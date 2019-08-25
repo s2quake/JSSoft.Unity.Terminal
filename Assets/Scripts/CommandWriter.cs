@@ -11,10 +11,10 @@ namespace JSSoft.Communication.Shells
 {
     class CommandWriter : StringWriter
     {
-        private readonly TerminalPro control;
+        private readonly Terminal control;
         private StringBuilder stringBuilder = new StringBuilder();
 
-        public CommandWriter(TerminalPro control)
+        public CommandWriter(Terminal control)
         {
             this.control = control;
             // TerminalColor.ForegroundColorChanged += TerminalColor_ForegroundColorChanged;

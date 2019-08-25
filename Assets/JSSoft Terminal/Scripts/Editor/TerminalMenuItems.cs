@@ -22,7 +22,7 @@ namespace JSSoft.UI.Editor
             var canvas = GameObject.FindObjectOfType<Canvas>();
             if (canvas == null)
             {
-                var canvasObj = new GameObject("Canvas") { tag = "UI" };
+                var canvasObj = new GameObject("Canvas");
                 canvas = canvasObj.AddComponent<Canvas>();
                 canvas.renderMode = RenderMode.ScreenSpaceOverlay;
                 canvasObj.AddComponent<CanvasScaler>();
@@ -32,22 +32,26 @@ namespace JSSoft.UI.Editor
             var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular SDF.asset", typeof(TMP_FontAsset));
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
-            var terminalObj = new GameObject("Terminal") { tag = "UI" };
+            var terminalObj = new GameObject("Terminal");
             var terminalRect = terminalObj.AddComponent<RectTransform>();            
             terminalObj.AddComponent<CanvasRenderer>();
             var terminalImage = terminalObj.AddComponent<Image>();
             terminalImage.sprite = backgroundSprite;
             terminalImage.type = Image.Type.Sliced;
 
-            var terminalScript = terminalObj.AddComponent<TerminalPro>();
+            var terminalScript = terminalObj.AddComponent<Terminal>();
             terminalScript.targetGraphic = terminalImage;
             terminalScript.lineType = TMP_InputField.LineType.MultiLineSubmit;
+            terminalScript.onFocusSelectAll = false;
+            terminalScript.resetOnDeActivation = false;
+            terminalScript.restoreOriginalTextOnEscape = false;
+            terminalScript.richText = false;
 
-            var textAreaObj = new GameObject("Text Area") { tag = "UI" };
+            var textAreaObj = new GameObject("Text Area");
             var textAreaRect = textAreaObj.AddComponent<RectTransform>();
             textAreaObj.AddComponent<RectMask2D>();
 
-            var placeholderObj = new GameObject("Placeholder") { tag = "UI" };
+            var placeholderObj = new GameObject("Placeholder");
             var placeholderRect = placeholderObj.AddComponent<RectTransform>();
             placeholderObj.AddComponent<CanvasRenderer>();
             var placeholderMesh = placeholderObj.AddComponent<TextMeshProUGUI>();
@@ -55,7 +59,7 @@ namespace JSSoft.UI.Editor
             placeholderMesh.extraPadding = false;
             placeholderMesh.font = fontAsset;
 
-            var textObj = new GameObject("Text") { tag = "UI" };
+            var textObj = new GameObject("Text");
             var textRect = textObj.AddComponent<RectTransform>();            
             var textMesh = textObj.AddComponent<TextMeshProUGUI>();
 

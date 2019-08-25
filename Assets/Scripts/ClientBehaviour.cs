@@ -17,9 +17,8 @@ namespace JSSoft.Communication.Shells
     {
         private IShell shell;
         private CommandContext commandContext;
-        private TerminalPro terminal;
-        private CancellationTokenSource cancellation;
         private CommandWriter writer;
+        public Terminal terminal;
 
         public void Awake()
         {
@@ -29,17 +28,22 @@ namespace JSSoft.Communication.Shells
 
         public void Start()
         {
-            this.terminal = GameObject.FindObjectOfType<TerminalPro>();
-            this.terminal.onExecuted.AddListener(this.terminal_onExecuted);
-            this.cancellation = new CancellationTokenSource();
-            this.writer = new CommandWriter(this.terminal);
+            if (this.terminal != null)
+            {
+                this.terminal.onExecuted.AddListener(this.terminal_onExecuted);
+                this.writer = new CommandWriter(this.terminal);
+                this.terminal.onCompletion = this.commandContext.GetCompletion;
+                //this.shell.Terminal = this.terminal;
+                this.terminal.Prompt = ">";
+            }
             this.commandContext.Out = this.writer;
+            
         }
 
         public void Update()
         {
             var text = this.writer.GetString();
-            if (text != null)
+            if (text != null && this.terminal != null)
             {
                 this.terminal.Append(text);
             }
@@ -47,7 +51,7 @@ namespace JSSoft.Communication.Shells
 
         public void OnDestroy()
         {
-            this.cancellation.Cancel();
+
         }
 
         private void terminal_onExecuted(string command)

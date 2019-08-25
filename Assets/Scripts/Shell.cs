@@ -15,6 +15,9 @@ namespace JSSoft.Communication.Shells
         private readonly INotifyUserService userServiceNotification;
         private bool isDisposed;
         private bool isServer = false;
+        private Terminal terminal;
+        private string prompt;
+        private string postfix;
 
         public Shell(CommandContext commandContext, IServiceContext serviceHost, INotifyUserService userServiceNotification)
         {
@@ -54,6 +57,19 @@ namespace JSSoft.Communication.Shells
             set => Console.Title = value;
         }
 
+        // public Terminal Terminal
+        // {
+        //     get => this.terminal;
+        //     set
+        //     {
+        //         this.terminal = value;
+        //         if (this.terminal != null)
+        //         {
+        //             this.UpdatePrompt();
+        //         }
+        //     }
+        // }
+
         // protected override void OnDrawPrompt(TextWriter writer, string prompt)
         // {
         //     if (this.UserID == string.Empty)
@@ -81,12 +97,20 @@ namespace JSSoft.Communication.Shells
 
         public string Prompt
         {
-            get; set;
+            get => this.prompt;
+            set
+            {
+                this.prompt = value;
+            }
         }
 
         public string Postfix
         {
-            get; set;
+            get => this.postfix;
+            set
+            {
+                this.postfix = value;
+            }
         }
 
         internal void Login(string userID, Guid token)

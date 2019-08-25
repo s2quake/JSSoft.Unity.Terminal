@@ -55,7 +55,6 @@
   <ItemGroup>
      <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Terminal.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPro.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
      <Compile Include="Assets\Scripts\CommandContext.cs" />
@@ -84,7 +83,6 @@
      <Compile Include="Assets\Scripts\Services\UserServiceHost.cs" />
      <Compile Include="Assets\Scripts\Settings.cs" />
      <Compile Include="Assets\Scripts\Shell.cs" />
-     <Compile Include="Assets\Scripts\TerminalHost.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
