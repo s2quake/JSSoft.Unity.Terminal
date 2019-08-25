@@ -10,5 +10,10 @@ namespace JSSoft.Communication.Shells
         {
 
         }
+
+        public new string[] GetCompletion(string[] items, string find)
+        {
+            return base.GetCompletion(items, find);
+        }
     }
 }

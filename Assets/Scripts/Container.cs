@@ -39,6 +39,8 @@ namespace JSSoft.Communication.Shells
             commandList.Add(new UserCommand(lazyShell, lazyUserService));
             commandList.Add(new DataCommand(lazyShell, lazyDataService));
             commandContext = new CommandContext(commandList, Enumerable.Empty<ICommandProvider>());
+            commandContext.Name = "UnityCommand";
+            commandContext.VerifyName = false;
             shell = new Shell(commandContext, serviceContext, userService);
         }
 
@@ -47,6 +49,10 @@ namespace JSSoft.Communication.Shells
             if (typeof(T) == typeof(IShell))
             {
                 return shell as T;
+            }
+            else if(typeof(T) == typeof(CommandContext))
+            {
+                return commandContext as T;
             }
             throw new NotImplementedException();
         }

@@ -18,85 +18,32 @@ namespace JSSoft.UI
         private readonly List<string> completions = new List<string>();
         private int historyIndex;
 
-        private string promptText;
-        private string outputText;
+        private string promptText = string.Empty;
+        private string outputText = string.Empty;
         private string prompt = string.Empty;
         private string inputText = string.Empty;
         private int refStack = 0;
         private string completion;
         private bool isReadOnly;
-        private string oldText = string.Empty;
-        private int oldPosition;
 
         private bool isChanged;
 
-        public event EventHandler Executed;
+        private ExecutedEent executedEvent = new ExecutedEent();
 
-        protected override void Start()
+        public ExecutedEent onExecuted
         {
-            base.Start();
-            this.promptText = string.Empty;
-            // this.Document.Blocks.Add(this.promptBlock);
-            // this.promptBlock.Inlines.AddRange(this.GetPrompt(this.Prompt));
-            // this.CaretPosition = this.promptBlock.ContentEnd;
-            if (this.TextInternal.Length != 0 && this.TextInternal.EndsWith(Environment.NewLine) == false)
-            {
-                this.TextInternal += Environment.NewLine;
-            }
-            this.outputText = this.TextInternal;
-
-            // this.text = string.Empty;
-            // this.Prompt = "c:>";
-            // this.onValueChanged = new TMP_InputField.OnChangeEvent();
-            // this.onValueChanged.AddListener(TextBox_TextChanged);
-            // this.onEndEdit = new TMP_InputField.SubmitEvent();
-            // this.onEndEdit.AddListener(OnEndEdit);
-            // this.onEndTextSelection = new TMP_InputField.TextSelectionEvent();
-            // this.onEndTextSelection.AddListener(OnEndTextSelection);
-            // this.onValidateInput = OnTextValidateInput;
-            this.caretPosition = this.text.Length;
-            // this.ActivateInputField();
+            get => executedEvent;
+            set => executedEvent = value;
         }
 
-        private string TextInternal
-        {
-            get => this.text;
-            set => this.text = value;
-        }
+        public OnCompletion onCompletion { get; set; }
 
-        private void OnEndTextSelection(string arg0, int arg1, int arg2)
-        {
-            this.OnCaretPositionChanged();
-        }
-
-        private void OnEndEdit(string text)
-        {
-            // if (this.isReadOnly == true)
-            // {
-            //     this.caretPosition = this.TextInternal.Length;
-            // }
-            // else
-            // {
-            //     //this.Execute();
-            // }
-        }
-
-        public char OnTextValidateInput(string text, int charIndex, char addedChar)
-        {
-            if (addedChar != '\0')
-            {
-                this.oldText = this.text;
-                this.oldPosition = this.caretPosition;
-            }
-            return addedChar;
-        }
         public void Execute()
         {
             this.refStack++;
             try
             {
                 var commandText = this.CommandText;
-                //var args = new RoutedEventArgs(ExecutedEvent);
                 this.Text = commandText;
                 if (this.histories.Contains(this.Text) == false)
                 {
@@ -114,19 +61,14 @@ namespace JSSoft.UI
                 this.AppendLine(this.Prompt + commandText);
 
                 this.readOnly = true;
-
-                this.OnExecuted(EventArgs.Empty);
-                this.readOnly = false;
-
-                //if (args.Handled == false)
+                if (this.executedEvent != null)
                 {
-                    this.promptText = this.Prompt;
-                    this.text = this.outputText + this.Prompt;
-                    this.readOnly = false;
-                    this.caretPosition = this.TextInternal.Length;
-                    this.oldPosition = this.caretPosition;
-                    this.oldText = this.TextInternal;
+                    this.executedEvent.Invoke(commandText);
                 }
+                this.promptText = this.Prompt;
+                this.text = this.outputText + this.Prompt;
+                this.readOnly = false;
+                this.caretPosition = this.text.Length;
             }
             finally
             {
@@ -197,29 +139,13 @@ namespace JSSoft.UI
                 var diff = value.Length - this.prompt.Length;
                 this.prompt = value;
                 this.promptText = this.prompt + this.inputText;
-                this.text = this.oldText = this.outputText + this.prompt + this.inputText;
+                this.text = this.outputText + this.prompt + this.inputText;
                 if (this.isReadOnly == false)
                 {
-                    this.oldPosition += diff;
                     this.caretPosition += diff;
                 }
-
-                // this.OnCaretPositionChanged();
-                //this.RefreshPrompt();
             }
         }
-
-        // public Brush OutputForeground
-        // {
-        //     get { return (Brush)this.GetValue(OutputForegroundProperty); }
-        //     set { this.SetValue(OutputForegroundProperty, value); }
-        // }
-
-        // public Brush OutputBackground
-        // {
-        //     get { return (Brush)this.GetValue(OutputBackgroundProperty); }
-        //     set { this.SetValue(OutputBackgroundProperty, value); }
-        // }
 
         public void NextCompletion()
         {
@@ -373,37 +299,17 @@ namespace JSSoft.UI
             return text;
         }
 
-        // protected override void OnInitialized(EventArgs e)
-        // {
-        //     base.OnInitialized(e);
-        // }
-
-        // protected override void OnGotFocus(RoutedEventArgs e)
-        // {
-        //     base.OnGotFocus(e);
-        //     this.textBox?.Focus();
-        // }
-
-        protected virtual void OnExecuted(EventArgs e)
-        {
-            this.Executed?.Invoke(this, e);
-        }
-
         protected virtual string[] GetCompletion(string[] items, string find)
         {
+            if (this.onCompletion != null)
+            {
+                return this.onCompletion(items, find);
+            }
             var query = from item in this.completions
                         where item.StartsWith(find)
                         select item;
             return query.ToArray();
         }
-
-        // protected virtual Inline[] GetPrompt(string prompt)
-        // {
-        //     return new Run[]
-        //     {
-        //         new Run(){ Text = this.Prompt, },
-        //     };
-        // }
 
         private void CompletionImpl(Func<string[], string, string> func)
         {
@@ -450,48 +356,23 @@ namespace JSSoft.UI
 
                 if (prefix == true || postfix == true)
                 {
+                    this.promptText = this.Prompt + leftText + "\"" + this.completion + "\"";
                     // this.promptBlock.Inlines.Clear();
                     // this.promptBlock.Inlines.AddRange(this.GetPrompt(this.Prompt));
                     // this.promptBlock.Inlines.Add(new Run() { Text = leftText + "\"" + this.completion + "\"" });
                 }
                 else
                 {
+                    this.promptText = this.Prompt + leftText + this.completion;
                     // this.promptBlock.Inlines.Clear();
                     // this.promptBlock.Inlines.AddRange(this.GetPrompt(this.Prompt));
                     // this.promptBlock.Inlines.Add(new Run() { Text = leftText + this.completion, });
                 }
                 this.inputText = inputText;
+                this.text = this.outputText + this.promptText;
+                this.caretPosition = this.text.Length;
             }
         }
-
-        // private static void PromptPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        // {
-        //     if (d is TerminalControl self)
-        //     {
-        //         self.RefreshPrompt();
-        //     }
-        // }
-
-        // private static object PromptPropertyCoerceValueCallback(DependencyObject d, object baseValue)
-        // {
-        //     return baseValue ?? string.Empty;
-        // }
-
-        // private static void OutputForegroundPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        // {
-        //     if (d is TerminalControl self && self.textBox != null)
-        //     {
-        //         self.isChanged = true;
-        //     }
-        // }
-
-        // private static void OutputBackgroundPropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        // {
-        //     if (d is TerminalControl self && self.textBox != null)
-        //     {
-        //         self.isChanged = true;
-        //     }
-        // }
 
         private void TextBox_TextChanged(string arg0)
         {
@@ -502,147 +383,6 @@ namespace JSSoft.UI
             this.inputText = this.promptText.Substring(this.prompt.Length);
             this.completion = string.Empty;
         }
-
-        private void Update()
-        {
-            return;
-            if (Input.GetKeyDown(KeyCode.Home))
-            {
-                //if (Keyboard.Modifiers == ModifierKeys.None)
-                {
-                    //e.Handled = true;
-                    this.MoveToFirst();
-                }
-                // else if (Keyboard.Modifiers == ModifierKeys.Shift)
-                // {
-                //     e.Handled = true;
-                //     var commandStart = this.promptBlock.Inlines.FirstInline.ContentStart.GetPositionAtOffset(this.Prompt.Length);
-                //     this.Selection.Select(commandStart, this.Selection.Start);
-                // }
-            }
-            // else if (e.Key == Key.Escape && Keyboard.Modifiers == ModifierKeys.None)
-            // {
-            //     if (this.IsReadOnly == true)
-            //     {
-            //         this.MoveToFirst();
-            //         e.Handled = true;
-            //     }
-            // }
-            else if (Input.GetKeyDown(KeyCode.Return))
-            {
-                if (this.isReadOnly == false)
-                {
-                    try
-                    {
-                        this.Execute();
-                    }
-                    finally
-                    {
-                        //e.Handled = true;
-                        this.ActivateInputField();
-                    }
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Tab))
-            {
-                this.text = this.oldText;
-                this.caretPosition = this.oldPosition;
-
-                if (Input.GetKey(KeyCode.LeftShift) == false)
-                {
-                    //e.Handled = true;
-                    this.NextCompletion();
-                }
-                else if (Input.GetKey(KeyCode.LeftShift) == true)
-                {
-                    //e.Handled = true;
-                    this.PrevCompletion();
-                }
-            }
-            // else if (e.Key == Key.Back && Keyboard.Modifiers == ModifierKeys.None)
-            // {
-            //     var commandStart = this.promptBlock.Inlines.FirstInline.ContentStart.GetPositionAtOffset(this.Prompt.Length);
-            //     if (this.CaretPosition.CompareTo(commandStart) <= 0)
-            //     {
-            //         e.Handled = true;
-            //     }
-            // }
-            // else if (e.Key == Key.Up && Keyboard.Modifiers == ModifierKeys.None)
-            // {
-            //     if (this.IsReadOnly == false)
-            //     {
-            //         this.PrevHistory();
-            //         e.Handled = true;
-            //     }
-            // }
-            // else if (e.Key == Key.Down && Keyboard.Modifiers == ModifierKeys.None)
-            // {
-            //     if (this.IsReadOnly == false)
-            //     {
-            //         this.NextHistory();
-            //         e.Handled = true;
-            //     }
-            // }
-            else if (Input.GetKeyDown(KeyCode.UpArrow) ||
-                    Input.GetKeyDown(KeyCode.DownArrow) ||
-                    Input.GetKeyDown(KeyCode.LeftArrow) ||
-                    Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                this.OnCaretPositionChanged();
-            }
-            else if (Input.GetKeyDown(KeyCode.Backspace))
-            {
-                if (this.oldPosition <= this.outputText.Length + this.prompt.Length)
-                {
-                    this.text = this.oldText;
-                    this.caretPosition = this.oldPosition;
-                }
-                else
-                {
-                    this.oldText = this.text;
-                    this.oldPosition = this.caretPosition;
-                    this.inputText = this.text.Substring(this.outputText.Length + this.prompt.Length);
-                }
-            }
-
-        }
-
-        private void OnCaretPositionChanged()
-        {
-            var inputPosition = this.outputText.Length + this.prompt.Length;
-            this.isReadOnly = this.caretPosition < inputPosition;
-            if (this.isReadOnly == true)
-            {
-                this.caretPosition = inputPosition;
-            }
-            else
-            {
-                this.oldPosition = this.caretPosition;
-            }
-        }
-
-        // private void TextBox_SelectionChanged(object sender, RoutedEventArgs e)
-        // {
-        //     if (this.promptBlock.Inlines.FirstInline != null)
-        //     {
-        //         var commandStart = this.promptBlock.Inlines.FirstInline.ContentStart.GetPositionAtOffset(this.Prompt.Length);
-        //         if (commandStart != null)
-        //         {
-        //             if (this.Selection.Start.CompareTo(commandStart) < 0 || this.Selection.End.CompareTo(commandStart) < 0)
-        //             {
-        //                 this.IsReadOnly = true;
-        //             }
-        //             else
-        //             {
-        //                 this.IsReadOnly = false;
-        //             }
-        //         }
-        //         else
-        //         {
-        //             this.IsReadOnly = false;
-        //         }
-        //     }
-        // }
 
         private void RefreshPrompt()
         {
@@ -656,7 +396,7 @@ namespace JSSoft.UI
             this.refStack++;
             try
             {
-                var isEnd = this.caretPosition == this.TextInternal.Length;
+                var isEnd = this.caretPosition == this.text.Length;
                 // if (this.output == null || this.isChanged == true)
                 // {
                 //     var oldOutput = this.output;
@@ -672,7 +412,7 @@ namespace JSSoft.UI
                 //     }
                 //     else
                 //     {
-                //         this.outputBlock.Inlines.InsertAfter(oldOutput, this.output);
+                //         this.outputBlock.Inlinxs.InsertAfter(oldOutput, this.output);
                 //     }
                 // }
                 // if (text.EndsWith(Environment.NewLine) == true)
@@ -690,9 +430,9 @@ namespace JSSoft.UI
                 this.text = this.outputText + this.promptText;
 
                 if (isEnd == true)
-                    this.caretPosition = this.TextInternal.Length;
-                this.oldText = this.text;
-                this.oldPosition = this.caretPosition;
+                    this.caretPosition = this.text.Length;
+                // this.oldText = this.text;
+                // this.oldPosition = this.caretPosition;
             }
             finally
             {
@@ -725,8 +465,14 @@ namespace JSSoft.UI
 
         }
 
-        protected virtual bool OnPreviewKeyDown(KeyCode key, EventModifiers modifiers)
+        protected virtual bool OnPreviewKeyDown(Event e)
         {
+            var key = e.keyCode;
+            var modifiers = e.modifiers;
+            if (e.character == '\n' || e.character == '\t')
+            {
+                return true;
+            }
             if (key == KeyCode.Backspace)
             {
                 //if (modifiers == EventModifiers.None)
@@ -734,6 +480,35 @@ namespace JSSoft.UI
                     var inputPosition = this.outputText.Length + this.prompt.Length;
                     if (this.caretPosition <= inputPosition)
                         return true;
+                }
+            }
+            else if (key == KeyCode.UpArrow ||
+                key == KeyCode.DownArrow ||
+                key == KeyCode.LeftArrow ||
+                key == KeyCode.RightArrow)
+            {
+
+            }
+            else if (key == KeyCode.Return || key == KeyCode.KeypadEnter)
+            {
+                if (this.isReadOnly == false)
+                {
+                    this.Execute();
+                    return true;
+                }
+            }
+            else if (key == KeyCode.Tab)
+            {
+                var shift = modifiers.HasFlag(EventModifiers.Shift);
+                if (shift == false)
+                {
+                    this.NextCompletion();
+                    return true;
+                }
+                else if (shift == true)
+                {
+                    this.PrevCompletion();
+                    return true;
                 }
             }
             return false;
@@ -751,7 +526,7 @@ namespace JSSoft.UI
             {
                 if (m_ProcessingEvent.rawType == EventType.KeyDown)
                 {
-                    if (this.OnPreviewKeyDown(m_ProcessingEvent.keyCode, m_ProcessingEvent.modifiers) == true)
+                    if (this.OnPreviewKeyDown(m_ProcessingEvent) == true)
                         continue;
                     consumedEvent = true;
                     var shouldContinue = KeyPressed(m_ProcessingEvent);
@@ -781,12 +556,24 @@ namespace JSSoft.UI
             if (consumedEvent)
             {
                 UpdateLabel();
-                this.promptText = this.text.Substring(this.outputText.Length);
-                this.inputText = this.promptText.Substring(this.prompt.Length);
-                this.completion = string.Empty;
+                if (this.refStack == 0)
+                {
+                    this.promptText = this.text.Substring(this.outputText.Length);
+                    this.inputText = this.promptText.Substring(this.prompt.Length);
+                    this.completion = string.Empty;
+                }
             }
-
+            this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
             eventData.Use();
         }
+
+        protected override bool IsValidChar(char c)
+        {
+            if (this.isReadOnly == true)
+                return false;
+            return base.IsValidChar(c);
+        }
+
+        public delegate string[] OnCompletion(string[] items, string find);
     }
 }
