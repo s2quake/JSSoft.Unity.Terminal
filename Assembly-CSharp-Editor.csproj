@@ -2,6 +2,8 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <CscToolPath>/Applications/Unity/Hub/Editor/2019.2.0f1/Unity.app/Contents/Tools/RoslynScripts</CscToolPath>
+    <CscToolExe>unity_csc.sh</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -318,14 +320,20 @@
  <Reference Include="Grpc.Core">
  <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Grpc.Core.dll</HintPath>
  </Reference>
+ <Reference Include="System.Buffers">
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Buffers.dll</HintPath>
+ </Reference>
  <Reference Include="Grpc.Core.Api">
  <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Grpc.Core.Api.dll</HintPath>
  </Reference>
- <Reference Include="System.Interactive.Async">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Interactive.Async.dll</HintPath>
- </Reference>
  <Reference Include="Newtonsoft.Json">
  <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Runtime.CompilerServices.Unsafe">
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+ </Reference>
+ <Reference Include="System.Memory">
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Memory.dll</HintPath>
  </Reference>
  <Reference Include="Ntreev.Library.resources">
  <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/ko-KR/Ntreev.Library.resources.dll</HintPath>

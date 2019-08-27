@@ -53,8 +53,10 @@ namespace JSSoft.Communication.Shells
         public static Settings CreateFromCommandLine()
         {
             var settings = new Settings();
-            var parser = new CommandLineParser(settings);
-            parser.Parse("", CommandParsingTypes.OmitCommandName);
+            //var parser = new CommandLineParser(settings);
+            //parser.Parse("", CommandParsingTypes.OmitCommandName);
+            settings.Host = "localhost";
+            settings.Port = 4004;
             return settings;
         }
     }

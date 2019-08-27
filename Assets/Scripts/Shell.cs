@@ -3,7 +3,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JSSoft.Communication.Services;
-using Ntreev.Library.Commands;
+using JSSoft.UI;
+using UnityEngine;
+//using Ntreev.Library.Commands;
 
 namespace JSSoft.Communication.Shells
 {
@@ -15,15 +17,11 @@ namespace JSSoft.Communication.Shells
         private readonly INotifyUserService userServiceNotification;
         private bool isDisposed;
         private bool isServer = false;
-        private Terminal terminal;
-        private string prompt;
-        private string postfix;
+        private string prompt = ">";
 
         public Shell(CommandContext commandContext, IServiceContext serviceHost, INotifyUserService userServiceNotification)
         {
             this.settings = Settings.CreateFromCommandLine();
-            this.Prompt = "";
-            this.Postfix = ">";
             this.serviceHost = serviceHost;
             this.serviceHost.Opened += ServiceHost_Opened;
             this.serviceHost.Closed += ServiceHost_Closed;
@@ -57,7 +55,13 @@ namespace JSSoft.Communication.Shells
             set => Console.Title = value;
         }
 
-        // public Terminal Terminal
+        public string Prompt
+        {
+            get => this.prompt;
+            set => this.prompt = value;
+        }
+
+        // public ITerminal Terminal
         // {
         //     get => this.terminal;
         //     set
@@ -65,7 +69,7 @@ namespace JSSoft.Communication.Shells
         //         this.terminal = value;
         //         if (this.terminal != null)
         //         {
-        //             this.UpdatePrompt();
+        //             this.terminal.Prompt = ">";
         //         }
         //     }
         // }
@@ -95,30 +99,12 @@ namespace JSSoft.Communication.Shells
         //     }
         // }
 
-        public string Prompt
-        {
-            get => this.prompt;
-            set
-            {
-                this.prompt = value;
-            }
-        }
-
-        public string Postfix
-        {
-            get => this.postfix;
-            set
-            {
-                this.postfix = value;
-            }
-        }
-
         internal void Login(string userID, Guid token)
         {
             this.UserID = userID;
             this.UserToken = token;
             this.UpdatePrompt();
-            this.Out.WriteLine("사용자 관련 명령을 수행하려면 'help user' 을(를) 입력하세요.");
+            this.Out.WriteLine("type 'help user' to execute user command.");
             this.Out.WriteLine();
         }
 
@@ -141,13 +127,13 @@ namespace JSSoft.Communication.Shells
         {
             if (this.IsOpened == true)
             {
-                this.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}";
+                this.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}>";
                 if (this.UserID != string.Empty)
-                    this.Prompt += $"@{this.UserID}";
+                    this.Prompt += $"@{this.UserID}>";
             }
             else
             {
-                this.Prompt = string.Empty;
+                this.Prompt = ">";
             }
         }
 
@@ -159,16 +145,16 @@ namespace JSSoft.Communication.Shells
             if (this.isServer)
             {
                 this.Title = $"Server {this.serviceHost.Host}:{this.serviceHost.Port}";
-                this.Out.WriteLine("서버가 시작되었습니다.");
+                this.Out.WriteLine("Server has started.");
             }
             else
             {
                 this.Title = $"Client {this.serviceHost.Host}:{this.serviceHost.Port}";
-                this.Out.WriteLine("서버에 연결되었습니다.");
+                this.Out.WriteLine("Server is connected.");
             }
-            this.Out.WriteLine("사용 가능한 명령을 확인려면 'help' 을(를) 입력하세요.");
+            this.Out.WriteLine("type 'help' to show available commands.");
             this.Out.WriteLine();
-            this.Out.WriteLine("로그인을 하려면 'login admin admin' 을(를) 입력하세요.");
+            this.Out.WriteLine("type 'login admin admin' to login.");
             this.Out.WriteLine();
         }
 
@@ -176,18 +162,9 @@ namespace JSSoft.Communication.Shells
         {
             this.IsOpened = false;
             this.UpdatePrompt();
-            if (this.isServer)
-            {
-                this.Title = $"Server - Closed";
-                this.Out.WriteLine("서버가 중단되었습니다.");
-                this.Out.WriteLine("서버를 시작하려면 'open' 을(를) 입력하세요.");
-            }
-            else
-            {
-                this.Title = $"Client - Disconnected";
-                this.Out.WriteLine("서버와 연결이 끊어졌습니다.");
-                this.Out.WriteLine("서버에 연결하려면 'open' 을(를) 입력하세요.");
-            }
+            this.Title = $"Client - Disconnected";
+            this.Out.WriteLine("Server is disconnected.");
+            this.Out.WriteLine("type 'open' to connect server.");
             this.Out.WriteLine();
         }
 
@@ -205,16 +182,16 @@ namespace JSSoft.Communication.Shells
         {
             if (e.Sender == this.UserID)
             {
-                using (TerminalColor.SetForeground(ConsoleColor.Magenta))
+                // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
                 {
-                    this.Out.WriteLine($"'{e.Receiver}'에게 귓속말: {e.Message}");
+                    this.Out.WriteLine($"to '{e.Receiver}': {e.Message}");
                 }
             }
             else if (e.Receiver == this.UserID)
             {
-                using (TerminalColor.SetForeground(ConsoleColor.Magenta))
+                // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
                 {
-                    this.Out.WriteLine($"'{e.Receiver}'의 귓속말: {e.Message}");
+                    this.Out.WriteLine($"from '{e.Receiver}': {e.Message}");
                 }
             }
         }

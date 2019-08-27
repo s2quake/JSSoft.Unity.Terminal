@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using JSSoft.UI;
 
 namespace JSSoft.Communication.Shells
 {
@@ -10,5 +11,7 @@ namespace JSSoft.Communication.Shells
         Task StopAsync();
 
         string Title { get; set; }
+
+        string Prompt { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using UnityEngine.UI;
 namespace JSSoft.UI
 {
     [AddComponentMenu("UI/Terminal", 15)]
-    public class Terminal : TMP_InputField
+    public class Terminal : TMP_InputField, ITerminal
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -65,10 +65,9 @@ namespace JSSoft.UI
                 {
                     this.executedEvent.Invoke(commandText);
                 }
-                this.promptText = this.Prompt;
-                this.text = this.outputText + this.Prompt;
-                this.readOnly = false;
-                this.caretPosition = this.text.Length;
+                // this.promptText = this.Prompt;
+                // this.text = this.outputText + this.Prompt;
+                // this.caretPosition = this.text.Length;
             }
             finally
             {
@@ -214,6 +213,7 @@ namespace JSSoft.UI
                 this.inputText = string.Empty;
                 this.completion = string.Empty;
                 this.promptText = this.Prompt;
+                this.text = this.outputText + this.Prompt;
                 if (isEnd == true)
                     this.caretPosition = this.text.Length;
                 this.readOnly = false;
@@ -585,5 +585,23 @@ namespace JSSoft.UI
         }
 
         public delegate string[] OnCompletion(string[] items, string find);
+
+        #region ITerminal
+
+        string ITerminal.Command => this.CommandText;
+
+        string ITerminal.Prompt
+        {
+            get => this.Prompt;
+            set => this.Prompt = value;
+        }
+
+        // event EventHandler ITerminal.Executed
+        // {
+        //     add {}
+        //     remove {}
+        // }
+
+        #endregion
     }
 }
