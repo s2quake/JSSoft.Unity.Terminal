@@ -23,6 +23,7 @@ namespace JSSoft.Communication.Shells
 
         public void Awake()
         {
+            JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
             this.shell = Container.GetService<IShell>();
             this.commandContext = Container.GetService<CommandContext>();
         }

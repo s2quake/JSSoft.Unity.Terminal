@@ -135,13 +135,12 @@ namespace JSSoft.UI
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
-                var diff = value.Length - this.prompt.Length;
                 this.prompt = value;
                 this.promptText = this.prompt + this.inputText;
                 this.text = this.outputText + this.prompt + this.inputText;
                 if (this.isReadOnly == false)
                 {
-                    this.caretPosition += diff;
+                    this.caretPosition = this.text.Length;
                 }
             }
         }
@@ -205,6 +204,7 @@ namespace JSSoft.UI
             this.refStack++;
             try
             {
+                // TMP_SelectionCaret
                 // var textRange = new TextRange(this.promptBlock.ContentStart, this.promptBlock.ContentEnd);
                 var isEnd = this.caretPosition == this.text.Length;
                 // if (textRange.Text != string.Empty)
@@ -214,8 +214,8 @@ namespace JSSoft.UI
                 this.completion = string.Empty;
                 this.promptText = this.Prompt;
                 this.text = this.outputText + this.Prompt;
-                if (isEnd == true)
-                    this.caretPosition = this.text.Length;
+                //if (isEnd == true)
+                this.caretPosition = this.text.Length;
                 this.readOnly = false;
             }
             finally
@@ -227,13 +227,11 @@ namespace JSSoft.UI
         public static Match[] MatchCompletion(string text)
         {
             var matches = Regex.Matches(text, "\\S+");
-            var argList = new List<Match>();
-
+            var argList = new List<Match>(matches.Count);
             foreach (Match item in matches)
             {
                 argList.Add(item);
             }
-
             return argList.ToArray();
         }
 
@@ -311,6 +309,15 @@ namespace JSSoft.UI
             return query.ToArray();
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            this.caretBlinkRate = 0;
+            this.customCaretColor = true;
+            this.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
+            this.caretWidth = (int)(this.pointSize * 0.7f) - 1;
+        }
+
         private void CompletionImpl(Func<string[], string, string> func)
         {
             var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));
@@ -357,16 +364,10 @@ namespace JSSoft.UI
                 if (prefix == true || postfix == true)
                 {
                     this.promptText = this.Prompt + leftText + "\"" + this.completion + "\"";
-                    // this.promptBlock.Inlines.Clear();
-                    // this.promptBlock.Inlines.AddRange(this.GetPrompt(this.Prompt));
-                    // this.promptBlock.Inlines.Add(new Run() { Text = leftText + "\"" + this.completion + "\"" });
                 }
                 else
                 {
                     this.promptText = this.Prompt + leftText + this.completion;
-                    // this.promptBlock.Inlines.Clear();
-                    // this.promptBlock.Inlines.AddRange(this.GetPrompt(this.Prompt));
-                    // this.promptBlock.Inlines.Add(new Run() { Text = leftText + this.completion, });
                 }
                 this.inputText = inputText;
                 this.text = this.outputText + this.promptText;
