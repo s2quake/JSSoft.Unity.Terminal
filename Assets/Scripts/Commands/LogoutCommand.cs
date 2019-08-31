@@ -54,7 +54,7 @@ namespace JSSoft.Communication.Commands
         protected override async Task OnExecuteAsync()
         {
             await this.UserService.LogoutAsync(this.Shell.UserToken);
-            this.Shell.Logout();
+            await this.Shell.LogoutAsync();
         }
 
         private IUserService UserService => this.userService.Value;

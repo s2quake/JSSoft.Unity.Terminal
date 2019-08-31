@@ -66,7 +66,7 @@ namespace JSSoft.Communication.Commands
         protected override async Task OnExecuteAsync()
         {
             var token = await this.UserService.LoginAsync(this.UserID, this.Password);
-            this.Shell.Login(this.UserID, token);
+            await this.Shell.LoginAsync(this.UserID, token);
         }
 
         private IUserService UserService => this.userService.Value;

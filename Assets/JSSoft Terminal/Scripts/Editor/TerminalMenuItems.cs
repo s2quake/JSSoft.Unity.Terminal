@@ -9,20 +9,20 @@ namespace JSSoft.UI.Editor
 {
     static class TerminalMeniItems
     {
-        [MenuItem("Terminal/Test")]
-        private static void Test2()
-        {
-            var selectedObject = Selection.activeGameObject;
-            if (selectedObject != null)
-            {
-                var selectedObjectRect = selectedObject.GetComponent<RectTransform>();
-                if (selectedObjectRect != null)
-                {
-                    Debug.Log($"offsetMin: {selectedObjectRect.offsetMin}");
-                    Debug.Log($"offsetMax: {selectedObjectRect.offsetMax}");
-                }
-            }
-        }
+        // [MenuItem("Terminal/Test")]
+        // private static void Test2()
+        // {
+        //     var selectedObject = Selection.activeGameObject;
+        //     if (selectedObject != null)
+        //     {
+        //         var selectedObjectRect = selectedObject.GetComponent<RectTransform>();
+        //         if (selectedObjectRect != null)
+        //         {
+        //             Debug.Log($"offsetMin: {selectedObjectRect.offsetMin}");
+        //             Debug.Log($"offsetMax: {selectedObjectRect.offsetMax}");
+        //         }
+        //     }
+        // }
 
         [MenuItem("GameObject/UI/Terminal")]
         private static void CreateTerminalUI()

@@ -110,20 +110,26 @@ namespace JSSoft.Communication.Shells
         //     }
         // }
 
-        internal void Login(string userID, Guid token)
+        internal async Task LoginAsync(string userID, Guid token)
         {
-            this.UserID = userID;
-            this.UserToken = token;
-            this.UpdatePrompt();
-            this.Out.WriteLine("type 'help user' to execute user command.");
-            this.Out.WriteLine();
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.UserID = userID;
+                this.UserToken = token;
+                this.UpdatePrompt();
+                this.Out.WriteLine("type 'help user' to execute user command.");
+                this.Out.WriteLine();
+            });
         }
 
-        internal void Logout()
+        internal async Task LogoutAsync()
         {
-            this.UserID = string.Empty;
-            this.UserToken = Guid.Empty;
-            this.UpdatePrompt();
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.UserID = string.Empty;
+                this.UserToken = Guid.Empty;
+                this.UpdatePrompt();
+            });
         }
 
         internal Guid Token { get; set; }
@@ -193,27 +199,33 @@ namespace JSSoft.Communication.Shells
             });
         }
 
-        private void UserServiceNotification_LoggedOut(object sender, UserEventArgs e)
+        private async void UserServiceNotification_LoggedOut(object sender, UserEventArgs e)
         {
-            this.Out.WriteLine($"User logged out: {e.UserID}");
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.Out.WriteLine($"User logged out: {e.UserID}");
+            });
         }
 
-        private void userServiceNotification_MessageReceived(object sender, UserMessageEventArgs e)
+        private async void userServiceNotification_MessageReceived(object sender, UserMessageEventArgs e)
         {
-            if (e.Sender == this.UserID)
+            await this.dispatcher.InvokeAsync(() =>
             {
-                // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
+                if (e.Sender == this.UserID)
                 {
-                    this.Out.WriteLine($"to '{e.Receiver}': {e.Message}");
+                    // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
+                    {
+                        this.Out.WriteLine($"to '{e.Receiver}': {e.Message}");
+                    }
                 }
-            }
-            else if (e.Receiver == this.UserID)
-            {
-                // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
+                else if (e.Receiver == this.UserID)
                 {
-                    this.Out.WriteLine($"from '{e.Receiver}': {e.Message}");
+                    // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
+                    {
+                        this.Out.WriteLine($"from '{e.Receiver}': {e.Message}");
+                    }
                 }
-            }
+            });
         }
 
         #region IServiceProvider

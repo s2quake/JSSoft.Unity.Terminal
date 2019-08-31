@@ -395,10 +395,32 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            // this.caretBlinkRate = 0;
-            // this.customCaretColor = true;
-            // this.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
-            // this.caretWidth = (int)(this.pointSize * 0.7f) - 1;
+        }
+
+        protected virtual bool OnPreviewKeyDown(Event e)
+        {
+            var keyCode = e.keyCode;
+            var modifiers = e.modifiers;
+            var key = $"{modifiers}+{keyCode}";
+            if (bindingByKey.ContainsKey(key) == true)
+            {
+                var binding = bindingByKey[key];
+                if (binding.Verify(this) == true && binding.Action(this) == true)
+                    return true;
+            }
+            Debug.Log($"{modifiers}+{keyCode}");
+            if (e.character == '\n' || e.character == '\t' || e.character == 25)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        protected override bool IsValidChar(char c)
+        {
+            if (this.isReadOnly == true)
+                return false;
+            return base.IsValidChar(c);
         }
 
         private void CompletionImpl(Func<string[], string, string> func)
@@ -511,32 +533,6 @@ namespace JSSoft.UI
                     this.refStack--;
                 }
             }
-        }
-
-        protected virtual bool OnPreviewKeyDown(Event e)
-        {
-            var keyCode = e.keyCode;
-            var modifiers = e.modifiers;
-            var key = $"{modifiers}+{keyCode}";
-            if (bindingByKey.ContainsKey(key) == true)
-            {
-                var binding = bindingByKey[key];
-                if (binding.Verify(this) == true && binding.Action(this) == true)
-                    return true;
-            }
-            Debug.Log($"{modifiers}+{keyCode}");
-            if (e.character == '\n' || e.character == '\t' || e.character == 25)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        protected override bool IsValidChar(char c)
-        {
-            if (this.isReadOnly == true)
-                return false;
-            return base.IsValidChar(c);
         }
 
         private static void AddBinding(IKeyBinding binding)
