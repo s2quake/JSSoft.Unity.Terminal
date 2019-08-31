@@ -23,8 +23,10 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Ntreev.Library.Threading;
 using Ntreev.Library.Commands;
 using JSSoft.Communication.Shells;
+using UnityEngine;
 #if MEF
 using System.ComponentModel.Composition;
 #endif
@@ -37,6 +39,7 @@ namespace JSSoft.Communication.Commands
     class ExitCommand : CommandAsyncBase
     {
         private readonly Lazy<IShell> shell = null;
+        private Dispatcher dispatcher;
 
 #if MEF
         [ImportingConstructor]
@@ -44,6 +47,7 @@ namespace JSSoft.Communication.Commands
         public ExitCommand(Lazy<IShell> shell)
         {
             this.shell = shell;
+            this.dispatcher = Dispatcher.Current;
         }
 
         [CommandProperty(IsRequired = true)]
@@ -53,9 +57,10 @@ namespace JSSoft.Communication.Commands
             get; set;
         }
 
-        protected override Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync()
         {
-            return this.shell.Value.StopAsync();
+            await this.shell.Value.StopAsync();
+            this.dispatcher.InvokeAsync(() => Application.Quit());
         }
     }
 }

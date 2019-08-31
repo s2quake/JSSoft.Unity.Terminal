@@ -65,6 +65,15 @@ namespace JSSoft.UI
                 AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, 
                             (t) => t.MoveToLast()));
             }
+            if (IsWindows == true)
+            {
+                AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Escape, 
+                            (t) => t.Clear(), (t) => t.isReadOnly == false));
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, 
+                            (t) => t.MoveToFirst()));
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, 
+                            (t) => t.MoveToLast()));
+            }
         }
 
         public void Execute()
@@ -89,14 +98,15 @@ namespace JSSoft.UI
                 this.completion = string.Empty;
                 this.AppendLine(this.Prompt + commandText);
 
-                this.readOnly = true;
                 if (this.executedEvent != null)
                 {
+                    this.readOnly = true;
                     this.executedEvent.Invoke(commandText);
                 }
-                // this.promptText = this.Prompt;
-                // this.text = this.outputText + this.Prompt;
-                // this.caretPosition = this.text.Length;
+                else
+                {
+                    this.InsertPrompt();
+                }
             }
             finally
             {
@@ -232,17 +242,11 @@ namespace JSSoft.UI
             this.refStack++;
             try
             {
-                // TMP_SelectionCaret
-                // var textRange = new TextRange(this.promptBlock.ContentStart, this.promptBlock.ContentEnd);
-                var isEnd = this.caretPosition == this.text.Length;
-                // if (textRange.Text != string.Empty)
-                //     this.AppendLine(textRange.Text);
                 this.promptText = string.Empty;
                 this.inputText = string.Empty;
                 this.completion = string.Empty;
                 this.promptText = this.Prompt;
                 this.text = this.outputText + this.Prompt;
-                //if (isEnd == true)
                 this.caretPosition = this.text.Length;
                 this.readOnly = false;
             }
@@ -480,42 +484,10 @@ namespace JSSoft.UI
             try
             {
                 var isEnd = this.caretPosition == this.text.Length;
-                // if (this.output == null || this.isChanged == true)
-                // {
-                //     var oldOutput = this.output;
-                //     this.output = new Run();
-                //     if (this.OutputForeground != null)
-                //         this.output.Foreground = this.OutputForeground;
-                //     if (this.OutputBackground != null)
-                //         this.output.Background = this.OutputBackground;
-                //     if (oldOutput == null)
-                //     {
-                //         this.outputBlock = new Paragraph(this.output);
-                //         this.Document.Blocks.InsertBefore(this.promptBlock, this.outputBlock);
-                //     }
-                //     else
-                //     {
-                //         this.outputBlock.Inlinxs.InsertAfter(oldOutput, this.output);
-                //     }
-                // }
-                // if (text.EndsWith(Environment.NewLine) == true)
-                // {
-                //     text = text.Substring(0, text.Length - Environment.NewLine.Length);
-                //     this.output.Text += this.outputLeftText + text;
-                //     this.outputLeftText = Environment.NewLine;
-                // }
-                // else
-                // {
-                //     this.output.Text += this.outputLeftText + text;
-                //     this.outputLeftText = string.Empty;
-                // }
                 this.outputText += text;
                 this.text = this.outputText + this.promptText;
-
                 if (isEnd == true)
                     this.caretPosition = this.text.Length;
-                // this.oldText = this.text;
-                // this.oldPosition = this.caretPosition;
             }
             finally
             {
@@ -576,6 +548,8 @@ namespace JSSoft.UI
         }
 
         private static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
+
+        private static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
 
         public delegate string[] OnCompletion(string[] items, string find);
 
