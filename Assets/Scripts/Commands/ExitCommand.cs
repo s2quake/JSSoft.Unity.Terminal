@@ -60,7 +60,11 @@ namespace JSSoft.Communication.Commands
         protected override async Task OnExecuteAsync()
         {
             await this.shell.Value.StopAsync();
-            this.dispatcher.InvokeAsync(() => Application.Quit());
+#if UNITY_EDITOR
+            await this.dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
+#else
+            await this.dispatcher.InvokeAsync(() => UnityEngine.Application.Quit());
+#endif
         }
     }
 }
