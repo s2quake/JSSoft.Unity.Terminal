@@ -438,12 +438,12 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: TMPro.TMP_InputField+TouchScreenKeyboardEvent, Unity.TextMeshPro,
       Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_CaretColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
-  m_CustomCaretColor: 0
+  m_CaretColor: {r: 0.5686275, g: 0.5686275, b: 0.5686275, a: 1}
+  m_CustomCaretColor: 1
   m_SelectionColor: {r: 0.65882355, g: 0.80784315, b: 1, a: 0.7529412}
   m_Text: 
-  m_CaretBlinkRate: 0.85
-  m_CaretWidth: 1
+  m_CaretBlinkRate: 0
+  m_CaretWidth: 15
   m_ReadOnly: 0
   m_RichText: 0
   m_GlobalFontAsset: {fileID: 11400000, guid: 10fbfe21dd10540078b32174948713bc, type: 2}
@@ -680,6 +680,7 @@ GameObject:
   m_Component:
   - component: {fileID: 625097643}
   - component: {fileID: 625097644}
+  - component: {fileID: 625097645}
   m_Layer: 0
   m_Name: ClientObject
   m_TagString: Untagged
@@ -714,6 +715,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   terminal: {fileID: 492747707}
+--- !u!114 &625097645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 625097642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 609eccd4013574586858863439c377db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1106709271
 GameObject:
   m_ObjectHideFlags: 0
@@ -949,7 +962,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 30109177}
   m_Direction: 3
   m_Value: 0
-  m_Size: 0.1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

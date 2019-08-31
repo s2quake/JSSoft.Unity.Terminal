@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Ntreev.Library.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,20 +15,21 @@ namespace JSSoft.UI
     [AddComponentMenu("UI/Terminal", 15)]
     public class Terminal : TMP_InputField, ITerminal
     {
+        private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
-        private int historyIndex;
 
         private string promptText = string.Empty;
         private string outputText = string.Empty;
         private string prompt = string.Empty;
         private string inputText = string.Empty;
-        private int refStack = 0;
         private string completion;
+        private int refStack = 0;
+        private int historyIndex;
         private bool isReadOnly;
-
         private bool isChanged;
 
+        private Event processingEvent = new Event();
         private ExecutedEent executedEvent = new ExecutedEent();
 
         public ExecutedEent onExecuted
@@ -37,6 +39,33 @@ namespace JSSoft.UI
         }
 
         public OnCompletion onCompletion { get; set; }
+
+        static Terminal()
+        {
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, 
+                            (t) => t.PrevHistory(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, 
+                            (t) => t.NextHistory(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return, 
+                            (t) => t.Execute(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter, 
+                            (t) => t.Execute(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, 
+                            (t) => true, (t) => t.caretPosition <= t.outputText.Length + t.prompt.Length));
+            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Tab, 
+                            (t) => t.NextCompletion(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.Shift, KeyCode.Tab, 
+                            (t) => t.PrevCompletion(), (t) => t.isReadOnly == false));
+            if (IsMac == true)
+            {
+                AddBinding(new KeyBinding(EventModifiers.Control, KeyCode.U, 
+                            (t) => t.Clear(), (t) => t.isReadOnly == false));
+                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow, 
+                            (t) => t.MoveToFirst()));
+                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, 
+                            (t) => t.MoveToLast()));
+            }
+        }
 
         public void Execute()
         {
@@ -77,44 +106,43 @@ namespace JSSoft.UI
 
         public void Clear()
         {
-            var text = this.text ?? string.Empty;
-            var promptText = this.prompt + this.inputText;
-            text = text.Substring(0, text.Length - promptText.Length);
-            //this.promptText = this.Prompt;
-            this.text = text + this.prompt;
+            this.promptText = this.prompt;
             this.inputText = string.Empty;
             this.completion = string.Empty;
+            this.text = this.outputText + this.promptText;
+            this.caretPosition = this.text.Length;
         }
 
         public void MoveToFirst()
         {
-            this.caretPosition = this.text.Length - this.promptText.Length;
+            this.caretPosition = this.outputText.Length + this.prompt.Length;
+            this.UpdateLabel();
         }
 
         public void MoveToLast()
         {
             this.caretPosition = this.text.Length;
+            this.UpdateLabel();
         }
 
-        // public void Reset()
-        // {
-        //     this.refStack++;
-        //     try
-        //     {
-        //         // this.output = null;
-        //         // this.outputBlock = null;
-        //         // this.outputLeftText = string.Empty;
-        //         // this.Document.Blocks.Clear();
-        //         // this.promptBlock = new Paragraph();
-        //         // this.Document.Blocks.Add(this.promptBlock);
-        //         // this.promptBlock.Inlines.AddRange(this.GetPrompt(this.Prompt));
-        //         // this.CaretPosition = this.promptBlock.Inlines.LastInline.ContentEnd;
-        //     }
-        //     finally
-        //     {
-        //         this.refStack--;
-        //     }
-        // }
+        public new void Reset()
+        {
+            this.refStack++;
+            try
+            {
+                this.outputText = string.Empty;
+                this.inputText = string.Empty;
+                this.promptText = this.prompt;
+                this.text = this.outputText + this.promptText;
+                this.caretPosition = this.text.Length;
+                this.caretBlinkRate = 1;
+                this.caretBlinkRate = 0;
+            }
+            finally
+            {
+                this.refStack--;
+            }
+        }
 
         public new void Append(string text)
         {
@@ -297,6 +325,59 @@ namespace JSSoft.UI
             return text;
         }
 
+        public override void OnUpdateSelected(BaseEventData eventData)
+        {
+            if (!isFocused)
+                return;
+
+            bool consumedEvent = false;
+            while (Event.PopEvent(processingEvent))
+            {
+                if (processingEvent.rawType == EventType.KeyDown)
+                {
+                    if (this.OnPreviewKeyDown(processingEvent) == true)
+                        continue;
+                    consumedEvent = true;
+                    var shouldContinue = KeyPressed(processingEvent);
+                    if (shouldContinue == EditState.Finish)
+                    {
+                        //SendOnSubmit();
+                        //DeactivateInputField();
+                        break;
+                    }
+                }
+
+                switch (processingEvent.type)
+                {
+                    case EventType.ValidateCommand:
+                    case EventType.ExecuteCommand:
+                        switch (processingEvent.commandName)
+                        {
+                            case "SelectAll":
+                                SelectAll();
+                                consumedEvent = true;
+                                break;
+                        }
+                        break;
+                }
+            }
+
+            if (consumedEvent)
+            {
+                UpdateLabel();
+                if (this.refStack == 0)
+                {
+                    this.promptText = this.text.Substring(this.outputText.Length);
+                    this.inputText = this.promptText.Substring(this.prompt.Length);
+                    this.completion = string.Empty;
+                }
+            }
+            this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
+            eventData.Use();
+        }
+
+        public Dispatcher Dispatcher { get; private set; }
+
         protected virtual string[] GetCompletion(string[] items, string find)
         {
             if (this.onCompletion != null)
@@ -312,6 +393,7 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
+            this.Dispatcher = Dispatcher.Current;
             this.caretBlinkRate = 0;
             this.customCaretColor = true;
             this.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
@@ -462,120 +544,23 @@ namespace JSSoft.UI
             }
         }
 
-        public class ExecutedEent : UnityEvent<string>
-        {
-
-        }
-
         protected virtual bool OnPreviewKeyDown(Event e)
         {
-            var key = e.keyCode;
+            var keyCode = e.keyCode;
             var modifiers = e.modifiers;
-            if (e.character == '\n' || e.character == '\t')
+            var key = $"{modifiers}+{keyCode}";
+            if (bindingByKey.ContainsKey(key) == true)
+            {
+                var binding = bindingByKey[key];
+                if (binding.Verify(this) == true && binding.Action(this) == true)
+                    return true;
+            }
+            Debug.Log($"{modifiers}+{keyCode}");
+            if (e.character == '\n' || e.character == '\t' || e.character == 25)
             {
                 return true;
             }
-            if (key == KeyCode.Backspace)
-            {
-                //if (modifiers == EventModifiers.None)
-                {
-                    var inputPosition = this.outputText.Length + this.prompt.Length;
-                    if (this.caretPosition <= inputPosition)
-                        return true;
-                }
-            }
-            else if (key == KeyCode.UpArrow)
-            {
-                if (this.isReadOnly == false)
-                {
-                    this.PrevHistory();
-                    return true;
-                }
-            }
-            else if (key == KeyCode.DownArrow)
-            {
-                if (this.isReadOnly == false)
-                {
-                    this.NextHistory();
-                    return true;
-                }
-            }
-            else if (key == KeyCode.Return || key == KeyCode.KeypadEnter)
-            {
-                if (this.isReadOnly == false)
-                {
-                    this.Execute();
-                    return true;
-                }
-            }
-            else if (key == KeyCode.Tab)
-            {
-                var shift = modifiers.HasFlag(EventModifiers.Shift);
-                if (shift == false)
-                {
-                    this.NextCompletion();
-                    return true;
-                }
-                else if (shift == true)
-                {
-                    this.PrevCompletion();
-                    return true;
-                }
-            }
             return false;
-        }
-
-        private Event m_ProcessingEvent = new Event();
-
-        public override void OnUpdateSelected(BaseEventData eventData)
-        {
-            if (!isFocused)
-                return;
-
-            bool consumedEvent = false;
-            while (Event.PopEvent(m_ProcessingEvent))
-            {
-                if (m_ProcessingEvent.rawType == EventType.KeyDown)
-                {
-                    if (this.OnPreviewKeyDown(m_ProcessingEvent) == true)
-                        continue;
-                    consumedEvent = true;
-                    var shouldContinue = KeyPressed(m_ProcessingEvent);
-                    if (shouldContinue == EditState.Finish)
-                    {
-                        //SendOnSubmit();
-                        //DeactivateInputField();
-                        break;
-                    }
-                }
-
-                switch (m_ProcessingEvent.type)
-                {
-                    case EventType.ValidateCommand:
-                    case EventType.ExecuteCommand:
-                        switch (m_ProcessingEvent.commandName)
-                        {
-                            case "SelectAll":
-                                SelectAll();
-                                consumedEvent = true;
-                                break;
-                        }
-                        break;
-                }
-            }
-
-            if (consumedEvent)
-            {
-                UpdateLabel();
-                if (this.refStack == 0)
-                {
-                    this.promptText = this.text.Substring(this.outputText.Length);
-                    this.inputText = this.promptText.Substring(this.prompt.Length);
-                    this.completion = string.Empty;
-                }
-            }
-            this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
-            eventData.Use();
         }
 
         protected override bool IsValidChar(char c)
@@ -585,7 +570,19 @@ namespace JSSoft.UI
             return base.IsValidChar(c);
         }
 
+        private static void AddBinding(IKeyBinding binding)
+        {
+            bindingByKey.Add($"{binding.Modifiers}+{binding.KeyCode}", binding);
+        }
+
+        private static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
+
         public delegate string[] OnCompletion(string[] items, string find);
+
+        public class ExecutedEent : UnityEvent<string>
+        {
+
+        }
 
         #region ITerminal
 

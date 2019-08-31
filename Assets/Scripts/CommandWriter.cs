@@ -5,18 +5,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Ntreev.Library.Threading;
 using JSSoft.UI;
 
 namespace JSSoft.Communication.Shells
 {
     class CommandWriter : StringWriter
     {
-        private readonly Terminal control;
+        private readonly Terminal terminal;
+        private readonly Dispatcher dispatcher;
         private StringBuilder stringBuilder = new StringBuilder();
 
-        public CommandWriter(Terminal control)
+        public CommandWriter(Terminal terminal)
         {
-            this.control = control;
+            this.terminal = terminal;
+            this.dispatcher = Dispatcher.Current;
             // TerminalColor.ForegroundColorChanged += TerminalColor_ForegroundColorChanged;
             // TerminalColor.BackgroundColorChanged += TerminalColor_BackgroundColorChanged;
         }
@@ -69,52 +72,40 @@ namespace JSSoft.Communication.Shells
         //     });
         // }
 
-        public string GetString()
-        {
-            lock (this.control)
-            {
-                if (this.stringBuilder.Length == 0)
-                    return null;
-                var text = this.stringBuilder.ToString();
-                this.stringBuilder.Clear();
-                return text;
-            }
-        }
+        // public string GetString()
+        // {
+        //     lock (this.terminal)
+        //     {
+        //         if (this.stringBuilder.Length == 0)
+        //             return null;
+        //         var text = this.stringBuilder.ToString();
+        //         this.stringBuilder.Clear();
+        //         return text;
+        //     }
+        // }
 
         public override void Write(char value)
         {
             base.Write(value);
-            lock (this.control)
-            {
-                this.stringBuilder.Append(value.ToString());
-            }
+            this.dispatcher.InvokeAsync(() => this.terminal.Append(value.ToString()));
         }
 
         public override void WriteLine()
         {
             base.WriteLine();
-            lock (this.control)
-            {
-                this.stringBuilder.AppendLine(string.Empty);
-            }
+            this.dispatcher.InvokeAsync(() => this.terminal.AppendLine(string.Empty));
         }
 
         public override void WriteLine(string value)
         {
             base.WriteLine(value);
-            lock (this.control)
-            {
-                this.stringBuilder.AppendLine(value);
-            }
+            this.dispatcher.InvokeAsync(() => this.terminal.AppendLine(value));
         }
 
         public override void Write(string value)
         {
             base.Write(value);
-            lock (this.control)
-            {
-                this.stringBuilder.Append(value);
-            }
+            this.dispatcher.InvokeAsync(() => this.terminal.Append(value));
         }
     }
 }

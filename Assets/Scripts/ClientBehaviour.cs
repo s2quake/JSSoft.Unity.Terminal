@@ -32,16 +32,17 @@ namespace JSSoft.Communication.Shells
         {
             if (this.terminal != null)
             {
+                Container.Terminal = this.terminal;
                 this.terminal.onExecuted.AddListener(this.terminal_onExecuted);
                 this.writer = new CommandWriter(this.terminal);
                 this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
                 this.terminal.ActivateInputField();
                 // Debug.Log("Start 1");
-                await this.shell.StartAsync();
                 // Debug.Log("Start 2");
                 //await TestAsync();
             }
+            await this.shell.StartAsync();
         }
 
         private async Task TestAsync()
@@ -61,23 +62,23 @@ namespace JSSoft.Communication.Shells
                 {
                     this.terminal.Prompt = this.shell.Prompt;
                 }
-                var text = this.writer.GetString();
-                if (text != null)
-                {
-                    this.terminal.Append(text);
-                }
+                // var text = this.writer.GetString();
+                // if (text != null)
+                // {
+                //     this.terminal.Append(text);
+                // }
             }
         }
 
         public async void OnDestroy()
         {
             Debug.Log("OnDestroy 1");
-            if (this.terminal != null)
+            //if (this.terminal != null)
             {
-                // Debug.Log("OnDestroy 1");
+                Debug.Log("OnDestroy 2");
                 await this.shell.StopAsync();
                 this.shell.Dispose();
-                // Debug.Log("OnDestroy 2");
+                Debug.Log("OnDestroy ");
                 await TestAsync();
             }
         }

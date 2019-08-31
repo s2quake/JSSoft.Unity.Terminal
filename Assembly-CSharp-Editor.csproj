@@ -304,40 +304,40 @@
  <HintPath>/Applications/Unity/Hub/Editor/2019.2.0f1/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
  <Reference Include="Ntreev.Library">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Ntreev.Library.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/Ntreev.Library.dll</HintPath>
  </Reference>
  <Reference Include="Google.Protobuf">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Google.Protobuf.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/Google.Protobuf.dll</HintPath>
  </Reference>
  <Reference Include="JSSoft.Communication">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/JSSoft.Communication.dll</HintPath>
  </Reference>
  <Reference Include="Ntreev.Library.Commands">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Ntreev.Library.Commands.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/Ntreev.Library.Commands.dll</HintPath>
  </Reference>
  <Reference Include="Grpc.Core">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Grpc.Core.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/Grpc.Core.dll</HintPath>
  </Reference>
  <Reference Include="System.Buffers">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Buffers.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/System.Buffers.dll</HintPath>
  </Reference>
  <Reference Include="Grpc.Core.Api">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Grpc.Core.Api.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/Grpc.Core.Api.dll</HintPath>
  </Reference>
  <Reference Include="Newtonsoft.Json">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/Newtonsoft.Json.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="System.Runtime.CompilerServices.Unsafe">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/System.Runtime.CompilerServices.Unsafe.dll</HintPath>
  </Reference>
  <Reference Include="System.Memory">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/System.Memory.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/System.Memory.dll</HintPath>
  </Reference>
  <Reference Include="Ntreev.Library.resources">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/ko-KR/Ntreev.Library.resources.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/ko-KR/Ntreev.Library.resources.dll</HintPath>
  </Reference>
  <Reference Include="Ntreev.Library.Commands.resources">
- <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/ko-KR/Ntreev.Library.Commands.resources.dll</HintPath>
+ <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Assets/Plugins/JSSoft.Communication/ko-KR/Ntreev.Library.Commands.resources.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>/Users/s2quake-mac/Projects/New Unity Project/Library/PackageCache/com.unity.ads@2.0.8/Editor/UnityEditor.Advertisements.dll</HintPath>

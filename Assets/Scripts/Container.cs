@@ -7,6 +7,7 @@ using System.Reflection;
 using Ntreev.Library.Commands;
 using JSSoft.Communication.Commands;
 using JSSoft.Communication.Services;
+using JSSoft.UI;
 
 namespace JSSoft.Communication.Shells
 {
@@ -20,6 +21,7 @@ namespace JSSoft.Communication.Shells
 
         static Container()
         {
+            var lazyTerminal = new Lazy<ITerminal>(GetTerminal);
             var lazyIShell = new Lazy<IShell>(GetShell);
             var lazyShell = new Lazy<Shell>(GetShell);
             var userService = new UserService();
@@ -31,6 +33,7 @@ namespace JSSoft.Communication.Shells
             serviceHosts = new IServiceHost[] { userServiceHost, dataServiceHost };
             serviceContext = new ClientContext(serviceHosts);
 
+            commandList.Add(new ResetCommand(lazyTerminal));
             commandList.Add(new CloseCommand(serviceContext, lazyShell));
             commandList.Add(new ExitCommand(lazyIShell));
             commandList.Add(new LoginCommand(lazyShell, lazyUserService));
@@ -50,7 +53,7 @@ namespace JSSoft.Communication.Shells
             {
                 return shell as T;
             }
-            else if(typeof(T) == typeof(CommandContext))
+            else if (typeof(T) == typeof(CommandContext))
             {
                 return commandContext as T;
             }
@@ -64,8 +67,12 @@ namespace JSSoft.Communication.Shells
 
         public static void Release()
         {
-            
+
         }
+
+        public static ITerminal GetTerminal() => Terminal;
+
+        public static ITerminal Terminal { get; set; }
 
         private static Shell GetShell() => shell;
     }
