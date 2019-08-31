@@ -12,7 +12,5 @@ namespace JSSoft.UI
         string Command { get; }
 
         string Prompt { get; set; }
-
-        Dispatcher Dispatcher {get;}
     }
 }

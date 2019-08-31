@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JSSoft.Communication.Services;
 using JSSoft.UI;
+using Ntreev.Library.Threading;
 using UnityEngine;
 //using Ntreev.Library.Commands;
 
@@ -17,9 +18,10 @@ namespace JSSoft.Communication.Shells
         private readonly INotifyUserService userServiceNotification;
         private bool isDisposed;
         private bool isServer = false;
-        private string prompt = ">";
+        private ITerminal terminal;
+        private Dispatcher dispatcher;
 
-        public Shell(CommandContext commandContext, IServiceContext serviceHost, INotifyUserService userServiceNotification)
+        public Shell(CommandContext commandContext, IServiceContext serviceHost, INotifyUserService userServiceNotification, ITerminal terminal)
         {
             this.settings = Settings.CreateFromCommandLine();
             this.serviceHost = serviceHost;
@@ -30,6 +32,9 @@ namespace JSSoft.Communication.Shells
             this.userServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
             this.userServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
             this.commandContext = commandContext;
+            this.terminal = terminal;
+            this.dispatcher = Dispatcher.Current;
+            this.terminal.Prompt = ">";
             this.Title = "Server";
         }
 
@@ -55,11 +60,17 @@ namespace JSSoft.Communication.Shells
             set => Console.Title = value;
         }
 
-        public string Prompt
-        {
-            get => this.prompt;
-            set => this.prompt = value;
-        }
+        // public string Prompt
+        // {
+        //     get => this.terminal != null ? this.terminal.Prompt : string.Empty;
+        //     set
+        //     {
+        //         if (this.terminal != null)
+        //         {
+        //             this.terminal.Prompt = value;
+        //         }
+        //     }
+        // }
 
         // public ITerminal Terminal
         // {
@@ -125,52 +136,61 @@ namespace JSSoft.Communication.Shells
 
         private void UpdatePrompt()
         {
+            this.dispatcher.VerifyAccess();
             if (this.IsOpened == true)
             {
-                this.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}>";
+                this.terminal.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}>";
                 if (this.UserID != string.Empty)
-                    this.Prompt += $"@{this.UserID}>";
+                    this.terminal.Prompt += $"@{this.UserID}>";
             }
             else
             {
-                this.Prompt = ">";
+                this.terminal.Prompt = ">";
             }
         }
 
-        private void ServiceHost_Opened(object sender, EventArgs e)
+        private async void ServiceHost_Opened(object sender, EventArgs e)
         {
-            this.IsOpened = true;
-            this.UpdatePrompt();
-
-            if (this.isServer)
+            await this.dispatcher.InvokeAsync(() =>
             {
-                this.Title = $"Server {this.serviceHost.Host}:{this.serviceHost.Port}";
-                this.Out.WriteLine("Server has started.");
-            }
-            else
+                this.IsOpened = true;
+                this.UpdatePrompt();
+                if (this.isServer)
+                {
+                    this.Title = $"Server {this.serviceHost.Host}:{this.serviceHost.Port}";
+                    this.Out.WriteLine("Server has started.");
+                }
+                else
+                {
+                    this.Title = $"Client {this.serviceHost.Host}:{this.serviceHost.Port}";
+                    this.Out.WriteLine("Server is connected.");
+                }
+                this.Out.WriteLine("type 'help' to show available commands.");
+                this.Out.WriteLine();
+                this.Out.WriteLine("type 'login admin admin' to login.");
+                this.Out.WriteLine();
+            });
+        }
+
+        private async void ServiceHost_Closed(object sender, EventArgs e)
+        {
+            await this.dispatcher.InvokeAsync(() =>
             {
-                this.Title = $"Client {this.serviceHost.Host}:{this.serviceHost.Port}";
-                this.Out.WriteLine("Server is connected.");
-            }
-            this.Out.WriteLine("type 'help' to show available commands.");
-            this.Out.WriteLine();
-            this.Out.WriteLine("type 'login admin admin' to login.");
-            this.Out.WriteLine();
+                this.IsOpened = false;
+                this.UpdatePrompt();
+                this.Title = $"Client - Disconnected";
+                this.Out.WriteLine("Server is disconnected.");
+                this.Out.WriteLine("type 'open' to connect server.");
+                this.Out.WriteLine();
+            });
         }
 
-        private void ServiceHost_Closed(object sender, EventArgs e)
+        private async void UserServiceNotification_LoggedIn(object sender, UserEventArgs e)
         {
-            this.IsOpened = false;
-            this.UpdatePrompt();
-            this.Title = $"Client - Disconnected";
-            this.Out.WriteLine("Server is disconnected.");
-            this.Out.WriteLine("type 'open' to connect server.");
-            this.Out.WriteLine();
-        }
-
-        private void UserServiceNotification_LoggedIn(object sender, UserEventArgs e)
-        {
-            this.Out.WriteLine($"User logged in: {e.UserID}");
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                this.Out.WriteLine($"User logged in: {e.UserID}");
+            });
         }
 
         private void UserServiceNotification_LoggedOut(object sender, UserEventArgs e)
@@ -215,12 +235,10 @@ namespace JSSoft.Communication.Shells
             this.serviceHost.Host = this.settings.Host;
             this.serviceHost.Port = this.settings.Port;
             this.Token = await this.serviceHost.OpenAsync();
-            //base.Start();
         }
 
         async Task IShell.StopAsync()
         {
-            //base.Cancel();
             if (this.serviceHost.IsOpened == true)
             {
                 this.serviceHost.Closed -= ServiceHost_Closed;

@@ -135,7 +135,7 @@ namespace JSSoft.UI
             this.UpdateLabel();
         }
 
-        public new void Reset()
+        public void ResetOutput()
         {
             this.refStack++;
             try
@@ -380,8 +380,6 @@ namespace JSSoft.UI
             eventData.Use();
         }
 
-        public Dispatcher Dispatcher { get; private set; }
-
         protected virtual string[] GetCompletion(string[] items, string find)
         {
             if (this.onCompletion != null)
@@ -397,11 +395,10 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.Dispatcher = Dispatcher.Current;
-            this.caretBlinkRate = 0;
-            this.customCaretColor = true;
-            this.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
-            this.caretWidth = (int)(this.pointSize * 0.7f) - 1;
+            // this.caretBlinkRate = 0;
+            // this.customCaretColor = true;
+            // this.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
+            // this.caretWidth = (int)(this.pointSize * 0.7f) - 1;
         }
 
         private void CompletionImpl(Func<string[], string, string> func)
@@ -559,6 +556,8 @@ namespace JSSoft.UI
         }
 
         #region ITerminal
+
+        void ITerminal.Reset() => this.ResetOutput();
 
         string ITerminal.Command => this.CommandText;
 

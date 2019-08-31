@@ -73,7 +73,6 @@
      <Compile Include="Assets\Scripts\CommandWriter.cs" />
      <Compile Include="Assets\Scripts\Container.cs" />
      <Compile Include="Assets\Scripts\DebugLogger.cs" />
-     <Compile Include="Assets\Scripts\DispatcherBehaviour.cs" />
      <Compile Include="Assets\Scripts\IShell.cs" />
      <Compile Include="Assets\Scripts\Services\Authority.cs" />
      <Compile Include="Assets\Scripts\Services\DataService.cs" />

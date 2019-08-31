@@ -12,28 +12,40 @@ namespace JSSoft.UI.Editor
         [MenuItem("Terminal/Test")]
         private static void Test2()
         {
-            var rect = Selection.activeGameObject.GetComponent<RectTransform>();
-            rect.offsetMax = new Vector2(rect.offsetMax.x + 1.0f, rect.offsetMax.y);
+            var selectedObject = Selection.activeGameObject;
+            if (selectedObject != null)
+            {
+                var selectedObjectRect = selectedObject.GetComponent<RectTransform>();
+                if (selectedObjectRect != null)
+                {
+                    Debug.Log($"offsetMin: {selectedObjectRect.offsetMin}");
+                    Debug.Log($"offsetMax: {selectedObjectRect.offsetMax}");
+                }
+            }
         }
 
         [MenuItem("GameObject/UI/Terminal")]
+        private static void CreateTerminalUI()
+        {
+            CreateTerminal();
+        }
+        
         private static void CreateTerminal()
         {
+            var width = 800.0f;
+            var height = 600.0f;
             var canvas = GameObject.FindObjectOfType<Canvas>();
             if (canvas == null)
             {
-                var canvasObj = new GameObject("Canvas");
-                canvas = canvasObj.AddComponent<Canvas>();
-                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-                canvasObj.AddComponent<CanvasScaler>();
-                canvasObj.AddComponent<GraphicRaycaster>();
+                EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
+                canvas = GameObject.FindObjectOfType<Canvas>();
             }
 
             var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular SDF.asset", typeof(TMP_FontAsset));
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
-            var terminalObj = new GameObject("Terminal");
-            var terminalRect = terminalObj.AddComponent<RectTransform>();            
+            var terminalObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
+            var terminalRect = terminalObj.AddComponent<RectTransform>();
             terminalObj.AddComponent<CanvasRenderer>();
             var terminalImage = terminalObj.AddComponent<Image>();
             terminalImage.sprite = backgroundSprite;
@@ -47,11 +59,11 @@ namespace JSSoft.UI.Editor
             terminalScript.restoreOriginalTextOnEscape = false;
             terminalScript.richText = false;
 
-            var textAreaObj = new GameObject("Text Area");
+            var textAreaObj = new GameObject("Text Area") { layer = canvas.gameObject.layer };
             var textAreaRect = textAreaObj.AddComponent<RectTransform>();
             textAreaObj.AddComponent<RectMask2D>();
 
-            var placeholderObj = new GameObject("Placeholder");
+            var placeholderObj = new GameObject("Placeholder") { layer = canvas.gameObject.layer };
             var placeholderRect = placeholderObj.AddComponent<RectTransform>();
             placeholderObj.AddComponent<CanvasRenderer>();
             var placeholderMesh = placeholderObj.AddComponent<TextMeshProUGUI>();
@@ -59,8 +71,8 @@ namespace JSSoft.UI.Editor
             placeholderMesh.extraPadding = false;
             placeholderMesh.font = fontAsset;
 
-            var textObj = new GameObject("Text");
-            var textRect = textObj.AddComponent<RectTransform>();            
+            var textObj = new GameObject("Text") { layer = canvas.gameObject.layer };
+            var textRect = textObj.AddComponent<RectTransform>();
             var textMesh = textObj.AddComponent<TextMeshProUGUI>();
 
             terminalScript.textViewport = textAreaRect;
@@ -73,12 +85,16 @@ namespace JSSoft.UI.Editor
             colorBlock.selectedColor = Color.black;
             colorBlock.pressedColor = Color.black;
             terminalScript.colors = colorBlock;
+            terminalScript.caretBlinkRate = 0;
+            terminalScript.customCaretColor = true;
+            terminalScript.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
+            terminalScript.caretWidth = (int)(terminalScript.pointSize * 0.7f) - 1;
 
             terminalRect.SetParent(canvas.GetComponent<RectTransform>());
             terminalRect.position = Vector3.zero;
-            terminalRect.sizeDelta = new Vector2(800, 600);
+            terminalRect.sizeDelta = new Vector2(width, height);
             terminalRect.anchoredPosition = new Vector2(0, 0);
-            
+
             textAreaRect.SetParent(terminalRect);
             textAreaRect.anchorMin = Vector3.zero;
             textAreaRect.anchorMax = Vector3.one;
@@ -97,6 +113,26 @@ namespace JSSoft.UI.Editor
             textRect.offsetMin = Vector2.zero;
             textRect.offsetMax = Vector2.zero;
 
+            Selection.activeObject = terminalObj;
+
+            EditorApplication.ExecuteMenuItem("GameObject/UI/Scrollbar");
+
+            var scrollbarObj = Selection.activeGameObject;
+            var scrollbarRect = scrollbarObj.GetComponent<RectTransform>();
+            var scrollbar = scrollbarObj.GetComponent<Scrollbar>();
+            var navigation = scrollbar.navigation;
+            navigation.mode = Navigation.Mode.Vertical;
+            scrollbar.direction = Scrollbar.Direction.TopToBottom;
+            scrollbar.size = 1.0f;
+            scrollbar.navigation = navigation;
+
+            scrollbarRect.SetParent(terminalRect);
+            scrollbarRect.anchorMin = new Vector2(1, 0.5f);
+            scrollbarRect.anchorMax = new Vector2(1, 0.5f);
+            scrollbarRect.offsetMax = new Vector2(0, height / 2);
+            scrollbarRect.offsetMin = new Vector2(-20, -height / 2);
+
+            terminalScript.verticalScrollbar = scrollbar;
             Selection.activeGameObject = terminalObj;
         }
     }

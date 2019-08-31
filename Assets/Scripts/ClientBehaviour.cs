@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.IO;
+using Ntreev.Library.Threading;
 
 namespace JSSoft.Communication.Shells
 {
@@ -19,30 +20,37 @@ namespace JSSoft.Communication.Shells
         private IShell shell;
         private CommandContext commandContext;
         private CommandWriter writer;
-        public Terminal terminal;
+        private DispatcherScheduler scheduler;
+        private Terminal terminal;
+
+        static ClientBehaviour()
+        {
+            JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
+        }
 
         public void Awake()
         {
-            JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
+            this.scheduler = DispatcherScheduler.Current;
             this.shell = Container.GetService<IShell>();
             this.commandContext = Container.GetService<CommandContext>();
+            this.terminal = Container.GetService<Terminal>();
         }
 
         public async Task Start()
         {
             if (this.terminal != null)
             {
-                Container.Terminal = this.terminal;
                 this.terminal.onExecuted.AddListener(this.terminal_onExecuted);
                 this.writer = new CommandWriter(this.terminal);
                 this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
                 this.terminal.ActivateInputField();
-                // Debug.Log("Start 1");
-                // Debug.Log("Start 2");
-                //await TestAsync();
             }
             await this.shell.StartAsync();
+            if (this.terminal != null)
+            {
+                this.terminal.ActivateInputField();
+            }
         }
 
         private async Task TestAsync()
@@ -56,31 +64,17 @@ namespace JSSoft.Communication.Shells
 
         public void Update()
         {
-            if (this.terminal != null)
-            {
-                if (this.shell.Prompt != this.terminal.Prompt)
-                {
-                    this.terminal.Prompt = this.shell.Prompt;
-                }
-                // var text = this.writer.GetString();
-                // if (text != null)
-                // {
-                //     this.terminal.Append(text);
-                // }
-            }
+            this.scheduler.ProcessAll();
         }
 
         public async void OnDestroy()
         {
             Debug.Log("OnDestroy 1");
-            //if (this.terminal != null)
-            {
-                Debug.Log("OnDestroy 2");
-                await this.shell.StopAsync();
-                this.shell.Dispose();
-                Debug.Log("OnDestroy ");
-                await TestAsync();
-            }
+            await this.shell.StopAsync();
+            Debug.Log("OnDestroy 2");
+            this.shell.Dispose();
+            Debug.Log("OnDestroy 3");
+            await TestAsync();
         }
 
         private void terminal_onExecuted(string command)
@@ -88,7 +82,7 @@ namespace JSSoft.Communication.Shells
             this.Run(command);
         }
 
-        public async void Run(string commandLine)
+        private async void Run(string commandLine)
         {
             try
             {

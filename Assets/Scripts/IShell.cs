@@ -11,7 +11,5 @@ namespace JSSoft.Communication.Shells
         Task StopAsync();
 
         string Title { get; set; }
-
-        string Prompt { get; set; }
     }
 }

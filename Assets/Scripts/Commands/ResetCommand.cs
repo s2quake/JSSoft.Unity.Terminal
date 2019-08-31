@@ -24,21 +24,24 @@ using System;
 using System.Threading.Tasks;
 using JSSoft.UI;
 using Ntreev.Library.Commands;
+using Ntreev.Library.Threading;
 
 namespace JSSoft.Communication.Commands
 {
     class ResetCommand : CommandBase
     {
         private readonly Lazy<ITerminal> terminal;
+        private Dispatcher dispatcher;
 
         public ResetCommand(Lazy<ITerminal> terminal)
         {
             this.terminal = terminal;
+            this.dispatcher = Dispatcher.Current;
         }
 
         protected override void OnExecute()
         {
-            this.Terminal.Dispatcher.Invoke(this.Terminal.Reset);
+            this.dispatcher.Invoke(this.Terminal.Reset);
         }
 
         private ITerminal Terminal => this.terminal.Value;

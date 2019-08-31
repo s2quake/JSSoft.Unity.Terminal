@@ -8,6 +8,7 @@ using Ntreev.Library.Commands;
 using JSSoft.Communication.Commands;
 using JSSoft.Communication.Services;
 using JSSoft.UI;
+using Terminal = JSSoft.UI.Terminal;
 
 namespace JSSoft.Communication.Shells
 {
@@ -18,6 +19,7 @@ namespace JSSoft.Communication.Shells
         private static CommandContext commandContext;
         private static ClientContext serviceContext;
         private static IServiceHost[] serviceHosts;
+        private static Terminal terminal;
 
         static Container()
         {
@@ -44,7 +46,8 @@ namespace JSSoft.Communication.Shells
             commandContext = new CommandContext(commandList, Enumerable.Empty<ICommandProvider>());
             commandContext.Name = "UnityCommand";
             commandContext.VerifyName = false;
-            shell = new Shell(commandContext, serviceContext, userService);
+            terminal = UnityEngine.GameObject.FindObjectOfType<Terminal>();
+            shell = new Shell(commandContext, serviceContext, userService, terminal);
         }
 
         public static T GetService<T>() where T : class
@@ -56,6 +59,10 @@ namespace JSSoft.Communication.Shells
             else if (typeof(T) == typeof(CommandContext))
             {
                 return commandContext as T;
+            }
+            else if (typeof(T) == typeof(ITerminal) || typeof(T) == typeof(Terminal))
+            {
+                return terminal as T;
             }
             throw new NotImplementedException();
         }
@@ -70,9 +77,7 @@ namespace JSSoft.Communication.Shells
 
         }
 
-        public static ITerminal GetTerminal() => Terminal;
-
-        public static ITerminal Terminal { get; set; }
+        public static ITerminal GetTerminal() => terminal;
 
         private static Shell GetShell() => shell;
     }
