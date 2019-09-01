@@ -714,7 +714,7 @@ MonoBehaviour:
   m_CaretBlinkRate: 0
   m_CaretWidth: 15
   m_ReadOnly: 0
-  m_RichText: 0
+  m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: 10fbfe21dd10540078b32174948713bc, type: 2}
   m_OnFocusSelectAll: 0
   m_ResetOnDeActivation: 0
@@ -1011,7 +1011,7 @@ MonoBehaviour:
   m_enableKerning: 1
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
-  m_isRichText: 0
+  m_isRichText: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0

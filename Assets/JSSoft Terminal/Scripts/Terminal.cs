@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using Ntreev.Library.Threading;
 using TMPro;
 using UnityEngine;
@@ -23,8 +24,8 @@ namespace JSSoft.UI
         private string outputText = string.Empty;
         private string prompt = string.Empty;
         private string inputText = string.Empty;
+        private string commandText = string.Empty;
         private string completion;
-        private int refStack = 0;
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
@@ -42,83 +43,79 @@ namespace JSSoft.UI
 
         static Terminal()
         {
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, 
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow,
                             (t) => t.PrevHistory(), (t) => t.isReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, 
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow,
                             (t) => t.NextHistory(), (t) => t.isReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return, 
-                            (t) => t.Execute(), (t) => t.isReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter, 
-                            (t) => t.Execute(), (t) => t.isReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, 
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow,
                             (t) => true, (t) => t.caretPosition <= t.outputText.Length + t.prompt.Length));
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Tab, 
+            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return,
+                            (t) => t.Execute(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter,
+                            (t) => t.Execute(), (t) => t.isReadOnly == false));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace,
+                            (t) => true, (t) => t.caretPosition <= t.outputText.Length + t.prompt.Length));
+            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Tab,
                             (t) => t.NextCompletion(), (t) => t.isReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.Shift, KeyCode.Tab, 
+            AddBinding(new KeyBinding(EventModifiers.Shift, KeyCode.Tab,
                             (t) => t.PrevCompletion(), (t) => t.isReadOnly == false));
             if (IsMac == true)
             {
-                AddBinding(new KeyBinding(EventModifiers.Control, KeyCode.U, 
+                AddBinding(new KeyBinding(EventModifiers.Control, KeyCode.U,
                             (t) => t.Clear(), (t) => t.isReadOnly == false));
-                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow, 
+                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow,
                             (t) => t.MoveToFirst()));
-                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, 
+                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow,
                             (t) => t.MoveToLast()));
             }
             if (IsWindows == true)
             {
-                AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Escape, 
+                AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Escape,
                             (t) => t.Clear(), (t) => t.isReadOnly == false));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, 
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home,
                             (t) => t.MoveToFirst()));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, 
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.End,
                             (t) => t.MoveToLast()));
             }
         }
 
         public void Execute()
         {
-            this.refStack++;
-            try
+            var commandText = this.commandText;
+            var promptText = this.promptText;
+            if (this.histories.Contains(commandText) == false)
             {
-                var commandText = this.CommandText;
-                this.Text = commandText;
-                if (this.histories.Contains(this.Text) == false)
-                {
-                    this.histories.Add(this.Text);
-                    this.historyIndex = this.histories.Count;
-                }
-                else
-                {
-                    this.historyIndex = this.histories.LastIndexOf(this.Text) + 1;
-                }
-
-                this.promptText = string.Empty;
-                this.inputText = string.Empty;
-                this.completion = string.Empty;
-                this.AppendLine(this.Prompt + commandText);
-
-                if (this.executedEvent != null)
-                {
-                    this.readOnly = true;
-                    this.executedEvent.Invoke(commandText);
-                }
-                else
-                {
-                    this.InsertPrompt();
-                }
+                this.histories.Add(commandText);
+                this.historyIndex = this.histories.Count;
             }
-            finally
+            else
             {
-                this.refStack--;
+                this.historyIndex = this.histories.LastIndexOf(commandText) + 1;
+            }
+
+            this.promptText = string.Empty;
+            this.inputText = string.Empty;
+            this.commandText = string.Empty;
+            this.completion = string.Empty;
+            this.AppendLine(promptText);
+
+            if (this.executedEvent != null)
+            {
+                this.readOnly = true;
+                this.executedEvent.Invoke(commandText);
+            }
+            else
+            {
+                this.InsertPrompt();
             }
         }
 
         public void Clear()
         {
-            this.promptText = this.prompt;
             this.inputText = string.Empty;
+            this.commandText = string.Empty;
             this.completion = string.Empty;
+            this.promptText = this.prompt;
             this.text = this.outputText + this.promptText;
             this.caretPosition = this.text.Length;
         }
@@ -137,21 +134,20 @@ namespace JSSoft.UI
 
         public void ResetOutput()
         {
-            this.refStack++;
-            try
-            {
-                this.outputText = string.Empty;
-                this.inputText = string.Empty;
-                this.promptText = this.prompt;
-                this.text = this.outputText + this.promptText;
-                this.caretPosition = this.text.Length;
-                this.caretBlinkRate = 1;
-                this.caretBlinkRate = 0;
-            }
-            finally
-            {
-                this.refStack--;
-            }
+            this.outputText = string.Empty;
+            this.inputText = string.Empty;
+            this.commandText = string.Empty;
+            this.completion = string.Empty;
+            this.promptText = this.prompt;
+            this.text = this.outputText + this.promptText;
+            this.caretPosition = this.text.Length;
+            // this.caretBlinkRate = 1;
+            // CanvasUpdateRegistry.RegisterCanvasElementForGraphicRebuild(this);
+            // await Task.Delay(400);
+            // this.caretBlinkRate = 0;
+            // Debug.Log(this.isFocused);
+            // Debug.Log(stringPositionInternal != stringSelectPositionInternal);
+            // this.UpdateLabel();
         }
 
         public new void Append(string text)
@@ -164,7 +160,7 @@ namespace JSSoft.UI
             this.AppendInternal(text + Environment.NewLine);
         }
 
-        public string Text { get; private set; }
+        // public string Text { get; private set; }
 
         public string Prompt
         {
@@ -174,8 +170,8 @@ namespace JSSoft.UI
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
                 this.prompt = value;
-                this.promptText = this.prompt + this.inputText;
-                this.text = this.outputText + this.prompt + this.inputText;
+                this.promptText = this.prompt + this.commandText;
+                this.text = this.outputText + this.promptText;
                 if (this.isReadOnly == false)
                 {
                     this.caretPosition = this.text.Length;
@@ -185,37 +181,21 @@ namespace JSSoft.UI
 
         public void NextCompletion()
         {
-            this.refStack++;
-            try
-            {
-                this.CompletionImpl(NextCompletion);
-                this.caretPosition = this.text.Length;
-            }
-            finally
-            {
-                this.refStack--;
-            }
+            this.CompletionImpl(NextCompletion);
+            this.caretPosition = this.text.Length;
         }
 
         public void PrevCompletion()
         {
-            this.refStack++;
-            try
-            {
-                this.CompletionImpl(PrevCompletion);
-                this.caretPosition = this.text.Length;
-            }
-            finally
-            {
-                this.refStack--;
-            }
+            this.CompletionImpl(PrevCompletion);
+            this.caretPosition = this.text.Length;
         }
 
         public void NextHistory()
         {
             if (this.historyIndex + 1 < this.histories.Count)
             {
-                this.inputText = this.CommandText = this.histories[this.historyIndex + 1];
+                this.inputText = this.commandText = this.histories[this.historyIndex + 1];
                 this.MoveToLast();
                 this.historyIndex++;
             }
@@ -225,13 +205,13 @@ namespace JSSoft.UI
         {
             if (this.historyIndex > 0)
             {
-                this.inputText = this.CommandText = this.histories[this.historyIndex - 1];
+                this.inputText = this.commandText = this.histories[this.historyIndex - 1];
                 this.MoveToLast();
                 this.historyIndex--;
             }
             else if (this.histories.Count == 1)
             {
-                this.inputText = this.CommandText = this.histories[0];
+                this.inputText = this.commandText = this.histories[0];
                 this.MoveToLast();
                 this.historyIndex = 0;
             }
@@ -239,21 +219,13 @@ namespace JSSoft.UI
 
         public void InsertPrompt()
         {
-            this.refStack++;
-            try
-            {
-                this.promptText = string.Empty;
-                this.inputText = string.Empty;
-                this.completion = string.Empty;
-                this.promptText = this.Prompt;
-                this.text = this.outputText + this.Prompt;
-                this.caretPosition = this.text.Length;
-                this.readOnly = false;
-            }
-            finally
-            {
-                this.refStack--;
-            }
+            this.promptText = string.Empty;
+            this.inputText = string.Empty;
+            this.completion = string.Empty;
+            this.promptText = this.Prompt;
+            this.text = this.outputText + this.prompt;
+            this.caretPosition = this.text.Length;
+            this.readOnly = false;
         }
 
         public static Match[] MatchCompletion(string text)
@@ -334,15 +306,23 @@ namespace JSSoft.UI
             if (!isFocused)
                 return;
 
-            bool consumedEvent = false;
-            while (Event.PopEvent(processingEvent))
+            var consumedEvent = false;
+            var promptText = this.promptText;
+            while (Event.PopEvent(this.processingEvent))
             {
-                if (processingEvent.rawType == EventType.KeyDown)
+                if (this.processingEvent.rawType == EventType.KeyDown)
                 {
-                    if (this.OnPreviewKeyDown(processingEvent) == true)
+                    var keyCode = this.processingEvent.keyCode;
+                    var modifiers = this.processingEvent.modifiers;
+                    var key = $"{modifiers}+{keyCode}";
+                    if (this.OnPreviewKeyDown(this.processingEvent) == true)
+                    {
+                        Debug.Log($"{key}: true");
                         continue;
+                    }
                     consumedEvent = true;
-                    var shouldContinue = KeyPressed(processingEvent);
+                    Debug.Log($"{key}: false");
+                    var shouldContinue = KeyPressed(this.processingEvent);
                     if (shouldContinue == EditState.Finish)
                     {
                         //SendOnSubmit();
@@ -351,11 +331,11 @@ namespace JSSoft.UI
                     }
                 }
 
-                switch (processingEvent.type)
+                switch (this.processingEvent.type)
                 {
                     case EventType.ValidateCommand:
                     case EventType.ExecuteCommand:
-                        switch (processingEvent.commandName)
+                        switch (this.processingEvent.commandName)
                         {
                             case "SelectAll":
                                 SelectAll();
@@ -368,16 +348,42 @@ namespace JSSoft.UI
 
             if (consumedEvent)
             {
-                UpdateLabel();
-                if (this.refStack == 0)
+                this.promptText = this.text.Substring(this.outputText.Length);
+                if (this.promptText != string.Empty)
                 {
-                    this.promptText = this.text.Substring(this.outputText.Length);
-                    this.inputText = this.promptText.Substring(this.prompt.Length);
-                    this.completion = string.Empty;
+                    this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
                 }
+                this.completion = string.Empty;
+                Debug.Log($"InputText: \"{inputText}\"");
+                UpdateLabel();
             }
             this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
             eventData.Use();
+        }
+
+        public override void Rebuild(CanvasUpdate update)
+        {
+            base.Rebuild(update);
+
+            // if (this.textComponent.textInfo)
+            // {
+
+            // }
+
+            //switch (update)
+            {
+                // case CanvasUpdate.LatePreRender:
+                {
+                    // if (this.textComponent.textInfo.characterInfo.Length > 0)
+                    // {
+                    //     this.textComponent.textInfo.characterInfo[0].color = new Color(255, 0, 0);
+                    //     this.textComponent.textInfo.characterInfo[0].highlightColor = new Color(1, 0, 0);
+                    // }
+                }
+                // break;
+            }
+
+            
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)
@@ -408,7 +414,7 @@ namespace JSSoft.UI
                 if (binding.Verify(this) == true && binding.Action(this) == true)
                     return true;
             }
-            Debug.Log($"{modifiers}+{keyCode}");
+            // Debug.Log($"{modifiers}+{keyCode}");
             if (e.character == '\n' || e.character == '\t' || e.character == 25)
             {
                 return true;
@@ -468,71 +474,26 @@ namespace JSSoft.UI
 
                 if (prefix == true || postfix == true)
                 {
-                    this.promptText = this.Prompt + leftText + "\"" + this.completion + "\"";
+                    this.commandText = leftText + "\"" + this.completion + "\"";
                 }
                 else
                 {
-                    this.promptText = this.Prompt + leftText + this.completion;
+                    this.commandText = leftText + this.completion;
                 }
+                this.promptText = this.prompt + this.commandText;
                 this.inputText = inputText;
                 this.text = this.outputText + this.promptText;
                 this.caretPosition = this.text.Length;
             }
         }
 
-        private void TextBox_TextChanged(string arg0)
-        {
-            if (this.refStack > 0)
-                return;
-
-            this.promptText = this.text.Substring(this.outputText.Length);
-            this.inputText = this.promptText.Substring(this.prompt.Length);
-            this.completion = string.Empty;
-        }
-
-        private void RefreshPrompt()
-        {
-            this.refStack++;
-            this.Clear();
-            this.refStack--;
-        }
-
         private void AppendInternal(string text)
         {
-            this.refStack++;
-            try
-            {
-                var isEnd = this.caretPosition == this.text.Length;
-                this.outputText += text;
-                this.text = this.outputText + this.promptText;
-                if (isEnd == true)
-                    this.caretPosition = this.text.Length;
-            }
-            finally
-            {
-                this.refStack--;
-            }
-        }
-
-        private string CommandText
-        {
-            get
-            {
-                return this.promptText.Substring(this.Prompt.Length);
-            }
-            set
-            {
-                this.refStack++;
-                try
-                {
-                    this.promptText = this.Prompt + value;
-                    this.text = this.outputText + this.promptText;
-                }
-                finally
-                {
-                    this.refStack--;
-                }
-            }
+            var isEnd = this.caretPosition == this.text.Length;
+            this.outputText += text;
+            this.text = this.outputText + this.promptText;
+            if (isEnd == true)
+                this.caretPosition = this.text.Length;
         }
 
         private static void AddBinding(IKeyBinding binding)
@@ -555,7 +516,7 @@ namespace JSSoft.UI
 
         void ITerminal.Reset() => this.ResetOutput();
 
-        string ITerminal.Command => this.CommandText;
+        string ITerminal.Command => this.commandText;
 
         string ITerminal.Prompt
         {
