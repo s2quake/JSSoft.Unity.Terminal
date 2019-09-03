@@ -29,11 +29,13 @@ namespace JSSoft.UI
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
+        private Color32?[] foregroundColors = new Color32?[] { };
+        private Color32?[] backgroundColors = new Color32?[] { };
 
         private Event processingEvent = new Event();
-        private ExecutedEent executedEvent = new ExecutedEent();
+        private ExecutedEvent executedEvent = new ExecutedEvent();
 
-        public ExecutedEent onExecuted
+        public ExecutedEvent onExecuted
         {
             get => executedEvent;
             set => executedEvent = value;
@@ -159,8 +161,6 @@ namespace JSSoft.UI
         {
             this.AppendInternal(text + Environment.NewLine);
         }
-
-        // public string Text { get; private set; }
 
         public string Prompt
         {
@@ -383,8 +383,18 @@ namespace JSSoft.UI
                 // break;
             }
 
-            
+
         }
+
+        public void ResetColor()
+        {
+            this.ForegroundColor = null;
+            this.BackgroundColor = null;
+        }
+
+        public Color32? ForegroundColor { get; set; }
+
+        public Color32? BackgroundColor { get; set; }
 
         protected virtual string[] GetCompletion(string[] items, string find)
         {
@@ -490,10 +500,22 @@ namespace JSSoft.UI
         private void AppendInternal(string text)
         {
             var isEnd = this.caretPosition == this.text.Length;
+            var index = this.outputText.Length;
             this.outputText += text;
             this.text = this.outputText + this.promptText;
             if (isEnd == true)
                 this.caretPosition = this.text.Length;
+            var foregroundColors = new Color32?[this.outputText.Length];
+            var backgroundColors = new Color32?[this.outputText.Length];
+            this.foregroundColors.CopyTo(foregroundColors, 0);
+            this.backgroundColors.CopyTo(backgroundColors, 0);
+            this.foregroundColors = foregroundColors;
+            this.backgroundColors = backgroundColors;
+            for (var i = index; i < this.outputText.Length; i++)
+            {
+                this.foregroundColors[i] = this.ForegroundColor;
+                this.backgroundColors[i] = this.BackgroundColor;
+            }
         }
 
         private static void AddBinding(IKeyBinding binding)
@@ -505,9 +527,18 @@ namespace JSSoft.UI
 
         private static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
 
+        internal Color32? GetForegroundColor(int index)
+        {
+            if (index < this.foregroundColors.Length)
+            {
+                return this.foregroundColors[index];
+            }
+            return null;
+        }
+
         public delegate string[] OnCompletion(string[] items, string find);
 
-        public class ExecutedEent : UnityEvent<string>
+        public class ExecutedEvent : UnityEvent<string>
         {
 
         }

@@ -51,13 +51,13 @@ namespace JSSoft.UI.Editor
             terminalImage.sprite = backgroundSprite;
             terminalImage.type = Image.Type.Sliced;
 
-            var terminalScript = terminalObj.AddComponent<Terminal>();
-            terminalScript.targetGraphic = terminalImage;
-            terminalScript.lineType = TMP_InputField.LineType.MultiLineSubmit;
-            terminalScript.onFocusSelectAll = false;
-            terminalScript.resetOnDeActivation = false;
-            terminalScript.restoreOriginalTextOnEscape = false;
-            terminalScript.richText = false;
+            var terminal = terminalObj.AddComponent<Terminal>();
+            terminal.targetGraphic = terminalImage;
+            terminal.lineType = TMP_InputField.LineType.MultiLineSubmit;
+            terminal.onFocusSelectAll = false;
+            terminal.resetOnDeActivation = false;
+            terminal.restoreOriginalTextOnEscape = false;
+            terminal.richText = false;
 
             var textAreaObj = new GameObject("Text Area") { layer = canvas.gameObject.layer };
             var textAreaRect = textAreaObj.AddComponent<RectTransform>();
@@ -73,22 +73,24 @@ namespace JSSoft.UI.Editor
 
             var textObj = new GameObject("Text") { layer = canvas.gameObject.layer };
             var textRect = textObj.AddComponent<RectTransform>();
-            var textMesh = textObj.AddComponent<TextMeshProUGUI>();
+            var textMesh = textObj.AddComponent<TerminalText>();
+            textMesh.terminal = terminal;
+            textMesh.richText = false;
 
-            terminalScript.textViewport = textAreaRect;
-            terminalScript.textComponent = textMesh;
-            terminalScript.fontAsset = fontAsset;
-            terminalScript.pointSize = 24;
+            terminal.textViewport = textAreaRect;
+            terminal.textComponent = textMesh;
+            terminal.fontAsset = fontAsset;
+            terminal.pointSize = 24;
             var colorBlock = ColorBlock.defaultColorBlock;
             colorBlock.normalColor = Color.black;
             colorBlock.highlightedColor = Color.black;
             colorBlock.selectedColor = Color.black;
             colorBlock.pressedColor = Color.black;
-            terminalScript.colors = colorBlock;
-            terminalScript.caretBlinkRate = 0;
-            terminalScript.customCaretColor = true;
-            terminalScript.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
-            terminalScript.caretWidth = (int)(terminalScript.pointSize * 0.7f) - 1;
+            terminal.colors = colorBlock;
+            terminal.caretBlinkRate = 0;
+            terminal.customCaretColor = true;
+            terminal.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
+            terminal.caretWidth = (int)(terminal.pointSize * 0.7f) - 1;
 
             terminalRect.SetParent(canvas.GetComponent<RectTransform>());
             terminalRect.position = Vector3.zero;
@@ -132,7 +134,7 @@ namespace JSSoft.UI.Editor
             scrollbarRect.offsetMax = new Vector2(0, height / 2);
             scrollbarRect.offsetMin = new Vector2(-20, -height / 2);
 
-            terminalScript.verticalScrollbar = scrollbar;
+            terminal.verticalScrollbar = scrollbar;
             Selection.activeGameObject = terminalObj;
         }
     }

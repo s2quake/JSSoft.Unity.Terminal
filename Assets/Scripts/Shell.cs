@@ -168,8 +168,10 @@ namespace JSSoft.Communication.Shells
                 }
                 else
                 {
+                    this.terminal.ForegroundColor = TerminalColors.Red;
                     this.Title = $"Client {this.serviceHost.Host}:{this.serviceHost.Port}";
                     this.Out.WriteLine("Server is connected.");
+                    this.terminal.ResetColor();
                 }
                 this.Out.WriteLine("type 'help' to show available commands.");
                 this.Out.WriteLine();

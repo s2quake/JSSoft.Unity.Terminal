@@ -59,6 +59,8 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingBase.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Terminal.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColors.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalText.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
      <Compile Include="Assets\Scripts\CommandContext.cs" />

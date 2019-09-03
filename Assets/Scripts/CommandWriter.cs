@@ -23,26 +23,30 @@ namespace JSSoft.Communication.Shells
 
         public override void Write(char value)
         {
+            this.dispatcher.VerifyAccess();
             base.Write(value);
-            this.dispatcher.InvokeAsync(() => this.terminal.Append(value.ToString()));
+            this.terminal.Append(value.ToString());
         }
 
         public override void WriteLine()
         {
+            this.dispatcher.VerifyAccess();
             base.WriteLine();
-            this.dispatcher.InvokeAsync(() => this.terminal.Append(Environment.NewLine));
+            this.terminal.Append(Environment.NewLine);
         }
 
         public override void WriteLine(string value)
         {
+            this.dispatcher.VerifyAccess();
             base.WriteLine(value);
-            this.dispatcher.InvokeAsync(() => this.terminal.Append(value + Environment.NewLine));
+            this.terminal.Append(value + Environment.NewLine);
         }
 
         public override void Write(string value)
         {
+            this.dispatcher.VerifyAccess();
             base.Write(value);
-            this.dispatcher.InvokeAsync(() => this.terminal.Append(value));
+            this.terminal.Append(value);
         }
     }
 }
