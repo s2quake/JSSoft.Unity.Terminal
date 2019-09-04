@@ -34,6 +34,10 @@ namespace JSSoft.UI
                     m_textInfo.characterInfo[m_characterCount].vertex_TR.color = foregroundColor;
                     m_textInfo.characterInfo[m_characterCount].vertex_BR.color = foregroundColor;
                 }
+                //if (this.terminal.GetBackgroundColor(m_characterCount) is Color32 backgroundColor)
+                {
+                    m_textInfo.characterInfo[m_characterCount].color = TerminalColors.Blue;
+                }
             }
         }
     }

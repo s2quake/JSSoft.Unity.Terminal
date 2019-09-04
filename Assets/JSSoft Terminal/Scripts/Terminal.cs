@@ -31,6 +31,8 @@ namespace JSSoft.UI
         private bool isChanged;
         private Color32?[] foregroundColors = new Color32?[] { };
         private Color32?[] backgroundColors = new Color32?[] { };
+        private Color32?[] promptForegroundColors = new Color32?[] { };
+        private Color32?[] promptBackgroundColors = new Color32?[] { };
 
         private Event processingEvent = new Event();
         private ExecutedEvent executedEvent = new ExecutedEvent();
@@ -42,6 +44,8 @@ namespace JSSoft.UI
         }
 
         public OnCompletion onCompletion { get; set; }
+
+        public OnDrawPrompt onDrawPrompt { get; set; }
 
         static Terminal()
         {
@@ -171,6 +175,12 @@ namespace JSSoft.UI
                     throw new ArgumentNullException(nameof(value));
                 this.prompt = value;
                 this.promptText = this.prompt + this.commandText;
+                this.promptForegroundColors = new Color32?[this.prompt.Length];
+                this.promptBackgroundColors = new Color32?[this.prompt.Length];
+                if (this.onDrawPrompt != null)
+                {
+                    this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                }
                 this.text = this.outputText + this.promptText;
                 if (this.isReadOnly == false)
                 {
@@ -533,10 +543,27 @@ namespace JSSoft.UI
             {
                 return this.foregroundColors[index];
             }
+            var promptIndex = index - this.outputText.Length;
+            if (promptIndex >= 0 && promptIndex < this.promptForegroundColors.Length)
+            {
+                return this.promptForegroundColors[promptIndex];
+            }
             return null;
         }
 
-        public delegate string[] OnCompletion(string[] items, string find);
+        internal Color32? GetBackgroundColor(int index)
+        {
+            if (index < this.backgroundColors.Length)
+            {
+                return this.backgroundColors[index];
+            }
+            var promptIndex = index - this.outputText.Length;
+            if (promptIndex >= 0 && promptIndex < this.promptBackgroundColors.Length)
+            {
+                return this.promptBackgroundColors[promptIndex];
+            }
+            return null;
+        }
 
         public class ExecutedEvent : UnityEvent<string>
         {

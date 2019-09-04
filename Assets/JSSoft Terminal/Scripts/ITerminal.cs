@@ -19,5 +19,13 @@ namespace JSSoft.UI
         Color32? ForegroundColor { get; set; }
 
         Color32? BackgroundColor { get; set; }
+
+        OnCompletion onCompletion { get; set; }
+
+        OnDrawPrompt onDrawPrompt { get; set; }
     }
+
+    public delegate string[] OnCompletion(string[] items, string find);
+
+    public delegate void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors);
 }

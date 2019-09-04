@@ -34,6 +34,7 @@ namespace JSSoft.Communication.Shells
             this.commandContext = commandContext;
             this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
+            this.terminal.onDrawPrompt = this.OnDrawPrompt;
             this.terminal.Prompt = ">";
             this.Title = "Server";
         }
@@ -85,30 +86,23 @@ namespace JSSoft.Communication.Shells
         //     }
         // }
 
-        // protected override void OnDrawPrompt(TextWriter writer, string prompt)
-        // {
-        //     if (this.UserID == string.Empty)
-        //     {
-        //         base.OnDrawPrompt(writer, prompt);
-        //     }
-        //     else
-        //     {
-        //         Console.ResetColor();
-        //         var pattern = $"(.+@)(.+){this.Postfix}";
-        //         var match = Regex.Match(prompt, pattern);
-        //         var p1 = prompt.TrimStart();
-        //         var p2 = prompt.TrimEnd();
-        //         var prefix = prompt.Substring(p1.Length);
-        //         var postfix = prompt.Substring(p2.Length);
-        //         writer.Write(match.Groups[1].Value);
-        //         using (TerminalColor.SetForeground(ConsoleColor.Green))
-        //         {
-        //             writer.Write(match.Groups[2].Value);
-        //         }
-        //         Console.ResetColor();
-        //         writer.Write(this.Postfix);
-        //     }
-        // }
+        private void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors)
+        {
+            if (this.UserID != string.Empty)
+            {
+                var pattern = $"(.+@)(.+)>";
+                var match = Regex.Match(prompt, pattern);
+                var p1 = prompt.TrimStart();
+                var p2 = prompt.TrimEnd();
+                var prefix = prompt.Substring(p1.Length);
+                var postfix = prompt.Substring(p2.Length);
+                var group = match.Groups[2];
+                for (var i = 0; i < group.Length; i++)
+                {
+                    foregroundColors[group.Index + i] = TerminalColors.Green;
+                }
+            }
+        }
 
         internal async Task LoginAsync(string userID, Guid token)
         {
@@ -215,17 +209,15 @@ namespace JSSoft.Communication.Shells
             {
                 if (e.Sender == this.UserID)
                 {
-                    // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
-                    {
-                        this.Out.WriteLine($"to '{e.Receiver}': {e.Message}");
-                    }
+                    this.terminal.ForegroundColor = TerminalColors.Magenta;
+                    this.Out.WriteLine($"to '{e.Receiver}': {e.Message}");
+                    this.terminal.ResetColor();
                 }
                 else if (e.Receiver == this.UserID)
                 {
-                    // using (TerminalColor.SetForeground(ConsoleColor.Magenta))
-                    {
-                        this.Out.WriteLine($"from '{e.Receiver}': {e.Message}");
-                    }
+                    this.terminal.ForegroundColor = TerminalColors.Magenta;
+                    this.Out.WriteLine($"from '{e.Receiver}': {e.Message}");
+                    this.terminal.ResetColor();
                 }
             });
         }
