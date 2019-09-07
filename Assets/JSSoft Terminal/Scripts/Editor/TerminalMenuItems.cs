@@ -41,7 +41,7 @@ namespace JSSoft.UI.Editor
                 canvas = GameObject.FindObjectOfType<Canvas>();
             }
 
-            var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular SDF.asset", typeof(TMP_FontAsset));
+            var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular.asset", typeof(TMP_FontAsset));
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
             var terminalObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
