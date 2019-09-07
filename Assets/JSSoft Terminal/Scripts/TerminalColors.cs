@@ -21,5 +21,7 @@ namespace JSSoft.UI
         public static readonly Color32 Magenta = new Color32(255, 0, 255, 255);
         public static readonly Color32 Yellow = new Color32(255, 255, 0, 255);
         public static readonly Color32 White = new Color32(255, 255, 255, 255);
+
+        internal static readonly Color32 Transparent = new Color32(0, 0, 0, 0);
     }
 }

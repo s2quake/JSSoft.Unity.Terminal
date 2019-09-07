@@ -539,6 +539,10 @@ namespace JSSoft.UI
 
         internal Color32? GetForegroundColor(int index)
         {
+            if (index < this.text.Length && this.text[index] == ' ')
+            {
+                return TerminalColors.Transparent;
+            }
             if (index < this.foregroundColors.Length)
             {
                 return this.foregroundColors[index];
