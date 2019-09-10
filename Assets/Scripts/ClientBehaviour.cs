@@ -64,7 +64,15 @@ namespace JSSoft.Communication.Shells
 
         public void Update()
         {
-            this.scheduler.ProcessAll();
+            var dateTime = DateTime.Now;
+            var count = 0;
+            while (this.scheduler.ProcessOnce())
+            {
+                count++;
+                var span = DateTime.Now - dateTime;
+                if (span.TotalMilliseconds > 300)
+                    break;
+            }
         }
 
         public async void OnDestroy()

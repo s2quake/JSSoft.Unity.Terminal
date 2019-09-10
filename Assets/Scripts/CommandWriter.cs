@@ -23,30 +23,50 @@ namespace JSSoft.Communication.Shells
 
         public override void Write(char value)
         {
-            this.dispatcher.VerifyAccess();
-            base.Write(value);
-            this.terminal.Append(value.ToString());
+            if (this.dispatcher.CheckAccess() == true)
+            {
+                this.terminal.Append(value.ToString());
+            }
+            else
+            {
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(value.ToString()));
+            }
         }
 
         public override void WriteLine()
         {
-            this.dispatcher.VerifyAccess();
-            base.WriteLine();
-            this.terminal.Append(Environment.NewLine);
+            if (this.dispatcher.CheckAccess() == true)
+            {
+                this.terminal.Append(Environment.NewLine);
+            }
+            else
+            {
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(Environment.NewLine));
+            }
         }
 
         public override void WriteLine(string value)
         {
-            this.dispatcher.VerifyAccess();
-            base.WriteLine(value);
-            this.terminal.Append(value + Environment.NewLine);
+            if (this.dispatcher.CheckAccess() == true)
+            {
+                this.terminal.Append(value + Environment.NewLine);
+            }
+            else
+            {
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(value + Environment.NewLine));
+            }
         }
 
         public override void Write(string value)
         {
-            this.dispatcher.VerifyAccess();
-            base.Write(value);
-            this.terminal.Append(value);
+            if (this.dispatcher.CheckAccess() == true)
+            {
+                this.terminal.Append(value);
+            }
+            else
+            {
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(value));
+            }
         }
     }
 }

@@ -145,15 +145,10 @@ namespace JSSoft.UI
             this.commandText = string.Empty;
             this.completion = string.Empty;
             this.promptText = this.prompt;
+            this.foregroundColors = new Color32?[] { };
+            this.backgroundColors = new Color32?[] { };
             this.text = this.outputText + this.promptText;
             this.caretPosition = this.text.Length;
-            // this.caretBlinkRate = 1;
-            // CanvasUpdateRegistry.RegisterCanvasElementForGraphicRebuild(this);
-            // await Task.Delay(400);
-            // this.caretBlinkRate = 0;
-            // Debug.Log(this.isFocused);
-            // Debug.Log(stringPositionInternal != stringSelectPositionInternal);
-            // this.UpdateLabel();
         }
 
         public new void Append(string text)
@@ -371,31 +366,6 @@ namespace JSSoft.UI
             eventData.Use();
         }
 
-        public override void Rebuild(CanvasUpdate update)
-        {
-            base.Rebuild(update);
-
-            // if (this.textComponent.textInfo)
-            // {
-
-            // }
-
-            //switch (update)
-            {
-                // case CanvasUpdate.LatePreRender:
-                {
-                    // if (this.textComponent.textInfo.characterInfo.Length > 0)
-                    // {
-                    //     this.textComponent.textInfo.characterInfo[0].color = new Color(255, 0, 0);
-                    //     this.textComponent.textInfo.characterInfo[0].highlightColor = new Color(1, 0, 0);
-                    // }
-                }
-                // break;
-            }
-
-
-        }
-
         public void ResetColor()
         {
             this.ForegroundColor = null;
@@ -557,6 +527,8 @@ namespace JSSoft.UI
 
         internal Color32? GetBackgroundColor(int index)
         {
+            // if (index % 3 != 0)
+            //     return TerminalColors.Blue;
             if (index < this.backgroundColors.Length)
             {
                 return this.backgroundColors[index];

@@ -41,7 +41,7 @@ namespace JSSoft.UI.Editor
                 canvas = GameObject.FindObjectOfType<Canvas>();
             }
 
-            var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular.asset", typeof(TMP_FontAsset));
+            var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular SDF.asset", typeof(TMP_FontAsset));
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
             var terminalObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
@@ -63,19 +63,21 @@ namespace JSSoft.UI.Editor
             var textAreaRect = textAreaObj.AddComponent<RectTransform>();
             textAreaObj.AddComponent<RectMask2D>();
 
-            var placeholderObj = new GameObject("Placeholder") { layer = canvas.gameObject.layer };
-            var placeholderRect = placeholderObj.AddComponent<RectTransform>();
-            placeholderObj.AddComponent<CanvasRenderer>();
-            var placeholderMesh = placeholderObj.AddComponent<TextMeshProUGUI>();
-            placeholderMesh.enabled = false;
-            placeholderMesh.extraPadding = false;
-            placeholderMesh.font = fontAsset;
+            // var placeholderObj = new GameObject("Placeholder") { layer = canvas.gameObject.layer };
+            // var placeholderRect = placeholderObj.AddComponent<RectTransform>();
+            // placeholderObj.AddComponent<CanvasRenderer>();
+            // var placeholderMesh = placeholderObj.AddComponent<TextMeshProUGUI>();
+            // placeholderMesh.enabled = false;
+            // placeholderMesh.extraPadding = false;
+            // placeholderMesh.font = fontAsset;
 
             var textObj = new GameObject("Text") { layer = canvas.gameObject.layer };
             var textRect = textObj.AddComponent<RectTransform>();
             var textMesh = textObj.AddComponent<TerminalText>();
             textMesh.terminal = terminal;
             textMesh.richText = false;
+            // textMesh.geometrySortingOrder = VertexSortingOrder.Reverse;
+            textMesh.overflowMode = TextOverflowModes.ScrollRect;
 
             terminal.textViewport = textAreaRect;
             terminal.textComponent = textMesh;
@@ -103,11 +105,11 @@ namespace JSSoft.UI.Editor
             textAreaRect.offsetMin = new Vector2(10, 6);
             textAreaRect.offsetMax = new Vector2(-10, -7);
 
-            placeholderRect.SetParent(textAreaRect);
-            placeholderRect.anchorMin = Vector2.zero;
-            placeholderRect.anchorMax = Vector2.one;
-            placeholderRect.offsetMin = Vector2.zero;
-            placeholderRect.offsetMax = Vector2.zero;
+            // placeholderRect.SetParent(textAreaRect);
+            // placeholderRect.anchorMin = Vector2.zero;
+            // placeholderRect.anchorMax = Vector2.one;
+            // placeholderRect.offsetMin = Vector2.zero;
+            // placeholderRect.offsetMax = Vector2.zero;
 
             textRect.SetParent(textAreaRect);
             textRect.anchorMin = Vector3.zero;
