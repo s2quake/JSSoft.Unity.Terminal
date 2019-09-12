@@ -495,7 +495,7 @@ namespace JSSoft.UI
                 this.backgroundColors[i] = this.BackgroundColor;
             }
             this.text = this.outputText + this.promptText;
-            this.caretPosition += text.Length;
+            // this.caretPosition += text.Length;
         }
 
         private static void AddBinding(IKeyBinding binding)

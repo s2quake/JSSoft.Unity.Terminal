@@ -64,7 +64,7 @@ namespace JSSoft.Communication.Shells
 
         public void Update()
         {
-            this.scheduler.ProcessAll(1000/60);
+            this.scheduler.ProcessAll(1000 / 60);
         }
 
         public async void OnDestroy()

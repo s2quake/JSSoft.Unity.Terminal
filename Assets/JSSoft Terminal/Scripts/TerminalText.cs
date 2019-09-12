@@ -9,8 +9,8 @@ namespace JSSoft.UI
     {
         [SerializeField]
         public Terminal terminal;
-        private int vertexCount;
-        private int maxVertexCount;
+        private int oldVertexCount;
+        private int newVertexCount;
 
         /// <summary>
         /// 공백인 경우 TMP_Text 에서 isVisible 이 false 이기 때문에 하위 클래스에서 어떠한 처리도 할 수가 없음.
@@ -48,27 +48,37 @@ namespace JSSoft.UI
         protected override void FillCharacterVertexBuffers(int i, int index_X4)
         {
             var materialIndex = m_textInfo.characterInfo[i].materialReferenceIndex;
-            m_textInfo.meshInfo[materialIndex].vertexCount = this.vertexCount;
-            base.FillCharacterVertexBuffers(i, index_X4);
-            this.vertexCount = m_textInfo.meshInfo[materialIndex].vertexCount;
-            if (this.vertexCount < this.maxVertexCount)
+            if (materialIndex == 0)
             {
-                m_textInfo.meshInfo[materialIndex].vertexCount = this.maxVertexCount;
+                // Debug.Log($"vertex1: {m_textInfo.meshInfo[materialIndex].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
+                m_textInfo.meshInfo[materialIndex].vertexCount = this.oldVertexCount;
+                base.FillCharacterVertexBuffers(i, index_X4);
+                this.oldVertexCount = m_textInfo.meshInfo[materialIndex].vertexCount;
+                if (this.oldVertexCount < this.newVertexCount)
+                {
+                    m_textInfo.meshInfo[materialIndex].vertexCount = this.newVertexCount;
+                }
+                // Debug.Log($"vertex2: {m_textInfo.meshInfo[materialIndex].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
             }
-            // Debug.Log($"highlight: {m_textInfo.meshInfo[materialIndex].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
+            else
+            {
+                base.FillCharacterVertexBuffers(i, index_X4);
+                // Debug.Log($"material: {materialIndex}");
+            }
         }
 
         protected override void DrawTextHighlight(Vector3 start, Vector3 end, ref int index, Color32 highlightColor)
         {
+            // Debug.Log($"highlight1: {m_textInfo.meshInfo[0].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
             base.DrawTextHighlight(start, end, ref index, highlightColor);
-            m_textInfo.meshInfo[0].vertexCount = this.maxVertexCount = index;
-            // Debug.Log($"highlight: {m_textInfo.meshInfo[0].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
+            m_textInfo.meshInfo[0].vertexCount = this.newVertexCount = index;
+            // Debug.Log($"highlight2: {m_textInfo.meshInfo[0].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
         }
 
         protected override void GenerateTextMesh()
         {
-            this.maxVertexCount = 0;
-            this.vertexCount = 0;
+            this.newVertexCount = 0;
+            this.oldVertexCount = 0;
             base.GenerateTextMesh();
         }
     }
