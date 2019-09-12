@@ -76,7 +76,7 @@ namespace JSSoft.UI.Editor
             var textMesh = textObj.AddComponent<TerminalText>();
             textMesh.terminal = terminal;
             textMesh.richText = false;
-            // textMesh.geometrySortingOrder = VertexSortingOrder.Reverse;
+            textMesh.geometrySortingOrder = VertexSortingOrder.Reverse;
             textMesh.overflowMode = TextOverflowModes.ScrollRect;
 
             terminal.textViewport = textAreaRect;

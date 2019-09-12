@@ -201,6 +201,8 @@ namespace JSSoft.UI
             if (this.historyIndex + 1 < this.histories.Count)
             {
                 this.inputText = this.commandText = this.histories[this.historyIndex + 1];
+                this.promptText = this.prompt + this.inputText;
+                this.text = this.outputText + this.promptText;
                 this.MoveToLast();
                 this.historyIndex++;
             }
@@ -211,12 +213,16 @@ namespace JSSoft.UI
             if (this.historyIndex > 0)
             {
                 this.inputText = this.commandText = this.histories[this.historyIndex - 1];
+                this.promptText = this.prompt + this.inputText;
+                this.text = this.outputText + this.promptText;
                 this.MoveToLast();
                 this.historyIndex--;
             }
             else if (this.histories.Count == 1)
             {
                 this.inputText = this.commandText = this.histories[0];
+                this.promptText = this.prompt + this.inputText;
+                this.text = this.outputText + this.promptText;
                 this.MoveToLast();
                 this.historyIndex = 0;
             }
@@ -322,11 +328,11 @@ namespace JSSoft.UI
                     var key = $"{modifiers}+{keyCode}";
                     if (this.OnPreviewKeyDown(this.processingEvent) == true)
                     {
-                        Debug.Log($"{key}: true");
+                        // Debug.Log($"{key}: true");
                         continue;
                     }
                     consumedEvent = true;
-                    Debug.Log($"{key}: false");
+                    // Debug.Log($"{key}: false");
                     var shouldContinue = KeyPressed(this.processingEvent);
                     if (shouldContinue == EditState.Finish)
                     {
@@ -359,10 +365,10 @@ namespace JSSoft.UI
                     this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
                 }
                 this.completion = string.Empty;
-                Debug.Log($"InputText: \"{inputText}\"");
+                // Debug.Log($"InputText: \"{inputText}\"");
+                this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
                 UpdateLabel();
             }
-            this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
             eventData.Use();
         }
 
@@ -479,23 +485,17 @@ namespace JSSoft.UI
 
         private void AppendInternal(string text)
         {
-            var isEnd = this.caretPosition == this.text.Length;
             var index = this.outputText.Length;
             this.outputText += text;
-            this.text = this.outputText + this.promptText;
-            if (isEnd == true)
-                this.caretPosition = this.text.Length;
-            var foregroundColors = new Color32?[this.outputText.Length];
-            var backgroundColors = new Color32?[this.outputText.Length];
-            this.foregroundColors.CopyTo(foregroundColors, 0);
-            this.backgroundColors.CopyTo(backgroundColors, 0);
-            this.foregroundColors = foregroundColors;
-            this.backgroundColors = backgroundColors;
+            Array.Resize(ref this.foregroundColors, this.outputText.Length);
+            Array.Resize(ref this.backgroundColors, this.outputText.Length);
             for (var i = index; i < this.outputText.Length; i++)
             {
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
+            this.text = this.outputText + this.promptText;
+            this.caretPosition += text.Length;
         }
 
         private static void AddBinding(IKeyBinding binding)
@@ -527,7 +527,7 @@ namespace JSSoft.UI
 
         internal Color32? GetBackgroundColor(int index)
         {
-            // if (index % 3 != 0)
+            // if (index % 2 != 0)
             //     return TerminalColors.Blue;
             if (index < this.backgroundColors.Length)
             {

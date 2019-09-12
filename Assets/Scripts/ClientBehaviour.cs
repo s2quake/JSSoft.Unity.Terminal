@@ -44,12 +44,12 @@ namespace JSSoft.Communication.Shells
                 this.writer = new CommandWriter(this.terminal);
                 this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
-                this.terminal.ActivateInputField();
             }
             await this.shell.StartAsync();
             if (this.terminal != null)
             {
                 this.terminal.ActivateInputField();
+                this.terminal.caretPosition = this.terminal.text.Length;
             }
         }
 
@@ -64,15 +64,7 @@ namespace JSSoft.Communication.Shells
 
         public void Update()
         {
-            var dateTime = DateTime.Now;
-            var count = 0;
-            while (this.scheduler.ProcessOnce())
-            {
-                count++;
-                var span = DateTime.Now - dateTime;
-                if (span.TotalMilliseconds > 300)
-                    break;
-            }
+            this.scheduler.ProcessAll(1000/60);
         }
 
         public async void OnDestroy()
