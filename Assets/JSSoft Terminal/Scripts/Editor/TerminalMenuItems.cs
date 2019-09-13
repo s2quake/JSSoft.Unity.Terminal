@@ -91,7 +91,7 @@ namespace JSSoft.UI.Editor
             terminal.colors = colorBlock;
             terminal.caretBlinkRate = 0;
             terminal.customCaretColor = true;
-            terminal.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f);
+            terminal.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f, 0);
             terminal.caretWidth = (int)(terminal.pointSize * 0.7f) - 1;
 
             terminalRect.SetParent(canvas.GetComponent<RectTransform>());

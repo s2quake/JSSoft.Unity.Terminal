@@ -50,7 +50,6 @@ namespace JSSoft.UI
             var materialIndex = m_textInfo.characterInfo[i].materialReferenceIndex;
             if (materialIndex == 0)
             {
-                // Debug.Log($"vertex1: {m_textInfo.meshInfo[materialIndex].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
                 m_textInfo.meshInfo[materialIndex].vertexCount = this.oldVertexCount;
                 base.FillCharacterVertexBuffers(i, index_X4);
                 this.oldVertexCount = m_textInfo.meshInfo[materialIndex].vertexCount;
@@ -58,21 +57,17 @@ namespace JSSoft.UI
                 {
                     m_textInfo.meshInfo[materialIndex].vertexCount = this.newVertexCount;
                 }
-                // Debug.Log($"vertex2: {m_textInfo.meshInfo[materialIndex].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
             }
             else
             {
                 base.FillCharacterVertexBuffers(i, index_X4);
-                // Debug.Log($"material: {materialIndex}");
             }
         }
 
         protected override void DrawTextHighlight(Vector3 start, Vector3 end, ref int index, Color32 highlightColor)
         {
-            // Debug.Log($"highlight1: {m_textInfo.meshInfo[0].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
             base.DrawTextHighlight(start, end, ref index, highlightColor);
             m_textInfo.meshInfo[0].vertexCount = this.newVertexCount = index;
-            // Debug.Log($"highlight2: {m_textInfo.meshInfo[0].vertexCount / 4}, {this.maxVertexCount / 4}, {this.vertexCount / 4}");
         }
 
         protected override void GenerateTextMesh()

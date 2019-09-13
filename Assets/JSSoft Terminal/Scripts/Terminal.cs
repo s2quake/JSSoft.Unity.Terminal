@@ -29,6 +29,7 @@ namespace JSSoft.UI
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
+        private int cursorPosition;
         private Color32?[] foregroundColors = new Color32?[] { };
         private Color32?[] backgroundColors = new Color32?[] { };
         private Color32?[] promptForegroundColors = new Color32?[] { };
@@ -54,7 +55,9 @@ namespace JSSoft.UI
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow,
                             (t) => t.NextHistory(), (t) => t.isReadOnly == false));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow,
-                            (t) => true, (t) => t.caretPosition <= t.outputText.Length + t.prompt.Length));
+                            (t) => t.CursorPosition--));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.RightArrow,
+                            (t) => t.CursorPosition++));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return,
                             (t) => t.Execute(), (t) => t.isReadOnly == false));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter,
@@ -366,10 +369,38 @@ namespace JSSoft.UI
                 }
                 this.completion = string.Empty;
                 // Debug.Log($"InputText: \"{inputText}\"");
+                // Debug.Log($"update: {this.caretPosition}");
                 this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
-                UpdateLabel();
+                this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
+                this.UpdateLabel();
             }
             eventData.Use();
+        }
+
+        public override void OnPointerDown(PointerEventData eventData)
+        {
+            // var index = this.caretPosition;
+            base.OnPointerDown(eventData);
+            // if (this.caretPosition != index)
+            // {
+            //     this.caretPositionInternal = index + 1;
+            //     this.caretSelectPositionInternal = index;
+            // }
+
+            // int insertionIndex = TMP_TextUtilities.GetCursorIndexFromPosition(m_TextComponent, eventData.position, eventData.pressEventCamera, out CaretPosition insertionSide);
+            // if (insertionIndex )
+        }
+
+        public override void OnDrag(PointerEventData eventData)
+        {
+            var index = this.caretPosition;
+            base.OnDrag(eventData);
+            if (this.caretPosition != index)
+            {
+                this.caretPositionInternal = index + 1;
+                this.caretSelectPositionInternal = index;
+                Debug.Log(index);
+            }
         }
 
         public void ResetColor()
@@ -381,6 +412,22 @@ namespace JSSoft.UI
         public Color32? ForegroundColor { get; set; }
 
         public Color32? BackgroundColor { get; set; }
+
+
+        public int CursorPosition
+        {
+            get => this.cursorPosition;
+            set
+            {
+                this.cursorPosition = value;
+                if (this.cursorPosition < 0)
+                    this.cursorPosition = 0;
+                if (this.cursorPosition > this.promptText.Length - this.prompt.Length)
+                    this.cursorPosition = this.promptText.Length - this.prompt.Length;
+                this.caretPosition = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                this.UpdateLabel();
+            }
+        }
 
         protected virtual string[] GetCompletion(string[] items, string find)
         {
@@ -394,9 +441,171 @@ namespace JSSoft.UI
             return query.ToArray();
         }
 
+        private CanvasRenderer cursorRenderer;
+        private Mesh cursorMesh;
+
+        private Mesh CursorMesh
+        {
+            get
+            {
+                if (this.cursorMesh == null)
+                {
+                    this.cursorMesh = new Mesh();
+                }
+                return this.cursorMesh;
+            }
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
+            if (Application.isPlaying)
+            {
+                var textAreaRect = m_TextComponent.transform.parent;
+                var selectionCaret = textAreaRect.GetComponentInChildren(typeof(TMP_SelectionCaret), true) as TMP_SelectionCaret;
+                if (selectionCaret != null)
+                {
+                    selectionCaret.transform.SetAsLastSibling();
+                    //selectionCaret.rectTransform.SetAsLastSibling();
+                    Debug.Log("1");
+                }
+                var cursorObj = new GameObject("TerminalCursor", typeof(RectTransform));
+                cursorObj.layer = this.gameObject.layer;
+                var cursorRect = cursorObj.GetComponent<RectTransform>();
+                cursorObj.transform.parent = m_TextComponent.transform.parent;
+
+                this.cursorRenderer = cursorObj.AddComponent<CanvasRenderer>();
+                this.cursorRenderer.SetMaterial(Graphic.defaultGraphicMaterial, Texture2D.whiteTexture);
+
+                cursorRect.localPosition = m_TextComponent.rectTransform.localPosition;
+                cursorRect.localRotation = m_TextComponent.rectTransform.localRotation;
+                cursorRect.localScale = m_TextComponent.rectTransform.localScale;
+                cursorRect.anchorMin = m_TextComponent.rectTransform.anchorMin;
+                cursorRect.anchorMax = m_TextComponent.rectTransform.anchorMax;
+                cursorRect.anchoredPosition = m_TextComponent.rectTransform.anchoredPosition;
+                cursorRect.sizeDelta = m_TextComponent.rectTransform.sizeDelta;
+                cursorRect.pivot = m_TextComponent.rectTransform.pivot;
+            }
+            // TMPro_EventManager.TEXT_CHANGED_EVENT.Add(ON_TEXT_CHANGED);
+        }
+
+        // private void ON_TEXT_CHANGED(UnityEngine.Object obj)
+        // {
+
+        // }
+
+        public override void Rebuild(CanvasUpdate update)
+        {
+            base.Rebuild(update);
+            switch (update)
+            {
+                case CanvasUpdate.LatePreRender:
+                    UpdateCursorGeometry();
+                    break;
+            }
+        }
+
+        private void UpdateCursorGeometry()
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying)
+                return;
+#endif
+
+
+            var m_CursorVerts = new UIVertex[4];
+
+            for (int i = 0; i < m_CursorVerts.Length; i++)
+            {
+                m_CursorVerts[i] = UIVertex.simpleVert;
+                m_CursorVerts[i].uv0 = Vector2.zero;
+            }
+
+            float width = 15;
+
+            using (VertexHelper vbo = new VertexHelper())
+            {
+                // TODO: Optimize to only update the caret position when needed.
+
+                Vector2 startPosition = Vector2.zero;
+                float height = 0;
+                TMP_CharacterInfo currentCharacter;
+
+                var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                int currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
+
+                // Caret is positioned at the origin for the first character of each lines and at the advance for subsequent characters.
+                if (index == m_TextComponent.textInfo.lineInfo[currentLine].firstCharacterIndex)
+                {
+                    currentCharacter = m_TextComponent.textInfo.characterInfo[index];
+                    startPosition = new Vector2(currentCharacter.origin, currentCharacter.descender);
+                    height = currentCharacter.ascender - currentCharacter.descender;
+                }
+                else
+                {
+                    currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
+                    startPosition = new Vector2(currentCharacter.xAdvance, currentCharacter.descender);
+                    height = currentCharacter.ascender - currentCharacter.descender;
+                }
+
+                // if (m_SoftKeyboard != null)
+                //     m_SoftKeyboard.selection = new RangeInt(stringPositionInternal, 0);
+
+                // Adjust the position of the RectTransform based on the caret position in the viewport (only if we have focus).
+                // if (isFocused && startPosition != m_LastPosition || m_forceRectTransformAdjustment)
+                //     AdjustRectTransformRelativeToViewport(startPosition, height, currentCharacter.isVisible);
+
+                // m_LastPosition = startPosition;
+
+                // Clamp Caret height
+                float top = startPosition.y + height;
+                float bottom = top - height;
+
+                // Minor tweak to address caret potentially being too thin based on canvas scaler values.
+                float scale = m_TextComponent.canvas.scaleFactor;
+
+                m_CursorVerts[0].position = new Vector3(startPosition.x, bottom, 0.0f);
+                m_CursorVerts[1].position = new Vector3(startPosition.x, top, 0.0f);
+                m_CursorVerts[2].position = new Vector3(startPosition.x + (width + 1) / scale, top, 0.0f);
+                m_CursorVerts[3].position = new Vector3(startPosition.x + (width + 1) / scale, bottom, 0.0f);
+
+                // Set Vertex Color for the caret color.
+                m_CursorVerts[0].color = TerminalColors.Red;
+                m_CursorVerts[1].color = TerminalColors.Red;
+                m_CursorVerts[2].color = TerminalColors.Red;
+                m_CursorVerts[3].color = TerminalColors.Red;
+
+                vbo.AddUIVertexQuad(m_CursorVerts);
+
+                int screenHeight = Screen.height;
+                // Removed multiple display support until it supports none native resolutions(case 741751)
+                //int displayIndex = m_TextComponent.canvas.targetDisplay;
+                //if (Screen.fullScreen && displayIndex < Display.displays.Length)
+                //    screenHeight = Display.displays[displayIndex].renderingHeight;
+
+                startPosition.y = screenHeight - startPosition.y;
+                vbo.FillMesh(this.CursorMesh);
+                this.cursorRenderer.SetMesh(this.CursorMesh);
+            }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            this.onTextSelection = new TMP_InputField.TextSelectionEvent();
+            this.onTextSelection.AddListener(Terminal_onTextSelection);
+            this.onEndTextSelection = new TMP_InputField.TextSelectionEvent();
+            this.onEndTextSelection.AddListener(Terminal_onEndTextSelection);
+        }
+
+        private void Terminal_onTextSelection(string a, int i1, int i2)
+        {
+            // Debug.Log($"text {i1}, {i2}");
+        }
+
+        private void Terminal_onEndTextSelection(string a, int i1, int i2)
+        {
+            // Debug.Log($"end {i1}, {i2}");
         }
 
         protected virtual bool OnPreviewKeyDown(Event e)
@@ -420,9 +629,17 @@ namespace JSSoft.UI
 
         protected override bool IsValidChar(char c)
         {
-            if (this.isReadOnly == true)
-                return false;
-            return base.IsValidChar(c);
+            // if (this.isReadOnly == true)
+            //     return false;
+            // if (base.caretPosition < this.outputText.Length + this.prompt.Length)
+            //     return false;
+            var r = base.IsValidChar(c);
+            if (r == true && c != 0)
+            {
+                this.caretPosition = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                // Debug.Log(this.caretPosition);
+            }
+            return r;
         }
 
         private void CompletionImpl(Func<string[], string, string> func)
@@ -467,7 +684,6 @@ namespace JSSoft.UI
             {
                 this.completion = func(completions, this.completion);
                 var inputText = this.inputText;
-
                 if (prefix == true || postfix == true)
                 {
                     this.commandText = leftText + "\"" + this.completion + "\"";
@@ -495,7 +711,6 @@ namespace JSSoft.UI
                 this.backgroundColors[i] = this.BackgroundColor;
             }
             this.text = this.outputText + this.promptText;
-            // this.caretPosition += text.Length;
         }
 
         private static void AddBinding(IKeyBinding binding)
