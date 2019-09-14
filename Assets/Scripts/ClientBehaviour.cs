@@ -65,7 +65,7 @@ namespace JSSoft.Communication.Shells
         public void Update()
         {
 #if UNITY_EDITOR
-            if (Application.isPlaying)
+            if (Application.isPlaying && this.scheduler != null)
 #endif
             {
                 this.scheduler.ProcessAll(1000 / 60);
@@ -75,11 +75,14 @@ namespace JSSoft.Communication.Shells
         public async void OnDestroy()
         {
             // Debug.Log("OnDestroy 1");
-            await this.shell.StopAsync();
-            // Debug.Log("OnDestroy 2");
-            this.shell.Dispose();
-            // Debug.Log("OnDestroy 3");
-            // await TestAsync();
+            if (this.shell != null)
+            {
+                await this.shell.StopAsync();
+                // Debug.Log("OnDestroy 2");
+                this.shell.Dispose();
+                // Debug.Log("OnDestroy 3");
+                // await TestAsync();
+            }
         }
 
         private async void Terminal_Executed(object sender, TerminalExecuteEventArgs e)

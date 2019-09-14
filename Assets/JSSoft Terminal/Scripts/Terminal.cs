@@ -43,6 +43,7 @@ namespace JSSoft.UI
         private Event processingEvent = new Event();
         private EventHandler<TerminalExecuteEventArgs> executed;
 
+        // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static Terminal()
         {
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow,
@@ -67,8 +68,9 @@ namespace JSSoft.UI
                             (t) => t.Execute(), (t) => t.isReadOnly == false));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace,
                             (t) => t.Backspace()));
+            // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.None + KeyCode.Backspace 가 호출됨.
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Backspace,
-                            (t) => t.Backspace()));
+                            (t) => true));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Delete,
                             (t) => t.Delete()));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Tab,
@@ -87,7 +89,7 @@ namespace JSSoft.UI
             if (IsWindows == true)
             {
                 AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Escape,
-                            (t) => t.Clear(), (t) => t.isReadOnly == false));
+                            (t) => t.Clear()));
                 AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home,
                             (t) => t.MoveToFirst()));
                 AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.End,
@@ -139,6 +141,7 @@ namespace JSSoft.UI
             }
             else if (this.executed != null)
             {
+                this.readOnly = true;
                 this.executed.Invoke(this, new TerminalExecuteEventArgs(commandText, endAction));
             }
             else
@@ -235,11 +238,8 @@ namespace JSSoft.UI
 
         public void Delete()
         {
-            var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-            var canDelete = position < this.text.Length;
-            this.stringPositionInternal = this.stringSelectPositionInternal = position;
-            base.caretPositionInternal = this.caretSelectPositionInternal = position;
-            if (canDelete == true)
+            this.PrepareCaretPosition();
+            if (this.cursorPosition < this.commandText.Length)
             {
                 base.KeyPressed(new Event() { keyCode = KeyCode.Delete });
                 this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
@@ -249,22 +249,11 @@ namespace JSSoft.UI
 
         public void Backspace()
         {
-            var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-            var canBackspace = position > this.outputText.Length + this.prompt.Length;
-            if (canBackspace == true)
+            this.PrepareCaretPosition();
+            if (this.cursorPosition > 0)
             {
                 base.KeyPressed(new Event() { keyCode = KeyCode.Backspace });
                 this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
-            }
-            else
-            {
-                this.stringPositionInternal = this.stringSelectPositionInternal = position;
-                base.caretPositionInternal = this.caretSelectPositionInternal = position;
-                if (this.cursorPosition > 0)
-                {
-                    base.KeyPressed(new Event() { keyCode = KeyCode.Backspace });
-                    this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
-                }
             }
             this.UpdateLabel();
         }
@@ -439,32 +428,6 @@ namespace JSSoft.UI
             eventData.Use();
         }
 
-        public override void OnPointerDown(PointerEventData eventData)
-        {
-            // var index = base.caretPosition;
-            base.OnPointerDown(eventData);
-            // if (base.caretPosition != index)
-            // {
-            //     base.caretPositionInternal = index + 1;
-            //     this.caretSelectPositionInternal = index;
-            // }
-
-            // int insertionIndex = TMP_TextUtilities.GetCursorIndexFromPosition(m_TextComponent, eventData.position, eventData.pressEventCamera, out CaretPosition insertionSide);
-            // if (insertionIndex )
-        }
-
-        public override void OnDrag(PointerEventData eventData)
-        {
-            // var index = base.caretPosition;
-            base.OnDrag(eventData);
-            // if (base.caretPosition != index)
-            // {
-            //     base.caretPositionInternal = index + 1;
-            //     this.caretSelectPositionInternal = index;
-            //     Debug.Log(index);
-            // }
-        }
-
         public override void OnScroll(PointerEventData eventData)
         {
             base.OnScroll(eventData);
@@ -565,18 +528,12 @@ namespace JSSoft.UI
             this.onTextSelection.AddListener(Terminal_onTextSelection);
             this.onEndTextSelection = new TMP_InputField.TextSelectionEvent();
             this.onEndTextSelection.AddListener(Terminal_onEndTextSelection);
-            this.onValidateInput = OnValidateInput;
             this.cursorVertes = new UIVertex[4];
             for (var i = 0; i < this.cursorVertes.Length; i++)
             {
                 this.cursorVertes[i] = UIVertex.simpleVert;
                 this.cursorVertes[i].uv0 = Vector2.zero;
             }
-        }
-
-        public char OnValidateInput(string text, int charIndex, char addedChar)
-        {
-            return addedChar;
         }
 
         protected virtual bool OnPreviewKeyDown(Event e)
@@ -610,7 +567,7 @@ namespace JSSoft.UI
                 if (base.caretPosition < this.outputText.Length + this.prompt.Length)
                 {
                     var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                    this.stringPositionInternal = this.stringSelectPositionInternal = position;
+                    base.stringPositionInternal = base.stringSelectPositionInternal = position;
                 }
                 // Debug.Log(c);
                 // Debug.Log(base.caretPosition);
@@ -658,7 +615,7 @@ namespace JSSoft.UI
             // Debug.Log(nameof(UpdateCursorGeometry));
             float width = 15;
 
-            using (VertexHelper vbo = new VertexHelper())
+            using (var vertexHelper = new VertexHelper())
             {
                 // TODO: Optimize to only update the caret position when needed.
 
@@ -719,12 +676,18 @@ namespace JSSoft.UI
                 cursorVertes[3].position = new Vector3(startPosition.x + (width + 1) / scale, bottom, 0.0f);
 
                 // Set Vertex Color for the caret color.
-                cursorVertes[0].color = new Color(1, 0, 0, 0.56862745098f);
-                cursorVertes[1].color = new Color(1, 0, 0, 0.56862745098f);
-                cursorVertes[2].color = new Color(1, 0, 0, 0.56862745098f);
-                cursorVertes[3].color = new Color(1, 0, 0, 0.56862745098f);
+                var alpha = this.readOnly == true ? 0 : 0.56862745098f;
+                if (this.readOnly == true)
+                {
+                    Debug.Log("readonly");
+                }
+                
+                cursorVertes[0].color = new Color(1, 0, 0, alpha);
+                cursorVertes[1].color = new Color(1, 0, 0, alpha);
+                cursorVertes[2].color = new Color(1, 0, 0, alpha);
+                cursorVertes[3].color = new Color(1, 0, 0, alpha);
 
-                vbo.AddUIVertexQuad(cursorVertes);
+                vertexHelper.AddUIVertexQuad(cursorVertes);
 
                 int screenHeight = Screen.height;
                 // Removed multiple display support until it supports none native resolutions(case 741751)
@@ -733,7 +696,7 @@ namespace JSSoft.UI
                 //    screenHeight = Display.displays[displayIndex].renderingHeight;
 
                 startPosition.y = screenHeight - startPosition.y;
-                vbo.FillMesh(this.cursorMesh);
+                vertexHelper.FillMesh(this.cursorMesh);
                 this.cursorRenderer.SetMesh(this.cursorMesh);
                 this.UpdateCursorTransform();
             }
