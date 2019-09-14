@@ -2,6 +2,8 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
+    <CscToolPath>/Applications/Unity/Hub/Editor/2019.2.0f1/Unity.app/Contents/Tools/RoslynScripts</CscToolPath>
+    <CscToolExe>unity_csc.sh</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -56,10 +58,13 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminal.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminalExtensions.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingBase.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Terminal.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColors.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCursor.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalText.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
@@ -106,6 +111,7 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Bitmap.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF.shader" />
+     <None Include="Assets\JSSoft Terminal\Fonts\hangul.txt" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Mobile.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface.shader" />

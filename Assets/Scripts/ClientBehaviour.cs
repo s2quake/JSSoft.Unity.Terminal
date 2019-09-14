@@ -21,7 +21,7 @@ namespace JSSoft.Communication.Shells
         private CommandContext commandContext;
         private CommandWriter writer;
         private DispatcherScheduler scheduler;
-        private Terminal terminal;
+        private ITerminal terminal;
 
         static ClientBehaviour()
         {
@@ -40,7 +40,7 @@ namespace JSSoft.Communication.Shells
         {
             if (this.terminal != null)
             {
-                this.terminal.onExecuted.AddListener(this.terminal_onExecuted);
+                this.terminal.Executed += Terminal_Executed;
                 this.writer = new CommandWriter(this.terminal);
                 this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
@@ -48,8 +48,8 @@ namespace JSSoft.Communication.Shells
             await this.shell.StartAsync();
             if (this.terminal != null)
             {
-                this.terminal.ActivateInputField();
-                this.terminal.caretPosition = this.terminal.text.Length;
+                this.terminal.Focus();
+                this.terminal.CursorPosition = 0;
             }
         }
 
@@ -64,25 +64,31 @@ namespace JSSoft.Communication.Shells
 
         public void Update()
         {
-            this.scheduler.ProcessAll(1000 / 60);
+#if UNITY_EDITOR
+            if (Application.isPlaying)
+#endif
+            {
+                this.scheduler.ProcessAll(1000 / 60);
+            }
         }
 
         public async void OnDestroy()
         {
-            Debug.Log("OnDestroy 1");
+            // Debug.Log("OnDestroy 1");
             await this.shell.StopAsync();
-            Debug.Log("OnDestroy 2");
+            // Debug.Log("OnDestroy 2");
             this.shell.Dispose();
-            Debug.Log("OnDestroy 3");
-            await TestAsync();
+            // Debug.Log("OnDestroy 3");
+            // await TestAsync();
         }
 
-        private void terminal_onExecuted(string command)
+        private async void Terminal_Executed(object sender, TerminalExecuteEventArgs e)
         {
-            this.Run(command);
+            await this.RunAsync(e.Command);
+            e.Handled = true;
         }
 
-        private async void Run(string commandLine)
+        private async Task RunAsync(string commandLine)
         {
             try
             {
@@ -101,10 +107,6 @@ namespace JSSoft.Communication.Shells
                     this.terminal.AppendLine(e.InnerException.Message);
                 else
                     this.terminal.AppendLine(e.Message);
-            }
-            finally
-            {
-                this.terminal.InsertPrompt();
             }
         }
     }

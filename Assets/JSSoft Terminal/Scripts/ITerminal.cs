@@ -12,9 +12,27 @@ namespace JSSoft.UI
 
         void ResetColor();
 
+        void Delete();
+
+        void Backspace();
+
+        void NextCompletion();
+
+        void PrevCompletion();
+
+        void NextHistory();
+
+        void PrevHistory();
+
+        void Focus();
+
         string Command { get; }
 
         string Prompt { get; set; }
+
+        string OutputText { get; }
+
+        int CursorPosition { get; set; }
 
         Color32? ForegroundColor { get; set; }
 
@@ -23,6 +41,8 @@ namespace JSSoft.UI
         OnCompletion onCompletion { get; set; }
 
         OnDrawPrompt onDrawPrompt { get; set; }
+
+        event EventHandler<TerminalExecuteEventArgs> Executed;
     }
 
     public delegate string[] OnCompletion(string[] items, string find);
