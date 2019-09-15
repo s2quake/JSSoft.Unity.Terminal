@@ -9,27 +9,12 @@ namespace JSSoft.UI.Editor
 {
     static class TerminalMeniItems
     {
-        // [MenuItem("Terminal/Test")]
-        // private static void Test2()
-        // {
-        //     var selectedObject = Selection.activeGameObject;
-        //     if (selectedObject != null)
-        //     {
-        //         var selectedObjectRect = selectedObject.GetComponent<RectTransform>();
-        //         if (selectedObjectRect != null)
-        //         {
-        //             Debug.Log($"offsetMin: {selectedObjectRect.offsetMin}");
-        //             Debug.Log($"offsetMax: {selectedObjectRect.offsetMax}");
-        //         }
-        //     }
-        // }
-
         [MenuItem("GameObject/UI/Terminal")]
         private static void CreateTerminalUI()
         {
             CreateTerminal();
         }
-        
+
         private static void CreateTerminal()
         {
             var width = 800.0f;
@@ -41,7 +26,7 @@ namespace JSSoft.UI.Editor
                 canvas = GameObject.FindObjectOfType<Canvas>();
             }
 
-            var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular SDF.asset", typeof(TMP_FontAsset));
+            var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular.asset", typeof(TMP_FontAsset));
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
             var terminalObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
@@ -62,14 +47,6 @@ namespace JSSoft.UI.Editor
             var textAreaObj = new GameObject("Text Area") { layer = canvas.gameObject.layer };
             var textAreaRect = textAreaObj.AddComponent<RectTransform>();
             textAreaObj.AddComponent<RectMask2D>();
-
-            // var placeholderObj = new GameObject("Placeholder") { layer = canvas.gameObject.layer };
-            // var placeholderRect = placeholderObj.AddComponent<RectTransform>();
-            // placeholderObj.AddComponent<CanvasRenderer>();
-            // var placeholderMesh = placeholderObj.AddComponent<TextMeshProUGUI>();
-            // placeholderMesh.enabled = false;
-            // placeholderMesh.extraPadding = false;
-            // placeholderMesh.font = fontAsset;
 
             var textObj = new GameObject("Text") { layer = canvas.gameObject.layer };
             var textRect = textObj.AddComponent<RectTransform>();
@@ -104,12 +81,6 @@ namespace JSSoft.UI.Editor
             textAreaRect.anchorMax = Vector3.one;
             textAreaRect.offsetMin = new Vector2(10, 6);
             textAreaRect.offsetMax = new Vector2(-10, -7);
-
-            // placeholderRect.SetParent(textAreaRect);
-            // placeholderRect.anchorMin = Vector2.zero;
-            // placeholderRect.anchorMax = Vector2.one;
-            // placeholderRect.offsetMin = Vector2.zero;
-            // placeholderRect.offsetMax = Vector2.zero;
 
             textRect.SetParent(textAreaRect);
             textRect.anchorMin = Vector3.zero;

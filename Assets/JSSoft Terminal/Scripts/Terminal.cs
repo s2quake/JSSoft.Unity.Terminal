@@ -639,18 +639,22 @@ namespace JSSoft.UI
                 //     Debug.Log(m_TextComponent.textInfo.characterInfo.Length);
                 // }
                 int currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
-
+                var characterInfo = m_TextComponent.textInfo.characterInfo[index];
+                var alpha = this.readOnly == true ? 0 : 0.56862745098f;
+                var c = m_TextComponent.font.characterLookupTable['a'];
                 // Caret is positioned at the origin for the first character of each lines and at the advance for subsequent characters.
                 if (index == m_TextComponent.textInfo.lineInfo[currentLine].firstCharacterIndex)
                 {
                     currentCharacter = m_TextComponent.textInfo.characterInfo[index];
                     startPosition = new Vector2(currentCharacter.origin, currentCharacter.descender);
+                    width = currentCharacter.xAdvance - currentCharacter.origin;
                     height = currentCharacter.ascender - currentCharacter.descender;
                 }
                 else
                 {
                     currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
                     startPosition = new Vector2(currentCharacter.xAdvance, currentCharacter.descender);
+                    width = currentCharacter.xAdvance - currentCharacter.origin;
                     height = currentCharacter.ascender - currentCharacter.descender;
                 }
 
@@ -670,24 +674,20 @@ namespace JSSoft.UI
                 // Minor tweak to address caret potentially being too thin based on canvas scaler values.
                 float scale = m_TextComponent.canvas.scaleFactor;
 
-                cursorVertes[0].position = new Vector3(startPosition.x, bottom, 0.0f);
-                cursorVertes[1].position = new Vector3(startPosition.x, top, 0.0f);
-                cursorVertes[2].position = new Vector3(startPosition.x + (width + 1) / scale, top, 0.0f);
-                cursorVertes[3].position = new Vector3(startPosition.x + (width + 1) / scale, bottom, 0.0f);
+                this.cursorVertes[0].position = new Vector3(startPosition.x, bottom, 0.0f);
+                this.cursorVertes[1].position = new Vector3(startPosition.x, top, 0.0f);
+                this.cursorVertes[2].position = new Vector3(startPosition.x + width / scale, top, 0.0f);
+                this.cursorVertes[3].position = new Vector3(startPosition.x + width / scale, bottom, 0.0f);
 
                 // Set Vertex Color for the caret color.
-                var alpha = this.readOnly == true ? 0 : 0.56862745098f;
-                if (this.readOnly == true)
-                {
-                    Debug.Log("readonly");
-                }
                 
-                cursorVertes[0].color = new Color(1, 0, 0, alpha);
-                cursorVertes[1].color = new Color(1, 0, 0, alpha);
-                cursorVertes[2].color = new Color(1, 0, 0, alpha);
-                cursorVertes[3].color = new Color(1, 0, 0, alpha);
+                
+                this.cursorVertes[0].color = new Color(1, 0, 0, alpha);
+                this.cursorVertes[1].color = new Color(1, 0, 0, alpha);
+                this.cursorVertes[2].color = new Color(1, 0, 0, alpha);
+                this.cursorVertes[3].color = new Color(1, 0, 0, alpha);
 
-                vertexHelper.AddUIVertexQuad(cursorVertes);
+                vertexHelper.AddUIVertexQuad(this.cursorVertes);
 
                 int screenHeight = Screen.height;
                 // Removed multiple display support until it supports none native resolutions(case 741751)
