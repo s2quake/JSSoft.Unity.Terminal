@@ -62,6 +62,14 @@ namespace JSSoft.UI
                             (t) => true));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Shift, KeyCode.DownArrow,
                             (t) => true));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.LeftArrow,
+                            (t) => true));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.RightArrow,
+                            (t) => true));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.UpArrow,
+                            (t) => true));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.DownArrow,
+                            (t) => true));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return,
                             (t) => t.Execute(), (t) => t.isReadOnly == false));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter,
@@ -499,7 +507,8 @@ namespace JSSoft.UI
                 {
                     selectionCaret.transform.SetAsLastSibling();
                     //selectionCaret.rectTransform.SetAsLastSibling();
-                    // m_CaretVisible = false;
+                    m_CaretVisible = false;
+                    base.caretColor = TerminalColors.Transparent;
                     // Debug.Log("1");
                 }
                 var cursorObj = new GameObject("TerminalCursor", typeof(RectTransform));
@@ -610,93 +619,53 @@ namespace JSSoft.UI
             if (this.cursorRenderer == null || this.cursorVertes == null)
                 return;
 
-            // if (m_CaretVisible == false)
-            //     return;
-            // Debug.Log(nameof(UpdateCursorGeometry));
-            float width = 15;
+             var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                if (this.promptText == string.Empty)
+                    index = this.outputText.Length + this.cursorPosition;
 
             using (var vertexHelper = new VertexHelper())
             {
-                // TODO: Optimize to only update the caret position when needed.
-
-                Vector2 startPosition = Vector2.zero;
-                float height = 0;
-                TMP_CharacterInfo currentCharacter;
-
-                var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                if (this.promptText == string.Empty)
-                    index = this.outputText.Length + this.cursorPosition;
-                // if (index > this.text.Length + 1)
-                // {
-                //     int qwer = 0;
-                // }
-                // if (index >= m_TextComponent.textInfo.characterInfo.Length)
-                // {
-                //     Debug.Log("=====");
-                //     Debug.Log(this.cursorPosition);
-                //     Debug.Log(this.text.Length);
-                //     Debug.Log(index);
-                //     Debug.Log(m_TextComponent.textInfo.characterInfo.Length);
-                // }
-                int currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
+                var startPosition = Vector2.zero;
+                var height = 0.0f;
+                var width = 15.0f;
+                
+ 
+                var currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
                 var characterInfo = m_TextComponent.textInfo.characterInfo[index];
                 var alpha = this.readOnly == true ? 0 : 0.56862745098f;
                 var c = m_TextComponent.font.characterLookupTable['a'];
                 // Caret is positioned at the origin for the first character of each lines and at the advance for subsequent characters.
                 if (index == m_TextComponent.textInfo.lineInfo[currentLine].firstCharacterIndex)
                 {
-                    currentCharacter = m_TextComponent.textInfo.characterInfo[index];
+                    var currentCharacter = m_TextComponent.textInfo.characterInfo[index];
                     startPosition = new Vector2(currentCharacter.origin, currentCharacter.descender);
                     width = currentCharacter.xAdvance - currentCharacter.origin;
                     height = currentCharacter.ascender - currentCharacter.descender;
                 }
                 else
                 {
-                    currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
+                    var currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
                     startPosition = new Vector2(currentCharacter.xAdvance, currentCharacter.descender);
                     width = currentCharacter.xAdvance - currentCharacter.origin;
                     height = currentCharacter.ascender - currentCharacter.descender;
                 }
 
-                // if (m_SoftKeyboard != null)
-                //     m_SoftKeyboard.selection = new RangeInt(stringPositionInternal, 0);
-
-                // Adjust the position of the RectTransform based on the caret position in the viewport (only if we have focus).
-                // if (isFocused && startPosition != m_LastPosition || m_forceRectTransformAdjustment)
-                //     AdjustRectTransformRelativeToViewport(startPosition, height, currentCharacter.isVisible);
-
-                // m_LastPosition = startPosition;
-
-                // Clamp Caret height
-                float top = startPosition.y + height;
-                float bottom = top - height;
-
-                // Minor tweak to address caret potentially being too thin based on canvas scaler values.
-                float scale = m_TextComponent.canvas.scaleFactor;
+                var top = startPosition.y + height;
+                var bottom = top - height;
+                var scale = m_TextComponent.canvas.scaleFactor;
 
                 this.cursorVertes[0].position = new Vector3(startPosition.x, bottom, 0.0f);
                 this.cursorVertes[1].position = new Vector3(startPosition.x, top, 0.0f);
                 this.cursorVertes[2].position = new Vector3(startPosition.x + width / scale, top, 0.0f);
                 this.cursorVertes[3].position = new Vector3(startPosition.x + width / scale, bottom, 0.0f);
-
-                // Set Vertex Color for the caret color.
-                
-                
-                this.cursorVertes[0].color = new Color(1, 0, 0, alpha);
-                this.cursorVertes[1].color = new Color(1, 0, 0, alpha);
-                this.cursorVertes[2].color = new Color(1, 0, 0, alpha);
-                this.cursorVertes[3].color = new Color(1, 0, 0, alpha);
+                this.cursorVertes[0].color = new Color(1, 1, 1, alpha);
+                this.cursorVertes[1].color = new Color(1, 1, 1, alpha);
+                this.cursorVertes[2].color = new Color(1, 1, 1, alpha);
+                this.cursorVertes[3].color = new Color(1, 1, 1, alpha);
 
                 vertexHelper.AddUIVertexQuad(this.cursorVertes);
-
-                int screenHeight = Screen.height;
-                // Removed multiple display support until it supports none native resolutions(case 741751)
-                //int displayIndex = m_TextComponent.canvas.targetDisplay;
-                //if (Screen.fullScreen && displayIndex < Display.displays.Length)
-                //    screenHeight = Display.displays[displayIndex].renderingHeight;
-
-                startPosition.y = screenHeight - startPosition.y;
                 vertexHelper.FillMesh(this.cursorMesh);
+
                 this.cursorRenderer.SetMesh(this.cursorMesh);
                 this.UpdateCursorTransform();
             }
