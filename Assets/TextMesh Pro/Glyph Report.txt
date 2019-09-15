@@ -1,0 +1,12 @@
+Font: Apple SD Gothic Neo  Style: Regular
+Point Size: 24   SP/PD Ratio: 37.5%
+
+Characters included: 5/5
+Missing characters: 0
+Excluded characters: 0
+
+Characters missing from font file:
+----------------------------------------
+
+Characters excluded from packing:
+----------------------------------------
