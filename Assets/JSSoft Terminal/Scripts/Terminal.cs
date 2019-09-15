@@ -639,14 +639,14 @@ namespace JSSoft.UI
                 {
                     var currentCharacter = m_TextComponent.textInfo.characterInfo[index];
                     startPosition = new Vector2(currentCharacter.origin, currentCharacter.descender);
-                    width = currentCharacter.xAdvance - currentCharacter.origin;
+                    // width = currentCharacter.xAdvance - currentCharacter.origin;
                     height = currentCharacter.ascender - currentCharacter.descender;
                 }
                 else
                 {
                     var currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
                     startPosition = new Vector2(currentCharacter.xAdvance, currentCharacter.descender);
-                    width = currentCharacter.xAdvance - currentCharacter.origin;
+                    // width = currentCharacter.xAdvance - currentCharacter.origin;
                     height = currentCharacter.ascender - currentCharacter.descender;
                 }
 

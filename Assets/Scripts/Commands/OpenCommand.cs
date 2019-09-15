@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using JSSoft.Communication.Shells;
 using Ntreev.Library.Commands;
@@ -47,10 +48,20 @@ namespace JSSoft.Communication.Commands
             this.shell = shell;
         }
 
+        [CommandProperty]
+        [DefaultValue(ClientContextBase.DefaultHost)]
+        public string Host { get; set; }
+
+        [CommandProperty]
+        [DefaultValue(ClientContextBase.DefaultPort)]
+        public int Port { get; set; }
+
         public override bool IsEnabled => this.serviceHost.IsOpened == false;
 
         protected override async Task OnExecuteAsync()
         {
+            this.serviceHost.Host = this.Host;
+            this.serviceHost.Port = this.Port;
             this.Shell.Token = await this.serviceHost.OpenAsync();
         }
 

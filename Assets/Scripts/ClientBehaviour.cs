@@ -45,7 +45,16 @@ namespace JSSoft.Communication.Shells
                 this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
             }
-            await this.shell.StartAsync();
+            // try
+            // {
+            //     await this.shell.StartAsync();
+            // }
+            // catch (Exception e)
+            // {
+            //     this.terminal.AppendLine($"{e}");
+            // }
+            this.terminal.AppendLine($"서버에 연결하기 위해서 아래의 명령을 입력하세요");
+            this.terminal.AppendLine($"open --host [주소값]");
             if (this.terminal != null)
             {
                 this.terminal.Focus();
@@ -107,9 +116,9 @@ namespace JSSoft.Communication.Shells
             catch (Exception e)
             {
                 if (e.InnerException != null)
-                    this.terminal.AppendLine(e.InnerException.Message);
+                    this.terminal.AppendLine($"{e.InnerException}");
                 else
-                    this.terminal.AppendLine(e.Message);
+                    this.terminal.AppendLine($"{e}");
             }
         }
     }
