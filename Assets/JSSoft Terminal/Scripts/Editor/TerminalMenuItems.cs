@@ -38,8 +38,8 @@ namespace JSSoft.UI.Editor
 
         private static void CreateTerminal()
         {
-            var width = 800.0f;
-            var height = 600.0f;
+            // var width = 800.0f;
+            // var height = 600.0f;
             var canvas = GameObject.FindObjectOfType<Canvas>();
             if (canvas == null)
             {
@@ -54,7 +54,7 @@ namespace JSSoft.UI.Editor
             var terminalRect = terminalObj.AddComponent<RectTransform>();
             terminalObj.AddComponent<CanvasRenderer>();
             var terminalImage = terminalObj.AddComponent<Image>();
-            terminalImage.sprite = backgroundSprite;
+            // terminalImage.sprite = backgroundSprite;
             terminalImage.type = Image.Type.Sliced;
 
             var terminal = terminalObj.AddComponent<Terminal>();
@@ -93,9 +93,12 @@ namespace JSSoft.UI.Editor
             terminal.caretWidth = (int)(terminal.pointSize * 0.7f) - 1;
 
             terminalRect.SetParent(canvas.GetComponent<RectTransform>());
-            terminalRect.position = Vector3.zero;
-            terminalRect.sizeDelta = new Vector2(width, height);
-            terminalRect.anchoredPosition = new Vector2(0, 0);
+            terminalRect.anchorMin = Vector3.zero;
+            terminalRect.anchorMax = Vector3.one;
+            terminalRect.offsetMin = Vector3.zero;
+            terminalRect.offsetMax = Vector3.zero;
+            // terminalRect.position = Vector3.zero;
+            terminalRect.pivot = new Vector2(0.5f, 0.5f);
 
             textAreaRect.SetParent(terminalRect);
             textAreaRect.anchorMin = Vector3.zero;
@@ -123,10 +126,10 @@ namespace JSSoft.UI.Editor
             scrollbar.navigation = navigation;
 
             scrollbarRect.SetParent(terminalRect);
-            scrollbarRect.anchorMin = new Vector2(1, 0.5f);
-            scrollbarRect.anchorMax = new Vector2(1, 0.5f);
-            scrollbarRect.offsetMax = new Vector2(0, height / 2);
-            scrollbarRect.offsetMin = new Vector2(-20, -height / 2);
+            scrollbarRect.anchorMin = new Vector2(1, 0);
+            scrollbarRect.anchorMax = new Vector2(1, 1);
+            scrollbarRect.offsetMin = new Vector2(-20, 0);
+            scrollbarRect.offsetMax = new Vector2(0, 0);
 
             terminal.verticalScrollbar = scrollbar;
             Selection.activeGameObject = terminalObj;
