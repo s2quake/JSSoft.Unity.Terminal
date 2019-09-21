@@ -82,15 +82,17 @@ namespace JSSoft.UI.Editor
             terminal.fontAsset = fontAsset;
             terminal.pointSize = 24;
             var colorBlock = ColorBlock.defaultColorBlock;
-            colorBlock.normalColor = Color.black;
-            colorBlock.highlightedColor = Color.black;
-            colorBlock.selectedColor = Color.black;
-            colorBlock.pressedColor = Color.black;
+            var color = new Color(30.0f / 255.0f, 30.0f / 255.0f, 30.0f / 255.0f);
+            colorBlock.normalColor = color;
+            colorBlock.highlightedColor = color;
+            colorBlock.selectedColor = color;
+            colorBlock.pressedColor = color;
             terminal.colors = colorBlock;
             terminal.caretBlinkRate = 0;
             terminal.customCaretColor = true;
-            terminal.caretColor = new Color(0.56862745098f, 0.56862745098f, 0.56862745098f, 0);
-            terminal.caretWidth = (int)(terminal.pointSize * 0.7f) - 1;
+            terminal.caretColor = new Color(139.0f / 255.0f, 139.0f / 255.0f, 139.0f / 255.0f);
+            // terminal.caretWidth = (int)(terminal.pointSize * 0.7f) - 1;
+            terminal.selectionColor = new Color(49.0f / 255.0f, 79.0f / 255.0f, 120.0f / 255.0f);
 
             terminalRect.SetParent(canvas.GetComponent<RectTransform>());
             terminalRect.anchorMin = Vector3.zero;

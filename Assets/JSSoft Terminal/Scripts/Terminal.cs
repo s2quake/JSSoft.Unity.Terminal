@@ -470,7 +470,11 @@ namespace JSSoft.UI
             switch (update)
             {
                 case CanvasUpdate.LatePreRender:
-                    UpdateCursorGeometry();
+                    // this.UpdateCursorGeometry();
+                    if (this.textComponent is TerminalText terminalText)
+                    {
+                        terminalText.Refresh();
+                    }
                     break;
             }
         }
@@ -528,21 +532,28 @@ namespace JSSoft.UI
                 if (selectionCaret != null)
                 {
                     selectionCaret.transform.SetAsLastSibling();
+                    selectionCaret.gameObject.SetActive(false);
                     //selectionCaret.rectTransform.SetAsLastSibling();
-                    m_CaretVisible = false;
-                    base.caretColor = TerminalColors.Transparent;
+                    // m_CaretVisible = false;
+                    // base.caretColor = TerminalColors.Transparent;
                     // Debug.Log("1");
                 }
-                var cursorObj = new GameObject("TerminalCursor", typeof(RectTransform));
-                cursorObj.layer = this.gameObject.layer;
-                this.cursorRect = cursorObj.GetComponent<RectTransform>();
-                cursorObj.transform.parent = m_TextComponent.transform.parent;
-                cursorObj.AddComponent<TerminalCursor>();
+                // var cursorObj = new GameObject("TerminalCursor", typeof(RectTransform));
+                // cursorObj.layer = this.gameObject.layer;
+                // this.cursorRect = cursorObj.GetComponent<RectTransform>();
+                // cursorObj.transform.parent = m_TextComponent.transform.parent;
+                // cursorObj.AddComponent<TerminalCursor>();
 
-                this.cursorRenderer = cursorObj.GetComponent<CanvasRenderer>();
-                this.cursorRenderer.SetMaterial(Graphic.defaultGraphicMaterial, Texture2D.whiteTexture);
-                this.cursorMesh = new Mesh();
-                this.UpdateCursorTransform();
+                // this.cursorRenderer = cursorObj.GetComponent<CanvasRenderer>();
+                // this.cursorRenderer.SetMaterial(Graphic.defaultGraphicMaterial, Texture2D.whiteTexture);
+                // this.cursorMesh = new Mesh();
+                // this.UpdateCursorTransform();
+            }
+            if (this.fontAsset != null)
+            {
+                var charInfo = this.fontAsset.characterLookupTable['a'];
+                var glyph = charInfo.glyph;
+                this.caretWidth = (int)glyph.metrics.horizontalAdvance;
             }
             TMPro_EventManager.TEXT_CHANGED_EVENT.Add(ON_TEXT_CHANGED);
         }
@@ -632,6 +643,8 @@ namespace JSSoft.UI
             }
         }
 
+        internal int CursorPositionInternal => this.outputText.Length + this.prompt.Length + this.cursorPosition;
+
         private void UpdateCursorGeometry()
         {
 #if UNITY_EDITOR
@@ -641,17 +654,16 @@ namespace JSSoft.UI
             if (this.cursorRenderer == null || this.cursorVertes == null)
                 return;
 
-             var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                if (this.promptText == string.Empty)
-                    index = this.outputText.Length + this.cursorPosition;
+            var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+            if (this.promptText == string.Empty)
+                index = this.outputText.Length + this.cursorPosition;
 
             using (var vertexHelper = new VertexHelper())
             {
                 var startPosition = Vector2.zero;
                 var height = 0.0f;
-                var width = 15.0f;
-                
- 
+
+
                 var currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
                 var characterInfo = m_TextComponent.textInfo.characterInfo[index];
                 var alpha = this.readOnly == true ? 0 : 0.56862745098f;
@@ -678,8 +690,8 @@ namespace JSSoft.UI
 
                 this.cursorVertes[0].position = new Vector3(startPosition.x, bottom, 0.0f);
                 this.cursorVertes[1].position = new Vector3(startPosition.x, top, 0.0f);
-                this.cursorVertes[2].position = new Vector3(startPosition.x + width / scale, top, 0.0f);
-                this.cursorVertes[3].position = new Vector3(startPosition.x + width / scale, bottom, 0.0f);
+                this.cursorVertes[2].position = new Vector3(startPosition.x + 4 / scale, top, 0.0f);
+                this.cursorVertes[3].position = new Vector3(startPosition.x + 4 / scale, bottom, 0.0f);
                 this.cursorVertes[0].color = new Color(1, 1, 1, alpha);
                 this.cursorVertes[1].color = new Color(1, 1, 1, alpha);
                 this.cursorVertes[2].color = new Color(1, 1, 1, alpha);
