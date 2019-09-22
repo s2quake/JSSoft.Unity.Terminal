@@ -49,23 +49,20 @@ namespace JSSoft.UI
                 }
             }
             var length = this.GetLength(chars);
-            chars[length - 2].unicode = 255;
-            // if (length == m_TextParsingBuffer.Length)
-            // {
-            //     Array.Resize(ref m_TextParsingBuffer, length + 1);
-            // }
-            // m_TextParsingBuffer[length].stringIndex = m_TextParsingBuffer[length-1].stringIndex + 1;
-            // m_TextParsingBuffer[length].stringIndex = m_TextParsingBuffer[length-1].length;
-            // m_TextParsingBuffer[length].unicode = m_TextParsingBuffer[length-1].unicode;
-            // m_TextParsingBuffer[length-1].stringIndex = m_TextParsingBuffer[length-2].stringIndex + 1;
-            // m_TextParsingBuffer[length-1].stringIndex = m_TextParsingBuffer[length-2].length;
-            // m_TextParsingBuffer[length-1].unicode = m_TextParsingBuffer[length-2].unicode;
-            // m_TextParsingBuffer[length - 2].unicode = 255;
-            // // m_TextParsingBuffer[length - 2].stringIndex = length;
-            // m_TextParsingBuffer[length - 2].length = 1;
+            // chars[length - 2].unicode = 255;
+            if (length == chars.Length)
+            {
+                Array.Resize(ref chars, length + 1);
+            }
+            chars[length].stringIndex = chars[length - 1].stringIndex + 1;
+            chars[length].length = chars[length - 1].length;
+            chars[length].unicode = chars[length - 1].unicode;
+            chars[length - 1].stringIndex = chars[length - 2].stringIndex + 1;
+            chars[length - 1].length = chars[length - 2].length;
+            chars[length - 1].unicode = chars[length - 2].unicode;
+            chars[length - 2].length = 1;
+            chars[length - 2].unicode = 'a';
             this.cursorIndex = length - 2;
-            // Debug.Log($"cursorIndex: {this.cursorIndex}");
-
             var size = base.SetArraySizes(chars);
             return size;
         }
@@ -125,6 +122,7 @@ namespace JSSoft.UI
                 m_textInfo.characterInfo[m_characterCount].highlightColor = backgroundColor;
             }
         }
+
         private int i2;
         protected override void FillCharacterVertexBuffers(int i, int index_X4)
         {
