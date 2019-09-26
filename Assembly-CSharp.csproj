@@ -53,7 +53,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\JSSoft Terminal\Scripts\BufferedText.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\CompositionRenderer.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\CustomTerminal.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\FontUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminal.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminalExtensions.cs" />
