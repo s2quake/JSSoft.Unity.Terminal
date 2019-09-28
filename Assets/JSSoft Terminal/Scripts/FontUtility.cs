@@ -32,8 +32,14 @@ namespace JSSoft.UI
 {
     public static class FontUtility
     {
+        private static readonly char defaultCharacter = 'a';
+        private static readonly int defaultItemWidth = 14;
+        private static readonly int defaultItemHeight = 21;
+
         public static TMP_FontAsset GetFontAsset(TMP_FontAsset fontAsset, char character)
         {
+            if (fontAsset == null)
+                throw new ArgumentNullException(nameof(fontAsset));
             var fontAssets = GetFontAssets(fontAsset);
             foreach (var item in fontAssets)
             {
@@ -58,6 +64,24 @@ namespace JSSoft.UI
                     }
                 }
             }
+        }
+
+        public static TMP_Character GetCharacter(TMP_FontAsset fontAsset, char character)
+        {
+            if (fontAsset == null)
+                throw new ArgumentNullException(nameof(fontAsset));
+            if (FontUtility.GetFontAsset(fontAsset, character) is TMP_FontAsset fontAsset1)
+                return fontAsset1.characterLookupTable[character];
+            return null;
+        }
+
+        public static int GetItemWidth(TMP_FontAsset fontAsset)
+        {
+            if (fontAsset == null)
+                throw new ArgumentNullException(nameof(fontAsset));
+            if (GetCharacter(fontAsset, defaultCharacter) is TMP_Character characterInfo)
+                return (int)characterInfo.glyph.metrics.horizontalAdvance;
+            return defaultItemWidth;
         }
     }
 }

@@ -32,16 +32,41 @@ namespace JSSoft.UI
 {
     public static class VertexUtility
     {
-        public static void SetVertex(Vector3[] vertices, int index, GlyphRect rect)
+        public static void SetVertex(this Vector3[] vertices, int index, GlyphRect rect)
         {
             var left = rect.x;
-            var top = rect.y;
+            var top = rect.y + rect.height;
             var right = rect.x + rect.width;
-            var bottom = rect.y + rect.height;
+            var bottom = rect.y;
             vertices[index + 0] = new Vector3(left, top, 0);
             vertices[index + 1] = new Vector3(left, bottom, 0);
             vertices[index + 2] = new Vector3(right, bottom, 0);
             vertices[index + 3] = new Vector3(right, top, 0);
+        }
+
+        public static void Transform(this Vector3[] vertices, int index, Rect rect)
+        {
+            for (var i = 0; i < 4; i++)
+            {
+                vertices[index + i].x += rect.x;
+                vertices[index + i].y = rect.y + rect.height - vertices[index + i].y;
+            }
+        }
+
+        public static void SetUV(this Vector2[] uvs, int index, Vector2 uv0, Vector2 uv1)
+        {
+            uvs[index + 0] = new Vector2(uv0.x, uv0.y);
+            uvs[index + 1] = new Vector2(uv0.x, uv1.y);
+            uvs[index + 2] = new Vector2(uv1.x, uv1.y);
+            uvs[index + 3] = new Vector2(uv1.x, uv0.y);
+        }
+
+        public static void SetColor(this Color32[] colors, int index, Color32 color)
+        {
+            colors[index + 0] = color;
+            colors[index + 1] = color;
+            colors[index + 2] = color;
+            colors[index + 3] = color;
         }
     }
 }
