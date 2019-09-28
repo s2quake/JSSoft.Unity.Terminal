@@ -32,6 +32,16 @@ namespace JSSoft.UI
 {
     public static class VertexUtility
     {
-        public static void SetVertex
+        public static void SetVertex(Vector3[] vertices, int index, GlyphRect rect)
+        {
+            var left = rect.x;
+            var top = rect.y;
+            var right = rect.x + rect.width;
+            var bottom = rect.y + rect.height;
+            vertices[index + 0] = new Vector3(left, top, 0);
+            vertices[index + 1] = new Vector3(left, bottom, 0);
+            vertices[index + 2] = new Vector3(right, bottom, 0);
+            vertices[index + 3] = new Vector3(right, top, 0);
+        }
     }
 }

@@ -108,13 +108,15 @@ namespace JSSoft.UI
                     var textHeight = (float)texture.height;
                     var uv0 = new Vector2(glyphRect.x / textWidth, glyphRect.y / textHeight);
                     var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
-                    var x = (rect.x + rect.width / 2) - (glyphRect.width / 2);
-                    var y = (rect.y + rect.height / 2) - (glyphRect.height / 2);
+                    var x = rect.x + (rect.width - glyphRect.width) / 2;
+                    var y = rect.y + (rect.height - glyphRect.height) / 2;
+                    var backgroundRect = new GlyphRect((int)x, (int)y, glyphRect.width, glyphRect.height);
 
-                    this.vertices[0] = new Vector3(x, y, 0);
-                    this.vertices[1] = new Vector3(x, y + glyphRect.height, 0);
-                    this.vertices[2] = new Vector3(x + glyphRect.width, y + glyphRect.height, 0);
-                    this.vertices[3] = new Vector3(x + glyphRect.width, y, 0);
+                    VertexUtility.SetVertex(this.vertices, 0, backgroundRect);
+                    // this.vertices[0] = new Vector3(x, y, 0);
+                    // this.vertices[1] = new Vector3(x, y + glyphRect.height, 0);
+                    // this.vertices[2] = new Vector3(x + glyphRect.width, y + glyphRect.height, 0);
+                    // this.vertices[3] = new Vector3(x + glyphRect.width, y, 0);
                     this.vertices[4] = new Vector3(x, y, 0);
                     this.vertices[5] = new Vector3(x, y + glyphRect.height, 0);
                     this.vertices[6] = new Vector3(x + glyphRect.width, y + glyphRect.height, 0);
