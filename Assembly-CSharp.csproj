@@ -68,6 +68,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCursor.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalText.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
      <Compile Include="Assets\Scripts\CommandContext.cs" />
