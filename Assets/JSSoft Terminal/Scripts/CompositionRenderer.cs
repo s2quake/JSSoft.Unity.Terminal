@@ -143,9 +143,9 @@ namespace JSSoft.UI
                 }
                 this.Mesh.Clear();
                 this.Mesh.subMeshCount = 2;
-                this.Mesh.vertices = vertices;
-                this.Mesh.uv = uvs;
-                this.Mesh.colors32 = colors;
+                this.Mesh.vertices = this.vertices;
+                this.Mesh.uv = this.uvs;
+                this.Mesh.colors32 = this.colors;
                 this.Mesh.SetTriangles(backgroundTriangles, 0);
                 this.Mesh.SetTriangles(foregroundTriangles, 1);
                 this.canvasRenderer.materialCount = 2;

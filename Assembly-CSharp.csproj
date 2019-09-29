@@ -63,13 +63,16 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingBase.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Terminal.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalBackground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCell.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColors.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCursor.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRenderer.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRow.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalText.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />

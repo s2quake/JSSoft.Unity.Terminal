@@ -75,6 +75,19 @@ namespace JSSoft.UI
             return null;
         }
 
+        public static int GetCharacterVolume(TMP_FontAsset fontAsset, char character)
+        {
+            if (fontAsset == null)
+                throw new ArgumentNullException(nameof(fontAsset));
+            if (GetCharacter(fontAsset, defaultCharacter) is TMP_Character characterInfo)
+            {
+                var defaultWidth = GetItemWidth(fontAsset);
+                var horizontalAdvance = characterInfo.glyph.metrics.horizontalAdvance;
+                return (int)Math.Ceiling(horizontalAdvance / defaultWidth);
+            }
+            return 1;
+        }
+
         public static int GetItemWidth(TMP_FontAsset fontAsset)
         {
             if (fontAsset == null)
@@ -82,6 +95,42 @@ namespace JSSoft.UI
             if (GetCharacter(fontAsset, defaultCharacter) is TMP_Character characterInfo)
                 return (int)characterInfo.glyph.metrics.horizontalAdvance;
             return defaultItemWidth;
+        }
+
+        public static TerminalRow[] GenerateTerminalRows(TMP_FontAsset fontAsset, string text, int columnCount)
+        {
+            var lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            var rowList = new List<TerminalRow>(lines.Length);
+            for (var i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                while (line != string.Empty)
+                {
+                    var row = new TerminalRow(rowList.Count, columnCount);
+                    line = FillString(fontAsset, row, line);
+                    rowList.Add(row);
+                }
+            }
+            return rowList.ToArray();
+        }
+
+        public static string FillString(TMP_FontAsset fontAsset, TerminalRow row, string text)
+        {
+            var columnIndex = 0;
+            var cellCount = row.Cells.Length;
+            var i = 0;
+            while (columnIndex < cellCount && i < text.Length)
+            {
+                var character = text[i];
+                var cell = row.Cells[columnIndex];
+                var volume = FontUtility.GetCharacterVolume(fontAsset, character);
+                if (columnIndex + volume > cellCount)
+                    break;
+                cell.Refresh(fontAsset, character);
+                columnIndex += volume;
+                i++;
+            }
+            return text.Substring(i);
         }
     }
 }
