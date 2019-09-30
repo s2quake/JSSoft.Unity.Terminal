@@ -36,10 +36,7 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalGrid grid;
 
-        private Vector3[] vertices = new Vector3[] { };
-        private Vector2[] uvs = new Vector2[] { };
-        private Color32[] colors = new Color32[] { };
-        private int[] triangles = new int[] { };
+        private TerminalRect terminalRect = new TerminalRect();
 
         public TerminalBackground()
         {
@@ -51,67 +48,41 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
+
+            var rect = this.rectTransform.rect;
+            var query = from row in this.Rows
+                        from cell in row.Cells
+                        where cell.BackgroundColor is Color32
+                        select cell;
+            var index = 0;
+            this.terminalRect.Count = query.Count();
+            foreach (var item in query)
+            {
+                this.terminalRect.SetVertex(index, item.BackgroundRect, rect);
+                this.terminalRect.SetUV(index, item.BackgroundUV);
+                if (item.BackgroundColor is Color32 color)
+                    this.terminalRect.SetColor(index, color);
+                index++;
+            }
             this.material.color = base.color;
-            // CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
-            Debug.Log(nameof(OnPopulateMesh));
+            this.terminalRect.Fill(vh);
         }
 
         public override void Rebuild(CanvasUpdate executing)
         {
             base.Rebuild(executing);
-            Debug.Log("base.Rebuild(executing);");
-            if (this.fontAsset != null && this.Rows != null && executing == CanvasUpdate.LatePreRender)
-            {
-                var rect = this.rectTransform.rect;
-                var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
-                var itemHeight = (int)this.fontAsset.faceInfo.lineHeight;
-                var columnCount = (int)(rect.width / itemWidth);
-                var rowCount = (int)(rect.height / itemHeight);
-                var vertexCount = rowCount * columnCount * 4 * 2;
-                if (vertexCount > this.vertices.Length)
-                {
-                    this.vertices = new Vector3[vertexCount];
-                    this.uvs = new Vector2[vertexCount];
-                    this.colors = new Color32[vertexCount];
-                    this.triangles = new int[vertexCount / 4 * 6];
-                }
-
-                var index = 0;
-                var query = from row in this.Rows
-                            from cell in row.Cells
-                            where cell.BackgroundColor is Color32
-                            select cell;
-
-                foreach (var item in query)
-                {
-                    this.vertices.SetVertex(index, item.BackgroundRect);
-                    this.vertices.Transform(index, rect);
-                    this.uvs.SetUV(index, item.BackgroundUV);
-                    if (item.BackgroundColor is Color32 color)
-                        this.colors.SetColor(index, color);
-                    index += 4;
-                }
-
-                Array.Clear(this.triangles, 0, this.triangles.Length);
-                this.triangles.SetTriangles(0, 0, index / 4);
-
-                this.Mesh.Clear();
-                this.Mesh.vertices = this.vertices;
-                this.Mesh.uv = this.uvs;
-                this.Mesh.colors32 = this.colors;
-                this.Mesh.triangles = this.triangles;
-                // this.canvasRenderer.Clear();
-                this.canvasRenderer.SetMesh(this.Mesh);
-                Debug.Log("background update");
-            }
         }
 
-        public TerminalRow[] Rows => this.grid?.Rows;
+        public TerminalRow[] Rows => this.grid != null ? this.grid.Rows : new TerminalRow[] { };
+
+        public int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
+
+        public int RowCount => this.grid != null ? this.grid.RowCount : 0;
 
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            Debug.Log(nameof(OnRectTransformDimensionsChange));
+            Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnRectTransformDimensionsChange)}");
         }
 
         protected override void OnCanvasHierarchyChanged()
@@ -135,18 +106,6 @@ namespace JSSoft.UI
 
             // this.gameObject.GetComponentsInChildren
             CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild(this);
-        }
-
-        private Mesh Mesh
-        {
-            get
-            {
-                if (m_CachedMesh == null)
-                {
-                    m_CachedMesh = new Mesh();
-                }
-                return m_CachedMesh;
-            }
         }
     }
 }

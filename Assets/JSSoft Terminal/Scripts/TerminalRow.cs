@@ -43,34 +43,6 @@ namespace JSSoft.UI
             }
         }
 
-        public int FillBackgound(int index, Vector3[] vertices, Vector2[] uvs, Color32[] colors, Rect rect)
-        {
-            foreach (var item in this.ValidCells)
-            {
-                vertices.SetVertex(index, item.BackgroundRect);
-                vertices.Transform(index, rect);
-                uvs.SetUV(index, item.BackgroundUV);
-                if (item.BackgroundColor is Color32 color)
-                    colors.SetColor(index, color);
-                index += 4;
-            }
-            return index;
-        }
-
-        public int FillForegound(int index, Vector3[] vertices, Vector2[] uvs, Color32[] colors, Rect rect)
-        {
-            foreach (var item in this.ValidCells)
-            {
-                vertices.SetVertex(index, item.ForegroundRect);
-                vertices.Transform(index, rect);
-                uvs.SetUV(index, item.ForegroundUV);
-                if (item.ForegroundColor is Color32 color)
-                    colors.SetColor(index, color);
-                index += 4;
-            }
-            return index;
-        }
-
         public int Index { get; }
 
         public TerminalCell[] Cells { get; }

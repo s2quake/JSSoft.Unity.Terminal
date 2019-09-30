@@ -32,7 +32,6 @@ namespace JSSoft.UI
 {
     public class TerminalCell
     {
-        // private TMP_Character characterInfo;
         private GlyphRect backgroundRect;
         private GlyphRect foregroundRect;
         private (Vector2, Vector2) backgroundUV;
@@ -74,26 +73,6 @@ namespace JSSoft.UI
             this.BackgroundColor = this.Index % 2 == 0 ? TerminalColors.Blue : TerminalColors.Red;
             this.ForegroundColor = TerminalColors.Black;
         }
-
-        // public void FillVertices2(Vector3[] vertices, int index)
-        // {
-        //     var itemWidth = FontUtility.GetItemWidth(this.FontAsset);
-        //     var characterInfo = this.FontAsset.characterLookupTable[this.Character];
-        //     var texture = this.FontAsset.atlasTexture;
-        //     var glyph = characterInfo.glyph;
-        //     var glyphRect = glyph.glyphRect;
-        //     var textWidth = (float)texture.width;
-        //     var textHeight = (float)texture.height;
-        //     var uv0 = new Vector2(glyphRect.x / textWidth, glyphRect.y / textHeight);
-        //     var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
-        //     var bx = this.Index * itemWidth;
-        //     var by = this.FontAsset.faceInfo.lineHeight * this.Row.Index;
-        //     var baseLine = by + this.FontAsset.faceInfo.ascentLine;
-        //     var fx = bx + glyph.metrics.horizontalBearingX;
-        //     var fy = by + baseLine - glyph.metrics.horizontalBearingY;
-        //     this.backgroundRect = new GlyphRect((int)bx, (int)by, (int)glyph.metrics.horizontalAdvance, (int)this.FontAsset.faceInfo.lineHeight);
-        //     this.foregroundRect = new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
-        // }
 
         public void Clear()
         {

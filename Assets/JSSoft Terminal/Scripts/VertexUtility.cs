@@ -45,12 +45,36 @@ namespace JSSoft.UI
             return 4;
         }
 
+        public static int SetVertex(this UIVertex[] vertices, int index, GlyphRect rect)
+        {
+            var left = rect.x;
+            var top = rect.y + rect.height;
+            var right = rect.x + rect.width;
+            var bottom = rect.y;
+            vertices[index + 0].position = new Vector3(left, top, 0);
+            vertices[index + 1].position = new Vector3(left, bottom, 0);
+            vertices[index + 2].position = new Vector3(right, bottom, 0);
+            vertices[index + 3].position = new Vector3(right, top, 0);
+            return 4;
+        }
+
         public static void Transform(this Vector3[] vertices, int index, Rect rect)
         {
             for (var i = 0; i < 4; i++)
             {
                 vertices[index + i].x += rect.x;
                 vertices[index + i].y = rect.y + rect.height - vertices[index + i].y;
+            }
+        }
+
+        public static void Transform(this UIVertex[] vertices, int index, Rect rect)
+        {
+            for (var i = 0; i < 4; i++)
+            {
+                var position = vertices[index + i].position;
+                position.x += rect.x;
+                position.y = rect.y + rect.height - position.y;
+                vertices[index + i].position = position;
             }
         }
 
@@ -73,12 +97,40 @@ namespace JSSoft.UI
             return 4;
         }
 
+        public static int SetUV(this UIVertex[] vertices, int index)
+        {
+            return SetUV(vertices, index, Vector2.zero, Vector2.one);
+        }
+
+        public static int SetUV(this UIVertex[] vertices, int index, (Vector2, Vector2) uv)
+        {
+            return SetUV(vertices, index, uv.Item1, uv.Item2);
+        }
+
+        public static int SetUV(this UIVertex[] vertices, int index, Vector2 uv0, Vector2 uv1)
+        {
+            vertices[index + 0].uv0 = new Vector2(uv0.x, uv0.y);
+            vertices[index + 1].uv0 = new Vector2(uv0.x, uv1.y);
+            vertices[index + 2].uv0 = new Vector2(uv1.x, uv1.y);
+            vertices[index + 3].uv0 = new Vector2(uv1.x, uv0.y);
+            return 4;
+        }
+
         public static int SetColor(this Color32[] colors, int index, Color32 color)
         {
             colors[index + 0] = color;
             colors[index + 1] = color;
             colors[index + 2] = color;
             colors[index + 3] = color;
+            return 4;
+        }
+
+        public static int SetColor(this UIVertex[] vertices, int index, Color32 color)
+        {
+            vertices[index + 0].color = color;
+            vertices[index + 1].color = color;
+            vertices[index + 2].color = color;
+            vertices[index + 3].color = color;
             return 4;
         }
 

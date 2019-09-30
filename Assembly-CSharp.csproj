@@ -70,6 +70,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRect.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRow.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalText.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalUtility.cs" />

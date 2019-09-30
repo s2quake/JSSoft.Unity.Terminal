@@ -38,10 +38,7 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalGrid grid;
 
-        private Vector3[] vertices = new Vector3[] { };
-        private Vector2[] uvs = new Vector2[] { };
-        private Color32[] colors = new Color32[] { };
-        private int[] triangles = new int[] { };
+        private TerminalRect terminalRect = new TerminalRect();
 
         public TerminalForeground()
         {
@@ -50,61 +47,49 @@ namespace JSSoft.UI
 
         public override Texture mainTexture => this.fontAsset?.atlasTexture;
 
+        public TerminalRow[] Rows => this.grid != null ? this.grid.Rows : new TerminalRow[] { };
+
+        public int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
+
+        public int RowCount => this.grid != null ? this.grid.RowCount : 0;
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            Debug.Log(nameof(OnValidate));
+
+            foreach (var item in this.FallbackFontAssets)
+            {
+                
+            }
+        }
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            // this.material.color = base.color;
-            // CanvasUpdateRegistry.RegisterCanvasElementForLayoutRebuild(this);
+            var rect = this.rectTransform.rect;
+            var query = from row in this.Rows
+                        from cell in row.Cells
+                        where cell.Character != 0 && cell.FontAsset == this.fontAsset
+                        select cell;
+            var index = 0;
+            this.terminalRect.Count = query.Count();
+            foreach (var item in query)
+            {
+                this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
+                this.terminalRect.SetUV(index, item.ForegroundUV);
+                if (item.ForegroundColor is Color32 color)
+                    this.terminalRect.SetColor(index, color);
+                index++;
+            }
+            this.material.color = base.color;
+            this.terminalRect.Fill(vh);
         }
 
         public override void Rebuild(CanvasUpdate executing)
         {
             base.Rebuild(executing);
-            if (this.fontAsset != null && this.Rows != null && executing == CanvasUpdate.LatePreRender)
-            {
-                var rect = this.rectTransform.rect;
-                var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
-                var itemHeight = (int)this.fontAsset.faceInfo.lineHeight;
-                var columnCount = (int)(rect.width / itemWidth);
-                var rowCount = (int)(rect.height / itemHeight);
-                var vertexCount = rowCount * columnCount * 4 * 2;
-                if (vertexCount > this.vertices.Length)
-                {
-                    this.vertices = new Vector3[vertexCount];
-                    this.uvs = new Vector2[vertexCount];
-                    this.colors = new Color32[vertexCount];
-                    this.triangles = new int[vertexCount / 4 * 6];
-                }
-
-                var index = 0;
-                var query = from row in this.Rows
-                            from cell in row.Cells
-                            where cell.Character != 0
-                            select cell;
-
-                foreach (var item in query)
-                {
-                    this.vertices.SetVertex(index, item.ForegroundRect);
-                    this.vertices.Transform(index, rect);
-                    this.uvs.SetUV(index, item.ForegroundUV);
-                    if (item.ForegroundColor is Color32 color)
-                        this.colors.SetColor(index, color);
-                    index += 4;
-                }
-
-                Array.Clear(this.triangles, 0, this.triangles.Length);
-                this.triangles.SetTriangles(0, 0, index / 4);
-
-                this.Mesh.Clear();
-                this.Mesh.vertices = this.vertices;
-                this.Mesh.uv = this.uvs;
-                this.Mesh.colors32 = this.colors;
-                this.Mesh.triangles = this.triangles;
-                this.canvasRenderer.SetMesh(this.Mesh);
-            }
         }
-
-        public TerminalRow[] Rows => this.grid?.Rows;
 
         protected override void OnRectTransformDimensionsChange()
         {
@@ -126,15 +111,32 @@ namespace JSSoft.UI
             // this.gameObject.GetComponentsInChildren
         }
 
-        private Mesh Mesh
+        private IEnumerable<TMP_FontAsset> FallbackFontAssets
         {
             get
             {
-                if (m_CachedMesh == null)
+                if (this.fontAsset != null && this.fontAsset.fallbackFontAssetTable != null)
                 {
-                    m_CachedMesh = new Mesh();
+                    foreach (var item in this.fontAsset.fallbackFontAssetTable)
+                    {
+                        yield return item;
+                    }
                 }
-                return m_CachedMesh;
+            }
+        }
+
+        private IEnumerable<TerminalForeground> FallbackComponents
+        {
+            get
+            {
+                for (var i = 0; i < this.rectTransform.childCount; i++)
+                {
+                    var childTransform = this.rectTransform.GetChild(i);
+                    if (childTransform.GetComponent<TerminalForeground>() is TerminalForeground component)
+                    {
+                        yield return component;
+                    }
+                }
             }
         }
     }

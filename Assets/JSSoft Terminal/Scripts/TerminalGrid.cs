@@ -36,35 +36,17 @@ namespace JSSoft.UI
         private TMP_FontAsset fontAsset;
         [SerializeField]
         private string text = "123";
-        private TerminalRow[] rows;
 
-        public TerminalRow[] Rows => this.rows;
+        public int ColumnCount { get; private set; }
+
+        public int RowCount { get; private set; }
+
+        public TerminalRow[] Rows { get; private set; } = new TerminalRow[] { };
 
         public override void Rebuild(CanvasUpdate executing)
         {
             base.Rebuild(executing);
             Debug.Log($"{nameof(Rebuild)}: {executing}");
-            if (this.fontAsset != null && executing == CanvasUpdate.LatePreRender)
-            {
-                // var rect = this.rectTransform.rect;
-                // var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
-                // var itemHeight = (int)this.fontAsset.faceInfo.lineHeight;
-                // var columnCount = (int)(rect.width / itemWidth);
-                // var rowCount = (int)(rect.height / itemHeight);
-                // var vertexCount = rowCount * columnCount * 4 * 2;
-
-                // this.rows = FontUtility.GenerateTerminalRows(this.fontAsset, this.text, columnCount);
-                // Debug.Log($"{columnCount} x {rowCount}");
-
-                // for (var i = 0; i < this.rectTransform.childCount; i++)
-                // {
-                //     var childTransform = this.rectTransform.GetChild(i);
-                //     var childGraphic = childTransform.GetComponent<Graphic>();
-                //     childGraphic.SetAllDirty();
-                //     Debug.Log(childGraphic.gameObject.name);
-                // }
-                // CanvasUpdateRegistry.RegisterCanvasElementForGraphicRebuild(this);
-            }
         }
 
         protected override void OnValidate()
@@ -87,23 +69,6 @@ namespace JSSoft.UI
         {
             base.OnRectTransformDimensionsChange();
             Debug.Log(nameof(OnRectTransformDimensionsChange));
-
-            // if (this.fontAsset != null)
-            // {
-            //     var rect = this.rectTransform.rect;
-            //     var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
-            //     var itemHeight = (int)this.fontAsset.faceInfo.lineHeight;
-            //     var columnCount = (int)(rect.width / itemWidth);
-            //     var rowCount = (int)(rect.height / itemHeight);
-            //     var vertexCount = rowCount * columnCount * 4 * 2;
-
-            //     this.rows = FontUtility.GenerateTerminalRows(this.fontAsset, this.text, columnCount);
-            //     Debug.Log($"{columnCount} x {rowCount}");
-            // }
-            // else
-            // {
-            //     this.rows = null;
-            // }
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -116,15 +81,13 @@ namespace JSSoft.UI
                 var rect = this.rectTransform.rect;
                 var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
                 var itemHeight = (int)this.fontAsset.faceInfo.lineHeight;
-                var columnCount = (int)(rect.width / itemWidth);
-                var rowCount = (int)(rect.height / itemHeight);
-                var vertexCount = rowCount * columnCount * 4 * 2;
-
-                this.rows = FontUtility.GenerateTerminalRows(this.fontAsset, this.text, columnCount);
+                this.ColumnCount = (int)(rect.width / itemWidth);
+                this.RowCount = (int)(rect.height / itemHeight);
+                this.Rows = FontUtility.GenerateTerminalRows(this.fontAsset, this.text, this.ColumnCount);
             }
             else
             {
-                this.rows = null;
+                this.Rows = new TerminalRow[] { };
             }
         }
 

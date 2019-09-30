@@ -79,7 +79,7 @@ namespace JSSoft.UI
         {
             if (fontAsset == null)
                 throw new ArgumentNullException(nameof(fontAsset));
-            if (GetCharacter(fontAsset, defaultCharacter) is TMP_Character characterInfo)
+            if (GetCharacter(fontAsset, character) is TMP_Character characterInfo)
             {
                 var defaultWidth = GetItemWidth(fontAsset);
                 var horizontalAdvance = characterInfo.glyph.metrics.horizontalAdvance;
