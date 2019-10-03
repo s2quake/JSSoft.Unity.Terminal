@@ -47,21 +47,9 @@ namespace JSSoft.UI
 
         public override Texture mainTexture => this.fontAsset?.atlasTexture;
 
-        // public TerminalRow[] Rows => this.Grid.Rows;
-
-        // public int ColumnCount => this.Grid.ColumnCount;
-
-        // public int RowCount => this.Grid.RowCount;
-
         protected override void OnValidate()
         {
             base.OnValidate();
-            // Debug.Log(nameof(OnValidate));
-
-            foreach (var item in this.FallbackFontAssets)
-            {
-
-            }
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -83,10 +71,11 @@ namespace JSSoft.UI
             this.terminalRect.Fill(vh);
         }
 
-        public override void Rebuild(CanvasUpdate executing)
-        {
-            base.Rebuild(executing);
-        }
+        // public override void Rebuild(CanvasUpdate executing)
+        // {
+        //     base.Rebuild(executing);
+        //     Debug.Log($"{nameof(TerminalForeground)}.{nameof(Rebuild)}: {executing}");
+        // }
 
         protected override void OnRectTransformDimensionsChange()
         {
@@ -98,27 +87,27 @@ namespace JSSoft.UI
             base.OnEnable();
             // this.material = new Material(Shader.Find("TextMeshPro/Distance Field"));
             // this.material.color = base.color;
-            TerminalGrid.TextChanged += TerminalGrid_TextChanged;
-                        if (this.grid != null)
+            if (this.grid != null)
+            {
+                this.grid.TextChanged += TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            }
             this.SetVerticesDirty();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalGrid.TextChanged -= TerminalGrid_TextChanged;
-                        if (this.grid != null)
+            if (this.grid != null)
+            {
+                this.grid.TextChanged -= TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-            // this.gameObject.GetComponentsInChildren
+            }
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
-            {
-                this.SetVerticesDirty();
-            }
+            this.SetVerticesDirty();
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)

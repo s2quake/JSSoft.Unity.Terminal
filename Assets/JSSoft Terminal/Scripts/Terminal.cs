@@ -36,7 +36,7 @@ using UnityEngine.UI;
 namespace JSSoft.UI
 {
     [AddComponentMenu("UI/Terminal", 15)]
-    public class Terminal : TMP_InputField, ITerminal
+    public class Terminal : Selectable, ITerminal, IUpdateSelectedHandler
     {
         private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
         private readonly List<string> histories = new List<string>();
@@ -64,6 +64,13 @@ namespace JSSoft.UI
 
         private Event processingEvent = new Event();
         private EventHandler<TerminalExecuteEventArgs> executed;
+
+        private int caretPosition;
+
+        [SerializeField]
+        private TerminalGrid grid;
+        [SerializeField]
+        private CompositionRenderer compositionRenderer;
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static Terminal()
@@ -162,7 +169,7 @@ namespace JSSoft.UI
             });
             if (this.onExecuted != null)
             {
-                this.readOnly = true;
+                // this.readOnly = true;
                 if (this.executed != null)
                 {
                     Debug.LogWarning("execute");
@@ -171,7 +178,7 @@ namespace JSSoft.UI
             }
             else if (this.executed != null)
             {
-                this.readOnly = true;
+                // this.readOnly = true;
                 this.executed.Invoke(this, new TerminalExecuteEventArgs(commandText, endAction));
             }
             else
@@ -187,23 +194,23 @@ namespace JSSoft.UI
             this.completion = string.Empty;
             this.promptText = this.prompt;
             this.cursorPosition = 0;
-            this.text = this.outputText + this.promptText;
-            base.caretPosition = this.text.Length;
+            this.Text = this.outputText + this.promptText;
+            this.caretPosition = this.Text.Length;
             this.cursorPosition = 0;
         }
 
         public void MoveToFirst()
         {
-            base.caretPosition = this.outputText.Length + this.prompt.Length;
+            this.caretPosition = this.outputText.Length + this.prompt.Length;
             this.cursorPosition = 0;
-            this.UpdateLabel();
+            //this.UpdateLabel();
         }
 
         public void MoveToLast()
         {
-            base.caretPosition = this.text.Length;
+            this.caretPosition = this.Text.Length;
             this.cursorPosition = this.commandText.Length;
-            this.UpdateLabel();
+            //this.UpdateLabel();
         }
 
         public void ResetOutput()
@@ -216,11 +223,11 @@ namespace JSSoft.UI
             this.cursorPosition = 0;
             this.foregroundColors = new Color32?[] { };
             this.backgroundColors = new Color32?[] { };
-            this.text = this.outputText + this.promptText;
-            base.caretPosition = this.text.Length;
+            this.Text = this.outputText + this.promptText;
+            this.caretPosition = this.Text.Length;
         }
 
-        public new void Append(string text)
+        public void Append(string text)
         {
             this.AppendInternal(text);
         }
@@ -246,46 +253,46 @@ namespace JSSoft.UI
                 {
                     this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
-                this.text = this.outputText + this.promptText;
+                this.Text = this.outputText + this.promptText;
                 if (this.isReadOnly == false)
                 {
-                    base.caretPosition = this.text.Length;
+                    this.caretPosition = this.Text.Length;
                 }
             }
         }
 
         public void NextCompletion()
         {
-            this.PrepareCaretPosition();
+            // this.PrepareCaretPosition();
             this.CompletionImpl(NextCompletion);
         }
 
         public void PrevCompletion()
         {
-            this.PrepareCaretPosition();
+            // this.PrepareCaretPosition();
             this.CompletionImpl(PrevCompletion);
         }
 
         public void Delete()
         {
-            this.PrepareCaretPosition();
+            // this.PrepareCaretPosition();
             if (this.cursorPosition < this.commandText.Length)
             {
-                base.KeyPressed(new Event() { keyCode = KeyCode.Delete });
-                this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
+                // base.KeyPressed(new Event() { keyCode = KeyCode.Delete });
+                // this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
             }
-            this.UpdateLabel();
+            //this.UpdateLabel();
         }
 
         public void Backspace()
         {
-            this.PrepareCaretPosition();
+            // this.PrepareCaretPosition();
             if (this.cursorPosition > 0)
             {
-                base.KeyPressed(new Event() { keyCode = KeyCode.Backspace });
-                this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
+                // base.KeyPressed(new Event() { keyCode = KeyCode.Backspace });
+                // this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
             }
-            this.UpdateLabel();
+            //this.UpdateLabel();
         }
 
         public void NextHistory()
@@ -295,7 +302,7 @@ namespace JSSoft.UI
                 this.inputText = this.commandText = this.histories[this.historyIndex + 1];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.text = this.outputText + this.promptText;
+                this.Text = this.outputText + this.promptText;
                 this.MoveToLast();
                 this.historyIndex++;
             }
@@ -308,7 +315,7 @@ namespace JSSoft.UI
                 this.inputText = this.commandText = this.histories[this.historyIndex - 1];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.text = this.outputText + this.promptText;
+                this.Text = this.outputText + this.promptText;
                 this.MoveToLast();
                 this.historyIndex--;
             }
@@ -317,7 +324,7 @@ namespace JSSoft.UI
                 this.inputText = this.commandText = this.histories[0];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.text = this.outputText + this.promptText;
+                this.Text = this.outputText + this.promptText;
                 this.MoveToLast();
                 this.historyIndex = 0;
             }
@@ -396,10 +403,10 @@ namespace JSSoft.UI
             return text;
         }
 
-        public override void OnUpdateSelected(BaseEventData eventData)
+        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
-            if (!isFocused)
-                return;
+            // if (!isFocused)
+            //     return;
 
             var consumedEvent = false;
             var promptText = this.promptText;
@@ -416,13 +423,24 @@ namespace JSSoft.UI
                         continue;
                     }
                     consumedEvent = true;
-                    // Debug.Log($"{key}: false");
-                    var shouldContinue = KeyPressed(this.processingEvent);
-                    if (shouldContinue == EditState.Finish)
+                    if (this.processingEvent.character != 0)
                     {
-                        //SendOnSubmit();
-                        //DeactivateInputField();
-                        break;
+                        this.Text += this.processingEvent.character;
+                        // if (this.inputSystem.compositionString != string.Empty)
+                        // {
+                        // }
+                        // else
+                        // {
+                        //     int wqer = 0;
+                        // }
+                        if (this.compositionRenderer != null)
+                        {
+                            this.compositionRenderer.Character = this.processingEvent.character;
+                        }
+                    }
+                    else
+                    {
+                        // this.text += this.processingEvent.character;
                     }
                 }
 
@@ -433,7 +451,7 @@ namespace JSSoft.UI
                         switch (this.processingEvent.commandName)
                         {
                             case "SelectAll":
-                                SelectAll();
+                                // SelectAll();
                                 consumedEvent = true;
                                 break;
                         }
@@ -443,41 +461,37 @@ namespace JSSoft.UI
 
             if (consumedEvent)
             {
-                this.promptText = this.text.Substring(this.outputText.Length);
+                this.promptText = this.Text.Substring(this.outputText.Length);
                 if (this.promptText != string.Empty)
                 {
                     this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
                 }
                 this.completion = string.Empty;
-                // Debug.Log($"InputText: \"{inputText}\"");
-                // Debug.Log($"update: {base.stringPositionInternal}");
-                this.isReadOnly = base.caretPosition < this.outputText.Length + this.prompt.Length;
-                this.UpdateLabel();
-                this.cursorPosition = base.stringPositionInternal - (this.outputText.Length + this.prompt.Length);
+                this.isReadOnly = this.caretPosition < this.outputText.Length + this.prompt.Length;
             }
             eventData.Use();
         }
 
-        public override void OnScroll(PointerEventData eventData)
-        {
-            base.OnScroll(eventData);
-            this.UpdateCursorTransform();
-        }
+        // public override void OnScroll(PointerEventData eventData)
+        // {
+        //     base.OnScroll(eventData);
+        //     this.UpdateCursorTransform();
+        // }
 
-        public override void Rebuild(CanvasUpdate update)
-        {
-            base.Rebuild(update);
-            switch (update)
-            {
-                case CanvasUpdate.LatePreRender:
-                    // this.UpdateCursorGeometry();
-                    if (this.textComponent is TerminalText terminalText)
-                    {
-                        terminalText.Refresh();
-                    }
-                    break;
-            }
-        }
+        // public override void Rebuild(CanvasUpdate update)
+        // {
+        //     base.Rebuild(update);
+        //     switch (update)
+        //     {
+        //         case CanvasUpdate.LatePreRender:
+        //             // this.UpdateCursorGeometry();
+        //             if (this.TextComponent is TerminalText terminalText)
+        //             {
+        //                 terminalText.Refresh();
+        //             }
+        //             break;
+        //     }
+        // }
 
         public void ResetColor()
         {
@@ -499,8 +513,27 @@ namespace JSSoft.UI
                     this.cursorPosition = 0;
                 if (this.cursorPosition > this.promptText.Length - this.prompt.Length)
                     this.cursorPosition = this.promptText.Length - this.prompt.Length;
-                base.caretPosition = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                this.UpdateLabel();
+                this.caretPosition = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                //this.UpdateLabel();
+            }
+        }
+
+        public string Text
+        {
+            get
+            {
+                if (this.grid != null)
+                {
+                    return this.grid.Text;
+                }
+                return string.Empty;
+            }
+            private set
+            {
+                if (this.grid != null)
+                {
+                    this.grid.Text = value;
+                }
             }
         }
 
@@ -527,17 +560,17 @@ namespace JSSoft.UI
             base.OnEnable();
             if (Application.isPlaying)
             {
-                var textAreaRect = m_TextComponent.transform.parent;
-                var selectionCaret = textAreaRect.GetComponentInChildren(typeof(TMP_SelectionCaret), true) as TMP_SelectionCaret;
-                if (selectionCaret != null)
-                {
-                    selectionCaret.transform.SetAsLastSibling();
-                    selectionCaret.gameObject.SetActive(false);
-                    //selectionCaret.rectTransform.SetAsLastSibling();
-                    // m_CaretVisible = false;
-                    // base.caretColor = TerminalColors.Transparent;
-                    // Debug.Log("1");
-                }
+                // var textAreaRect = m_TextComponent.transform.parent;
+                // var selectionCaret = textAreaRect.GetComponentInChildren(typeof(TMP_SelectionCaret), true) as TMP_SelectionCaret;
+                // if (selectionCaret != null)
+                // {
+                //     selectionCaret.transform.SetAsLastSibling();
+                //     selectionCaret.gameObject.SetActive(false);
+                //     //selectionCaret.rectTransform.SetAsLastSibling();
+                // m_CaretVisible = false;
+                // base.caretColor = TerminalColors.Transparent;
+                // Debug.Log("1");
+                // }
                 // var cursorObj = new GameObject("TerminalCursor", typeof(RectTransform));
                 // cursorObj.layer = this.gameObject.layer;
                 // this.cursorRect = cursorObj.GetComponent<RectTransform>();
@@ -549,33 +582,28 @@ namespace JSSoft.UI
                 // this.cursorMesh = new Mesh();
                 // this.UpdateCursorTransform();
             }
-            if (this.fontAsset != null)
-            {
-                var charInfo = this.fontAsset.characterLookupTable['a'];
-                var glyph = charInfo.glyph;
-                this.caretWidth = (int)glyph.metrics.horizontalAdvance;
-            }
-            TMPro_EventManager.TEXT_CHANGED_EVENT.Add(ON_TEXT_CHANGED);
-        }
-
-        private void ON_TEXT_CHANGED(UnityEngine.Object obj)
-        {
-
+            // if (this.fontAsset != null)
+            // {
+            //     var charInfo = this.fontAsset.characterLookupTable['a'];
+            //     var glyph = charInfo.glyph;
+            //     this.caretWidth = (int)glyph.metrics.horizontalAdvance;
+            // }
+            // TMPro_EventManager.TEXT_CHANGED_EVENT.Add(ON_TEXT_CHANGED);
         }
 
         protected override void Awake()
         {
             base.Awake();
-            this.onTextSelection = new TMP_InputField.TextSelectionEvent();
-            this.onTextSelection.AddListener(Terminal_onTextSelection);
-            this.onEndTextSelection = new TMP_InputField.TextSelectionEvent();
-            this.onEndTextSelection.AddListener(Terminal_onEndTextSelection);
-            this.cursorVertes = new UIVertex[4];
-            for (var i = 0; i < this.cursorVertes.Length; i++)
-            {
-                this.cursorVertes[i] = UIVertex.simpleVert;
-                this.cursorVertes[i].uv0 = Vector2.zero;
-            }
+            // this.onTextSelection = new TMP_InputField.TextSelectionEvent();
+            // this.onTextSelection.AddListener(Terminal_onTextSelection);
+            // this.onEndTextSelection = new TMP_InputField.TextSelectionEvent();
+            // this.onEndTextSelection.AddListener(Terminal_onEndTextSelection);
+            // this.cursorVertes = new UIVertex[4];
+            // for (var i = 0; i < this.cursorVertes.Length; i++)
+            // {
+            //     this.cursorVertes[i] = UIVertex.simpleVert;
+            //     this.cursorVertes[i].uv0 = Vector2.zero;
+            // }
         }
 
         protected virtual bool OnPreviewKeyDown(Event e)
@@ -597,113 +625,106 @@ namespace JSSoft.UI
             return false;
         }
 
-        protected override bool IsValidChar(char c)
-        {
-            // if (this.isReadOnly == true)
-            //     return false;
-            // if (base.caretPosition < this.outputText.Length + this.prompt.Length)
-            //     return false;
-            var isValid = base.IsValidChar(c);
-            if (isValid == true)
-            {
-                if (base.caretPosition < this.outputText.Length + this.prompt.Length)
-                {
-                    var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                    base.stringPositionInternal = base.stringSelectPositionInternal = position;
-                }
-                // Debug.Log(c);
-                // Debug.Log(base.caretPosition);
-                // return false;
-            }
-            return isValid;
-        }
+        // protected override bool IsValidChar(char c)
+        // {
+        //     var isValid = base.IsValidChar(c);
+        //     if (isValid == true)
+        //     {
+        //         if (this.caretPosition < this.outputText.Length + this.prompt.Length)
+        //         {
+        //             var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+        //             base.stringPositionInternal = base.stringSelectPositionInternal = position;
+        //         }
+        //     }
+        //     return isValid;
+        // }
 
-        private void PrepareCaretPosition()
-        {
-            if (base.caretPosition < this.outputText.Length + this.prompt.Length)
-            {
-                var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                base.stringPositionInternal = base.stringSelectPositionInternal = position;
-                base.caretPositionInternal = base.caretSelectPositionInternal = position;
-            }
-        }
+        // private void PrepareCaretPosition()
+        // {
+        //     if (this.caretPosition < this.outputText.Length + this.prompt.Length)
+        //     {
+        //         var position = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+        //         base.stringPositionInternal = base.stringSelectPositionInternal = position;
+        //         this.caretPositionInternal = base.caretSelectPositionInternal = position;
+        //     }
+        // }
 
-        private void UpdateCursorTransform()
-        {
-            if (this.cursorRect != null)
-            {
-                this.cursorRect.localPosition = m_TextComponent.rectTransform.localPosition;
-                this.cursorRect.localRotation = m_TextComponent.rectTransform.localRotation;
-                this.cursorRect.localScale = m_TextComponent.rectTransform.localScale;
-                this.cursorRect.anchorMin = m_TextComponent.rectTransform.anchorMin;
-                this.cursorRect.anchorMax = m_TextComponent.rectTransform.anchorMax;
-                this.cursorRect.anchoredPosition = m_TextComponent.rectTransform.anchoredPosition;
-                this.cursorRect.sizeDelta = m_TextComponent.rectTransform.sizeDelta;
-                this.cursorRect.pivot = m_TextComponent.rectTransform.pivot;
-            }
-        }
+        // private void UpdateCursorTransform()
+        // {
+        //     if (this.cursorRect != null)
+        //     {
+        //         this.cursorRect.localPosition = m_TextComponent.rectTransform.localPosition;
+        //         this.cursorRect.localRotation = m_TextComponent.rectTransform.localRotation;
+        //         this.cursorRect.localScale = m_TextComponent.rectTransform.localScale;
+        //         this.cursorRect.anchorMin = m_TextComponent.rectTransform.anchorMin;
+        //         this.cursorRect.anchorMax = m_TextComponent.rectTransform.anchorMax;
+        //         this.cursorRect.anchoredPosition = m_TextComponent.rectTransform.anchoredPosition;
+        //         this.cursorRect.sizeDelta = m_TextComponent.rectTransform.sizeDelta;
+        //         this.cursorRect.pivot = m_TextComponent.rectTransform.pivot;
+        //     }
+        // }
 
         internal int CursorPositionInternal => this.outputText.Length + this.prompt.Length + this.cursorPosition;
 
-        private void UpdateCursorGeometry()
-        {
-#if UNITY_EDITOR
-            if (!Application.isPlaying)
-                return;
-#endif
-            if (this.cursorRenderer == null || this.cursorVertes == null)
-                return;
+        //         private void UpdateCursorGeometry()
+        //         {
+        // #if UNITY_EDITOR
+        //             if (!Application.isPlaying)
+        //                 return;
+        // #endif
+        //             if (this.cursorRenderer == null || this.cursorVertes == null)
+        //                 return;
 
-            var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-            if (this.promptText == string.Empty)
-                index = this.outputText.Length + this.cursorPosition;
+        //             var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+        //             if (this.promptText == string.Empty)
+        //                 index = this.outputText.Length + this.cursorPosition;
 
-            using (var vertexHelper = new VertexHelper())
-            {
-                var startPosition = Vector2.zero;
-                var height = 0.0f;
+        //             using (var vertexHelper = new VertexHelper())
+        //             {
+        //                 var startPosition = Vector2.zero;
+        //                 var height = 0.0f;
 
 
-                var currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
-                var characterInfo = m_TextComponent.textInfo.characterInfo[index];
-                var alpha = this.readOnly == true ? 0 : 0.56862745098f;
-                var c = m_TextComponent.font.characterLookupTable['a'];
-                // Caret is positioned at the origin for the first character of each lines and at the advance for subsequent characters.
-                if (index == m_TextComponent.textInfo.lineInfo[currentLine].firstCharacterIndex)
-                {
-                    var currentCharacter = m_TextComponent.textInfo.characterInfo[index];
-                    startPosition = new Vector2(currentCharacter.origin, currentCharacter.descender);
-                    // width = currentCharacter.xAdvance - currentCharacter.origin;
-                    height = currentCharacter.ascender - currentCharacter.descender;
-                }
-                else
-                {
-                    var currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
-                    startPosition = new Vector2(currentCharacter.xAdvance, currentCharacter.descender);
-                    // width = currentCharacter.xAdvance - currentCharacter.origin;
-                    height = currentCharacter.ascender - currentCharacter.descender;
-                }
+        //                 var currentLine = m_TextComponent.textInfo.characterInfo[index].lineNumber;
+        //                 var characterInfo = m_TextComponent.textInfo.characterInfo[index];
+        //                 var alpha = this.readOnly == true ? 0 : 0.56862745098f;
+        //                 var c = m_TextComponent.font.characterLookupTable['a'];
+        //                 // Caret is positioned at the origin for the first character of each lines and at the advance for subsequent characters.
+        //                 if (index == m_TextComponent.textInfo.lineInfo[currentLine].firstCharacterIndex)
+        //                 {
+        //                     var currentCharacter = m_TextComponent.textInfo.characterInfo[index];
+        //                     startPosition = new Vector2(currentCharacter.origin, currentCharacter.descender);
+        //                     // width = currentCharacter.xAdvance - currentCharacter.origin;
+        //                     height = currentCharacter.ascender - currentCharacter.descender;
+        //                 }
+        //                 else
+        //                 {
+        //                     var currentCharacter = m_TextComponent.textInfo.characterInfo[index - 1];
+        //                     startPosition = new Vector2(currentCharacter.xAdvance, currentCharacter.descender);
+        //                     // width = currentCharacter.xAdvance - currentCharacter.origin;
+        //                     height = currentCharacter.ascender - currentCharacter.descender;
+        //                 }
 
-                var top = startPosition.y + height;
-                var bottom = top - height;
-                var scale = m_TextComponent.canvas.scaleFactor;
+        //                 var top = startPosition.y + height;
+        //                 var bottom = top - height;
+        //                 var scale = m_TextComponent.canvas.scaleFactor;
 
-                this.cursorVertes[0].position = new Vector3(startPosition.x, bottom, 0.0f);
-                this.cursorVertes[1].position = new Vector3(startPosition.x, top, 0.0f);
-                this.cursorVertes[2].position = new Vector3(startPosition.x + 4 / scale, top, 0.0f);
-                this.cursorVertes[3].position = new Vector3(startPosition.x + 4 / scale, bottom, 0.0f);
-                this.cursorVertes[0].color = new Color(1, 1, 1, alpha);
-                this.cursorVertes[1].color = new Color(1, 1, 1, alpha);
-                this.cursorVertes[2].color = new Color(1, 1, 1, alpha);
-                this.cursorVertes[3].color = new Color(1, 1, 1, alpha);
+        //                 this.cursorVertes[0].position = new Vector3(startPosition.x, bottom, 0.0f);
+        //                 this.cursorVertes[1].position = new Vector3(startPosition.x, top, 0.0f);
+        //                 this.cursorVertes[2].position = new Vector3(startPosition.x + 4 / scale, top, 0.0f);
+        //                 this.cursorVertes[3].position = new Vector3(startPosition.x + 4 / scale, bottom, 0.0f);
+        //                 this.cursorVertes[0].color = new Color(1, 1, 1, alpha);
+        //                 this.cursorVertes[1].color = new Color(1, 1, 1, alpha);
+        //                 this.cursorVertes[2].color = new Color(1, 1, 1, alpha);
+        //                 this.cursorVertes[3].color = new Color(1, 1, 1, alpha);
 
-                vertexHelper.AddUIVertexQuad(this.cursorVertes);
-                vertexHelper.FillMesh(this.cursorMesh);
+        //                 vertexHelper.AddUIVertexQuad(this.cursorVertes);
+        //                 vertexHelper.FillMesh(this.cursorMesh);
 
-                this.cursorRenderer.SetMesh(this.cursorMesh);
-                this.UpdateCursorTransform();
-            }
-        }
+        //                 this.cursorRenderer.SetMesh(this.cursorMesh);
+        //                 this.UpdateCursorTransform();
+        //             }
+        //         }
 
         private void Terminal_onTextSelection(string a, int i1, int i2)
         {
@@ -768,8 +789,8 @@ namespace JSSoft.UI
                 this.promptText = this.prompt + this.commandText;
                 this.inputText = inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.text = this.outputText + this.promptText;
-                base.caretPosition = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                this.Text = this.outputText + this.promptText;
+                this.caretPosition = this.outputText.Length + this.prompt.Length + this.cursorPosition;
             }
         }
 
@@ -784,7 +805,7 @@ namespace JSSoft.UI
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
-            this.text = this.outputText + this.promptText;
+            this.Text = this.outputText + this.promptText;
         }
 
         private static void AddBinding(IKeyBinding binding)
@@ -799,9 +820,9 @@ namespace JSSoft.UI
             this.completion = string.Empty;
             this.promptText = this.Prompt;
             this.cursorPosition = 0;
-            this.text = this.outputText + this.prompt;
-            base.caretPosition = this.text.Length;
-            this.readOnly = false;
+            this.Text = this.outputText + this.prompt;
+            this.caretPosition = this.Text.Length;
+            this.isReadOnly = false;
         }
 
         private static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
@@ -810,7 +831,7 @@ namespace JSSoft.UI
 
         internal Color32? GetForegroundColor(int index)
         {
-            if (index < this.text.Length && this.text[index] == ' ')
+            if (index < this.Text.Length && this.Text[index] == ' ')
             {
                 return TerminalColors.Transparent;
             }
@@ -842,6 +863,35 @@ namespace JSSoft.UI
             return null;
         }
 
+
+        private BaseInput InputSystem
+        {
+            get
+            {
+                if (EventSystem.current && EventSystem.current.currentInputModule)
+                    return EventSystem.current.currentInputModule.input;
+                return null;
+            }
+        }
+
+        private string CompositionString
+        {
+            get { return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString; }
+        }
+
+        public override void OnSelect(BaseEventData eventData)
+        {
+            base.OnSelect(eventData);
+            this.InputSystem.imeCompositionMode = IMECompositionMode.On;
+        }
+
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            base.OnDeselect(eventData);
+            Debug.Log(nameof(OnDeselect));
+        }
+
+
         public class ExecutedEvent : UnityEvent<string, Action>
         {
 
@@ -851,7 +901,10 @@ namespace JSSoft.UI
 
         void ITerminal.Reset() => this.ResetOutput();
 
-        void ITerminal.Focus() => this.ActivateInputField();
+        void ITerminal.Focus()
+        {
+
+        }
 
         string ITerminal.Command => this.commandText;
 

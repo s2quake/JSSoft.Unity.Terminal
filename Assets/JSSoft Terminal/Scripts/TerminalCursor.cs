@@ -24,14 +24,88 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore;
 using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
     public class TerminalCursor : MaskableGraphic
     {
-        public override void Cull(Rect clipRect, bool validRect)
+        [SerializeField]
+        private TerminalGrid grid;
+        [SerializeField]
+        private Terminal terminal;
+        [SerializeField]
+        private int cursorLeft;
+        [SerializeField]
+        private int cursorTop;
+        private TerminalRect terminalRect = new TerminalRect();
+
+        public TerminalCursor()
         {
+
         }
+
+        public int CursorLeft
+        {
+            get => this.cursorLeft;
+            set
+            {
+                if (value < 0 || value >= this.ColumnCount)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.cursorLeft = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        public int CursorTop
+        {
+            get => this.cursorTop;
+            set
+            {
+                if (value < 0 || value >= this.RowCount)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.cursorTop = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        protected override void OnPopulateMesh(VertexHelper vh)
+        {
+            base.OnPopulateMesh(vh);
+
+            if (this.cursorLeft < this.ColumnCount && this.cursorTop < this.RowCount)
+            {
+                var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
+                var itemWidth = TerminalGrid.GetItemWidth(this.grid);
+                var itemHeight = TerminalGrid.GetItemHeight(this.grid);
+                var x = this.cursorLeft * itemWidth;
+                var y = this.cursorTop * itemHeight;
+                var itemRect = new GlyphRect(x, y, itemWidth, itemHeight);
+                this.terminalRect.Count = 1;
+                this.terminalRect.SetVertex(0, itemRect, rect);
+                this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
+                this.terminalRect.SetColor(0, TerminalColors.Gray);
+            }
+            else
+            {
+                this.terminalRect.Count = 0;
+            }
+            this.material.color = base.color;
+            this.terminalRect.Fill(vh);
+        }
+
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            this.cursorLeft = Math.Min(this.ColumnCount - 1, this.cursorLeft);
+            this.cursorLeft = Math.Max(0, this.cursorLeft);
+            this.cursorTop = Math.Min(this.RowCount - 1, this.cursorTop);
+            this.cursorTop = Math.Max(0, this.cursorTop);
+        }
+
+        private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
+
+        private int RowCount => this.grid != null ? this.grid.RowCount : 0;
     }
 }

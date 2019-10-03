@@ -33,17 +33,18 @@ namespace JSSoft.UI
 {
     public class TerminalRow
     {
+        private readonly List<TerminalCell> cellList = new List<TerminalCell>();
         private Color32? backgroundColor;
         private Color32? foregroundColor;
 
-        public TerminalRow(TerminalGrid grid, int index, int columnCount)
+        public TerminalRow(TerminalGrid grid, int index)
         {
-            this.Grid = grid;
+            this.Grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.Index = index;
-            this.Cells = new TerminalCell[columnCount];
-            for (var i = 0; i < columnCount; i++)
+            this.cellList.Capacity = grid.ColumnCount;
+            for (var i = 0; i < grid.ColumnCount; i++)
             {
-                this.Cells[i] = new TerminalCell(this, i);
+                this.cellList.Add(new TerminalCell(this, i));
             }
         }
 
@@ -51,18 +52,18 @@ namespace JSSoft.UI
 
         public int Index { get; }
 
-        public TerminalCell[] Cells { get; }
+        public IReadOnlyList<TerminalCell> Cells => this.cellList;
 
-        public Color32? BackgroundColor 
+        public Color32? BackgroundColor
         {
             get => this.backgroundColor ?? this.Grid.BackgroundColor;
-            set => this.backgroundColor = value; 
+            set => this.backgroundColor = value;
         }
 
-        public Color32? ForegroundColor 
+        public Color32? ForegroundColor
         {
             get => this.foregroundColor ?? this.Grid.ForegroundColor;
-            set => this.foregroundColor = value; 
+            set => this.foregroundColor = value;
         }
 
         private IEnumerable<TerminalCell> ValidCells => this.Cells.Where(item => item.Character != 0);

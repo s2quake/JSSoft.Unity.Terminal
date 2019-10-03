@@ -36,7 +36,7 @@ namespace JSSoft.UI
         private Event processingEvent = new Event();
         private string text = string.Empty;
 
-        private BaseInput inputSystem
+        private BaseInput InputSystem
         {
             get
             {
@@ -46,15 +46,15 @@ namespace JSSoft.UI
             }
         }
 
-        private string compositionString
+        private string CompositionString
         {
-            get { return inputSystem != null ? inputSystem.compositionString : Input.compositionString; }
+            get { return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString; }
         }
 
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);
-            this.inputSystem.imeCompositionMode = IMECompositionMode.On;
+            this.InputSystem.imeCompositionMode = IMECompositionMode.On;
         }
 
         public override void OnDeselect(BaseEventData eventData)
@@ -74,7 +74,7 @@ namespace JSSoft.UI
                     var key = $"{modifiers}+{keyCode}: '{this.processingEvent.character}'";
                     if (this.processingEvent.character != 0)
                     {
-                        this.text += this.inputSystem.compositionString;
+                        this.text += this.InputSystem.compositionString;
                         // if (this.inputSystem.compositionString != string.Empty)
                         // {
                         // }
@@ -91,11 +91,6 @@ namespace JSSoft.UI
                     {
                         // this.text += this.processingEvent.character;
                     }
-                    // this.text += this.processingEvent.character;
-                    Debug.Log(key);
-                    // Debug.Log($"imeCompositionMode: {this.inputSystem.imeCompositionMode}");
-                    // Debug.Log($"compositionString: {this.inputSystem.compositionString}");
-                    // Debug.Log(this.text);
                 }
             }
             eventData.Use();

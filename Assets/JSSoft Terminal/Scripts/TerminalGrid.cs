@@ -36,7 +36,7 @@ namespace JSSoft.UI
         private TMP_FontAsset fontAsset;
         [SerializeField]
         [TextArea(5, 10)]
-        private string text = "123";
+        private string text = string.Empty;
         [SerializeField]
         private Color32 fontColor = TerminalColors.White;
         [SerializeField]
@@ -44,17 +44,28 @@ namespace JSSoft.UI
         [SerializeField]
         private Scrollbar verticalScrollbar;
 
-        private TerminalRow[] rows = new TerminalRow[] { };
+        private readonly List<TerminalRow> rowList = new List<TerminalRow>();
         private bool isUpdating;
 
         public TerminalGrid()
         {
-            // base.color = TerminalColors.Black;
+
+        }
+
+        public string Text
+        {
+            get => this.text;
+            set
+            {
+                this.text = value ?? throw new ArgumentNullException(nameof(value));
+                this.UpdateGrid();
+                this.OnTextChanged(EventArgs.Empty);
+            }
         }
 
         public static Rect TransformRect(TerminalGrid grid, Rect rect)
         {
-            if (grid != null && grid.fontAsset != null && grid.Rows.Length > 0)
+            if (grid != null && grid.fontAsset != null && grid.rowList.Count > 0)
             {
                 var itemHeight = FontUtility.GetItemHeight(grid.fontAsset);
                 rect.y += itemHeight * grid.visibleIndex;
@@ -78,9 +89,42 @@ namespace JSSoft.UI
             return Enumerable.Empty<TerminalCell>();
         }
 
-        public static event EventHandler TextChanged;
+        public static TerminalCell GetCell(TerminalGrid grid, int cursorLeft, int cursorTop)
+        {
+            if (grid != null)
+            {
+                if (cursorTop >= grid.Rows.Count)
+                    throw new ArgumentOutOfRangeException(nameof(cursorTop));
+                if (cursorLeft >= grid.ColumnCount)
+                    throw new ArgumentOutOfRangeException(nameof(cursorLeft));
+                return grid.Rows[cursorTop].Cells[cursorLeft];
+            }
+            return null;
+        }
+
+        public static int GetItemWidth(TerminalGrid grid)
+        {
+            if (grid != null && grid.fontAsset != null)
+            {
+                return FontUtility.GetItemWidth(grid.fontAsset);
+            }
+            return 0;
+        }
+
+        public static int GetItemHeight(TerminalGrid grid)
+        {
+            if (grid != null && grid.fontAsset != null)
+            {
+                return FontUtility.GetItemHeight(grid.fontAsset);
+            }
+            return 0;
+        }
+
+        public event EventHandler TextChanged;
 
         public event EventHandler VisibleIndexChanged;
+
+        public event EventHandler LayoutChanged;
 
         public TMP_FontAsset FontAsset => this.fontAsset;
 
@@ -88,19 +132,7 @@ namespace JSSoft.UI
 
         public int RowCount { get; private set; }
 
-        public int MaxRowCount => this.Rows.Length;
-
-        public TerminalRow[] Rows
-        {
-            get => this.rows;
-            private set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-                this.rows = value;
-                this.UpdateScrollbarSize();
-            }
-        }
+        public IReadOnlyList<TerminalRow> Rows => this.rowList;
 
         public int VisibleIndex
         {
@@ -112,8 +144,7 @@ namespace JSSoft.UI
                 if (this.visibleIndex != value)
                 {
                     this.visibleIndex = value;
-                    this.visibleIndex = Math.Max(this.visibleIndex, 0);
-                    this.visibleIndex = Math.Min(this.visibleIndex, this.rows.Length - this.RowCount);
+                    this.UpdateVisibleIndex();
                     this.UpdateScrollbarValue();
                     this.OnVisibleIndexChanged(EventArgs.Empty);
                 }
@@ -137,6 +168,16 @@ namespace JSSoft.UI
             base.Rebuild(executing);
         }
 
+        protected virtual void OnTextChanged(EventArgs e)
+        {
+            this.TextChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnLayoutChanged(EventArgs e)
+        {
+            this.LayoutChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         protected virtual void OnVisibleIndexChanged(EventArgs e)
         {
             this.VisibleIndexChanged?.Invoke(this, EventArgs.Empty);
@@ -145,38 +186,11 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (this.fontAsset != null)
-            {
-                var rect = this.rectTransform.rect;
-                var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
-                var itemHeight = (int)this.fontAsset.faceInfo.lineHeight;
-                this.ColumnCount = (int)(rect.width / itemWidth);
-                this.RowCount = (int)(rect.height / itemHeight);
-                this.Rows = GenerateTerminalRows(this, this.text, this.ColumnCount);
-            }
-            else
-            {
-                this.Rows = new TerminalRow[] { };
-            }
-            // for (var i = 0; i < this.rectTransform.childCount; i++)
-            // {
-            //     var childTransform = this.rectTransform.GetChild(i);
-            //     var childGraphic = childTransform.GetComponent<Graphic>();
-            //     if (childGraphic != null)
-            //     {
-            //         CanvasUpdateRegistry.RegisterCanvasElementForGraphicRebuild(childGraphic);
-            //         // Debug.Log($"{nameof(OnValidate)}.{childGraphic.name}");
-            //     }
-            // }
-            // if (this.verticalScrollbar != null)
-            // {
-            //     this.verticalScrollbar.value = this.visibleIndex;
-            //     this.verticalScrollbar.size = this.rows.Length;
-            // }
-            this.visibleIndex = Math.Max(this.visibleIndex, 0);
-            this.visibleIndex = Math.Min(this.visibleIndex, this.rows.Length - this.RowCount);
+            this.UpdateGrid();
+            this.UpdateVisibleIndex();
+            this.UpdateScrollVisible();
             this.UpdateScrollbarValue();
-            TextChanged?.Invoke(this, EventArgs.Empty);
+            this.OnTextChanged(EventArgs.Empty);
         }
 
         protected override void OnRectTransformDimensionsChange()
@@ -197,7 +211,7 @@ namespace JSSoft.UI
             this.material.color = base.color;
             if (this.verticalScrollbar != null)
             {
-                this.verticalScrollbar.size = this.Rows.Length;
+                this.verticalScrollbar.size = this.rowList.Count;
                 this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
             }
             this.SetVerticesDirty();
@@ -217,14 +231,14 @@ namespace JSSoft.UI
             if (this.isUpdating == false)
             {
                 var value1 = (float)this.verticalScrollbar.value;
-                var value2 = (float)Math.Max(1, this.MaxRowCount - this.RowCount);
+                var value2 = (float)Math.Max(1, this.rowList.Count - this.RowCount);
                 this.isUpdating = true;
                 this.VisibleIndex = (int)(value1 * value2);
                 this.isUpdating = false;
             }
         }
 
-        public static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text, int columnCount)
+        public static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text)
         {
             var fontAsset = grid.FontAsset;
             var lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -234,7 +248,7 @@ namespace JSSoft.UI
                 var line = lines[i];
                 while (line != string.Empty)
                 {
-                    var row = new TerminalRow(grid, rowList.Count, columnCount);
+                    var row = new TerminalRow(grid, rowList.Count);
                     line = FillString(fontAsset, row, line);
                     rowList.Add(row);
                 }
@@ -245,7 +259,7 @@ namespace JSSoft.UI
         public static string FillString(TMP_FontAsset fontAsset, TerminalRow row, string text)
         {
             var columnIndex = 0;
-            var cellCount = row.Cells.Length;
+            var cellCount = row.Cells.Count;
             var i = 0;
             while (columnIndex < cellCount && i < text.Length)
             {
@@ -261,12 +275,54 @@ namespace JSSoft.UI
             return text.Substring(i);
         }
 
+        private void UpdateGrid()
+        {
+            if (this.fontAsset != null)
+            {
+                var rect = this.rectTransform.rect;
+                var itemWidth = FontUtility.GetItemWidth(this.fontAsset);
+                var itemHeight = FontUtility.GetItemHeight(this.fontAsset);
+                this.ColumnCount = (int)(rect.width / itemWidth);
+                this.RowCount = (int)(rect.height / itemHeight);
+                this.rowList.Clear();
+                this.rowList.AddRange(GenerateTerminalRows(this, this.text));
+            }
+            else
+            {
+                this.ColumnCount = 0;
+                this.RowCount = 0;
+                this.rowList.Clear();
+            }
+        }
+
+        private void UpdateVisibleIndex()
+        {
+            if (this.Rows.Count < this.RowCount)
+            {
+                this.visibleIndex = 0;
+            }
+            else
+            {
+                this.visibleIndex = Math.Max(this.visibleIndex, 0);
+                this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count - this.RowCount);
+            }
+        }
+
+        private void UpdateScrollVisible()
+        {
+            if (this.verticalScrollbar != null)
+            {
+                var gameObject = this.verticalScrollbar.gameObject;
+                gameObject.SetActive(this.rowList.Count >= this.RowCount);
+            }
+        }
+
         private void UpdateScrollbarValue()
         {
             if (this.verticalScrollbar != null && this.isUpdating == false)
             {
                 var value1 = this.visibleIndex;
-                var value2 = (float)Math.Max(1, this.MaxRowCount - this.RowCount);
+                var value2 = (float)Math.Max(1, this.rowList.Count - this.RowCount);
                 this.isUpdating = true;
                 this.verticalScrollbar.value = value1 / value2;
                 this.isUpdating = false;
@@ -278,7 +334,7 @@ namespace JSSoft.UI
             if (this.verticalScrollbar != null)
             {
                 var value1 = (float)Math.Max(1, this.RowCount);
-                var value2 = (float)Math.Max(1, this.MaxRowCount);
+                var value2 = (float)Math.Max(1, this.rowList.Count);
                 this.verticalScrollbar.size = value1 / value2;
             }
         }

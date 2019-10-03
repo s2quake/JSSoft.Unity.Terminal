@@ -89,26 +89,27 @@ namespace JSSoft.UI
             this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
             this.material.color = base.color;
             this.SetVerticesDirty();
-            TerminalGrid.TextChanged += TerminalGrid_TextChanged;
             if (this.grid != null)
+            {
+                this.grid.TextChanged += TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            }
             Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalGrid.TextChanged -= TerminalGrid_TextChanged;
-                        if (this.grid != null)
+            if (this.grid != null)
+            {
+                this.grid.TextChanged -= TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+            }
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
-            {
-                this.SetVerticesDirty();
-            }
+            this.SetVerticesDirty();
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
