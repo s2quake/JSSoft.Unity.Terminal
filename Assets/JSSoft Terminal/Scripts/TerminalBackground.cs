@@ -43,20 +43,22 @@ namespace JSSoft.UI
 
         }
 
-        public override Texture mainTexture => this.fontAsset?.atlasTexture;
+        // public override Texture mainTexture => this.fontAsset?.atlasTexture;
+
+        public override void Rebuild(CanvasUpdate executing)
+        {
+            base.Rebuild(executing);
+        }
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
 
-            var rect = this.rectTransform.rect;
-            var query = from row in this.Rows
-                        from cell in row.Cells
-                        where cell.BackgroundColor is Color32
-                        select cell;
+            var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
+            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.BackgroundColor is Color32);
             var index = 0;
-            this.terminalRect.Count = query.Count();
-            foreach (var item in query)
+            this.terminalRect.Count = visibleCells.Count();
+            foreach (var item in visibleCells)
             {
                 this.terminalRect.SetVertex(index, item.BackgroundRect, rect);
                 this.terminalRect.SetUV(index, item.BackgroundUV);
@@ -66,18 +68,8 @@ namespace JSSoft.UI
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);
+            // Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnPopulateMesh)}");
         }
-
-        public override void Rebuild(CanvasUpdate executing)
-        {
-            base.Rebuild(executing);
-        }
-
-        public TerminalRow[] Rows => this.grid != null ? this.grid.Rows : new TerminalRow[] { };
-
-        public int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
-
-        public int RowCount => this.grid != null ? this.grid.RowCount : 0;
 
         protected override void OnRectTransformDimensionsChange()
         {
@@ -94,18 +86,34 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.material = new Material(Shader.Find("TextMeshPro/Distance Field"));
+            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
             this.material.color = base.color;
             this.SetVerticesDirty();
-            CanvasUpdateRegistry.RegisterCanvasElementForGraphicRebuild(this);
+            TerminalGrid.TextChanged += TerminalGrid_TextChanged;
+            if (this.grid != null)
+                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            TerminalGrid.TextChanged -= TerminalGrid_TextChanged;
+                        if (this.grid != null)
+                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+        }
 
-            // this.gameObject.GetComponentsInChildren
-            CanvasUpdateRegistry.UnRegisterCanvasElementForRebuild(this);
+        private void TerminalGrid_TextChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        {
+            this.SetVerticesDirty();
         }
     }
 }

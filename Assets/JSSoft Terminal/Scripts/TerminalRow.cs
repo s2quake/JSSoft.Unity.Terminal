@@ -33,19 +33,37 @@ namespace JSSoft.UI
 {
     public class TerminalRow
     {
-        public TerminalRow(int index, int columnCount)
+        private Color32? backgroundColor;
+        private Color32? foregroundColor;
+
+        public TerminalRow(TerminalGrid grid, int index, int columnCount)
         {
+            this.Grid = grid;
             this.Index = index;
             this.Cells = new TerminalCell[columnCount];
             for (var i = 0; i < columnCount; i++)
             {
-                this.Cells[i] = new TerminalCell(i, this);
+                this.Cells[i] = new TerminalCell(this, i);
             }
         }
+
+        public TerminalGrid Grid { get; }
 
         public int Index { get; }
 
         public TerminalCell[] Cells { get; }
+
+        public Color32? BackgroundColor 
+        {
+            get => this.backgroundColor ?? this.Grid.BackgroundColor;
+            set => this.backgroundColor = value; 
+        }
+
+        public Color32? ForegroundColor 
+        {
+            get => this.foregroundColor ?? this.Grid.ForegroundColor;
+            set => this.foregroundColor = value; 
+        }
 
         private IEnumerable<TerminalCell> ValidCells => this.Cells.Where(item => item.Character != 0);
     }

@@ -32,12 +32,10 @@ namespace JSSoft.UI
 {
     public class TerminalCell
     {
-        private GlyphRect backgroundRect;
-        private GlyphRect foregroundRect;
-        private (Vector2, Vector2) backgroundUV;
-        private (Vector2, Vector2) foregroundUV;
+        private Color32? backgroundColor;
+        private Color32? foregroundColor;
 
-        public TerminalCell(int index, TerminalRow row)
+        public TerminalCell(TerminalRow row, int index)
         {
             this.Index = index;
             this.Row = row;
@@ -46,6 +44,7 @@ namespace JSSoft.UI
         public void Refresh(TMP_FontAsset fontAsset, char character)
         {
             this.FontAsset = FontUtility.GetFontAsset(fontAsset, character);
+            this.OriginAsset = fontAsset;
             this.Character = character;
             this.Volume = FontUtility.GetCharacterVolume(fontAsset, character);
             this.UpdateRect();
@@ -53,7 +52,8 @@ namespace JSSoft.UI
 
         public void UpdateRect()
         {
-            var itemWidth = FontUtility.GetItemWidth(this.FontAsset);
+            var itemWidth = FontUtility.GetItemWidth(this.OriginAsset);
+            var characterWidth = FontUtility.GetItemWidth(this.OriginAsset, this.Character);
             var characterInfo = this.FontAsset.characterLookupTable[this.Character];
             var texture = this.FontAsset.atlasTexture;
             var glyph = characterInfo.glyph;
@@ -66,17 +66,16 @@ namespace JSSoft.UI
             var by = this.FontAsset.faceInfo.lineHeight * this.Row.Index;
             var fx = bx + glyph.metrics.horizontalBearingX;
             var fy = by + this.FontAsset.faceInfo.ascentLine - glyph.metrics.horizontalBearingY;
-            this.backgroundRect = new GlyphRect((int)bx, (int)by, (int)glyph.metrics.horizontalAdvance, (int)this.FontAsset.faceInfo.lineHeight);
-            this.foregroundRect = new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
-            this.backgroundUV = (Vector2.zero, Vector2.zero);
-            this.foregroundUV = (uv0, uv1);
-            this.BackgroundColor = this.Index % 2 == 0 ? TerminalColors.Blue : TerminalColors.Red;
-            this.ForegroundColor = TerminalColors.Black;
+            this.BackgroundRect = new GlyphRect((int)bx, (int)by, characterWidth, (int)this.FontAsset.faceInfo.lineHeight);
+            this.ForegroundRect = new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
+            this.BackgroundUV = (Vector2.zero, Vector2.zero);
+            this.ForegroundUV = (uv0, uv1);
         }
 
         public void Clear()
         {
             this.FontAsset = null;
+            this.OriginAsset = null;
             this.Character = char.MinValue;
             this.Volume = 0;
         }
@@ -87,20 +86,30 @@ namespace JSSoft.UI
 
         public TMP_FontAsset FontAsset { get; private set; }
 
+        public TMP_FontAsset OriginAsset { get; private set; }
+
         public char Character { get; private set; }
 
         public int Volume { get; private set; }
 
-        public GlyphRect BackgroundRect => this.backgroundRect;
+        public GlyphRect BackgroundRect { get; private set; }
 
-        public GlyphRect ForegroundRect => this.foregroundRect;
+        public GlyphRect ForegroundRect { get; private set; }
 
-        public (Vector2, Vector2) BackgroundUV => this.backgroundUV;
+        public (Vector2, Vector2) BackgroundUV { get; private set; }
 
-        public (Vector2, Vector2) ForegroundUV => this.foregroundUV;
+        public (Vector2, Vector2) ForegroundUV { get; private set; }
 
-        public Color32? BackgroundColor { get; set; }
+        public Color32? BackgroundColor
+        {
+            get => this.backgroundColor ?? this.Row.BackgroundColor;
+            set => this.backgroundColor = value;
+        }
 
-        public Color32? ForegroundColor { get; set; }
+        public Color32? ForegroundColor
+        {
+            get => this.foregroundColor ?? this.Row.ForegroundColor;
+            set => this.foregroundColor = value;
+        }
     }
 }

@@ -47,34 +47,31 @@ namespace JSSoft.UI
 
         public override Texture mainTexture => this.fontAsset?.atlasTexture;
 
-        public TerminalRow[] Rows => this.grid != null ? this.grid.Rows : new TerminalRow[] { };
+        // public TerminalRow[] Rows => this.Grid.Rows;
 
-        public int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
+        // public int ColumnCount => this.Grid.ColumnCount;
 
-        public int RowCount => this.grid != null ? this.grid.RowCount : 0;
+        // public int RowCount => this.Grid.RowCount;
 
         protected override void OnValidate()
         {
             base.OnValidate();
-            Debug.Log(nameof(OnValidate));
+            // Debug.Log(nameof(OnValidate));
 
             foreach (var item in this.FallbackFontAssets)
             {
-                
+
             }
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            var rect = this.rectTransform.rect;
-            var query = from row in this.Rows
-                        from cell in row.Cells
-                        where cell.Character != 0 && cell.FontAsset == this.fontAsset
-                        select cell;
+            var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
+            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.Character != 0 && item.FontAsset == this.fontAsset);
             var index = 0;
-            this.terminalRect.Count = query.Count();
-            foreach (var item in query)
+            this.terminalRect.Count = visibleCells.Count();
+            foreach (var item in visibleCells)
             {
                 this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
                 this.terminalRect.SetUV(index, item.ForegroundUV);
@@ -101,14 +98,32 @@ namespace JSSoft.UI
             base.OnEnable();
             // this.material = new Material(Shader.Find("TextMeshPro/Distance Field"));
             // this.material.color = base.color;
+            TerminalGrid.TextChanged += TerminalGrid_TextChanged;
+                        if (this.grid != null)
+                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
             this.SetVerticesDirty();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-
+            TerminalGrid.TextChanged -= TerminalGrid_TextChanged;
+                        if (this.grid != null)
+                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
             // this.gameObject.GetComponentsInChildren
+        }
+
+        private void TerminalGrid_TextChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        {
+            this.SetVerticesDirty();
         }
 
         private IEnumerable<TMP_FontAsset> FallbackFontAssets

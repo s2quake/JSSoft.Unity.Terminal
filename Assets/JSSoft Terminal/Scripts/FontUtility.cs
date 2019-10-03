@@ -88,49 +88,32 @@ namespace JSSoft.UI
             return 1;
         }
 
-        public static int GetItemWidth(TMP_FontAsset fontAsset)
+        public static int GetItemWidth(TMP_FontAsset originAsset)
         {
-            if (fontAsset == null)
-                throw new ArgumentNullException(nameof(fontAsset));
-            if (GetCharacter(fontAsset, defaultCharacter) is TMP_Character characterInfo)
+            if (originAsset == null)
+                throw new ArgumentNullException(nameof(originAsset));
+            if (GetCharacter(originAsset, defaultCharacter) is TMP_Character characterInfo)
                 return (int)characterInfo.glyph.metrics.horizontalAdvance;
             return defaultItemWidth;
         }
 
-        public static TerminalRow[] GenerateTerminalRows(TMP_FontAsset fontAsset, string text, int columnCount)
+        public static int GetItemWidth(TMP_FontAsset originAsset, char character)
         {
-            var lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            var rowList = new List<TerminalRow>(lines.Length);
-            for (var i = 0; i < lines.Length; i++)
+            var itemWidth = GetItemWidth(originAsset);
+            if (GetCharacter(originAsset, character) is TMP_Character characterInfo)
             {
-                var line = lines[i];
-                while (line != string.Empty)
-                {
-                    var row = new TerminalRow(rowList.Count, columnCount);
-                    line = FillString(fontAsset, row, line);
-                    rowList.Add(row);
-                }
+                var characterWidth = (int)characterInfo.glyph.metrics.horizontalAdvance;
+                var n = Math.Ceiling(characterWidth / (float)itemWidth);
+                return (int)(itemWidth * n);
             }
-            return rowList.ToArray();
+            return itemWidth;
         }
 
-        public static string FillString(TMP_FontAsset fontAsset, TerminalRow row, string text)
+        public static int GetItemHeight(TMP_FontAsset originAsset)
         {
-            var columnIndex = 0;
-            var cellCount = row.Cells.Length;
-            var i = 0;
-            while (columnIndex < cellCount && i < text.Length)
-            {
-                var character = text[i];
-                var cell = row.Cells[columnIndex];
-                var volume = FontUtility.GetCharacterVolume(fontAsset, character);
-                if (columnIndex + volume > cellCount)
-                    break;
-                cell.Refresh(fontAsset, character);
-                columnIndex += volume;
-                i++;
-            }
-            return text.Substring(i);
+            if (originAsset == null)
+                throw new ArgumentNullException(nameof(originAsset));
+            return (int)Math.Ceiling(originAsset.faceInfo.lineHeight);
         }
     }
 }
