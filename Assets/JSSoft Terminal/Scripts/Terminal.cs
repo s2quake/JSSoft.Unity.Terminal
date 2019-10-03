@@ -70,7 +70,7 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalGrid grid;
         [SerializeField]
-        private CompositionRenderer compositionRenderer;
+        private TerminalComposition compositionRenderer;
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static Terminal()

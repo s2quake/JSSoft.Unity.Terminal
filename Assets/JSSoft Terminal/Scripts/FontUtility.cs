@@ -88,6 +88,61 @@ namespace JSSoft.UI
             return 1;
         }
 
+        public static (Vector2, Vector2) GetUV(TMP_FontAsset fontAsset, char character)
+        {
+            if (fontAsset == null)
+                throw new ArgumentNullException(nameof(fontAsset));
+            if (fontAsset.characterLookupTable.ContainsKey(character) == false)
+                throw new ArgumentException($"'{character}' does not exits.", nameof(character));
+            var characterInfo = fontAsset.characterLookupTable[character];
+            var texture = fontAsset.atlasTexture;
+            var glyph = characterInfo.glyph;
+            var glyphRect = glyph.glyphRect;
+            var textWidth = (float)texture.width;
+            var textHeight = (float)texture.height;
+            var uv0 = new Vector2(glyphRect.x / textWidth, glyphRect.y / textHeight);
+            var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
+            return (uv0, uv1);
+        }
+
+        // public static GlyphRect GetBackgroundRect(TMP_FontAsset fontAsset, char character, int x, int y)
+        // {
+        //     if (fontAsset == null)
+        //         throw new ArgumentNullException(nameof(fontAsset));
+
+        //     if (fontAsset.characterLookupTable.ContainsKey(character) == false)
+        //         throw new ArgumentException($"'{character}' does not exits.", nameof(character));
+        //     var characterWidth = FontUtility.GetItemWidth(fontAsset, character);
+        //     var characterInfo = fontAsset.characterLookupTable[character];
+        //     var texture = fontAsset.atlasTexture;
+        //     var glyph = characterInfo.glyph;
+        //     var glyphRect = glyph.glyphRect;
+        //     var textWidth = (float)texture.width;
+        //     var textHeight = (float)texture.height;
+        //     var bx = x;
+        //     var by = y;
+        //     return new GlyphRect((int)bx, (int)by, characterWidth, (int)this.FontAsset.faceInfo.lineHeight);
+        // }
+        
+        public static GlyphRect GetForegroundRect(TMP_FontAsset fontAsset, char character)
+        {
+            return GetForegroundRect(fontAsset, character, 0, 0);
+        }
+
+        public static GlyphRect GetForegroundRect(TMP_FontAsset fontAsset, char character, int x, int y)
+        {
+            if (fontAsset == null)
+                throw new ArgumentNullException(nameof(fontAsset));
+            if (fontAsset.characterLookupTable.ContainsKey(character) == false)
+                throw new ArgumentException($"'{character}' does not exits.", nameof(character));
+            var characterInfo = fontAsset.characterLookupTable[character];
+            var glyph = characterInfo.glyph;
+            var glyphRect = glyph.glyphRect;
+            var fx = x + glyph.metrics.horizontalBearingX;
+            var fy = y + fontAsset.faceInfo.ascentLine - glyph.metrics.horizontalBearingY;
+            return new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
+        }
+
         public static int GetItemWidth(TMP_FontAsset originAsset)
         {
             if (originAsset == null)

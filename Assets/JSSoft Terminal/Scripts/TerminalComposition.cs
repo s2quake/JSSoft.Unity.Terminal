@@ -24,70 +24,92 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.TextCore;
 using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalCursor : MaskableGraphic
+    public class TerminalComposition : MaskableGraphic
     {
+        [SerializeField]
+        private char character = '최';
         [SerializeField]
         private TerminalGrid grid;
         [SerializeField]
-        private int cursorLeft;
+        private int columnIndex;
         [SerializeField]
-        private int cursorTop;
+        private int rowIndex;
         private TerminalRect terminalRect = new TerminalRect();
+        private Texture texture;
 
-        public TerminalCursor()
+        public TerminalComposition()
         {
 
         }
 
-        public int CursorLeft
+        public char Character
         {
-            get => this.cursorLeft;
+            get => this.character;
+            set
+            {
+                this.character = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        public int ColumnIndex
+        {
+            get => this.columnIndex;
             set
             {
                 if (value < 0 || value >= this.ColumnCount)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorLeft = value;
+                this.columnIndex = value;
                 this.SetVerticesDirty();
             }
         }
 
-        public int CursorTop
+        public int RowIndex
         {
-            get => this.cursorTop;
+            get => this.rowIndex;
             set
             {
                 if (value < 0 || value >= this.RowCount)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorTop = value;
+                this.rowIndex = value;
                 this.SetVerticesDirty();
             }
         }
+
+        public Vector2 Offset { get; set; }
+
+        public override Texture mainTexture => this.texture;
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
 
-            if (this.cursorLeft < this.ColumnCount && this.cursorTop < this.RowCount)
+            if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount)
             {
                 var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
                 var itemWidth = TerminalGrid.GetItemWidth(this.grid);
                 var itemHeight = TerminalGrid.GetItemHeight(this.grid);
-                var x = this.cursorLeft * itemWidth;
-                var y = this.cursorTop * itemHeight;
-                var itemRect = new GlyphRect(x, y, itemWidth, itemHeight);
+                var x = this.columnIndex * itemWidth;
+                var y = this.rowIndex * itemHeight;
+                var fontAsset = FontUtility.GetFontAsset(this.grid.FontAsset, this.character);
+                var itemRect = FontUtility.GetForegroundRect(fontAsset, this.character, x, y);
+                var uv = FontUtility.GetUV(fontAsset, this.character);
                 this.terminalRect.Count = 1;
                 this.terminalRect.SetVertex(0, itemRect, rect);
-                this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
-                this.terminalRect.SetColor(0, TerminalColors.Gray);
+                this.terminalRect.SetUV(0, uv);
+                this.terminalRect.SetColor(0, TerminalColors.White);
+                this.texture = fontAsset.atlasTexture;
             }
             else
             {
                 this.terminalRect.Count = 0;
+                this.texture = null;
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);
@@ -96,10 +118,17 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.cursorLeft = Math.Min(this.ColumnCount - 1, this.cursorLeft);
-            this.cursorLeft = Math.Max(0, this.cursorLeft);
-            this.cursorTop = Math.Min(this.RowCount - 1, this.cursorTop);
-            this.cursorTop = Math.Max(0, this.cursorTop);
+            this.columnIndex = Math.Min(this.ColumnCount - 1, this.columnIndex);
+            this.columnIndex = Math.Max(0, this.columnIndex);
+            this.rowIndex = Math.Min(this.RowCount - 1, this.rowIndex);
+            this.rowIndex = Math.Max(0, this.rowIndex);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
+            this.material.color = base.color;
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;

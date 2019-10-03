@@ -32,7 +32,7 @@ namespace JSSoft.UI
     public class CustomTerminal : Selectable, IUpdateSelectedHandler
     {
         [SerializeField]
-        private CompositionRenderer compositionRenderer;
+        private TerminalComposition compositionRenderer;
         private Event processingEvent = new Event();
         private string text = string.Empty;
 

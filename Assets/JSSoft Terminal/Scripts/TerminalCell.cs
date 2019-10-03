@@ -60,8 +60,6 @@ namespace JSSoft.UI
             var glyphRect = glyph.glyphRect;
             var textWidth = (float)texture.width;
             var textHeight = (float)texture.height;
-            var uv0 = new Vector2(glyphRect.x / textWidth, glyphRect.y / textHeight);
-            var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
             var bx = this.Index * itemWidth;
             var by = this.FontAsset.faceInfo.lineHeight * this.Row.Index;
             var fx = bx + glyph.metrics.horizontalBearingX;
@@ -69,7 +67,7 @@ namespace JSSoft.UI
             this.BackgroundRect = new GlyphRect((int)bx, (int)by, characterWidth, (int)this.FontAsset.faceInfo.lineHeight);
             this.ForegroundRect = new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
             this.BackgroundUV = (Vector2.zero, Vector2.zero);
-            this.ForegroundUV = (uv0, uv1);
+            this.ForegroundUV = FontUtility.GetUV(this.FontAsset, this.Character);
         }
 
         public void Clear()
