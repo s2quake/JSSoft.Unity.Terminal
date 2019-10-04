@@ -30,7 +30,7 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public class TerminalGrid : MaskableGraphic
+    public class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         [SerializeField]
         private TMP_FontAsset fontAsset;
@@ -50,17 +50,6 @@ namespace JSSoft.UI
         public TerminalGrid()
         {
 
-        }
-
-        public string Text
-        {
-            get => this.text;
-            set
-            {
-                this.text = value ?? throw new ArgumentNullException(nameof(value));
-                this.UpdateGrid();
-                this.OnTextChanged(EventArgs.Empty);
-            }
         }
 
         public static Rect TransformRect(TerminalGrid grid, Rect rect)
@@ -120,11 +109,53 @@ namespace JSSoft.UI
             return 0;
         }
 
-        public event EventHandler TextChanged;
+        public static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text)
+        {
+            var fontAsset = grid.FontAsset;
+            var lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            var rowList = new List<TerminalRow>(lines.Length);
+            for (var i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                while (line != string.Empty)
+                {
+                    var row = new TerminalRow(grid, rowList.Count);
+                    line = FillString(fontAsset, row, line);
+                    rowList.Add(row);
+                }
+            }
+            return rowList.ToArray();
+        }
 
-        public event EventHandler VisibleIndexChanged;
+        public static string FillString(TMP_FontAsset fontAsset, TerminalRow row, string text)
+        {
+            var columnIndex = 0;
+            var cellCount = row.Cells.Count;
+            var i = 0;
+            while (columnIndex < cellCount && i < text.Length)
+            {
+                var character = text[i];
+                var cell = row.Cells[columnIndex];
+                var volume = FontUtility.GetCharacterVolume(fontAsset, character);
+                if (columnIndex + volume > cellCount)
+                    break;
+                cell.Refresh(fontAsset, character);
+                columnIndex += volume;
+                i++;
+            }
+            return text.Substring(i);
+        }
 
-        public event EventHandler LayoutChanged;
+        public string Text
+        {
+            get => this.text;
+            set
+            {
+                this.text = value ?? throw new ArgumentNullException(nameof(value));
+                this.UpdateGrid();
+                this.OnTextChanged(EventArgs.Empty);
+            }
+        }
 
         public TMP_FontAsset FontAsset => this.fontAsset;
 
@@ -162,6 +193,12 @@ namespace JSSoft.UI
             get => this.fontColor;
             set => this.fontColor = value;
         }
+
+        public event EventHandler TextChanged;
+
+        public event EventHandler VisibleIndexChanged;
+
+        public event EventHandler LayoutChanged;
 
         public override void Rebuild(CanvasUpdate executing)
         {
@@ -201,7 +238,6 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-
         }
 
         protected override void OnEnable()
@@ -236,43 +272,6 @@ namespace JSSoft.UI
                 this.VisibleIndex = (int)(value1 * value2);
                 this.isUpdating = false;
             }
-        }
-
-        public static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text)
-        {
-            var fontAsset = grid.FontAsset;
-            var lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            var rowList = new List<TerminalRow>(lines.Length);
-            for (var i = 0; i < lines.Length; i++)
-            {
-                var line = lines[i];
-                while (line != string.Empty)
-                {
-                    var row = new TerminalRow(grid, rowList.Count);
-                    line = FillString(fontAsset, row, line);
-                    rowList.Add(row);
-                }
-            }
-            return rowList.ToArray();
-        }
-
-        public static string FillString(TMP_FontAsset fontAsset, TerminalRow row, string text)
-        {
-            var columnIndex = 0;
-            var cellCount = row.Cells.Count;
-            var i = 0;
-            while (columnIndex < cellCount && i < text.Length)
-            {
-                var character = text[i];
-                var cell = row.Cells[columnIndex];
-                var volume = FontUtility.GetCharacterVolume(fontAsset, character);
-                if (columnIndex + volume > cellCount)
-                    break;
-                cell.Refresh(fontAsset, character);
-                columnIndex += volume;
-                i++;
-            }
-            return text.Substring(i);
         }
 
         private void UpdateGrid()
@@ -336,6 +335,33 @@ namespace JSSoft.UI
                 var value1 = (float)Math.Max(1, this.RowCount);
                 var value2 = (float)Math.Max(1, this.rowList.Count);
                 this.verticalScrollbar.size = value1 / value2;
+            }
+        }
+
+        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+        {
+            // Debug.Log("IBeginDragHandler.OnBeginDrag");
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                Debug.Log(eventData.position);
+            }
+        }
+
+        void IDragHandler.OnDrag(PointerEventData eventData)
+        {
+            // Debug.Log("IDragHandler.OnDrag");
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                Debug.Log(eventData.position);
+            }
+        }
+
+        void IEndDragHandler.OnEndDrag(PointerEventData eventData)
+        {
+            // Debug.Log("IEndDragHandler.OnEndDrag");
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                Debug.Log(eventData.position);
             }
         }
     }

@@ -32,8 +32,13 @@ namespace JSSoft.UI
 {
     public class TerminalComposition : MaskableGraphic
     {
+        private static readonly int[] backgroundTriangles = new int[6] { 0, 1, 2, 2, 3, 0 };
+        private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
+
         [SerializeField]
-        private char character = '최';
+        private char character;
+        [SerializeField]
+        private Color fontColor = Color.black;
         [SerializeField]
         private TerminalGrid grid;
         [SerializeField]
@@ -42,6 +47,9 @@ namespace JSSoft.UI
         private int rowIndex;
         private TerminalRect terminalRect = new TerminalRect();
         private Texture texture;
+        private Vector3[] vertices = new Vector3[8];
+        private Vector2[] uvs = new Vector2[8];
+        private Color32[] colors = new Color32[8];
 
         public TerminalComposition()
         {
@@ -82,37 +90,24 @@ namespace JSSoft.UI
             }
         }
 
+        public override void Rebuild(CanvasUpdate update)
+        {
+            base.Rebuild(update);
+            if (update == CanvasUpdate.LatePreRender)
+            {
+                this.UpdateGeometry();
+            }
+        }
+
         public Vector2 Offset { get; set; }
 
         public override Texture mainTexture => this.texture;
 
+        public TMP_FontAsset FontAsset => this.grid?.FontAsset;
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-
-            if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount)
-            {
-                var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-                var itemWidth = TerminalGrid.GetItemWidth(this.grid);
-                var itemHeight = TerminalGrid.GetItemHeight(this.grid);
-                var x = this.columnIndex * itemWidth;
-                var y = this.rowIndex * itemHeight;
-                var fontAsset = FontUtility.GetFontAsset(this.grid.FontAsset, this.character);
-                var itemRect = FontUtility.GetForegroundRect(fontAsset, this.character, x, y);
-                var uv = FontUtility.GetUV(fontAsset, this.character);
-                this.terminalRect.Count = 1;
-                this.terminalRect.SetVertex(0, itemRect, rect);
-                this.terminalRect.SetUV(0, uv);
-                this.terminalRect.SetColor(0, TerminalColors.White);
-                this.texture = fontAsset.atlasTexture;
-            }
-            else
-            {
-                this.terminalRect.Count = 0;
-                this.texture = null;
-            }
-            this.material.color = base.color;
-            this.terminalRect.Fill(vh);
         }
 
         protected override void OnValidate()
@@ -127,12 +122,76 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
+            this.material = new Material(Shader.Find("Unlit/Color"));
             this.material.color = base.color;
+        }
+
+        protected override void UpdateGeometry()
+        {
+            base.UpdateGeometry();
+
+            if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount)
+            {
+                var rect = this.rectTransform.rect;
+                var fontAsset = FontUtility.GetFontAsset(this.FontAsset, this.character);
+                var characterInfo = fontAsset.characterLookupTable[this.character];
+                var texture = fontAsset.atlasTexture;
+                var glyph = characterInfo.glyph;
+                var glyphRect = glyph.glyphRect;
+                var itemWidth = TerminalGrid.GetItemWidth(this.grid);
+                var itemHeight = TerminalGrid.GetItemHeight(this.grid);
+                var bx = this.columnIndex * itemWidth;
+                var by = this.rowIndex * itemHeight;
+                var foregroundRect = FontUtility.GetForegroundRect(fontAsset, this.character, bx, by);
+                var backgroundRect = foregroundRect.Expand(1);
+                var uv = FontUtility.GetUV(fontAsset, this.character);
+
+                this.vertices.SetVertex(0, backgroundRect);
+                this.vertices.Transform(0, rect);
+                this.vertices.SetVertex(4, foregroundRect);
+                this.vertices.Transform(4, rect);
+                this.uvs.SetUV(0, Vector2.zero, Vector2.zero);
+                this.uvs.SetUV(4, uv);
+                this.colors.SetColor(0, base.color);
+                this.colors.SetColor(4, this.fontColor);
+                this.texture = texture;
+
+                this.Mesh.Clear();
+                this.Mesh.subMeshCount = 2;
+                this.Mesh.vertices = this.vertices;
+                this.Mesh.uv = this.uvs;
+                this.Mesh.colors32 = this.colors;
+                this.Mesh.SetTriangles(backgroundTriangles, 0);
+                this.Mesh.SetTriangles(foregroundTriangles, 1);
+
+                this.canvasRenderer.materialCount = 2;
+                this.canvasRenderer.SetTexture(this.texture);
+                this.canvasRenderer.SetMaterial(this.material, 0);
+                this.canvasRenderer.SetMaterial(fontAsset.material, 1);
+                this.canvasRenderer.SetMesh(this.Mesh);
+            }
+            else
+            {
+                this.Mesh.Clear();
+                this.canvasRenderer.SetMesh(this.Mesh);
+                this.texture = null;
+            }
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
 
         private int RowCount => this.grid != null ? this.grid.RowCount : 0;
+
+        private Mesh Mesh
+        {
+            get
+            {
+                if (m_CachedMesh == null)
+                {
+                    m_CachedMesh = new Mesh();
+                }
+                return m_CachedMesh;
+            }
+        }
     }
 }

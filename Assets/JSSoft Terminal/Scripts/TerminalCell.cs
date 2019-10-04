@@ -90,6 +90,8 @@ namespace JSSoft.UI
 
         public int Volume { get; private set; }
 
+        public bool IsSelected { get; set; }
+
         public GlyphRect BackgroundRect { get; private set; }
 
         public GlyphRect ForegroundRect { get; private set; }

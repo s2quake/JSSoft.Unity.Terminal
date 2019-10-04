@@ -54,6 +54,8 @@ namespace JSSoft.UI
 
         public IReadOnlyList<TerminalCell> Cells => this.cellList;
 
+        public bool IsSelected { get; set; }
+
         public Color32? BackgroundColor
         {
             get => this.backgroundColor ?? this.Grid.BackgroundColor;

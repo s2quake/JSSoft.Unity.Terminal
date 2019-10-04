@@ -154,5 +154,14 @@ namespace JSSoft.UI
                 vertexIndex += 4;
             }
         }
+
+        public static GlyphRect Expand(this GlyphRect rect, int size)
+        {
+            rect.x -= size;
+            rect.y -= size;
+            rect.width += (size * 2);
+            rect.height += (size * 2);
+            return rect;
+        }
     }
 }
