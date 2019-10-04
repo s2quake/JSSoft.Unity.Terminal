@@ -55,7 +55,7 @@ namespace JSSoft.UI
             base.OnPopulateMesh(vh);
 
             var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.BackgroundColor is Color32);
+            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.BackgroundColor is Color32 || item.IsSelected == true);
             var index = 0;
             this.terminalRect.Count = visibleCells.Count();
             foreach (var item in visibleCells)
@@ -64,6 +64,8 @@ namespace JSSoft.UI
                 this.terminalRect.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
                     this.terminalRect.SetColor(index, color);
+                if (item.IsSelected == true)
+                    this.terminalRect.SetColor(index, TerminalColors.Green);
                 index++;
             }
             this.material.color = base.color;

@@ -30,7 +30,7 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
     {
         [SerializeField]
         private TMP_FontAsset fontAsset;
@@ -362,6 +362,27 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 Debug.Log(eventData.position);
+            }
+        }
+
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                var position = eventData.position;
+                var rect = this.rectTransform.rect;
+                // position.x += rect.x;
+                position.y = rect.height - position.y;
+                Debug.Log(position);
+                foreach (var item in this.rowList)
+                {
+                    if (item.Intersect(position) is TerminalCell cell)
+                    {
+                        cell.IsSelected = !cell.IsSelected;
+                        this.OnTextChanged(EventArgs.Empty);
+                        break;
+                    }
+                }
             }
         }
     }

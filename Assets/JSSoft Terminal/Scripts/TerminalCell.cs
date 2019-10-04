@@ -39,6 +39,7 @@ namespace JSSoft.UI
         {
             this.Index = index;
             this.Row = row;
+            this.UpdateRect();
         }
 
         public void Refresh(TMP_FontAsset fontAsset, char character)
@@ -47,10 +48,10 @@ namespace JSSoft.UI
             this.OriginAsset = fontAsset;
             this.Character = character;
             this.Volume = FontUtility.GetCharacterVolume(fontAsset, character);
-            this.UpdateRect();
+            this.UpdateLayout();
         }
 
-        public void UpdateRect()
+        public void UpdateLayout()
         {
             var itemWidth = FontUtility.GetItemWidth(this.OriginAsset);
             var characterWidth = FontUtility.GetItemWidth(this.OriginAsset, this.Character);
@@ -76,6 +77,11 @@ namespace JSSoft.UI
             this.OriginAsset = null;
             this.Character = char.MinValue;
             this.Volume = 0;
+        }
+
+        public bool Intersect(Vector2 position)
+        {
+            return this.BackgroundRect.Intersect(position);
         }
 
         public int Index { get; }
@@ -110,6 +116,17 @@ namespace JSSoft.UI
         {
             get => this.foregroundColor ?? this.Row.ForegroundColor;
             set => this.foregroundColor = value;
+        }
+
+        private void UpdateRect()
+        {
+            var itemWidth = TerminalGrid.GetItemWidth(this.Row.Grid);
+            var itemHeight = TerminalGrid.GetItemHeight(this.Row.Grid);
+            var x = this.Index * itemWidth;
+            var y = this.Row.Index * itemHeight;
+            var width = itemWidth;
+            var height = itemHeight;
+            this.BackgroundRect = new GlyphRect(x, y, width, height);
         }
     }
 }

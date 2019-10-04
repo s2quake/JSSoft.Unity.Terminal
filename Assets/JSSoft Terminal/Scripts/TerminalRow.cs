@@ -46,6 +46,19 @@ namespace JSSoft.UI
             {
                 this.cellList.Add(new TerminalCell(this, i));
             }
+            this.UpdateRect();
+        }
+
+        public TerminalCell Intersect(Vector2 position)
+        {
+            if (this.Rect.Intersect(position) == false)
+                return null;
+            foreach (var item in this.cellList)
+            {
+                if (item.Intersect(position) == true)
+                    return item;
+            }
+            throw new NotImplementedException();
         }
 
         public TerminalGrid Grid { get; }
@@ -55,6 +68,8 @@ namespace JSSoft.UI
         public IReadOnlyList<TerminalCell> Cells => this.cellList;
 
         public bool IsSelected { get; set; }
+
+        public GlyphRect Rect { get; private set; }
 
         public Color32? BackgroundColor
         {
@@ -66,6 +81,17 @@ namespace JSSoft.UI
         {
             get => this.foregroundColor ?? this.Grid.ForegroundColor;
             set => this.foregroundColor = value;
+        }
+
+        private void UpdateRect()
+        {
+            var itemWidth = TerminalGrid.GetItemWidth(this.Grid);
+            var itemHeight = TerminalGrid.GetItemHeight(this.Grid);
+            var x = 0;
+            var y = this.Index * itemHeight;
+            var width = this.cellList.Count * itemWidth;
+            var height = itemHeight;
+            this.Rect = new GlyphRect(x, y, width, height);
         }
 
         private IEnumerable<TerminalCell> ValidCells => this.Cells.Where(item => item.Character != 0);

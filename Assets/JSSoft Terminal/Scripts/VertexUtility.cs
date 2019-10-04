@@ -163,5 +163,14 @@ namespace JSSoft.UI
             rect.height += (size * 2);
             return rect;
         }
+
+        public static bool Intersect(this GlyphRect rect, Vector2 position)
+        {
+            if (position.x < rect.x || position.y < rect.y)
+                return false;
+            if (position.x >= rect.x + rect.width || position.y >= rect.y + rect.height)
+                return false;
+            return true;
+        }
     }
 }
