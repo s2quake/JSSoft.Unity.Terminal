@@ -54,19 +54,12 @@ namespace JSSoft.UI
         public void UpdateLayout()
         {
             var itemWidth = FontUtility.GetItemWidth(this.OriginAsset);
+            var itemHeight = FontUtility.GetItemHeight(this.OriginAsset);
             var characterWidth = FontUtility.GetItemWidth(this.OriginAsset, this.Character);
-            var characterInfo = this.FontAsset.characterLookupTable[this.Character];
-            var texture = this.FontAsset.atlasTexture;
-            var glyph = characterInfo.glyph;
-            var glyphRect = glyph.glyphRect;
-            var textWidth = (float)texture.width;
-            var textHeight = (float)texture.height;
-            var bx = this.Index * itemWidth;
-            var by = this.FontAsset.faceInfo.lineHeight * this.Row.Index;
-            var fx = bx + glyph.metrics.horizontalBearingX;
-            var fy = by + this.FontAsset.faceInfo.ascentLine - glyph.metrics.horizontalBearingY;
-            this.BackgroundRect = new GlyphRect((int)bx, (int)by, characterWidth, (int)this.FontAsset.faceInfo.lineHeight);
-            this.ForegroundRect = new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
+            var x = this.Index * itemWidth;
+            var y = this.Row.Index * itemHeight;
+            this.BackgroundRect = new GlyphRect((int)x, (int)y, characterWidth, itemHeight);
+            this.ForegroundRect = FontUtility.GetForegroundRect(this.FontAsset, this.Character, x, y);
             this.BackgroundUV = (Vector2.zero, Vector2.zero);
             this.ForegroundUV = FontUtility.GetUV(this.FontAsset, this.Character);
         }

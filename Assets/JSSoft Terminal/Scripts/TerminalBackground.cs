@@ -55,7 +55,7 @@ namespace JSSoft.UI
             base.OnPopulateMesh(vh);
 
             var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.BackgroundColor is Color32 || item.IsSelected == true);
+            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.Character != 0 || item.IsSelected == true);
             var index = 0;
             this.terminalRect.Count = visibleCells.Count();
             foreach (var item in visibleCells)
@@ -70,6 +70,7 @@ namespace JSSoft.UI
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);
+            Debug.Log($"backgound count: {index}");
             // Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnPopulateMesh)}");
         }
 
@@ -95,6 +96,7 @@ namespace JSSoft.UI
             {
                 this.grid.TextChanged += TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+                this.grid.SelectionChanged += TerminalGrid_SelectionChanged;
             }
             Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
         }
@@ -106,6 +108,7 @@ namespace JSSoft.UI
             {
                 this.grid.TextChanged -= TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+                this.grid.SelectionChanged -= TerminalGrid_SelectionChanged;
             }
         }
 
@@ -115,6 +118,11 @@ namespace JSSoft.UI
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        {
+            this.SetVerticesDirty();
+        }
+
+        private void TerminalGrid_SelectionChanged(object sender, EventArgs e)
         {
             this.SetVerticesDirty();
         }

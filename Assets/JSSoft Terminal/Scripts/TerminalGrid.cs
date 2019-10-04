@@ -27,6 +27,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections.ObjectModel;
 
 namespace JSSoft.UI
 {
@@ -146,6 +147,26 @@ namespace JSSoft.UI
             return text.Substring(i);
         }
 
+        public Vector2 WorldToGrid(Vector2 position)
+        {
+            var rect = this.rectTransform.rect;
+            position.y = rect.height - position.y;
+            position.y += GetItemHeight(this) * this.visibleIndex;
+            return position;
+        }
+
+        public TerminalPoint Intersect(Vector2 position)
+        {
+            foreach (var item in this.rowList)
+            {
+                if (item.Intersect(position) is TerminalCell cell)
+                {
+                    return new TerminalPoint(cell.Index, item.Index);
+                }
+            }
+            return TerminalPoint.Invalid;
+        }
+
         public string Text
         {
             get => this.text;
@@ -200,6 +221,8 @@ namespace JSSoft.UI
 
         public event EventHandler LayoutChanged;
 
+        public event EventHandler SelectionChanged;
+
         public override void Rebuild(CanvasUpdate executing)
         {
             base.Rebuild(executing);
@@ -220,12 +243,18 @@ namespace JSSoft.UI
             this.VisibleIndexChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        protected virtual void OnSelectionChanged(EventArgs e)
+        {
+            this.SelectionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         protected override void OnValidate()
         {
             base.OnValidate();
             this.UpdateGrid();
             this.UpdateVisibleIndex();
             this.UpdateScrollVisible();
+            this.UpdateScrollbarSize();
             this.UpdateScrollbarValue();
             this.OnTextChanged(EventArgs.Empty);
         }
@@ -247,7 +276,6 @@ namespace JSSoft.UI
             this.material.color = base.color;
             if (this.verticalScrollbar != null)
             {
-                this.verticalScrollbar.size = this.rowList.Count;
                 this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
             }
             this.SetVerticesDirty();
@@ -292,6 +320,7 @@ namespace JSSoft.UI
                 this.RowCount = 0;
                 this.rowList.Clear();
             }
+            Debug.Log("Grid Update.");
         }
 
         private void UpdateVisibleIndex()
@@ -338,30 +367,57 @@ namespace JSSoft.UI
             }
         }
 
+        TerminalPoint startPoint;
+        TerminalPoint endPoint;
+
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            // Debug.Log("IBeginDragHandler.OnBeginDrag");
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                Debug.Log(eventData.position);
+                var position = this.WorldToGrid(eventData.position);
+                this.startPoint = this.endPoint = this.Intersect(position);
             }
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            // Debug.Log("IDragHandler.OnDrag");
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                Debug.Log(eventData.position);
+                var position = this.WorldToGrid(eventData.position);
+                this.endPoint = this.Intersect(position);
             }
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            // Debug.Log("IEndDragHandler.OnEndDrag");
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                Debug.Log(eventData.position);
+                var position = this.WorldToGrid(eventData.position);
+                this.endPoint = this.Intersect(position);
+
+                var p1 = this.startPoint < this.endPoint ? this.startPoint : this.endPoint;
+                var p2 = this.startPoint > this.endPoint ? this.startPoint : this.endPoint;
+
+                foreach(var item in this.GetCells(p1, p2))
+                {
+                    item.IsSelected = !item.IsSelected;
+                }
+                this.OnSelectionChanged(EventArgs.Empty);
+            }
+        }
+
+        private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
+        {
+            var x = p1.X;
+            var y = p2.Y;
+            while (x != p2.X && y != p2.Y)
+            {
+                yield return this.rowList[y].Cells[x];
+                if (++x == this.ColumnCount)
+                {
+                    y++;
+                    x = 0;
+                }
             }
         }
 
@@ -369,20 +425,20 @@ namespace JSSoft.UI
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                var position = eventData.position;
-                var rect = this.rectTransform.rect;
-                // position.x += rect.x;
-                position.y = rect.height - position.y;
-                Debug.Log(position);
-                foreach (var item in this.rowList)
-                {
-                    if (item.Intersect(position) is TerminalCell cell)
-                    {
-                        cell.IsSelected = !cell.IsSelected;
-                        this.OnTextChanged(EventArgs.Empty);
-                        break;
-                    }
-                }
+                // var position = eventData.position;
+                // var rect = this.rectTransform.rect;
+                // position.y = rect.height - position.y;
+                // position.y += GetItemHeight(this) * this.visibleIndex;
+                // Debug.Log(position);
+                // foreach (var item in this.rowList)
+                // {
+                //     if (item.Intersect(position) is TerminalCell cell)
+                //     {
+                //         cell.IsSelected = !cell.IsSelected;
+                //         this.OnTextChanged(EventArgs.Empty);
+                //         break;
+                //     }
+                // }
             }
         }
     }
