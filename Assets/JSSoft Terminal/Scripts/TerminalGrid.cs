@@ -49,6 +49,7 @@ namespace JSSoft.UI
         private TerminalPoint cursorPostion;
 
         private readonly List<TerminalRow> rowList = new List<TerminalRow>();
+        private TerminalPoint[] points = new TerminalPoint[] { };
         private bool isUpdating;
         private bool isSelecting;
         private TerminalPoint startPoint;
@@ -136,45 +137,63 @@ namespace JSSoft.UI
             return 0;
         }
 
-        private static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text)
+        private void GenerateRows(int index)
         {
-            if (grid == null)
-                throw new ArgumentNullException(nameof(grid));
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            var s = text.Replace("\r\n", "\n");
-            var fontAsset = grid.FontAsset;
-            var i = 0;
-            var rowList = new List<TerminalRow>();
-            while (i < s.Length)
+            var text = this.text + char.MinValue;
+            var pool = new Stack<TerminalRow>();
+            var point = TerminalPoint.Zero;
+            if (this.points.Any() == true)
             {
-                var row = new TerminalRow(grid, rowList.Count);
-                FillString(fontAsset, row, s, ref i);
-                rowList.Add(row);
-            }
-            return rowList.ToArray();
-        }
-
-        private static void FillString(TMP_FontAsset fontAsset, TerminalRow row, string text, ref int i)
-        {
-            var columnIndex = 0;
-            var cellCount = row.Cells.Count;
-            while (columnIndex < cellCount && i < text.Length)
-            {
-                var character = text[i];
-                if (character == '\n')
+                point = this.points[index];
+                for (var i = this.rowList.Count - 1; i >= point.Y; i--)
                 {
-                    i++;
-                    break;
+                    pool.Push(this.rowList[i]);
+                    this.rowList.RemoveAt(i);
                 }
-                var cell = row.Cells[columnIndex];
-                var volume = FontUtility.GetCharacterVolume(fontAsset, character);
-                if (columnIndex + volume > cellCount)
-                    break;
-                cell.Character = character;
-                cell.TextIndex = i;
-                columnIndex += volume;
-                i++;
+            }
+            Array.Resize(ref this.points, text.Length);
+            Array.Clear(this.points, index, this.points.Length - index);
+
+            var (row, cell) = NewRow(point.X);
+            while (index < text.Length)
+            {
+                var character = text[index];
+                if (point.X >= this.ColumnCount)
+                {
+                    point.X = 0;
+                    point.Y++;
+                    (row, cell) = NewRow(point.X);
+                }
+                if (character == '\n' && point.X != 0)
+                {
+                    point.X = this.ColumnCount;
+                }
+                else
+                {
+                    cell = row.Cells[point.X];
+                    var volume = FontUtility.GetCharacterVolume(this.fontAsset, character);
+                    if (point.X + volume > this.ColumnCount)
+                    {
+                        point.X += volume;
+                        continue;
+                    }
+                    cell.Character = character;
+                    this.points[index] = cell.Point;
+                    point.X += volume;
+                }
+                index++;
+            }
+
+            (TerminalRow, TerminalCell) NewRow(int i)
+            {
+                row = pool.Any() ? pool.Pop() : new TerminalRow(this, this.rowList.Count);
+                cell = row.Cells[i];
+                for (var j = i; j < this.ColumnCount; j++)
+                {
+                    row.Cells[j].Character = char.MinValue;
+                }
+                this.rowList.Add(row);
+                return (row, cell);
             }
         }
 
@@ -248,37 +267,9 @@ namespace JSSoft.UI
 
         public void Append(string text, int index)
         {
-            var query = from item in this.GetCells()
-                        where item.Character != 0
-                        select item;
-            var cell = query.FirstOrDefault(item => item.TextIndex == index);
-            var row = cell.Row;
-            for (var i = cell.Index; i < row.Cells.Count; i++)
-            {
-                row.Cells[i].Character = char.MinValue;
-            }
-            var poolList = new Stack<TerminalRow>();
-            for (var i = this.rowList.Count - 1; i >= row.Index; i--)
-            {
-                var item = this.rowList[i];
-                poolList.Push(item);
-                this.rowList.RemoveAt(i);
-            }
-
-            var s = this.text.Insert(index, text);
-
-            {
-                var fontAsset = this.FontAsset;
-                var i = index;
-                // var rowList = new List<TerminalRow>();
-                while (i < s.Length)
-                {
-                    var row1 = poolList.Any() ? poolList.Pop() : new TerminalRow(this, this.rowList.Count);
-                    FillString(fontAsset, row1, s, ref i);
-                    rowList.Add(row1);
-                }
-            }
-            this.OnLayoutChanged(EventArgs.Empty);
+            this.text = this.text.Insert(index, text);
+            this.GenerateRows(index);
+            this.OnTextChanged(EventArgs.Empty);
         }
 
         public string Text
@@ -443,14 +434,19 @@ namespace JSSoft.UI
                 var itemHeight = FontUtility.GetItemHeight(this.fontAsset);
                 this.ColumnCount = (int)(rect.width / itemWidth);
                 this.RowCount = (int)(rect.height / itemHeight);
+                this.points = new TerminalPoint[] { };
                 this.rowList.Clear();
-                this.rowList.AddRange(GenerateTerminalRows(this, this.text));
+                this.GenerateRows(0);
+                Debug.Log($"Columncount:{this.ColumnCount}");
+                Debug.Log($"Rowcount:{this.RowCount}");
+                Debug.Log($"rowList count:{this.rowList.Count}");
             }
             else
             {
                 this.ColumnCount = 0;
                 this.RowCount = 0;
                 this.rowList.Clear();
+                Array.Resize(ref this.points, 0);
             }
             Debug.Log("Grid Update.");
         }
@@ -584,7 +580,7 @@ namespace JSSoft.UI
                 var position = this.WorldToGrid(eventData.position);
                 if (this.IntersectWithCell(position) is TerminalCell cell)
                 {
-                    Debug.Log($"TextIndex: {cell.TextIndex}");
+                    // Debug.Log($"TextIndex: {cell.TextIndex}");
                 }
             }
         }

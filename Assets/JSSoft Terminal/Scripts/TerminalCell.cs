@@ -41,6 +41,11 @@ namespace JSSoft.UI
             this.UpdateLayout();
         }
 
+        public override string ToString()
+        {
+            return $"{{{this.Index},{this.Row.Index}}}: '{this.character}'";
+        }
+
         public static Color32 GetBackgroundColor(TerminalCell cell)
         {
             if (cell == null)
@@ -94,7 +99,7 @@ namespace JSSoft.UI
 
         public Color32? ForegroundColor { get; set; }
 
-        internal int TextIndex { get; set; }
+        public TerminalPoint Point => new TerminalPoint(this.Index, this.Row.Index);
 
         private void UpdateLayout()
         {
@@ -121,7 +126,7 @@ namespace JSSoft.UI
                 this.BackgroundUV = uv;
                 this.ForegroundUV = uv;
             }
-            this.TextIndex = -1;
+            // this.TextIndex = -1;
         }
     }
 }
