@@ -49,6 +49,20 @@ namespace JSSoft.UI
             this.UpdateRect();
         }
 
+        public static Color32 GetBackgroundColor(TerminalRow row)
+        {
+            if (row == null)
+                throw new ArgumentNullException(nameof(row));
+            return row.BackgroundColor ?? TerminalGrid.GetBackgroundColor(row.Grid);
+        }
+
+        public static Color32 GetForegroundColor(TerminalRow row)
+        {
+            if (row == null)
+                throw new ArgumentNullException(nameof(row));
+            return row.ForegroundColor ?? TerminalGrid.GetForegroundColor(row.Grid);
+        }
+
         public TerminalCell Intersect(Vector2 position)
         {
             if (this.Rect.Intersect(position) == false)
@@ -71,17 +85,9 @@ namespace JSSoft.UI
 
         public GlyphRect Rect { get; private set; }
 
-        public Color32? BackgroundColor
-        {
-            get => this.backgroundColor ?? this.Grid.BackgroundColor;
-            set => this.backgroundColor = value;
-        }
+        public Color32? BackgroundColor { get; set; }
 
-        public Color32? ForegroundColor
-        {
-            get => this.foregroundColor ?? this.Grid.ForegroundColor;
-            set => this.foregroundColor = value;
-        }
+        public Color32? ForegroundColor { get; set; }
 
         private void UpdateRect()
         {

@@ -47,10 +47,12 @@ namespace JSSoft.UI
 
         public override Texture mainTexture => this.fontAsset?.atlasTexture;
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
         }
+#endif
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
@@ -63,8 +65,7 @@ namespace JSSoft.UI
             {
                 this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
                 this.terminalRect.SetUV(index, item.ForegroundUV);
-                if (item.ForegroundColor is Color32 color)
-                    this.terminalRect.SetColor(index, color);
+                this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
                 index++;
             }
             this.material.color = base.color;

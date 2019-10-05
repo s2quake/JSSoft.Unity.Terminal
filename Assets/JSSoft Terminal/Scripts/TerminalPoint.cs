@@ -25,26 +25,77 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
+    [Serializable]
     public struct TerminalPoint : IEquatable<TerminalPoint>
     {
+        [SerializeField]
+        private int x, y;
+
         public TerminalPoint(int x, int y)
         {
-            this.X = x;
-            this.Y = y;
+            this.x = x;
+            this.y = y;
         }
 
-        public int X { get; set; }
+        public override bool Equals(object obj)
+        {
+            if (obj is TerminalPoint point)
+            {
+                return this.X == point.X && this.Y == point.Y;
+            }
+            return base.Equals(obj);
+        }
 
-        public int Y { get; set; }
+        public override int GetHashCode()
+        {
+            return this.X ^ this.Y;
+        }
+
+        public override string ToString()
+        {
+            return $"{this.X}, {this.Y}";
+        }
+
+        public int X
+        {
+            get => this.x;
+            set => this.x = value;
+        }
+
+        public int Y
+        {
+            get => this.y;
+            set => this.y = value;
+        }
 
         public static bool operator >(TerminalPoint pt1, TerminalPoint pt2)
         {
-            return pt1.Y > pt2.Y || pt1.X > pt2.X;
+            return pt1.Y > pt2.Y || (pt1.Y == pt2.Y && pt1.X > pt2.X);
+        }
+
+        public static bool operator >=(TerminalPoint pt1, TerminalPoint pt2)
+        {
+            return pt1 > pt2 ? true : pt1 == pt2;
         }
 
         public static bool operator <(TerminalPoint pt1, TerminalPoint pt2)
         {
-            return pt1.Y < pt2.Y || pt1.X < pt2.X;
+            return pt1.Y < pt2.Y || (pt1.Y == pt2.Y && pt1.X < pt2.X);
+        }
+
+        public static bool operator <=(TerminalPoint pt1, TerminalPoint pt2)
+        {
+            return pt1 < pt2 ? true : pt1 == pt2;
+        }
+
+        public static bool operator ==(TerminalPoint pt1, TerminalPoint pt2)
+        {
+            return pt1.Y == pt2.Y && pt1.X == pt2.X;
+        }
+
+        public static bool operator !=(TerminalPoint pt1, TerminalPoint pt2)
+        {
+            return pt1.Y != pt2.Y || pt1.X != pt2.X;
         }
 
         public static readonly TerminalPoint Zero = new TerminalPoint(0, 0);

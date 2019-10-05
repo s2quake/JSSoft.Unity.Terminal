@@ -28,10 +28,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.ObjectModel;
+using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
-    public class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
+    public class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
     {
         [SerializeField]
         private TMP_FontAsset fontAsset;
@@ -44,9 +45,14 @@ namespace JSSoft.UI
         private int visibleIndex;
         [SerializeField]
         private Scrollbar verticalScrollbar;
+        [SerializeField]
+        private TerminalPoint cursorPostion;
 
         private readonly List<TerminalRow> rowList = new List<TerminalRow>();
         private bool isUpdating;
+        private bool isSelecting;
+        private TerminalPoint startPoint;
+        private TerminalPoint endPoint;
 
         public TerminalGrid()
         {
@@ -110,41 +116,100 @@ namespace JSSoft.UI
             return 0;
         }
 
-        public static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text)
+        public static GlyphRect GetCellRect(TerminalGrid grid, TerminalCell cell)
         {
-            var fontAsset = grid.FontAsset;
-            var lines = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
-            var rowList = new List<TerminalRow>(lines.Length);
-            for (var i = 0; i < lines.Length; i++)
+            if (cell == null)
+                throw new ArgumentNullException(nameof(cell));
+            var itemWidth = TerminalGrid.GetItemWidth(grid);
+            var itemHeight = TerminalGrid.GetItemHeight(grid);
+            var x = cell.Index * itemWidth;
+            var y = cell.Row.Index * itemHeight;
+            return new GlyphRect(x, y, itemWidth, itemHeight);
+        }
+
+        public static int GetItemWidth(TerminalGrid grid, char character)
+        {
+            if (grid != null && grid.fontAsset != null)
             {
-                var line = lines[i];
-                while (line != string.Empty)
-                {
-                    var row = new TerminalRow(grid, rowList.Count);
-                    line = FillString(fontAsset, row, line);
-                    rowList.Add(row);
-                }
+                return FontUtility.GetItemWidth(grid.fontAsset, character);
+            }
+            return 0;
+        }
+
+        private static TerminalRow[] GenerateTerminalRows(TerminalGrid grid, string text)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            var s = text.Replace("\r\n", "\n");
+            var fontAsset = grid.FontAsset;
+            var i = 0;
+            var rowList = new List<TerminalRow>();
+            while (i < s.Length)
+            {
+                var row = new TerminalRow(grid, rowList.Count);
+                FillString(fontAsset, row, s, ref i);
+                rowList.Add(row);
             }
             return rowList.ToArray();
         }
 
-        public static string FillString(TMP_FontAsset fontAsset, TerminalRow row, string text)
+        private static void FillString(TMP_FontAsset fontAsset, TerminalRow row, string text, ref int i)
         {
             var columnIndex = 0;
             var cellCount = row.Cells.Count;
-            var i = 0;
             while (columnIndex < cellCount && i < text.Length)
             {
                 var character = text[i];
+                if (character == '\n')
+                {
+                    i++;
+                    break;
+                }
                 var cell = row.Cells[columnIndex];
                 var volume = FontUtility.GetCharacterVolume(fontAsset, character);
                 if (columnIndex + volume > cellCount)
                     break;
-                cell.Refresh(fontAsset, character);
+                cell.Character = character;
+                cell.TextIndex = i;
                 columnIndex += volume;
                 i++;
             }
-            return text.Substring(i);
+        }
+
+        public static bool IsSelecting(TerminalGrid grid, TerminalCell cell)
+        {
+            if (cell == null)
+                throw new ArgumentNullException(nameof(cell));
+            var point = new TerminalPoint(cell.Index, cell.Row.Index);
+            var isSelecting = IsSelecting(grid, point);
+            return cell.IsSelected != isSelecting;
+        }
+
+        public static bool IsSelecting(TerminalGrid grid, TerminalPoint point)
+        {
+            if (grid != null && grid.isSelecting == true)
+            {
+                var p1 = grid.startPoint < grid.endPoint ? grid.startPoint : grid.endPoint;
+                var p2 = grid.startPoint > grid.endPoint ? grid.startPoint : grid.endPoint;
+                return point >= p1 && point <= p2;
+            }
+            return false;
+        }
+
+        public static Color32 GetBackgroundColor(TerminalGrid grid)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            return grid.BackgroundColor ?? grid.color;
+        }
+
+        public static Color32 GetForegroundColor(TerminalGrid grid)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            return grid.ForegroundColor ?? grid.fontColor;
         }
 
         public Vector2 WorldToGrid(Vector2 position)
@@ -157,14 +222,63 @@ namespace JSSoft.UI
 
         public TerminalPoint Intersect(Vector2 position)
         {
+            if (this.IntersectWithCell(position) is TerminalCell cell)
+            {
+                return new TerminalPoint(cell.Index, cell.Row.Index);
+            }
+            return TerminalPoint.Invalid;
+        }
+
+        public TerminalCell IntersectWithCell(Vector2 position)
+        {
             foreach (var item in this.rowList)
             {
                 if (item.Intersect(position) is TerminalCell cell)
                 {
-                    return new TerminalPoint(cell.Index, item.Index);
+                    return cell;
                 }
             }
-            return TerminalPoint.Invalid;
+            return null;
+        }
+
+        public void Append(string text)
+        {
+            this.Append(text, this.text.Length);
+        }
+
+        public void Append(string text, int index)
+        {
+            var query = from item in this.GetCells()
+                        where item.Character != 0
+                        select item;
+            var cell = query.FirstOrDefault(item => item.TextIndex == index);
+            var row = cell.Row;
+            for (var i = cell.Index; i < row.Cells.Count; i++)
+            {
+                row.Cells[i].Character = char.MinValue;
+            }
+            var poolList = new Stack<TerminalRow>();
+            for (var i = this.rowList.Count - 1; i >= row.Index; i--)
+            {
+                var item = this.rowList[i];
+                poolList.Push(item);
+                this.rowList.RemoveAt(i);
+            }
+
+            var s = this.text.Insert(index, text);
+
+            {
+                var fontAsset = this.FontAsset;
+                var i = index;
+                // var rowList = new List<TerminalRow>();
+                while (i < s.Length)
+                {
+                    var row1 = poolList.Any() ? poolList.Pop() : new TerminalRow(this, this.rowList.Count);
+                    FillString(fontAsset, row1, s, ref i);
+                    rowList.Add(row1);
+                }
+            }
+            this.OnLayoutChanged(EventArgs.Empty);
         }
 
         public string Text
@@ -203,16 +317,22 @@ namespace JSSoft.UI
             }
         }
 
-        public Color32 BackgroundColor
-        {
-            get => base.color;
-            set => base.color = value;
-        }
+        public Color32? BackgroundColor { get; set; }
 
-        public Color32 ForegroundColor
+        public Color32? ForegroundColor { get; set; }
+
+        public TerminalPoint CursorLocation
         {
-            get => this.fontColor;
-            set => this.fontColor = value;
+            get => this.cursorPostion;
+            set
+            {
+                if (this.cursorPostion != value)
+                {
+                    this.cursorPostion = value;
+                    this.UpdateCursorPosition();
+                    this.OnCursorPositionChanged(EventArgs.Empty);
+                }
+            }
         }
 
         public event EventHandler TextChanged;
@@ -223,10 +343,12 @@ namespace JSSoft.UI
 
         public event EventHandler SelectionChanged;
 
-        public override void Rebuild(CanvasUpdate executing)
-        {
-            base.Rebuild(executing);
-        }
+        public event EventHandler CursorPositionChanged;
+
+        // public override void Rebuild(CanvasUpdate executing)
+        // {
+        //     base.Rebuild(executing);
+        // }
 
         protected virtual void OnTextChanged(EventArgs e)
         {
@@ -248,6 +370,12 @@ namespace JSSoft.UI
             this.SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        protected virtual void OnCursorPositionChanged(EventArgs e)
+        {
+            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -256,8 +384,12 @@ namespace JSSoft.UI
             this.UpdateScrollVisible();
             this.UpdateScrollbarSize();
             this.UpdateScrollbarValue();
+            this.UpdateCursorPosition();
             this.OnTextChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
+            // Debug.Log($"{TerminalGrid.GetItemWidth(this) * 80}x{TerminalGrid.GetItemHeight(this) * 24}");
         }
+#endif
 
         protected override void OnRectTransformDimensionsChange()
         {
@@ -367,15 +499,47 @@ namespace JSSoft.UI
             }
         }
 
-        TerminalPoint startPoint;
-        TerminalPoint endPoint;
+        private void UpdateCursorPosition()
+        {
+            var x = this.cursorPostion.X;
+            var y = this.cursorPostion.Y;
+            x = Math.Max(x, 0);
+            x = Math.Min(x, this.ColumnCount - 1);
+            y = Math.Max(y, 0);
+            y = Math.Min(y, this.RowCount - 1);
+            this.cursorPostion = new TerminalPoint(x, y);
+        }
+
+        private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
+        {
+            var i = p1.X + p1.Y * this.ColumnCount;
+            var end = p2.X + p2.Y * this.ColumnCount;
+            while (i <= end)
+            {
+                var x = i % this.ColumnCount;
+                var y = i / this.ColumnCount;
+                yield return this.rowList[y].Cells[x];
+                i++;
+            }
+        }
+
+        private IEnumerable<TerminalCell> GetCells()
+        {
+            var query = from row in this.rowList
+                        from cell in row.Cells
+                        select cell;
+            return query;
+        }
+
+        #region implemetations
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                this.startPoint = this.endPoint = this.Intersect(position);
+                this.endPoint = this.Intersect(position);
+                this.isSelecting = true;
             }
         }
 
@@ -384,40 +548,32 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                this.endPoint = this.Intersect(position);
+                var endPoint = this.Intersect(position);
+                if (this.endPoint != endPoint)
+                {
+                    this.endPoint = endPoint;
+                    this.OnLayoutChanged(EventArgs.Empty);
+                }
             }
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
+            this.isSelecting = false;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                this.endPoint = this.Intersect(position);
-
-                var p1 = this.startPoint < this.endPoint ? this.startPoint : this.endPoint;
-                var p2 = this.startPoint > this.endPoint ? this.startPoint : this.endPoint;
-
-                foreach(var item in this.GetCells(p1, p2))
+                var s1 = this.startPoint;
+                var s2 = this.Intersect(position);
+                var p1 = s1 < s2 ? s1 : s2;
+                var p2 = s1 > s2 ? s1 : s2;
+                foreach (var item in this.GetCells(p1, p2))
                 {
                     item.IsSelected = !item.IsSelected;
                 }
+                this.startPoint = TerminalPoint.Invalid;
+                this.endPoint = TerminalPoint.Invalid;
                 this.OnSelectionChanged(EventArgs.Empty);
-            }
-        }
-
-        private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
-        {
-            var x = p1.X;
-            var y = p2.Y;
-            while (x != p2.X && y != p2.Y)
-            {
-                yield return this.rowList[y].Cells[x];
-                if (++x == this.ColumnCount)
-                {
-                    y++;
-                    x = 0;
-                }
             }
         }
 
@@ -425,21 +581,23 @@ namespace JSSoft.UI
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                // var position = eventData.position;
-                // var rect = this.rectTransform.rect;
-                // position.y = rect.height - position.y;
-                // position.y += GetItemHeight(this) * this.visibleIndex;
-                // Debug.Log(position);
-                // foreach (var item in this.rowList)
-                // {
-                //     if (item.Intersect(position) is TerminalCell cell)
-                //     {
-                //         cell.IsSelected = !cell.IsSelected;
-                //         this.OnTextChanged(EventArgs.Empty);
-                //         break;
-                //     }
-                // }
+                var position = this.WorldToGrid(eventData.position);
+                if (this.IntersectWithCell(position) is TerminalCell cell)
+                {
+                    Debug.Log($"TextIndex: {cell.TextIndex}");
+                }
             }
         }
+
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
+        {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                var position = this.WorldToGrid(eventData.position);
+                this.startPoint = this.Intersect(position);
+            }
+        }
+
+        #endregion
     }
 }

@@ -32,44 +32,27 @@ namespace JSSoft.UI
 {
     public class TerminalCell
     {
-        private Color32? backgroundColor;
-        private Color32? foregroundColor;
+        private char character;
 
         public TerminalCell(TerminalRow row, int index)
         {
             this.Index = index;
             this.Row = row;
-            this.UpdateRect();
-        }
-
-        public void Refresh(TMP_FontAsset fontAsset, char character)
-        {
-            this.FontAsset = FontUtility.GetFontAsset(fontAsset, character);
-            this.OriginAsset = fontAsset;
-            this.Character = character;
-            this.Volume = FontUtility.GetCharacterVolume(fontAsset, character);
             this.UpdateLayout();
         }
 
-        public void UpdateLayout()
+        public static Color32 GetBackgroundColor(TerminalCell cell)
         {
-            var itemWidth = FontUtility.GetItemWidth(this.OriginAsset);
-            var itemHeight = FontUtility.GetItemHeight(this.OriginAsset);
-            var characterWidth = FontUtility.GetItemWidth(this.OriginAsset, this.Character);
-            var x = this.Index * itemWidth;
-            var y = this.Row.Index * itemHeight;
-            this.BackgroundRect = new GlyphRect((int)x, (int)y, characterWidth, itemHeight);
-            this.ForegroundRect = FontUtility.GetForegroundRect(this.FontAsset, this.Character, x, y);
-            this.BackgroundUV = (Vector2.zero, Vector2.zero);
-            this.ForegroundUV = FontUtility.GetUV(this.FontAsset, this.Character);
+            if (cell == null)
+                throw new ArgumentNullException(nameof(cell));
+            return cell.BackgroundColor ?? TerminalRow.GetBackgroundColor(cell.Row);
         }
 
-        public void Clear()
+        public static Color32 GetForegroundColor(TerminalCell cell)
         {
-            this.FontAsset = null;
-            this.OriginAsset = null;
-            this.Character = char.MinValue;
-            this.Volume = 0;
+            if (cell == null)
+                throw new ArgumentNullException(nameof(cell));
+            return cell.ForegroundColor ?? TerminalRow.GetForegroundColor(cell.Row);
         }
 
         public bool Intersect(Vector2 position)
@@ -81,11 +64,19 @@ namespace JSSoft.UI
 
         public TerminalRow Row { get; }
 
+        public TerminalGrid Grid => this.Row.Grid;
+
         public TMP_FontAsset FontAsset { get; private set; }
 
-        public TMP_FontAsset OriginAsset { get; private set; }
-
-        public char Character { get; private set; }
+        public char Character
+        {
+            get => this.character;
+            set
+            {
+                this.character = value;
+                this.UpdateLayout();
+            }
+        }
 
         public int Volume { get; private set; }
 
@@ -99,27 +90,38 @@ namespace JSSoft.UI
 
         public (Vector2, Vector2) ForegroundUV { get; private set; }
 
-        public Color32? BackgroundColor
-        {
-            get => this.backgroundColor ?? this.Row.BackgroundColor;
-            set => this.backgroundColor = value;
-        }
+        public Color32? BackgroundColor { get; set; }
 
-        public Color32? ForegroundColor
-        {
-            get => this.foregroundColor ?? this.Row.ForegroundColor;
-            set => this.foregroundColor = value;
-        }
+        public Color32? ForegroundColor { get; set; }
 
-        private void UpdateRect()
+        internal int TextIndex { get; set; }
+
+        private void UpdateLayout()
         {
-            var itemWidth = TerminalGrid.GetItemWidth(this.Row.Grid);
-            var itemHeight = TerminalGrid.GetItemHeight(this.Row.Grid);
-            var x = this.Index * itemWidth;
-            var y = this.Row.Index * itemHeight;
-            var width = itemWidth;
-            var height = itemHeight;
-            this.BackgroundRect = new GlyphRect(x, y, width, height);
+            var originAsset = this.Grid.FontAsset;
+            var character = this.character;
+            var rect = TerminalGrid.GetCellRect(this.Grid, this);
+            var fontAsset = FontUtility.GetFontAsset(originAsset, character);
+            if (fontAsset != null)
+            {
+                var characterWidth = TerminalGrid.GetItemWidth(this.Grid, character);
+                this.Volume = FontUtility.GetCharacterVolume(fontAsset, character);
+                this.BackgroundRect = new GlyphRect(rect.x, rect.y, characterWidth, rect.height);
+                this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, rect.x, rect.y);
+                this.BackgroundUV = (Vector2.zero, Vector2.zero);
+                this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
+                this.FontAsset = fontAsset;
+            }
+            else
+            {
+                var uv = (Vector2.zero, Vector2.zero);
+                this.Volume = 0;
+                this.BackgroundRect = rect;
+                this.ForegroundRect = rect;
+                this.BackgroundUV = uv;
+                this.ForegroundUV = uv;
+            }
+            this.TextIndex = -1;
         }
     }
 }

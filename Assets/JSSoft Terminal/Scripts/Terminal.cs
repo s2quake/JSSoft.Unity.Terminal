@@ -70,6 +70,8 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalGrid grid;
         [SerializeField]
+        private TerminalCursor cursor;
+        [SerializeField]
         private TerminalComposition compositionRenderer;
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
@@ -405,6 +407,8 @@ namespace JSSoft.UI
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
+            if (this.grid == null)
+                return;
             // if (!isFocused)
             //     return;
 
@@ -425,7 +429,8 @@ namespace JSSoft.UI
                     consumedEvent = true;
                     if (this.processingEvent.character != 0)
                     {
-                        this.Text += this.processingEvent.character;
+                        this.grid.Append($"{this.processingEvent.character}");
+                        // this.Text += this.processingEvent.character;
                         // if (this.inputSystem.compositionString != string.Empty)
                         // {
                         // }
@@ -581,6 +586,7 @@ namespace JSSoft.UI
                 // this.cursorRenderer.SetMaterial(Graphic.defaultGraphicMaterial, Texture2D.whiteTexture);
                 // this.cursorMesh = new Mesh();
                 // this.UpdateCursorTransform();
+                // this.CursorPosition = 0;
             }
             // if (this.fontAsset != null)
             // {

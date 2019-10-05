@@ -81,7 +81,7 @@ namespace JSSoft.UI
                 var y = this.cursorTop * itemHeight;
                 var itemRect = new GlyphRect(x, y, itemWidth, itemHeight);
                 this.terminalRect.Count = 1;
-                this.terminalRect.SetVertex(0, itemRect, rect);
+                this.terminalRect.SetVertex(0, itemRect, this.rectTransform.rect);
                 this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
                 this.terminalRect.SetColor(0, TerminalColors.Gray);
             }
@@ -93,6 +93,7 @@ namespace JSSoft.UI
             this.terminalRect.Fill(vh);
         }
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -100,6 +101,36 @@ namespace JSSoft.UI
             this.cursorLeft = Math.Max(0, this.cursorLeft);
             this.cursorTop = Math.Min(this.RowCount - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
+        }
+#endif
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
+            this.material.color = base.color;
+            this.SetVerticesDirty();
+            if (this.grid != null)
+            {
+                this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+            }
+            Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            if (this.grid != null)
+            {
+                this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
+            }
+        }
+
+        private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
+        {
+            this.cursorLeft = this.grid.CursorLocation.X;
+            this.cursorTop = this.grid.CursorLocation.Y - this.grid.VisibleIndex;
+            this.SetVerticesDirty();
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;

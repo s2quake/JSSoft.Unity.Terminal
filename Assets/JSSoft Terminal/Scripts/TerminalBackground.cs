@@ -50,12 +50,20 @@ namespace JSSoft.UI
             base.Rebuild(executing);
         }
 
+        private bool Predicate(TerminalCell cell)
+        {
+            if (cell.BackgroundColor is Color32)
+                return true;
+            return TerminalGrid.IsSelecting(this.grid, cell);
+
+        }
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
 
             var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.Character != 0 || item.IsSelected == true);
+            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
             this.terminalRect.Count = visibleCells.Count();
             foreach (var item in visibleCells)
@@ -64,14 +72,12 @@ namespace JSSoft.UI
                 this.terminalRect.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
                     this.terminalRect.SetColor(index, color);
-                if (item.IsSelected == true)
+                else
                     this.terminalRect.SetColor(index, TerminalColors.Green);
                 index++;
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);
-            Debug.Log($"backgound count: {index}");
-            // Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnPopulateMesh)}");
         }
 
         protected override void OnRectTransformDimensionsChange()
@@ -95,6 +101,7 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.grid.TextChanged += TerminalGrid_TextChanged;
+                this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
                 this.grid.SelectionChanged += TerminalGrid_SelectionChanged;
             }
@@ -107,12 +114,18 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.grid.TextChanged -= TerminalGrid_TextChanged;
+                this.grid.LayoutChanged -= TerminalGrid_LayoutChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
                 this.grid.SelectionChanged -= TerminalGrid_SelectionChanged;
             }
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
+        {
+            this.SetVerticesDirty();
+        }
+
+        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
             this.SetVerticesDirty();
         }

@@ -110,6 +110,7 @@ namespace JSSoft.UI
             base.OnPopulateMesh(vh);
         }
 
+#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -118,6 +119,7 @@ namespace JSSoft.UI
             this.rowIndex = Math.Min(this.RowCount - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
         }
+#endif
 
         protected override void OnEnable()
         {
