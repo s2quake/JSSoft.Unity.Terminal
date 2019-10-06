@@ -400,6 +400,7 @@ namespace JSSoft.UI
                 this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
             }
             this.SetVerticesDirty();
+            Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()

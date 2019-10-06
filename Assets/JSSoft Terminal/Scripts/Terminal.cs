@@ -505,7 +505,11 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
+            this.inputText = this.commandText;
+            this.promptText = this.prompt + this.commandText;
+            this.Text = this.outputText + Environment.NewLine + this.promptText;
             this.CursorPosition = this.commandText.Length;
+            Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}");
         }
 
         protected override void Awake()

@@ -51,6 +51,7 @@ namespace JSSoft.UI
         private Vector3[] vertices = new Vector3[8];
         private Vector2[] uvs = new Vector2[8];
         private Color32[] colors = new Color32[8];
+        private Mesh mesh;
 
         public TerminalComposition()
         {
@@ -216,11 +217,11 @@ namespace JSSoft.UI
         {
             get
             {
-                if (m_CachedMesh == null)
+                if (this.mesh == null)
                 {
-                    m_CachedMesh = new Mesh();
+                    this.mesh = new Mesh();
                 }
-                return m_CachedMesh;
+                return this.mesh;
             }
         }
     }
