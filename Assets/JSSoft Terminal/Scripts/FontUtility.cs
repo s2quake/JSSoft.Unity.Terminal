@@ -34,7 +34,6 @@ namespace JSSoft.UI
     {
         private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
-        private static readonly int defaultItemHeight = 21;
 
         public static TMP_FontAsset GetFontAsset(TMP_FontAsset fontAsset, char character)
         {
@@ -79,6 +78,8 @@ namespace JSSoft.UI
         {
             if (fontAsset == null)
                 throw new ArgumentNullException(nameof(fontAsset));
+            if (character == char.MinValue)
+                return 0;
             if (GetCharacter(fontAsset, character) is TMP_Character characterInfo)
             {
                 var defaultWidth = GetItemWidth(fontAsset);
@@ -104,25 +105,6 @@ namespace JSSoft.UI
             var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
             return (uv0, uv1);
         }
-
-        // public static GlyphRect GetBackgroundRect(TMP_FontAsset fontAsset, char character, int x, int y)
-        // {
-        //     if (fontAsset == null)
-        //         throw new ArgumentNullException(nameof(fontAsset));
-
-        //     if (fontAsset.characterLookupTable.ContainsKey(character) == false)
-        //         throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-        //     var characterWidth = FontUtility.GetItemWidth(fontAsset, character);
-        //     var characterInfo = fontAsset.characterLookupTable[character];
-        //     var texture = fontAsset.atlasTexture;
-        //     var glyph = characterInfo.glyph;
-        //     var glyphRect = glyph.glyphRect;
-        //     var textWidth = (float)texture.width;
-        //     var textHeight = (float)texture.height;
-        //     var bx = x;
-        //     var by = y;
-        //     return new GlyphRect((int)bx, (int)by, characterWidth, (int)this.FontAsset.faceInfo.lineHeight);
-        // }
         
         public static GlyphRect GetForegroundRect(TMP_FontAsset fontAsset, char character)
         {

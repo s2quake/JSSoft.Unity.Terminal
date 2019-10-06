@@ -32,29 +32,12 @@ namespace JSSoft.UI
     public class TerminalBackground : MaskableGraphic
     {
         [SerializeField]
-        private TMP_FontAsset fontAsset;
-        [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
 
         private TerminalRect terminalRect = new TerminalRect();
 
         public TerminalBackground()
         {
-
-        }
-
-        // public override Texture mainTexture => this.fontAsset?.atlasTexture;
-
-        public override void Rebuild(CanvasUpdate executing)
-        {
-            base.Rebuild(executing);
-        }
-
-        private bool Predicate(TerminalCell cell)
-        {
-            if (cell.BackgroundColor is Color32)
-                return true;
-            return TerminalGrid.IsSelecting(this.grid, cell);
 
         }
 
@@ -83,13 +66,11 @@ namespace JSSoft.UI
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnRectTransformDimensionsChange)}");
         }
 
         protected override void OnCanvasHierarchyChanged()
         {
             base.OnCanvasHierarchyChanged();
-            Debug.Log(nameof(OnCanvasHierarchyChanged));
         }
 
         protected override void OnEnable()
@@ -105,7 +86,7 @@ namespace JSSoft.UI
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
                 this.grid.SelectionChanged += TerminalGrid_SelectionChanged;
             }
-            Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
+            // Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()
@@ -118,6 +99,13 @@ namespace JSSoft.UI
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
                 this.grid.SelectionChanged -= TerminalGrid_SelectionChanged;
             }
+        }
+
+        private bool Predicate(TerminalCell cell)
+        {
+            if (cell.BackgroundColor is Color32)
+                return true;
+            return TerminalGrid.IsSelecting(this.grid, cell);
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)

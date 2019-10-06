@@ -34,9 +34,9 @@ namespace JSSoft.UI
     public class TerminalForeground : MaskableGraphic
     {
         [SerializeField]
-        private TMP_FontAsset fontAsset;
+        private TMP_FontAsset fontAsset = null;
         [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
 
         private TerminalRect terminalRect = new TerminalRect();
 

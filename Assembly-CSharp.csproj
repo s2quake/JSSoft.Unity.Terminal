@@ -45,7 +45,6 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>     <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\CustomTerminal.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\FontUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminal.cs" />
@@ -64,8 +63,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPoint.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRect.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRow.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalText.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalUtility.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRowCollection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />

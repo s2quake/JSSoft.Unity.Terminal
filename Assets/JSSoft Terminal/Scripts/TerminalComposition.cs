@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -36,16 +37,16 @@ namespace JSSoft.UI
         private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
 
         [SerializeField]
-        private char character;
+        private string text = string.Empty;
         [SerializeField]
         private Color fontColor = Color.black;
         [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
         [SerializeField]
         private int columnIndex;
         [SerializeField]
         private int rowIndex;
-        private TerminalRect terminalRect = new TerminalRect();
+
         private Texture texture;
         private Vector3[] vertices = new Vector3[8];
         private Vector2[] uvs = new Vector2[8];
@@ -56,12 +57,12 @@ namespace JSSoft.UI
 
         }
 
-        public char Character
+        public string Text
         {
-            get => this.character;
+            get => this.text;
             set
             {
-                this.character = value;
+                this.text = value ?? throw new ArgumentNullException(nameof(value));
                 this.SetVerticesDirty();
             }
         }
@@ -126,27 +127,54 @@ namespace JSSoft.UI
             base.OnEnable();
             this.material = new Material(Shader.Find("Unlit/Color"));
             this.material.color = base.color;
+            if (this.grid != null)
+            {
+                this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+                this.grid.CompositionStringChanged += TerminalGrid_CompositionStringChanged;
+            }
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            if (this.grid != null)
+            {
+                this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
+                this.grid.CompositionStringChanged -= TerminalGrid_CompositionStringChanged;
+            }
+        }
+
+        private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
+        {
+            this.columnIndex = this.grid.CursorLocation.X;
+            this.rowIndex = this.grid.CursorLocation.Y - this.grid.VisibleIndex;
+            this.SetVerticesDirty();
+        }
+
+        private void TerminalGrid_CompositionStringChanged(object sender, EventArgs e)
+        {
+            this.text = this.grid.CompositionString;
+            this.SetVerticesDirty();
         }
 
         protected override void UpdateGeometry()
         {
             base.UpdateGeometry();
 
-            if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount)
+            if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount && this.text != string.Empty)
             {
                 var rect = this.rectTransform.rect;
-                var fontAsset = FontUtility.GetFontAsset(this.FontAsset, this.character);
-                var characterInfo = fontAsset.characterLookupTable[this.character];
+                var character = this.text.First();
+                var fontAsset = FontUtility.GetFontAsset(this.FontAsset, character);
+                var characterInfo = fontAsset.characterLookupTable[character];
                 var texture = fontAsset.atlasTexture;
-                var glyph = characterInfo.glyph;
-                var glyphRect = glyph.glyphRect;
                 var itemWidth = TerminalGrid.GetItemWidth(this.grid);
                 var itemHeight = TerminalGrid.GetItemHeight(this.grid);
                 var bx = this.columnIndex * itemWidth;
                 var by = this.rowIndex * itemHeight;
-                var foregroundRect = FontUtility.GetForegroundRect(fontAsset, this.character, bx, by);
+                var foregroundRect = FontUtility.GetForegroundRect(fontAsset, character, bx, by);
                 var backgroundRect = foregroundRect.Expand(1);
-                var uv = FontUtility.GetUV(fontAsset, this.character);
+                var uv = FontUtility.GetUV(fontAsset, character);
 
                 this.vertices.SetVertex(0, backgroundRect);
                 this.vertices.Transform(0, rect);

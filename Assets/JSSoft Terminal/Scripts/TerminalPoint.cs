@@ -29,7 +29,9 @@ namespace JSSoft.UI
     public struct TerminalPoint : IEquatable<TerminalPoint>
     {
         [SerializeField]
-        private int x, y;
+        private int x;
+        [SerializeField]
+        private int y;
 
         public TerminalPoint(int x, int y)
         {
@@ -44,6 +46,11 @@ namespace JSSoft.UI
                 return this.X == point.X && this.Y == point.Y;
             }
             return base.Equals(obj);
+        }
+
+        public void Shift(int x, int y, int columnCount)
+        {
+            
         }
 
         public override int GetHashCode()

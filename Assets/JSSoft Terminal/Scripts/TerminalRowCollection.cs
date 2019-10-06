@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -30,13 +31,46 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public static class TerminalUtility
+    class TerminalRowCollection : List<TerminalRow>
     {
-        public static void GenerateTerminalRows(TMP_FontAsset fontAsset, string text, int columnCount)
-        {
+        private readonly TerminalGrid grid;
+        private readonly Stack<TerminalRow> pool = new Stack<TerminalRow>();
 
+        public TerminalRowCollection(TerminalGrid grid)
+        {
+            this.grid = grid;
         }
 
-        
+        public void Cut(TerminalPoint point)
+        {
+            if (point.Y < this.Count)
+            {
+                var row = this[point.Y];
+                row.Cut(point.X);
+                for (var i = this.Count - 1; i >= point.Y + 1; i--)
+                {
+                    var item = this[i];
+                    item.Reset();
+                    this.RemoveAt(i);
+                }
+            }
+        }
+
+        public TerminalCell Prepare(TerminalPoint point)
+        {
+            if (point.Y >= this.Count)
+            {
+                if (this.pool.Any() == true)
+                {
+                    this.Add(this.pool.Pop());
+                }
+                else
+                {
+                    this.Add(new TerminalRow(this.grid, this.Count));
+                }
+            }
+
+            return this[point.Y].Cells[point.X];
+        }
     }
 }

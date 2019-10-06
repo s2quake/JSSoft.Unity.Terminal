@@ -32,12 +32,14 @@ namespace JSSoft.UI
     public class TerminalCursor : MaskableGraphic
     {
         [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
         [SerializeField]
         private int cursorLeft;
         [SerializeField]
         private int cursorTop;
         private TerminalRect terminalRect = new TerminalRect();
+        [SerializeField]
+        private bool isVisible = true;
 
         public TerminalCursor()
         {
@@ -68,11 +70,20 @@ namespace JSSoft.UI
             }
         }
 
+        public bool IsVisible
+        {
+            get => this.isVisible;
+            set
+            {
+                this.isVisible = value;
+                this.SetVerticesDirty();
+            }
+        }
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-
-            if (this.cursorLeft < this.ColumnCount && this.cursorTop < this.RowCount)
+            if (this.cursorLeft < this.ColumnCount && this.cursorTop < this.RowCount && this.isVisible == true)
             {
                 var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
                 var itemWidth = TerminalGrid.GetItemWidth(this.grid);
@@ -113,8 +124,8 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+                this.isVisible = this.grid.IsCursorVisible;
             }
-            Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()
@@ -130,6 +141,7 @@ namespace JSSoft.UI
         {
             this.cursorLeft = this.grid.CursorLocation.X;
             this.cursorTop = this.grid.CursorLocation.Y - this.grid.VisibleIndex;
+            this.isVisible = this.grid.IsCursorVisible;
             this.SetVerticesDirty();
         }
 

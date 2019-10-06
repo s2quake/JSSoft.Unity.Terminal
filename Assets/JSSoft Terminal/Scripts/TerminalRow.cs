@@ -89,6 +89,22 @@ namespace JSSoft.UI
 
         public Color32? ForegroundColor { get; set; }
 
+        public void Cut(int x)
+        {
+            for (var i = x; i < this.cellList.Count; i++)
+            {
+                var item = this.cellList[i];
+                item.Character = char.MinValue;
+                item.BackgroundColor = null;
+                item.ForegroundColor = null;
+            }
+        }
+
+        public void Reset()
+        {
+            this.Cut(0);
+        }
+
         private void UpdateRect()
         {
             var itemWidth = TerminalGrid.GetItemWidth(this.Grid);
