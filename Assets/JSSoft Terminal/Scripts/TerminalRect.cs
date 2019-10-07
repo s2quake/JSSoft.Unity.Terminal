@@ -33,6 +33,7 @@ namespace JSSoft.UI
     public class TerminalRect
     {
         private int count;
+        private int capacity;
         private Vector3[] vertices = new Vector3[] { };
         private Vector2[] uvs = new Vector2[] { };
         private Color32[] colors = new Color32[] { };
@@ -86,11 +87,13 @@ namespace JSSoft.UI
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                if (value > this.count)
+                var length = value * 4;
+                if (length > this.capacity)
                 {
-                    this.vertices = new Vector3[value * 4];
-                    this.uvs = new Vector2[value * 4];
-                    this.colors = new Color32[value * 4];
+                    Array.Resize(ref this.vertices, length);
+                    Array.Resize(ref this.uvs, length);
+                    Array.Resize(ref this.colors, length);
+                    this.capacity = length;
                 }
                 this.count = value;
             }

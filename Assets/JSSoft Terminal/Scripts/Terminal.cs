@@ -453,7 +453,7 @@ namespace JSSoft.UI
                 {
                     var point = this.grid.IndexToPoint(this.index);
                     this.grid.VisibleIndex = int.MaxValue;
-                    this.grid.CursorLocation = point;
+                    this.grid.CursorPosition = point;
                 }
             }
         }
@@ -523,8 +523,9 @@ namespace JSSoft.UI
             base.OnValidate();
             this.inputText = this.commandText;
             this.promptText = this.prompt + this.commandText;
-            this.Text = this.outputText + Environment.NewLine + this.promptText;
-            this.CursorPosition = this.commandText.Length;
+            this.text = this.outputText + Environment.NewLine + this.promptText;
+            this.cursorPosition = this.commandText.Length;
+            // Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
         }
 #endif
 

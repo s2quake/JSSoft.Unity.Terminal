@@ -1,4 +1,4 @@
-// MIT License
+    // MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -137,12 +137,19 @@ namespace JSSoft.UI
             }
         }
 
+        protected override void OnRectTransformDimensionsChange()
+        {
+            base.OnRectTransformDimensionsChange();
+            // Debug.Log($"{nameof(TerminalCursor)}.{nameof(OnRectTransformDimensionsChange)}");
+        }
+
         private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
         {
-            this.cursorLeft = this.grid.CursorLocation.X;
-            this.cursorTop = this.grid.CursorLocation.Y - this.grid.VisibleIndex;
+            this.cursorLeft = this.grid.CursorPosition.X;
+            this.cursorTop = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
             this.isVisible = this.grid.IsCursorVisible;
             this.SetVerticesDirty();
+            Debug.Log($"{nameof(TerminalCursor)}{nameof(TerminalGrid_CursorPositionChanged)}");
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;

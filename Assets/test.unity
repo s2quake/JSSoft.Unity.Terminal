@@ -120,6 +120,47 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!21 &269337328
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Bitmap
+  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &311462594
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +260,48 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!21 &452478571
+--- !u!21 &337134765
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Bitmap
+  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!21 &449747735
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -463,47 +545,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566498932}
   m_CullTransparentMesh: 0
---- !u!21 &621656894
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TextMeshPro/Bitmap
-  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _FaceTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _ColorMask: 15
-    - _MaskSoftnessX: 0
-    - _MaskSoftnessY: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _VertexOffsetX: 0
-    - _VertexOffsetY: 0
-    m_Colors:
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &737875553
 GameObject:
   m_ObjectHideFlags: 0
@@ -767,47 +808,6 @@ Material:
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
---- !u!21 &945430502
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TextMeshPro/Bitmap
-  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _FaceTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _ColorMask: 15
-    - _MaskSoftnessX: 0
-    - _MaskSoftnessY: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _VertexOffsetX: 0
-    - _VertexOffsetY: 0
-    m_Colors:
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &967481278
 GameObject:
   m_ObjectHideFlags: 0
@@ -873,7 +873,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 967481278}
   m_CullTransparentMesh: 0
---- !u!21 &999984217
+--- !u!21 &1021672734
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -1063,15 +1063,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283e6a0a03ab0477eaeff767ea73c85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 452478571}
+  m_Material: {fileID: 269337328}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   grid: {fileID: 1914692749}
-  cursorLeft: 14
-  cursorTop: 1
+  cursorLeft: 43
+  cursorTop: 37
   isVisible: 1
 --- !u!222 &1250052429
 CanvasRenderer:
@@ -1165,7 +1165,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1684732832
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1229,7 +1229,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 566498933}
   m_Direction: 3
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.055718474
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1384,7 +1384,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 999984217}
+  m_Material: {fileID: 1021672734}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1393,7 +1393,7 @@ MonoBehaviour:
   text: 
   fontColor: {r: 1, g: 1, b: 1, a: 1}
   grid: {fileID: 1914692749}
-  columnIndex: 14
+  columnIndex: 43
   rowIndex: 1
 --- !u!222 &1858257003
 CanvasRenderer:
@@ -1458,7 +1458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2972e3d36c4284a08815a62f49463a7f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 945430502}
+  m_Material: {fileID: 337134765}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1466,14 +1466,279 @@ MonoBehaviour:
       m_Calls: []
   terminal: {fileID: 1914692751}
   fontAsset: {fileID: 11400000, guid: 5e4e39ad2f4214f049edaad7494d83b0, type: 2}
-  text: "\uC548\uB155\uD558\uC138\uC694.\nc:> \uBA85\uB839 \uC785\uB825."
+  text: "// MIT License\n// \n// Copyright (c) 2019 Jeesu Choi\n// \n// Permission
+    is hereby granted, free of charge, to any person obtaining a copy\n// of this
+    software and associated documentation files (the \"Software\"), to deal\n// in
+    the Software without restriction, including without limitation the rights\n//
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n//
+    copies of the Software, and to permit persons to whom the Software is\n// furnished
+    to do so, subject to the following conditions:\n// \n// The above copyright notice
+    and this permission notice shall be included in all\n// copies or substantial
+    portions of the Software.\n// \n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR\n// IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    WARRANTIES OF MERCHANTABILITY,\n// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE\n// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER\n// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM,\n// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE\n// SOFTWARE.\n\nusing System;\nusing System.Linq;\nusing System.Collections.Generic;\nusing
+    TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\nusing UnityEngine.EventSystems;\nusing
+    System.Collections.ObjectModel;\nusing UnityEngine.TextCore;\n\nnamespace JSSoft.UI\n{\n
+    \   [RequireComponent(typeof(Terminal))]\n    public class TerminalGrid : MaskableGraphic,
+    IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler\n
+    \   {\n        [SerializeField]\n        private Terminal terminal = null;\n        [SerializeField]\n
+    \       private TMP_FontAsset fontAsset = null;\n        [SerializeField]\n        [TextArea(5,
+    10)]\n        private string text = string.Empty;\n        [SerializeField]\n
+    \       private Color32 fontColor = TerminalColors.White;\n        [SerializeField]\n
+    \       private int visibleIndex;\n        [SerializeField]\n        private Scrollbar
+    verticalScrollbar = null;\n        [SerializeField]\n        private TerminalPoint
+    cursorPosition;\n        [SerializeField]\n        private bool isCursorVisible
+    = true;\n        [SerializeField]\n        private string compositionString =
+    string.Empty;\n\n        private readonly TerminalRowCollection rows;\n        private
+    TerminalPoint[] points = new TerminalPoint[] { TerminalPoint.Zero };\n        private
+    bool isUpdating;\n        private bool isSelecting;\n        private TerminalPoint
+    startPoint;\n        private TerminalPoint endPoint;\n\n        public TerminalGrid()\n
+    \       {\n            this.rows = new TerminalRowCollection(this);\n        }\n\n
+    \       public static Rect TransformRect(TerminalGrid grid, Rect rect)\n        {\n
+    \           if (grid != null && grid.fontAsset != null && grid.rows.Count > 0)\n
+    \           {\n                var itemHeight = FontUtility.GetItemHeight(grid.fontAsset);\n
+    \               rect.y += itemHeight * grid.visibleIndex;\n            }\n            return
+    rect;\n        }\n\n        public static IEnumerable<TerminalCell> GetVisibleCells(TerminalGrid
+    grid, Func<TerminalCell, bool> predicate)\n        {\n            if (grid !=
+    null)\n            {\n                var topIndex = grid.visibleIndex;\n                var
+    bottomIndex = topIndex + grid.RowCount;\n                var query = from row
+    in grid.Rows\n                            where row.Index >= topIndex && row.Index
+    < bottomIndex\n                            from cell in row.Cells\n                            where
+    predicate(cell)\n                            select cell;\n                return
+    query;\n            }\n            return Enumerable.Empty<TerminalCell>();\n
+    \       }\n\n        public static TerminalCell GetCell(TerminalGrid grid, int
+    cursorLeft, int cursorTop)\n        {\n            if (grid != null)\n            {\n
+    \               if (cursorTop >= grid.Rows.Count)\n                    throw new
+    ArgumentOutOfRangeException(nameof(cursorTop));\n                if (cursorLeft
+    >= grid.ColumnCount)\n                    throw new ArgumentOutOfRangeException(nameof(cursorLeft));\n
+    \               return grid.Rows[cursorTop].Cells[cursorLeft];\n            }\n
+    \           return null;\n        }\n\n        public static int GetItemWidth(TerminalGrid
+    grid)\n        {\n            if (grid != null && grid.fontAsset != null)\n            {\n
+    \               return FontUtility.GetItemWidth(grid.fontAsset);\n            }\n
+    \           return 0;\n        }\n\n        public static int GetItemHeight(TerminalGrid
+    grid)\n        {\n            if (grid != null && grid.fontAsset != null)\n            {\n
+    \               return FontUtility.GetItemHeight(grid.fontAsset);\n            }\n
+    \           return 0;\n        }\n\n        public static GlyphRect GetCellRect(TerminalGrid
+    grid, TerminalCell cell)\n        {\n            if (cell == null)\n                throw
+    new ArgumentNullException(nameof(cell));\n            var itemWidth = TerminalGrid.GetItemWidth(grid);\n
+    \           var itemHeight = TerminalGrid.GetItemHeight(grid);\n            var
+    x = cell.Index * itemWidth;\n            var y = cell.Row.Index * itemHeight;\n
+    \           return new GlyphRect(x, y, itemWidth, itemHeight);\n        }\n\n
+    \       public static int GetItemWidth(TerminalGrid grid, char character)\n        {\n
+    \           if (grid != null && grid.fontAsset != null)\n            {\n                return
+    FontUtility.GetItemWidth(grid.fontAsset, character);\n            }\n            return
+    0;\n        }\n\n        public static bool IsSelecting(TerminalGrid grid, TerminalCell
+    cell)\n        {\n            if (cell == null)\n                throw new ArgumentNullException(nameof(cell));\n
+    \           var point = new TerminalPoint(cell.Index, cell.Row.Index);\n            var
+    isSelecting = IsSelecting(grid, point);\n            return cell.IsSelected !=
+    isSelecting;\n        }\n\n        public static bool IsSelecting(TerminalGrid
+    grid, TerminalPoint point)\n        {\n            if (grid != null && grid.isSelecting
+    == true)\n            {\n                var p1 = grid.startPoint < grid.endPoint
+    ? grid.startPoint : grid.endPoint;\n                var p2 = grid.startPoint >
+    grid.endPoint ? grid.startPoint : grid.endPoint;\n                return point
+    >= p1 && point <= p2;\n            }\n            return false;\n        }\n\n
+    \       public static Color32 GetBackgroundColor(TerminalGrid grid)\n        {\n
+    \           if (grid == null)\n                throw new ArgumentNullException(nameof(grid));\n
+    \           return grid.BackgroundColor ?? grid.color;\n        }\n\n        public
+    static Color32 GetForegroundColor(TerminalGrid grid)\n        {\n            if
+    (grid == null)\n                throw new ArgumentNullException(nameof(grid));\n
+    \           return grid.ForegroundColor ?? grid.fontColor;\n        }\n\n        public
+    Vector2 WorldToGrid(Vector2 position)\n        {\n            var rect = this.rectTransform.rect;\n
+    \           position.y = rect.height - position.y;\n            position.y +=
+    GetItemHeight(this) * this.visibleIndex;\n            return position;\n        }\n\n
+    \       public TerminalPoint Intersect(Vector2 position)\n        {\n            if
+    (this.IntersectWithCell(position) is TerminalCell cell)\n            {\n                return
+    new TerminalPoint(cell.Index, cell.Row.Index);\n            }\n            return
+    TerminalPoint.Invalid;\n        }\n\n        public TerminalCell IntersectWithCell(Vector2
+    position)\n        {\n            foreach (var item in this.rows)\n            {\n
+    \               if (item.Intersect(position) is TerminalCell cell)\n                {\n
+    \                   return cell;\n                }\n            }\n            return
+    null;\n        }\n\n        public TerminalPoint IndexToPoint(int index)\n        {\n
+    \           if (index < 0 || index > this.text.Length + 1)\n                throw
+    new ArgumentOutOfRangeException(nameof(index));\n            return this.points[index];\n
+    \       }\n\n        public int PointToIndex(TerminalPoint point)\n        {\n
+    \           for (var i = 0; i < this.points.Length; i++)\n            {\n                var
+    item = this.points[i];\n                if (point == item)\n                    return
+    i;\n            }\n            return -1;\n        }\n\n        public void Append(string
+    text)\n        {\n            this.Append(text, this.text.Length);\n        }\n\n
+    \       public void Append(string text, int index)\n        {\n            this.text
+    = this.text.Insert(index, text);\n            this.UpdatePoints(index);\n            this.UpdateRows(index);\n
+    \           this.OnTextChanged(EventArgs.Empty);\n        }\n\n        public
+    void Remove(int startIndex, int length)\n        {\n            this.text.Remove(startIndex,
+    length);\n            this.UpdatePoints(startIndex);\n            this.UpdateRows(startIndex);\n
+    \           this.OnTextChanged(EventArgs.Empty);\n        }\n\n        public
+    string Text\n        {\n            get => this.text;\n            set\n            {\n
+    \               var newValue = value ?? throw new ArgumentNullException(nameof(value));\n
+    \               var oldValue = this.text;\n                var minLength = Math.Min(newValue.Length,
+    oldValue.Length);\n                var index = minLength;\n\n                for
+    (var i = 0; i < minLength; i++)\n                {\n                    if (newValue[i]
+    != oldValue[i])\n                    {\n                        index = i;\n                        break;\n
+    \                   }\n                }\n\n                this.text = newValue;\n
+    \               this.UpdatePoints(index);\n                this.UpdateRows(index);\n
+    \               this.OnTextChanged(EventArgs.Empty);\n            }\n        }\n\n
+    \       public TMP_FontAsset FontAsset => this.fontAsset;\n\n        public int
+    ColumnCount { get; private set; }\n\n        public int RowCount { get; private
+    set; }\n\n        public IReadOnlyList<TerminalRow> Rows => this.rows;\n\n        public
+    int VisibleIndex\n        {\n            get => this.visibleIndex;\n            set\n
+    \           {\n                if (value < 0)\n                    throw new ArgumentNullException(nameof(value));\n
+    \               if (this.visibleIndex != value)\n                {\n                    this.visibleIndex
+    = value;\n                    this.UpdateVisibleIndex();\n                    this.UpdateScrollbarValue();\n
+    \                   this.OnVisibleIndexChanged(EventArgs.Empty);\n                }\n
+    \           }\n        }\n\n        public Color32? BackgroundColor { get; set;
+    }\n\n        public Color32? ForegroundColor { get; set; }\n\n        public TerminalPoint
+    CursorPosition\n        {\n            get => this.cursorPosition;\n            set\n
+    \           {\n                if (this.cursorPosition != value)\n                {\n
+    \                   this.cursorPosition = value;\n                    this.UpdateCursorPosition();\n
+    \                   this.OnCursorPositionChanged(EventArgs.Empty);\n                }\n
+    \           }\n        }\n\n        public bool IsCursorVisible\n        {\n            get
+    => this.isCursorVisible;\n            set\n            {\n                this.isCursorVisible
+    = value;\n                this.OnCursorPositionChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public string CompositionString\n        {\n            get
+    => this.compositionString;\n            set\n            {\n                this.compositionString
+    = value ?? throw new ArgumentNullException(nameof(value));\n                this.OnCompositionStringChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        public event EventHandler TextChanged;\n\n
+    \       public event EventHandler VisibleIndexChanged;\n\n        public event
+    EventHandler LayoutChanged;\n\n        public event EventHandler SelectionChanged;\n\n
+    \       public event EventHandler CursorPositionChanged;\n\n        public event
+    EventHandler CompositionStringChanged;\n\n        protected virtual void OnTextChanged(EventArgs
+    e)\n        {\n            this.TextChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnLayoutChanged(EventArgs e)\n        {\n
+    \           this.LayoutChanged?.Invoke(this, EventArgs.Empty);\n        }\n\n
+    \       protected virtual void OnVisibleIndexChanged(EventArgs e)\n        {\n
+    \           this.VisibleIndexChanged?.Invoke(this, EventArgs.Empty);\n        }\n\n
+    \       protected virtual void OnSelectionChanged(EventArgs e)\n        {\n            this.SelectionChanged?.Invoke(this,
+    EventArgs.Empty);\n        }\n\n        protected virtual void OnCursorPositionChanged(EventArgs
+    e)\n        {\n            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnCompositionStringChanged(EventArgs
+    e)\n        {\n            this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n#if UNITY_EDITOR\n        protected override void OnValidate()\n
+    \       {\n            base.OnValidate();\n            this.UpdateGrid();\n            this.UpdateVisibleIndex();\n
+    \           this.UpdateScrollVisible();\n            this.UpdateScrollbarSize();\n
+    \           // this.UpdateScrollbarValue();\n            this.UpdatePoints(0);\n
+    \           this.UpdateRows(0);\n            this.UpdateCursorPosition();\n            this.OnTextChanged(EventArgs.Empty);\n
+    \           // this.OnCursorPositionChanged(EventArgs.Empty);\n            //
+    this.OnCompositionStringChanged(EventArgs.Empty);\n            // Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnValidate)}\");\n
+    \           this.SetVerticesDirty();\n        }\n#endif\n\n        protected override
+    void OnRectTransformDimensionsChange()\n        {\n            base.OnRectTransformDimensionsChange();\n
+    \           // var index = this.PointToIndex(this.cursorPosition);\n            this.UpdateGrid();\n
+    \           // this.UpdateVisibleIndex();\n            // this.UpdateScrollVisible();\n
+    \           // this.UpdateScrollbarSize();\n            // this.UpdateScrollbarValue();\n
+    \           // this.UpdateCursorPosition();\n            // if (index >= 0)\n
+    \           // {\n            //     this.cursorPosition = this.IndexToPoint(index);\n
+    \           // }\n            // this.OnCursorPositionChanged(EventArgs.Empty);\n
+    \           // Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnRectTransformDimensionsChange)}\");\n
+    \           this.SetVerticesDirty();\n        }\n\n        // protected override
+    void OnPopulateMesh(VertexHelper vh)\n        // {\n        //     base.OnPopulateMesh(vh);\n
+    \       // }\n\n        protected override void OnEnable()\n        {\n            base.OnEnable();\n
+    \           this.material = new Material(Shader.Find(\"TextMeshPro/Bitmap\"));\n
+    \           this.material.color = base.color;\n            if (this.verticalScrollbar
+    != null)\n            {\n                this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);\n
+    \           }\n            this.SetVerticesDirty();\n            Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnEnable)}\");\n
+    \       }\n\n        protected override void OnDisable()\n        {\n            base.OnDisable();\n
+    \           if (this.verticalScrollbar != null)\n            {\n                this.verticalScrollbar.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);\n
+    \           }\n            Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnDisable)}\");\n
+    \       }\n\n        private void VerticalScrollbar_OnValueChanged(float arg0)\n
+    \       {\n            if (this.isUpdating == false)\n            {\n                var
+    value1 = (float)this.verticalScrollbar.value;\n                var value2 = (float)Math.Max(1,
+    this.rows.Count - this.RowCount);\n                this.isUpdating = true;\n                this.VisibleIndex
+    = (int)(value1 * value2);\n                this.isUpdating = false;\n            }\n
+    \       }\n\n        private void UpdateGrid()\n        {\n            if (this.fontAsset
+    != null)\n            {\n                var rect = this.rectTransform.rect;\n
+    \               var fontAsset = this.fontAsset;\n                var itemWidth
+    = FontUtility.GetItemWidth(fontAsset);\n                var itemHeight = FontUtility.GetItemHeight(fontAsset);\n
+    \               this.ColumnCount = (int)(rect.width / itemWidth);\n                this.RowCount
+    = (int)(rect.height / itemHeight);\n            }\n            else\n            {\n
+    \               this.ColumnCount = 0;\n                this.RowCount = 0;\n            }\n
+    \       }\n\n        private void UpdateVisibleIndex()\n        {\n            if
+    (visibleIndex < 0 || this.Rows.Count < this.RowCount)\n                this.visibleIndex
+    = 0;\n            else\n                this.visibleIndex = Math.Min(this.visibleIndex,
+    this.Rows.Count - this.RowCount);\n        }\n\n        private void UpdateScrollVisible()\n
+    \       {\n            if (this.verticalScrollbar != null)\n            {\n                var
+    gameObject = this.verticalScrollbar.gameObject;\n                gameObject.SetActive(this.rows.Count
+    >= this.RowCount);\n            }\n        }\n\n        private void UpdateScrollbarValue()\n
+    \       {\n            if (this.verticalScrollbar != null && this.isUpdating ==
+    false)\n            {\n                var value1 = this.visibleIndex;\n                var
+    value2 = (float)Math.Max(1, this.rows.Count - this.RowCount);\n                this.isUpdating
+    = true;\n                this.verticalScrollbar.value = value1 / value2;\n                this.isUpdating
+    = false;\n            }\n        }\n\n        private void UpdateScrollbarSize()\n
+    \       {\n            if (this.verticalScrollbar != null)\n            {\n                var
+    value1 = (float)Math.Max(1, this.RowCount);\n                var value2 = (float)Math.Max(1,
+    this.rows.Count);\n                this.verticalScrollbar.size = value1 / value2;\n
+    \           }\n        }\n\n        private void UpdateCursorPosition()\n        {\n
+    \           var x = this.cursorPosition.X;\n            var y = this.cursorPosition.Y;\n
+    \           var maxRowCount = Math.Max(this.RowCount, this.rows.Count);\n            x
+    = Math.Max(x, 0);\n            x = Math.Min(x, this.ColumnCount - 1);\n            y
+    = Math.Max(y, 0);\n            y = Math.Min(y, maxRowCount);\n            this.cursorPosition
+    = new TerminalPoint(x, y);\n        }\n\n        private string t1 = string.Empty;\n
+    \       private void UpdatePoints(int index)\n        {\n            if (this.t1
+    == this.text)\n            return;\n            var text = this.text + char.MinValue;\n
+    \           var point = this.points[index];\n            var columnCount = this.ColumnCount;\n
+    \           var fontAsset = this.fontAsset;\n\n            if (this.points.Length
+    < text.Length)\n            {\n                Array.Resize(ref this.points, text.Length);\n
+    \           }\n            while (index < text.Length)\n            {\n                var
+    character = text[index];\n                var volume = FontUtility.GetCharacterVolume(fontAsset,
+    character);\n                if (point.X + volume > columnCount)\n                {\n
+    \                   point.X = 0;\n                    point.Y++;\n                }\n
+    \               this.points[index++] = point;\n                point.X += volume;\n
+    \               if (character == '\\n')\n                {\n                    point.X
+    = 0;\n                    point.Y++;\n                }\n            }\n            this.rows.Resize(point.Y
+    + 1);\n            this.t1 = this.text;\n        }\n\n        private string t
+    = string.Empty;\n        private void UpdateRows(int index)\n        {\n            if
+    (this.t == this.text)\n            return;\n            var text = this.text +
+    char.MinValue;\n            var columnCount = this.ColumnCount;\n            for
+    (var i = index; i < text.Length; i++)\n            {\n                var point
+    = this.points[i];\n                var character = text[i];\n                var
+    volume = FontUtility.GetCharacterVolume(this.fontAsset, character);\n                if
+    (point.X < columnCount)\n                {\n                    var cell = this.rows.Prepare(point);\n
+    \                   cell.Character = character;\n                }\n            }\n
+    \           this.t = this.text;\n        }\n\n        private IEnumerable<TerminalCell>
+    GetCells(TerminalPoint p1, TerminalPoint p2)\n        {\n            var i = p1.X
+    + p1.Y * this.ColumnCount;\n            var end = p2.X + p2.Y * this.ColumnCount;\n
+    \           while (i <= end)\n            {\n                var x = i % this.ColumnCount;\n
+    \               var y = i / this.ColumnCount;\n                yield return this.rows[y].Cells[x];\n
+    \               i++;\n            }\n        }\n\n        private IEnumerable<TerminalCell>
+    GetCells()\n        {\n            var query = from row in this.rows\n                        from
+    cell in row.Cells\n                        select cell;\n            return query;\n
+    \       }\n\n        #region implemetations\n\n        void IBeginDragHandler.OnBeginDrag(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               this.endPoint = this.Intersect(position);\n                this.isSelecting
+    = true;\n            }\n        }\n\n        void IDragHandler.OnDrag(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var endPoint = this.Intersect(position);\n                if (this.endPoint
+    != endPoint)\n                {\n                    this.endPoint = endPoint;\n
+    \                   this.OnLayoutChanged(EventArgs.Empty);\n                }\n
+    \           }\n        }\n\n        void IEndDragHandler.OnEndDrag(PointerEventData
+    eventData)\n        {\n            this.isSelecting = false;\n            if (eventData.button
+    == PointerEventData.InputButton.Left)\n            {\n                var position
+    = this.WorldToGrid(eventData.position);\n                var s1 = this.startPoint;\n
+    \               var s2 = this.Intersect(position);\n                var p1 = s1
+    < s2 ? s1 : s2;\n                var p2 = s1 > s2 ? s1 : s2;\n                foreach
+    (var item in this.GetCells(p1, p2))\n                {\n                    item.IsSelected
+    = !item.IsSelected;\n                }\n                this.startPoint = TerminalPoint.Invalid;\n
+    \               this.endPoint = TerminalPoint.Invalid;\n                this.OnSelectionChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        void IPointerClickHandler.OnPointerClick(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               if (this.IntersectWithCell(position) is TerminalCell cell)\n                {\n
+    \                   // Debug.Log($\"TextIndex: {cell.TextIndex}\");\n                }\n
+    \           }\n        }\n\n        void IPointerDownHandler.OnPointerDown(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               this.startPoint = this.Intersect(position);\n            }\n        }\n\n
+    \       #endregion\n    }\n}\n"
   fontColor:
     serializedVersion: 2
     rgba: 4294967295
   visibleIndex: 0
   verticalScrollbar: {fileID: 1684732833}
-  cursorPostion:
-    x: 14
+  cursorPosition:
+    x: 43
     y: 1
   isCursorVisible: 1
   compositionString: 
@@ -1525,9 +1790,9 @@ MonoBehaviour:
     m_DisabledTrigger: Disabled
   m_Interactable: 1
   m_TargetGraphic: {fileID: 1914692749}
-  outputText: "\uC548\uB155\uD558\uC138\uC694."
-  prompt: 'c:> '
-  commandText: "\uBA85\uB839 \uC785\uB825."
+  outputText: 1235555
+  prompt: 'iMac:JSSoft.Unity.Terminal s2quake-mac$ '
+  commandText: ls1
   grid: {fileID: 1914692749}
 --- !u!1 &1949075380
 GameObject:
@@ -1578,7 +1843,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bd18a3f9e414890ba0af99286e8afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 621656894}
+  m_Material: {fileID: 449747735}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:

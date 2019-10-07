@@ -33,7 +33,8 @@ namespace JSSoft.UI
 {
     public class TerminalRow
     {
-        private readonly List<TerminalCell> cellList = new List<TerminalCell>();
+        private readonly List<TerminalCell> cells = new List<TerminalCell>();
+        private readonly Stack<TerminalCell> pool = new Stack<TerminalCell>();
         private Color32? backgroundColor;
         private Color32? foregroundColor;
 
@@ -41,10 +42,10 @@ namespace JSSoft.UI
         {
             this.Grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.Index = index;
-            this.cellList.Capacity = grid.ColumnCount;
+            this.cells.Capacity = grid.ColumnCount;
             for (var i = 0; i < grid.ColumnCount; i++)
             {
-                this.cellList.Add(new TerminalCell(this, i));
+                this.cells.Add(new TerminalCell(this, i));
             }
             this.UpdateRect();
         }
@@ -67,7 +68,7 @@ namespace JSSoft.UI
         {
             if (this.Rect.Intersect(position) == false)
                 return null;
-            foreach (var item in this.cellList)
+            foreach (var item in this.cells)
             {
                 if (item.Intersect(position) == true)
                     return item;
@@ -79,7 +80,7 @@ namespace JSSoft.UI
 
         public int Index { get; }
 
-        public IReadOnlyList<TerminalCell> Cells => this.cellList;
+        public IReadOnlyList<TerminalCell> Cells => this.cells;
 
         public bool IsSelected { get; set; }
 
@@ -89,20 +90,41 @@ namespace JSSoft.UI
 
         public Color32? ForegroundColor { get; set; }
 
-        public void Cut(int x)
+        // public void Cut(int x)
+        // {
+        //     for (var i = x; i < this.cells.Count; i++)
+        //     {
+        //         var item = this.cells[i];
+        //         item.Character = char.MinValue;
+        //         item.BackgroundColor = null;
+        //         item.ForegroundColor = null;
+        //     }
+        // }
+
+        // public void Reset()
+        // {
+        //     this.Cut(0);
+        // }
+
+        public void Resize()
         {
-            for (var i = x; i < this.cellList.Count; i++)
+            for (var i = this.cells.Count - 1; i >= this.Grid.ColumnCount; i--)
             {
-                var item = this.cellList[i];
+                this.pool.Push(this.cells[i]);
+                this.cells.RemoveAt(i);
+            }
+            for (var i = this.cells.Count; i < this.Grid.ColumnCount; i++)
+            {
+                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i);
+                this.cells.Add(item);
+            }
+            for (var i = 0; i < this.cells.Count; i++)
+            {
+                var item = this.cells[i];
                 item.Character = char.MinValue;
                 item.BackgroundColor = null;
                 item.ForegroundColor = null;
             }
-        }
-
-        public void Reset()
-        {
-            this.Cut(0);
         }
 
         private void UpdateRect()
@@ -111,7 +133,7 @@ namespace JSSoft.UI
             var itemHeight = TerminalGrid.GetItemHeight(this.Grid);
             var x = 0;
             var y = this.Index * itemHeight;
-            var width = this.cellList.Count * itemWidth;
+            var width = this.cells.Count * itemWidth;
             var height = itemHeight;
             this.Rect = new GlyphRect(x, y, width, height);
         }

@@ -147,8 +147,8 @@ namespace JSSoft.UI
 
         private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
         {
-            this.columnIndex = this.grid.CursorLocation.X;
-            this.rowIndex = this.grid.CursorLocation.Y - this.grid.VisibleIndex;
+            this.columnIndex = this.grid.CursorPosition.X;
+            this.rowIndex = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
             this.SetVerticesDirty();
         }
 

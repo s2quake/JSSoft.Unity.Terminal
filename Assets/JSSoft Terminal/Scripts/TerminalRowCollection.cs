@@ -41,36 +41,50 @@ namespace JSSoft.UI
             this.grid = grid;
         }
 
-        public void Cut(TerminalPoint point)
-        {
-            if (point.Y < this.Count)
-            {
-                var row = this[point.Y];
-                row.Cut(point.X);
-                for (var i = this.Count - 1; i >= point.Y + 1; i--)
-                {
-                    var item = this[i];
-                    item.Reset();
-                    this.RemoveAt(i);
-                }
-            }
-        }
+        // public void Cut(TerminalPoint point)
+        // {
+        //     if (point.Y < this.Count)
+        //     {
+        //         var row = this[point.Y];
+        //         row.Cut(point.X);
+        //         for (var i = this.Count - 1; i >= point.Y + 1; i--)
+        //         {
+        //             var item = this[i];
+        //             item.Reset();
+        //             this.RemoveAt(i);
+        //         }
+        //     }
+        // }
 
         public TerminalCell Prepare(TerminalPoint point)
         {
             if (point.Y >= this.Count)
             {
-                if (this.pool.Any() == true)
-                {
-                    this.Add(this.pool.Pop());
-                }
-                else
-                {
-                    this.Add(new TerminalRow(this.grid, this.Count));
-                }
+                var row = this.pool.Any() == true ? this.pool.Pop() : new TerminalRow(this.grid, this.Count);
+                row.Resize();
+                this.Add(row);
             }
 
             return this[point.Y].Cells[point.X];
+        }
+
+        public void Resize(int count)
+        {
+            for (var i = this.Count - 1; i >= count; i--)
+            {
+                this.pool.Push(this[i]);
+                this.RemoveAt(i);
+            }
+            for (var i = this.Count; i < count; i++)
+            {
+                var item = this.pool.Any() ? this.pool.Pop() : new TerminalRow(this.grid, i);
+                this.Add(item);
+            }
+            for (var i = this.Count - 1; i >= 0; i--)
+            {
+                var row = this[i];
+                row.Resize();
+            }
         }
     }
 }
