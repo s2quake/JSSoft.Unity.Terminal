@@ -492,12 +492,14 @@ namespace JSSoft.UI
         private void Terminal_PromptTextChanged(object sender, EventArgs e)
         {
             this.Text = this.Terminal.Text;
+            this.VisibleIndex = int.MaxValue;
         }
 
         private void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
             var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
             this.CursorPosition = this.IndexToPoint(index);
+            this.VisibleIndex = int.MaxValue;
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)

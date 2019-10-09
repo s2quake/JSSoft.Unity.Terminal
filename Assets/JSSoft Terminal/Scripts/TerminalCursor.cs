@@ -1,4 +1,4 @@
-    // MIT License
+// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -124,6 +124,7 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
                 this.isVisible = this.grid.IsCursorVisible;
             }
         }
@@ -134,6 +135,7 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
+                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
             }
         }
 
@@ -145,11 +147,20 @@ namespace JSSoft.UI
 
         private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
         {
+            this.UpdateLayout();
+        }
+
+        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        {
+            this.UpdateLayout();
+        }
+
+        private void UpdateLayout()
+        {
             this.cursorLeft = this.grid.CursorPosition.X;
             this.cursorTop = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
             this.isVisible = this.grid.IsCursorVisible;
             this.SetVerticesDirty();
-            // Debug.Log($"{nameof(TerminalCursor)}{nameof(TerminalGrid_CursorPositionChanged)}");
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
