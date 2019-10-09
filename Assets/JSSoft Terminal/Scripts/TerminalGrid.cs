@@ -33,7 +33,7 @@ using UnityEngine.TextCore;
 namespace JSSoft.UI
 {
     [RequireComponent(typeof(Terminal))]
-    public class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
+    public partial class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
     {
         [SerializeField]
         private Terminal terminal = null;
@@ -41,13 +41,13 @@ namespace JSSoft.UI
         private TMP_FontAsset fontAsset = null;
         [SerializeField]
         [TextArea(5, 10)]
-        private string text = string.Empty;
+        public string text = string.Empty;
         [SerializeField]
         private Color32 fontColor = TerminalColors.White;
         [SerializeField]
         private int visibleIndex;
-        [SerializeField]
-        private Scrollbar verticalScrollbar = null;
+        // [SerializeField]
+        // private Scrollbar verticalScrollbar = null;
         [SerializeField]
         private TerminalPoint cursorPosition;
         [SerializeField]
@@ -56,15 +56,21 @@ namespace JSSoft.UI
         private string compositionString = string.Empty;
 
         private readonly TerminalRowCollection rows;
-        private TerminalPoint[] points = new TerminalPoint[] { TerminalPoint.Zero };
-        private bool isUpdating;
+        private readonly TerminalPointCollection points;
+        // private bool isUpdating;
         private bool isSelecting;
         private TerminalPoint startPoint;
         private TerminalPoint endPoint;
 
+        private void Test()
+        {
+            Debug.Log("test");
+        }
+
         public TerminalGrid()
         {
             this.rows = new TerminalRowCollection(this);
+            this.points = new TerminalPointCollection(this);
         }
 
         public static Rect TransformRect(TerminalGrid grid, Rect rect)
@@ -207,23 +213,9 @@ namespace JSSoft.UI
             return null;
         }
 
-        public TerminalPoint IndexToPoint(int index)
-        {
-            if (index < 0 || index > this.text.Length + 1)
-                throw new ArgumentOutOfRangeException(nameof(index));
-            return this.points[index];
-        }
+        public TerminalPoint IndexToPoint(int index) => this.points[index];
 
-        public int PointToIndex(TerminalPoint point)
-        {
-            for (var i = 0; i < this.points.Length; i++)
-            {
-                var item = this.points[i];
-                if (point == item)
-                    return i;
-            }
-            return -1;
-        }
+        public int PointToIndex(TerminalPoint point) => this.points.PointToIndex(point);
 
         public void Append(string text)
         {
@@ -233,16 +225,14 @@ namespace JSSoft.UI
         public void Append(string text, int index)
         {
             this.text = this.text.Insert(index, text);
-            this.UpdatePoints(index);
-            this.UpdateRows(index);
+            this.UpdateRows();
             this.OnTextChanged(EventArgs.Empty);
         }
 
         public void Remove(int startIndex, int length)
         {
             this.text.Remove(startIndex, length);
-            this.UpdatePoints(startIndex);
-            this.UpdateRows(startIndex);
+            this.UpdateRows();
             this.OnTextChanged(EventArgs.Empty);
         }
 
@@ -266,8 +256,7 @@ namespace JSSoft.UI
                 }
 
                 this.text = newValue;
-                this.UpdatePoints(index);
-                this.UpdateRows(index);
+                this.UpdateRows();
                 this.OnTextChanged(EventArgs.Empty);
             }
         }
@@ -291,7 +280,7 @@ namespace JSSoft.UI
                 {
                     this.visibleIndex = value;
                     this.UpdateVisibleIndex();
-                    this.UpdateScrollbarValue();
+                    this.UpdateScrollbar();
                     this.OnVisibleIndexChanged(EventArgs.Empty);
                 }
             }
@@ -383,16 +372,14 @@ namespace JSSoft.UI
             base.OnValidate();
             this.UpdateGrid();
             this.UpdateVisibleIndex();
-            this.UpdateScrollVisible();
-            this.UpdateScrollbarSize();
-            this.UpdateScrollbarValue();
-            this.UpdatePoints(0);
-            this.UpdateRows(0);
+            this.UpdateScrollbar();
+            this.UpdateRows();
             this.UpdateCursorPosition();
             this.OnTextChanged(EventArgs.Empty);
-            // this.OnCursorPositionChanged(EventArgs.Empty);
-            // this.OnCompositionStringChanged(EventArgs.Empty);
-            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnValidate)}");
+            this.OnVisibleIndexChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
+            this.OnCompositionStringChanged(EventArgs.Empty);
+            Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnValidate)}");
             this.SetVerticesDirty();
         }
 #endif
@@ -400,20 +387,15 @@ namespace JSSoft.UI
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            // var index = this.PointToIndex(this.cursorPosition);
             this.UpdateGrid();
-            // this.UpdateVisibleIndex();
-            // this.UpdateScrollVisible();
-            // this.UpdateScrollbarSize();
-            // this.UpdateScrollbarValue();
-            // this.UpdateCursorPosition();
-            // if (index >= 0)
-            // {
-            //     this.cursorPosition = this.IndexToPoint(index);
-            // }
-            // this.OnCursorPositionChanged(EventArgs.Empty);
-            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnRectTransformDimensionsChange)}");
+            this.UpdateVisibleIndex();
+            this.UpdateScrollbar();
+            this.UpdateRows();
+            this.UpdateCursorPosition();
             this.SetVerticesDirty();
+            this.OnTextChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
+            this.OnCompositionStringChanged(EventArgs.Empty);
         }
 
         // protected override void OnPopulateMesh(VertexHelper vh)
@@ -426,10 +408,11 @@ namespace JSSoft.UI
             base.OnEnable();
             this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
             this.material.color = base.color;
-            if (this.verticalScrollbar != null)
-            {
-                this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
-            }
+            // if (this.verticalScrollbar != null)
+            // {
+            //     this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
+            // }
+            this.AttachEvent();
             this.SetVerticesDirty();
             Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnEnable)}");
         }
@@ -437,22 +420,23 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (this.verticalScrollbar != null)
-            {
-                this.verticalScrollbar.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);
-            }
+            this.DetachEvent();
+            // if (this.verticalScrollbar != null)
+            // {
+            //     this.verticalScrollbar.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);
+            // }
             Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnDisable)}");
         }
 
         private void VerticalScrollbar_OnValueChanged(float arg0)
         {
-            if (this.isUpdating == false)
+            // if (this.isUpdating == false)
             {
-                var value1 = (float)this.verticalScrollbar.value;
-                var value2 = (float)Math.Max(1, this.rows.Count - this.RowCount);
-                this.isUpdating = true;
-                this.VisibleIndex = (int)(value1 * value2);
-                this.isUpdating = false;
+                // var value1 = (float)this.verticalScrollbar.value;
+                // var value2 = (float)Math.Max(1, this.rows.Count - this.RowCount);
+                // this.isUpdating = true;
+                // this.VisibleIndex = (int)(value1 * value2);
+                // this.isUpdating = false;
             }
         }
 
@@ -476,45 +460,37 @@ namespace JSSoft.UI
 
         private void UpdateVisibleIndex()
         {
-            if (visibleIndex < 0 || this.Rows.Count < this.RowCount)
+            if (this.visibleIndex < 0 || this.Rows.Count < this.RowCount)
                 this.visibleIndex = 0;
             else
                 this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count - this.RowCount);
         }
 
-        private void UpdateScrollVisible()
+        private void UpdateScrollbar()
         {
-            if (this.verticalScrollbar != null)
-            {
-                var gameObject = this.verticalScrollbar.gameObject;
-                var isActive = this.rows.Count >= this.RowCount;
-                if (gameObject.activeSelf != isActive)
-                    gameObject.SetActive(isActive);
-            }
-        }
+            // if (this.verticalScrollbar != null)
+            // {
+            //     var gameObject = this.verticalScrollbar.gameObject;
+            //     var isActive = this.rows.Count >= this.RowCount;
+            //     if (gameObject.activeSelf != isActive)
+            //         gameObject.SetActive(isActive);
 
-        private void UpdateScrollbarValue()
-        {
-            if (this.verticalScrollbar != null && this.isUpdating == false)
-            {
-                var value1 = this.visibleIndex;
-                var value2 = (float)Math.Max(1, this.rows.Count - this.RowCount);
-                var value = value1 / value2;
-                this.isUpdating = true;
-                if (this.verticalScrollbar.value != value)
-                    this.verticalScrollbar.value = value;
-                this.isUpdating = false;
-            }
-        }
+            //     var size1 = (float)Math.Max(1, this.RowCount);
+            //     var size2 = (float)Math.Max(1, this.rows.Count);
+            //     var size = size1 / size2;
+            //     if (this.verticalScrollbar.size != size)
+            //     {
+            //         this.verticalScrollbar.size = size1 / size2;
+            //     }
 
-        private void UpdateScrollbarSize()
-        {
-            if (this.verticalScrollbar != null)
-            {
-                var value1 = (float)Math.Max(1, this.RowCount);
-                var value2 = (float)Math.Max(1, this.rows.Count);
-                this.verticalScrollbar.size = value1 / value2;
-            }
+            //     var value1 = this.visibleIndex;
+            //     var value2 = (float)Math.Max(1, this.rows.Count - this.RowCount);
+            //     var value = value1 / value2;
+            //     if (this.verticalScrollbar.value != value)
+            //     {
+            //         this.verticalScrollbar.SetValueWithoutNotify(value);
+            //     }
+            // }
         }
 
         private void UpdateCursorPosition()
@@ -522,67 +498,46 @@ namespace JSSoft.UI
             var x = this.cursorPosition.X;
             var y = this.cursorPosition.Y;
             var maxRowCount = Math.Max(this.RowCount, this.rows.Count);
-            x = Math.Max(x, 0);
             x = Math.Min(x, this.ColumnCount - 1);
+            x = Math.Max(x, 0);
+            y = Math.Min(y, maxRowCount - 1);
             y = Math.Max(y, 0);
-            y = Math.Min(y, maxRowCount);
             this.cursorPosition = new TerminalPoint(x, y);
         }
 
-        private string t1 = string.Empty;
-        private void UpdatePoints(int index)
+        private void UpdateRows()
         {
-            if (this.t1 == this.text)
-                return;
-            var text = this.text + char.MinValue;
-            var point = this.points[index];
-            var columnCount = this.ColumnCount;
-            var fontAsset = this.fontAsset;
-
-            if (this.points.Length < text.Length)
-            {
-                Array.Resize(ref this.points, text.Length);
-            }
-            while (index < text.Length)
-            {
-                var character = text[index];
-                var volume = FontUtility.GetCharacterVolume(fontAsset, character);
-                if (point.X + volume > columnCount)
-                {
-                    point.X = 0;
-                    point.Y++;
-                }
-                this.points[index++] = point;
-                point.X += volume;
-                if (character == '\n')
-                {
-                    point.X = 0;
-                    point.Y++;
-                }
-            }
-            this.rows.Resize(point.Y + 1);
-            this.t1 = this.text;
+            this.points.Update();
+            this.rows.Udpate(this.points);
         }
 
-        private string t = string.Empty;
-        private void UpdateRows(int index)
+        private void AttachEvent()
         {
-            if (this.t == this.text)
-                return;
-            var text = this.text + char.MinValue;
-            var columnCount = this.ColumnCount;
-            for (var i = index; i < text.Length; i++)
+            if (this.terminal != null)
             {
-                var point = this.points[i];
-                var character = text[i];
-                var volume = FontUtility.GetCharacterVolume(this.fontAsset, character);
-                if (point.X < columnCount)
-                {
-                    var cell = this.rows.Prepare(point);
-                    cell.Character = character;
-                }
+                this.terminal.TextChanged += Terminal_TextChanged;
+                this.terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
             }
-            this.t = this.text;
+        }
+
+        private void DetachEvent()
+        {
+            if (this.terminal != null)
+            {
+                this.terminal.TextChanged -= Terminal_TextChanged;
+                this.terminal.CursorPositionChanged -= Terminal_CursorPositionChanged;
+            }
+        }
+
+        private void Terminal_TextChanged(object sender, EventArgs e)
+        {
+            this.Text = this.terminal.Text;
+        }
+
+        private void Terminal_CursorPositionChanged(object sender, EventArgs e)
+        {
+            var index = this.terminal.CursorPosition + this.terminal.OutputText.Length + Environment.NewLine.Length + this.terminal.Prompt.Length;
+            this.CursorPosition = this.IndexToPoint(index);
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)

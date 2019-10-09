@@ -67,9 +67,6 @@ namespace JSSoft.UI
         private Event processingEvent = new Event();
         private EventHandler<TerminalExecuteEventArgs> executed;
 
-        [SerializeField]
-        private TerminalGrid grid = null;
-
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static Terminal()
         {
@@ -392,9 +389,6 @@ namespace JSSoft.UI
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
-            if (this.grid == null)
-                return;
-
             while (Event.PopEvent(this.processingEvent))
             {
                 if (this.processingEvent.rawType == EventType.KeyDown)
@@ -409,7 +403,6 @@ namespace JSSoft.UI
                     }
                     if (this.processingEvent.character != 0)
                     {
-                        this.grid.Append($"{this.processingEvent.character}", this.index);
                         this.text = this.text.Insert(this.index, $"{this.processingEvent.character}");
                         this.promptText = this.Text.Substring(this.outputText.Length + Environment.NewLine.Length);
                         this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
@@ -432,8 +425,6 @@ namespace JSSoft.UI
             this.BackgroundColor = null;
         }
 
-        public TerminalGrid Grid => this.grid;
-
         public Color32? ForegroundColor { get; set; }
 
         public Color32? BackgroundColor { get; set; }
@@ -449,12 +440,6 @@ namespace JSSoft.UI
                 if (this.cursorPosition > this.promptText.Length - this.prompt.Length)
                     this.cursorPosition = this.promptText.Length - this.prompt.Length;
                 this.index = this.outputText.Length + Environment.NewLine.Length + this.prompt.Length + this.cursorPosition;
-                if (this.grid != null)
-                {
-                    var point = this.grid.IndexToPoint(this.index);
-                    this.grid.VisibleIndex = int.MaxValue;
-                    this.grid.CursorPosition = point;
-                }
             }
         }
 
@@ -464,12 +449,11 @@ namespace JSSoft.UI
             private set
             {
                 this.text = value;
-                if (this.grid != null)
-                {
-                    this.grid.Text = value;
-                }
+                this.OnTextChanged(EventArgs.Empty);
             }
         }
+
+        public string OutputText => this.outputText;
 
         public string CompositionString
         {
@@ -477,10 +461,7 @@ namespace JSSoft.UI
             private set
             {
                 this.compositionString = value;
-                if (this.grid != null)
-                {
-                    this.grid.CompositionString = value;
-                }
+                this.OnCompositionStringChanged(EventArgs.Empty);
             }
         }
 
@@ -489,6 +470,27 @@ namespace JSSoft.UI
         public OnCompletion onCompletion { get; set; }
 
         public OnDrawPrompt onDrawPrompt { get; set; }
+
+        public event EventHandler TextChanged;
+        
+        public event EventHandler CompositionStringChanged;
+
+        public event EventHandler CursorPositionChanged;
+
+        protected virtual void OnTextChanged(EventArgs e)
+        {
+            this.TextChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnCompositionStringChanged(EventArgs e)
+        {
+            this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnCursorPositionChanged(EventArgs e)
+        {
+            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
+        }
 
         protected virtual string[] GetCompletion(string[] items, string find)
         {
@@ -507,9 +509,9 @@ namespace JSSoft.UI
             base.OnEnable();
             this.inputText = this.commandText;
             this.promptText = this.prompt + this.commandText;
-            this.Text = this.outputText + Environment.NewLine + this.promptText;
-            this.CursorPosition = this.commandText.Length;
-            Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}");
+            this.text = this.outputText + Environment.NewLine + this.promptText;
+            this.cursorPosition = this.commandText.Length;
+            Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}1");
         }
 
         protected override void Awake()
@@ -525,7 +527,9 @@ namespace JSSoft.UI
             this.promptText = this.prompt + this.commandText;
             this.text = this.outputText + Environment.NewLine + this.promptText;
             this.cursorPosition = this.commandText.Length;
-            // Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
+            this.OnTextChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
+            Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
         }
 #endif
 

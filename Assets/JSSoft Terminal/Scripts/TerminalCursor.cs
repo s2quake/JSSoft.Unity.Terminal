@@ -149,7 +149,7 @@ namespace JSSoft.UI
             this.cursorTop = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
             this.isVisible = this.grid.IsCursorVisible;
             this.SetVerticesDirty();
-            Debug.Log($"{nameof(TerminalCursor)}{nameof(TerminalGrid_CursorPositionChanged)}");
+            // Debug.Log($"{nameof(TerminalCursor)}{nameof(TerminalGrid_CursorPositionChanged)}");
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;

@@ -61,9 +61,11 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPoint.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPointCollection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRect.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRow.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRowCollection.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalScrollbar.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />

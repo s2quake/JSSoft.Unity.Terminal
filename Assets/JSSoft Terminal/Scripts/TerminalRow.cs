@@ -106,14 +106,14 @@ namespace JSSoft.UI
         //     this.Cut(0);
         // }
 
-        public void Resize()
+        public void Resize(int columnCount)
         {
-            for (var i = this.cells.Count - 1; i >= this.Grid.ColumnCount; i--)
+            for (var i = this.cells.Count - 1; i >= columnCount; i--)
             {
                 this.pool.Push(this.cells[i]);
                 this.cells.RemoveAt(i);
             }
-            for (var i = this.cells.Count; i < this.Grid.ColumnCount; i++)
+            for (var i = this.cells.Count; i < columnCount; i++)
             {
                 var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i);
                 this.cells.Add(item);
