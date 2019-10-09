@@ -44,7 +44,7 @@ namespace JSSoft.UI
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
         }
 
-        public void Udpate(TerminalPointCollection points)
+        public void Udpate(TerminalCharacterInfoCollection characterInfos)
         {
             var fontAsset = this.grid.FontAsset;
             var text = this.grid.Text + char.MinValue;
@@ -52,17 +52,20 @@ namespace JSSoft.UI
 
             if (fontAsset != null && this.text != text)
             {
-                var volume = points.Volume;
+                var volume = characterInfos.Volume;
                 var index = 0;//this.FindUpdateIndex(fontAsset, text, columnCount);
                 this.Resize(this.grid.ColumnCount, volume.Bottom);
                 for (var i = index; i < text.Length; i++)
                 {
-                    var point = points[i];
-                    var character = text[i];
+                    var characterInfo = characterInfos[i];
+                    var point = characterInfo.Point;
+                    var character = characterInfo.Character;
                     if (point.X < columnCount)
                     {
                         var cell = this.Prepare(point);
                         cell.Character = character;
+                        cell.BackgroundColor = characterInfo.BackgroundColor;
+                        cell.ForegroundColor = characterInfo.ForegroundColor;
                     }
                 }
             }

@@ -1,4 +1,4 @@
-// MIT License
+﻿// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -21,31 +21,36 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Ntreev.Library.Threading;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalExecuteEventArgs : EventArgs
+    [RequireComponent(typeof(Terminal))]
+    public class TerminalEvents : UIBehaviour
     {
-        private bool handled;
+        public ExecutedEvent onExecuted { get; set; }
 
-        public TerminalExecuteEventArgs(string command)
+        public OnCompletion onCompletion { get; set; }
+
+        public OnDrawPrompt onDrawPrompt { get; set; }
+
+        public class ExecutedEvent : UnityEvent<string, Action>
         {
-            this.Command = command;
+
         }
 
-        public string Command { get; }
+// public delegate string[] OnCompletion(string[] items, string find);
 
-        public bool Handled
-        {
-            get => this.handled;
-            set
-            {
-                if (this.handled == false && value == true)
-                {
-                    this.handled = true;
-                }
-            }
-        }
+//     public delegate void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors);
     }
 }

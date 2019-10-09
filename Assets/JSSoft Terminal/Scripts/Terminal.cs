@@ -25,9 +25,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Ntreev.Library.Threading;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -52,12 +49,11 @@ namespace JSSoft.UI
         [SerializeField]
         private string commandText = string.Empty;
         private string completion;
-        private string text;
+        private string text = string.Empty;
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
         private int cursorPosition;
-        private int index;
         private string compositionString;
         private Color32?[] foregroundColors = new Color32?[] { };
         private Color32?[] backgroundColors = new Color32?[] { };
@@ -133,6 +129,7 @@ namespace JSSoft.UI
         {
             var commandText = this.commandText;
             var promptText = this.promptText;
+            var prompt = this.prompt;
             if (this.histories.Contains(commandText) == false)
             {
                 this.histories.Add(commandText);
@@ -143,44 +140,14 @@ namespace JSSoft.UI
                 this.historyIndex = this.histories.LastIndexOf(commandText) + 1;
             }
 
+            this.prompt = string.Empty;
             this.promptText = string.Empty;
             this.inputText = string.Empty;
             this.commandText = string.Empty;
             this.completion = string.Empty;
             this.cursorPosition = 0;
-            this.AppendLine(string.Empty);
             this.AppendLine(promptText);
-            this.ExecuteEvent(commandText);
-        }
-
-        private void ExecuteEvent(string commandText)
-        {
-            var isEnded = false;
-            var endAction = new Action(() =>
-            {
-                if (isEnded == true)
-                    throw new InvalidOperationException();
-                this.InsertPrompt();
-                isEnded = true;
-            });
-            if (this.onExecuted != null)
-            {
-                // this.readOnly = true;
-                if (this.executed != null)
-                {
-                    Debug.LogWarning("execute");
-                }
-                this.onExecuted.Invoke(commandText, endAction);
-            }
-            else if (this.executed != null)
-            {
-                // this.readOnly = true;
-                this.executed.Invoke(this, new TerminalExecuteEventArgs(commandText, endAction));
-            }
-            else
-            {
-                this.InsertPrompt();
-            }
+            this.ExecuteEvent(commandText, prompt);
         }
 
         public void Clear()
@@ -190,8 +157,8 @@ namespace JSSoft.UI
             this.completion = string.Empty;
             this.promptText = this.prompt;
             this.cursorPosition = 0;
-            this.Text = this.outputText + Environment.NewLine + this.promptText;
-            this.cursorPosition = 0;
+            this.OnPropmtTextChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
         }
 
         public void MoveToFirst()
@@ -214,8 +181,9 @@ namespace JSSoft.UI
             this.cursorPosition = 0;
             this.foregroundColors = new Color32?[] { };
             this.backgroundColors = new Color32?[] { };
-            this.Text = this.outputText + Environment.NewLine + this.promptText;
-            this.CursorPosition = 0;
+            this.text = this.outputText + this.promptText;
+            this.cursorPosition = 0;
+            this.InvokeOutputTextChangedEvent();
         }
 
         public void Append(string text)
@@ -226,26 +194,6 @@ namespace JSSoft.UI
         public void AppendLine(string text)
         {
             this.AppendInternal(text + Environment.NewLine);
-        }
-
-        public string Prompt
-        {
-            get => this.prompt;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-                this.prompt = value;
-                this.promptText = this.prompt + this.commandText;
-                this.promptForegroundColors = new Color32?[this.prompt.Length];
-                this.promptBackgroundColors = new Color32?[this.prompt.Length];
-                if (this.onDrawPrompt != null)
-                {
-                    this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
-                }
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
-                this.CursorPosition = this.commandText.Length;
-            }
         }
 
         public void NextCompletion()
@@ -264,7 +212,8 @@ namespace JSSoft.UI
             {
                 this.commandText = this.commandText.Remove(this.cursorPosition, 1);
                 this.promptText = this.prompt + this.commandText;
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
+                this.text = this.outputText + this.promptText;
+                this.InvokePromptTextChangedEvent();
             }
         }
 
@@ -274,8 +223,9 @@ namespace JSSoft.UI
             {
                 this.commandText = this.commandText.Remove(this.cursorPosition - 1, 1);
                 this.promptText = this.prompt + this.commandText;
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
-                this.CursorPosition--;
+                this.cursorPosition--;
+                this.text = this.outputText + this.promptText;
+                this.InvokePromptTextChangedEvent();
             }
         }
 
@@ -286,9 +236,9 @@ namespace JSSoft.UI
                 this.inputText = this.commandText = this.histories[this.historyIndex + 1];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
-                this.MoveToLast();
+                this.text = this.outputText + this.promptText;
                 this.historyIndex++;
+                this.InvokePromptTextChangedEvent();
             }
         }
 
@@ -299,18 +249,18 @@ namespace JSSoft.UI
                 this.inputText = this.commandText = this.histories[this.historyIndex - 1];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
-                this.MoveToLast();
+                this.text = this.outputText + this.promptText;
                 this.historyIndex--;
+                this.InvokePromptTextChangedEvent();
             }
             else if (this.histories.Count == 1)
             {
                 this.inputText = this.commandText = this.histories[0];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.commandText.Length;
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
-                this.MoveToLast();
+                this.text = this.outputText + this.promptText;
                 this.historyIndex = 0;
+                this.InvokePromptTextChangedEvent();
             }
         }
 
@@ -387,36 +337,16 @@ namespace JSSoft.UI
             return text;
         }
 
-        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
+        public override void OnSelect(BaseEventData eventData)
         {
-            while (Event.PopEvent(this.processingEvent))
-            {
-                if (this.processingEvent.rawType == EventType.KeyDown)
-                {
-                    var keyCode = this.processingEvent.keyCode;
-                    var modifiers = this.processingEvent.modifiers;
-                    var key = $"{modifiers}+{keyCode}";
-                    if (this.OnPreviewKeyDown(this.processingEvent) == true)
-                    {
-                        // Debug.Log($"{key}: true");
-                        continue;
-                    }
-                    if (this.processingEvent.character != 0)
-                    {
-                        this.text = this.text.Insert(this.index, $"{this.processingEvent.character}");
-                        this.promptText = this.Text.Substring(this.outputText.Length + Environment.NewLine.Length);
-                        this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
-                        this.completion = string.Empty;
-                        this.CursorPosition++;
-                    }
-                    else
-                    {
-                        this.CompositionString = this.GetCompositionString();
-                    }
-                }
-            }
+            base.OnSelect(eventData);
+            this.InputSystem.imeCompositionMode = IMECompositionMode.On;
+        }
 
-            eventData.Use();
+        public override void OnDeselect(BaseEventData eventData)
+        {
+            base.OnDeselect(eventData);
+            // Debug.Log(nameof(OnDeselect));
         }
 
         public void ResetColor()
@@ -439,21 +369,37 @@ namespace JSSoft.UI
                     this.cursorPosition = 0;
                 if (this.cursorPosition > this.promptText.Length - this.prompt.Length)
                     this.cursorPosition = this.promptText.Length - this.prompt.Length;
-                this.index = this.outputText.Length + Environment.NewLine.Length + this.prompt.Length + this.cursorPosition;
+                this.OnCursorPositionChanged(EventArgs.Empty);
             }
         }
 
-        public string Text
-        {
-            get => this.text ?? string.Empty;
-            private set
-            {
-                this.text = value;
-                this.OnTextChanged(EventArgs.Empty);
-            }
-        }
+        public string Text => this.text;
 
         public string OutputText => this.outputText;
+
+        public string Prompt
+        {
+            get => this.prompt;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                this.prompt = value;
+                this.promptForegroundColors = new Color32?[value.Length];
+                this.promptBackgroundColors = new Color32?[value.Length];
+                this.promptText = this.prompt + this.commandText;
+                this.cursorPosition = this.commandText.Length;
+                this.InvokePromptTextChangedEvent();
+                if (this.onDrawPrompt != null)
+                {
+                    this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                }
+            }
+        }
+
+        public string PromptText => this.promptText;
+
+        public string CommandText => this.commandText;
 
         public string CompositionString
         {
@@ -465,21 +411,26 @@ namespace JSSoft.UI
             }
         }
 
-        public ExecutedEvent onExecuted { get; set; }
-
         public OnCompletion onCompletion { get; set; }
 
         public OnDrawPrompt onDrawPrompt { get; set; }
 
-        public event EventHandler TextChanged;
-        
+        public event EventHandler OutputTextChanged;
+
+        public event EventHandler PromptTextChanged;
+
         public event EventHandler CompositionStringChanged;
 
         public event EventHandler CursorPositionChanged;
 
-        protected virtual void OnTextChanged(EventArgs e)
+        protected virtual void OnOutputTextChanged(EventArgs e)
         {
-            this.TextChanged?.Invoke(this, EventArgs.Empty);
+            this.OutputTextChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnPropmtTextChanged(EventArgs e)
+        {
+            this.PromptTextChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnCompositionStringChanged(EventArgs e)
@@ -509,7 +460,7 @@ namespace JSSoft.UI
             base.OnEnable();
             this.inputText = this.commandText;
             this.promptText = this.prompt + this.commandText;
-            this.text = this.outputText + Environment.NewLine + this.promptText;
+            this.text = this.outputText + this.promptText;
             this.cursorPosition = this.commandText.Length;
             Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}1");
         }
@@ -523,11 +474,15 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
+            if (this.outputText != string.Empty && this.outputText.EndsWith(Environment.NewLine) == false)
+            {
+                this.outputText += Environment.NewLine;
+            }
             this.inputText = this.commandText;
             this.promptText = this.prompt + this.commandText;
-            this.text = this.outputText + Environment.NewLine + this.promptText;
+            this.text = this.outputText + this.promptText;
             this.cursorPosition = this.commandText.Length;
-            this.OnTextChanged(EventArgs.Empty);
+            this.OnOutputTextChanged(EventArgs.Empty);
             this.OnCursorPositionChanged(EventArgs.Empty);
             Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
         }
@@ -552,16 +507,9 @@ namespace JSSoft.UI
             return false;
         }
 
-        internal int CursorPositionInternal => this.outputText.Length + this.prompt.Length + this.cursorPosition;
-
-        private void Terminal_onTextSelection(string a, int i1, int i2)
+        private static void AddBinding(IKeyBinding binding)
         {
-            // Debug.Log($"text {i1}, {i2}");
-        }
-
-        private void Terminal_onEndTextSelection(string a, int i1, int i2)
-        {
-            // Debug.Log($"end {i1}, {i2}");
+            bindingByKey.Add($"{binding.Modifiers}+{binding.KeyCode}", binding);
         }
 
         private void CompletionImpl(Func<string[], string, string> func)
@@ -616,8 +564,9 @@ namespace JSSoft.UI
                 }
                 this.promptText = this.prompt + this.commandText;
                 this.inputText = inputText;
-                this.Text = this.outputText + Environment.NewLine + this.promptText;
-                this.CursorPosition = this.commandText.Length;
+                this.text = this.outputText + this.promptText;
+                this.cursorPosition = this.commandText.Length;
+                this.InvokePromptTextChangedEvent();
             }
         }
 
@@ -632,28 +581,59 @@ namespace JSSoft.UI
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
-            this.Text = this.outputText + Environment.NewLine + this.promptText;
+            this.text = this.outputText + this.promptText;
+            this.InvokeOutputTextChangedEvent();
         }
 
-        private static void AddBinding(IKeyBinding binding)
+        private void InsertPrompt(string prompt)
         {
-            bindingByKey.Add($"{binding.Modifiers}+{binding.KeyCode}", binding);
-        }
-
-        private void InsertPrompt()
-        {
-            this.promptText = string.Empty;
+            this.prompt = prompt;
             this.inputText = string.Empty;
             this.completion = string.Empty;
-            this.promptText = this.Prompt;
-            this.Text = this.outputText + Environment.NewLine + this.prompt;
-            this.CursorPosition = 0;
+            this.promptText = prompt;
+            this.text = this.outputText + this.promptText;
+            this.cursorPosition = 0;
             this.isReadOnly = false;
+            this.InvokePromptTextChangedEvent();
+        }
+
+        private void InvokePromptTextChangedEvent()
+        {
+            this.OnPropmtTextChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
+        }
+
+        private void InvokeOutputTextChangedEvent()
+        {
+            this.OnOutputTextChanged(EventArgs.Empty);
+            this.OnCursorPositionChanged(EventArgs.Empty);
+        }
+
+        private void ExecuteEvent(string commandText, string prompt)
+        {
+            var eventArgs = new TerminalExecuteEventArgs(commandText);
+            this.executed?.Invoke(this, eventArgs);
+            this.InsertPrompt(prompt);
         }
 
         private static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
 
         private static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+
+        private BaseInput InputSystem
+        {
+            get
+            {
+                if (EventSystem.current && EventSystem.current.currentInputModule)
+                    return EventSystem.current.currentInputModule.input;
+                return null;
+            }
+        }
+
+        private string GetCompositionString()
+        {
+            return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
+        }
 
         internal Color32? GetForegroundColor(int index)
         {
@@ -689,39 +669,6 @@ namespace JSSoft.UI
             return null;
         }
 
-
-        private BaseInput InputSystem
-        {
-            get
-            {
-                if (EventSystem.current && EventSystem.current.currentInputModule)
-                    return EventSystem.current.currentInputModule.input;
-                return null;
-            }
-        }
-
-        private string GetCompositionString()
-        {
-            return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
-        }
-
-        public override void OnSelect(BaseEventData eventData)
-        {
-            base.OnSelect(eventData);
-            this.InputSystem.imeCompositionMode = IMECompositionMode.On;
-        }
-
-        public override void OnDeselect(BaseEventData eventData)
-        {
-            base.OnDeselect(eventData);
-            Debug.Log(nameof(OnDeselect));
-        }
-
-        public class ExecutedEvent : UnityEvent<string, Action>
-        {
-
-        }
-
         #region ITerminal
 
         void ITerminal.Reset() => this.ResetOutput();
@@ -746,6 +693,44 @@ namespace JSSoft.UI
         }
 
         string ITerminal.OutputText => this.outputText;
+
+        #endregion
+
+        #region IUpdateSelectedHandler
+
+        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
+        {
+            while (Event.PopEvent(this.processingEvent))
+            {
+                if (this.processingEvent.rawType == EventType.KeyDown)
+                {
+                    var keyCode = this.processingEvent.keyCode;
+                    var modifiers = this.processingEvent.modifiers;
+                    var key = $"{modifiers}+{keyCode}";
+                    if (this.OnPreviewKeyDown(this.processingEvent) == true)
+                    {
+                        // Debug.Log($"{key}: true");
+                        continue;
+                    }
+                    if (this.processingEvent.character != 0)
+                    {
+                        var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+                        this.text = this.text.Insert(index, $"{this.processingEvent.character}");
+                        this.promptText = this.Text.Substring(this.outputText.Length);
+                        this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
+                        this.completion = string.Empty;
+                        this.cursorPosition++;
+                        this.InvokePromptTextChangedEvent();
+                    }
+                    else
+                    {
+                        this.CompositionString = this.GetCompositionString();
+                    }
+                }
+            }
+
+            eventData.Use();
+        }
 
         #endregion
     }

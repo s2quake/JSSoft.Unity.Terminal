@@ -28,17 +28,17 @@ using System.Collections;
 
 namespace JSSoft.UI
 {
-    class TerminalPointCollection : IEnumerable<TerminalPoint>
+    class TerminalCharacterInfoCollection : IEnumerable<TerminalCharacterInfo>
     {
         private readonly TerminalGrid grid;
-        private TerminalPoint[] points = new TerminalPoint[] { };
+        private TerminalCharacterInfo[] items = new TerminalCharacterInfo[] { };
         private TerminalPoint lt;
         private TerminalPoint rb;
         private TMP_FontAsset fontAsset;
         private string text = string.Empty;
         private int columnCount;
 
-        public TerminalPointCollection(TerminalGrid grid)
+        public TerminalCharacterInfoCollection(TerminalGrid grid)
         {
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
         }
@@ -51,14 +51,15 @@ namespace JSSoft.UI
             if (fontAsset != null && this.text != text)
             {
                 var index = this.FindUpdateIndex(fontAsset, text, columnCount);
-                var point = this.points.Any() ? this.points[index] : TerminalPoint.Zero;
+                var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
 
-                if (this.points.Length < text.Length)
+                if (this.items.Length < text.Length)
                 {
-                    Array.Resize(ref this.points, text.Length);
+                    Array.Resize(ref this.items, text.Length);
                 }
                 while (index < text.Length)
                 {
+                    var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
                     var volume = FontUtility.GetCharacterVolume(fontAsset, character);
                     if (point.X + volume > columnCount)
@@ -66,7 +67,12 @@ namespace JSSoft.UI
                         point.X = 0;
                         point.Y++;
                     }
-                    this.points[index++] = point;
+                    characterInfo.Character = character;
+                    characterInfo.Volume = volume;
+                    characterInfo.Point = point;
+                    characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
+                    characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
+                    this.items[index++] = characterInfo;
                     point.X += volume;
                     if (character == '\n')
                     {
@@ -86,8 +92,8 @@ namespace JSSoft.UI
         {
             for (var i = 0; i < this.Count; i++)
             {
-                var item = this.points[i];
-                if (point == item)
+                var item = this.items[i];
+                if (point == item.Point)
                     return i;
             }
             return -1;
@@ -113,13 +119,13 @@ namespace JSSoft.UI
 
         public int Count => this.fontAsset != null ? this.text.Length : 0;
 
-        public TerminalPoint this[int index]
+        public TerminalCharacterInfo this[int index]
         {
             get
             {
                 if (index < 0 || index > this.Count + 1)
                     throw new ArgumentOutOfRangeException(nameof(index));
-                return this.points[index];
+                return this.items[index];
             }
         }
 
@@ -130,20 +136,20 @@ namespace JSSoft.UI
             if (this.fontAsset != fontAsset || this.columnCount != columnCount)
                 return 0;
             var index = GetIndex(this.text, text);
-            if (index >= this.points.Length)
+            if (index >= this.items.Length)
                 return 0;
             return index;
         }
 
         #region IEnumerable
 
-        IEnumerator<TerminalPoint> IEnumerable<TerminalPoint>.GetEnumerator()
+        IEnumerator<TerminalCharacterInfo> IEnumerable<TerminalCharacterInfo>.GetEnumerator()
         {
             if (this.fontAsset != null)
             {
                 for (var i = 0; i < this.text.Length; i++)
                 {
-                    yield return this.points[i];
+                    yield return this.items[i];
                 }
             }
         }
@@ -154,7 +160,7 @@ namespace JSSoft.UI
             {
                 for (var i = 0; i < this.text.Length; i++)
                 {
-                    yield return this.points[i];
+                    yield return this.items[i];
                 }
             }
         }

@@ -21,31 +21,20 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
+using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public class TerminalExecuteEventArgs : EventArgs
+    public struct TerminalCharacterInfo
     {
-        private bool handled;
+        public char Character { get; set; }
 
-        public TerminalExecuteEventArgs(string command)
-        {
-            this.Command = command;
-        }
+        public Color32? BackgroundColor { get; set; }
 
-        public string Command { get; }
+        public Color32? ForegroundColor { get; set; }
 
-        public bool Handled
-        {
-            get => this.handled;
-            set
-            {
-                if (this.handled == false && value == true)
-                {
-                    this.handled = true;
-                }
-            }
-        }
+        public int Volume { get; set; }
+
+        public TerminalPoint Point { get; set; }
     }
 }

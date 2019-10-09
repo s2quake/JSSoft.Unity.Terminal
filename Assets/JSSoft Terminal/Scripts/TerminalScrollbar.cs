@@ -43,7 +43,6 @@ namespace JSSoft.UI
 
         protected override void OnEnable()
         {
-            Debug.Log("protected override void OnEnable()1");
             base.OnEnable();
             this.verticalScrollbar = this.GetComponent<Scrollbar>();
             this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
@@ -55,7 +54,6 @@ namespace JSSoft.UI
             base.OnDisable();
             this.verticalScrollbar.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);
             this.DetachEvent();
-            Debug.Log("protected oveㅇrrid222e void OnDisable()");
         }
 
         private void AttachEvent()
@@ -65,7 +63,6 @@ namespace JSSoft.UI
                 this.grid.TextChanged += TerminalGrid_TextChanged;
                 this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-                Debug.Log("+++++++++1++++++++++++++++++++");
             }
         }
 
@@ -76,7 +73,6 @@ namespace JSSoft.UI
                 this.grid.TextChanged -= TerminalGrid_TextChanged;
                 this.grid.LayoutChanged -= TerminalGrid_LayoutChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-                Debug.Log("--------------------------");
             }
         }
 
@@ -133,8 +129,6 @@ namespace JSSoft.UI
         {
             this.UpdateScrollbarVisible();
             this.UpdateScrollbarSize();
-
-            Debug.Log("disable");
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)

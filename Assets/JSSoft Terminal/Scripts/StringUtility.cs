@@ -22,30 +22,16 @@
 
 using System;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.TextCore;
+using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalExecuteEventArgs : EventArgs
+    public static class StringUtility
     {
-        private bool handled;
-
-        public TerminalExecuteEventArgs(string command)
-        {
-            this.Command = command;
-        }
-
-        public string Command { get; }
-
-        public bool Handled
-        {
-            get => this.handled;
-            set
-            {
-                if (this.handled == false && value == true)
-                {
-                    this.handled = true;
-                }
-            }
-        }
+        
     }
 }
