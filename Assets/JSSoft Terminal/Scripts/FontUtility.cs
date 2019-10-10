@@ -105,13 +105,13 @@ namespace JSSoft.UI
             var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
             return (uv0, uv1);
         }
-        
-        public static GlyphRect GetForegroundRect(TMP_FontAsset fontAsset, char character)
+
+        public static Rect GetForegroundRect(TMP_FontAsset fontAsset, char character)
         {
             return GetForegroundRect(fontAsset, character, 0, 0);
         }
 
-        public static GlyphRect GetForegroundRect(TMP_FontAsset fontAsset, char character, int x, int y)
+        public static Rect GetForegroundRect(TMP_FontAsset fontAsset, char character, int x, int y)
         {
             if (fontAsset == null)
                 throw new ArgumentNullException(nameof(fontAsset));
@@ -119,10 +119,11 @@ namespace JSSoft.UI
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var characterInfo = fontAsset.characterLookupTable[character];
             var glyph = characterInfo.glyph;
+            var topBorder = (float)Math.Ceiling(fontAsset.faceInfo.lineHeight) - fontAsset.faceInfo.lineHeight;
             var glyphRect = glyph.glyphRect;
             var fx = x + glyph.metrics.horizontalBearingX;
-            var fy = y + fontAsset.faceInfo.ascentLine - glyph.metrics.horizontalBearingY;
-            return new GlyphRect((int)fx, (int)fy, glyphRect.width, glyphRect.height);
+            var fy = y + fontAsset.faceInfo.ascentLine - glyph.metrics.horizontalBearingY - topBorder;
+            return new Rect(fx, fy, glyph.metrics.width, glyph.metrics.height);
         }
 
         public static int GetItemWidth(TMP_FontAsset originAsset)

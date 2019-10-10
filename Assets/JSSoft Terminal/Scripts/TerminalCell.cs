@@ -89,7 +89,7 @@ namespace JSSoft.UI
 
         public GlyphRect BackgroundRect { get; private set; }
 
-        public GlyphRect ForegroundRect { get; private set; }
+        public Rect ForegroundRect { get; private set; }
 
         public (Vector2, Vector2) BackgroundUV { get; private set; }
 
@@ -122,7 +122,7 @@ namespace JSSoft.UI
                 var uv = (Vector2.zero, Vector2.zero);
                 this.Volume = 0;
                 this.BackgroundRect = rect;
-                this.ForegroundRect = rect;
+                this.ForegroundRect = new Rect(rect.x, rect.y, rect.width, rect.height);
                 this.BackgroundUV = uv;
                 this.ForegroundUV = uv;
             }

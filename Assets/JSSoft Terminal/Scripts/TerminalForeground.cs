@@ -47,6 +47,8 @@ namespace JSSoft.UI
 
         public override Texture mainTexture => this.fontAsset?.atlasTexture;
 
+        public TerminalForeground Parent => this.GetComponentInParent<TerminalForeground>();
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -88,6 +90,7 @@ namespace JSSoft.UI
             base.OnEnable();
             // this.material = new Material(Shader.Find("TextMeshPro/Distance Field"));
             // this.material.color = base.color;
+
             if (this.grid != null)
             {
                 this.grid.TextChanged += TerminalGrid_TextChanged;

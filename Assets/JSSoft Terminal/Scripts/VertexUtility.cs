@@ -32,7 +32,7 @@ namespace JSSoft.UI
 {
     public static class VertexUtility
     {
-        public static int SetVertex(this Vector3[] vertices, int index, GlyphRect rect)
+        public static void SetVertex(this Vector3[] vertices, int index, GlyphRect rect)
         {
             var left = rect.x;
             var top = rect.y + rect.height;
@@ -42,7 +42,18 @@ namespace JSSoft.UI
             vertices[index + 1] = new Vector3(left, bottom, 0);
             vertices[index + 2] = new Vector3(right, bottom, 0);
             vertices[index + 3] = new Vector3(right, top, 0);
-            return 4;
+        }
+
+        public static void SetVertex(this Vector3[] vertices, int index, Rect rect)
+        {
+            var left = rect.x;
+            var top = rect.y + rect.height;
+            var right = rect.x + rect.width;
+            var bottom = rect.y;
+            vertices[index + 0] = new Vector3(left, top, 0);
+            vertices[index + 1] = new Vector3(left, bottom, 0);
+            vertices[index + 2] = new Vector3(right, bottom, 0);
+            vertices[index + 3] = new Vector3(right, top, 0);
         }
 
         public static int SetVertex(this UIVertex[] vertices, int index, GlyphRect rect)
@@ -156,6 +167,15 @@ namespace JSSoft.UI
         }
 
         public static GlyphRect Expand(this GlyphRect rect, int size)
+        {
+            rect.x -= size;
+            rect.y -= size;
+            rect.width += (size * 2);
+            rect.height += (size * 2);
+            return rect;
+        }
+
+        public static Rect Expand(this Rect rect, int size)
         {
             rect.x -= size;
             rect.y -= size;
