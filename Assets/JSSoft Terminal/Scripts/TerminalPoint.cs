@@ -50,7 +50,7 @@ namespace JSSoft.UI
 
         public void Shift(int x, int y, int columnCount)
         {
-            
+
         }
 
         public override int GetHashCode()

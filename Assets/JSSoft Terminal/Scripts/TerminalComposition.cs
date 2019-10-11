@@ -126,6 +126,7 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
+            this.mesh = new Mesh();
             this.material = new Material(Shader.Find("Unlit/Color"));
             this.material.color = base.color;
             if (this.grid != null)
@@ -138,6 +139,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
+            this.mesh = null;
             if (this.grid != null)
             {
                 this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
@@ -187,24 +189,24 @@ namespace JSSoft.UI
                 this.colors.SetColor(4, this.fontColor);
                 this.texture = texture;
 
-                this.Mesh.Clear();
-                this.Mesh.subMeshCount = 2;
-                this.Mesh.vertices = this.vertices;
-                this.Mesh.uv = this.uvs;
-                this.Mesh.colors32 = this.colors;
-                this.Mesh.SetTriangles(backgroundTriangles, 0);
-                this.Mesh.SetTriangles(foregroundTriangles, 1);
+                this.mesh.Clear();
+                this.mesh.subMeshCount = 2;
+                this.mesh.vertices = this.vertices;
+                this.mesh.uv = this.uvs;
+                this.mesh.colors32 = this.colors;
+                this.mesh.SetTriangles(backgroundTriangles, 0);
+                this.mesh.SetTriangles(foregroundTriangles, 1);
 
                 this.canvasRenderer.materialCount = 2;
                 this.canvasRenderer.SetTexture(this.texture);
                 this.canvasRenderer.SetMaterial(this.material, 0);
                 this.canvasRenderer.SetMaterial(fontAsset.material, 1);
-                this.canvasRenderer.SetMesh(this.Mesh);
+                this.canvasRenderer.SetMesh(this.mesh);
             }
             else
             {
-                this.Mesh.Clear();
-                this.canvasRenderer.SetMesh(this.Mesh);
+                this.mesh.Clear();
+                this.canvasRenderer.SetMesh(this.mesh);
                 this.texture = null;
             }
         }
@@ -212,17 +214,5 @@ namespace JSSoft.UI
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
 
         private int RowCount => this.grid != null ? this.grid.RowCount : 0;
-
-        private Mesh Mesh
-        {
-            get
-            {
-                if (this.mesh == null)
-                {
-                    this.mesh = new Mesh();
-                }
-                return this.mesh;
-            }
-        }
     }
 }

@@ -59,16 +59,20 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
+            var renderCount = 2;
             var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
             var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.Character != 0 && item.FontAsset == this.fontAsset);
             var index = 0;
-            this.terminalRect.Count = visibleCells.Count();
+            this.terminalRect.Count = visibleCells.Count() * renderCount;
             foreach (var item in visibleCells)
             {
-                this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
-                this.terminalRect.SetUV(index, item.ForegroundUV);
-                this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
-                index++;
+                for (var i = 0; i < renderCount; i++)
+                {
+                    this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
+                    this.terminalRect.SetUV(index, item.ForegroundUV);
+                    this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
+                    index++;
+                }
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);

@@ -90,22 +90,6 @@ namespace JSSoft.UI
 
         public Color32? ForegroundColor { get; set; }
 
-        // public void Cut(int x)
-        // {
-        //     for (var i = x; i < this.cells.Count; i++)
-        //     {
-        //         var item = this.cells[i];
-        //         item.Character = char.MinValue;
-        //         item.BackgroundColor = null;
-        //         item.ForegroundColor = null;
-        //     }
-        // }
-
-        // public void Reset()
-        // {
-        //     this.Cut(0);
-        // }
-
         public void Resize(int columnCount)
         {
             for (var i = this.cells.Count - 1; i >= columnCount; i--)

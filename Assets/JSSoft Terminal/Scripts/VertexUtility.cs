@@ -56,7 +56,7 @@ namespace JSSoft.UI
             vertices[index + 3] = new Vector3(right, top, 0);
         }
 
-        public static int SetVertex(this UIVertex[] vertices, int index, GlyphRect rect)
+        public static void SetVertex(this UIVertex[] vertices, int index, GlyphRect rect)
         {
             var left = rect.x;
             var top = rect.y + rect.height;
@@ -66,7 +66,6 @@ namespace JSSoft.UI
             vertices[index + 1].position = new Vector3(left, bottom, 0);
             vertices[index + 2].position = new Vector3(right, bottom, 0);
             vertices[index + 3].position = new Vector3(right, top, 0);
-            return 4;
         }
 
         public static void Transform(this Vector3[] vertices, int index, Rect rect)
@@ -89,63 +88,59 @@ namespace JSSoft.UI
             }
         }
 
-        public static int SetUV(this Vector2[] uvs, int index)
+        public static void SetUV(this Vector2[] uvs, int index)
         {
-            return SetUV(uvs, index, Vector2.zero, Vector2.one);
+            SetUV(uvs, index, Vector2.zero, Vector2.one);
         }
 
-        public static int SetUV(this Vector2[] uvs, int index, (Vector2, Vector2) uv)
+        public static void SetUV(this Vector2[] uvs, int index, (Vector2, Vector2) uv)
         {
-            return SetUV(uvs, index, uv.Item1, uv.Item2);
+            SetUV(uvs, index, uv.Item1, uv.Item2);
         }
 
-        public static int SetUV(this Vector2[] uvs, int index, Vector2 uv0, Vector2 uv1)
+        public static void SetUV(this Vector2[] uvs, int index, Vector2 uv0, Vector2 uv1)
         {
             uvs[index + 0] = new Vector2(uv0.x, uv0.y);
             uvs[index + 1] = new Vector2(uv0.x, uv1.y);
             uvs[index + 2] = new Vector2(uv1.x, uv1.y);
             uvs[index + 3] = new Vector2(uv1.x, uv0.y);
-            return 4;
         }
 
-        public static int SetUV(this UIVertex[] vertices, int index)
+        public static void SetUV(this UIVertex[] vertices, int index)
         {
-            return SetUV(vertices, index, Vector2.zero, Vector2.one);
+            SetUV(vertices, index, Vector2.zero, Vector2.one);
         }
 
-        public static int SetUV(this UIVertex[] vertices, int index, (Vector2, Vector2) uv)
+        public static void SetUV(this UIVertex[] vertices, int index, (Vector2, Vector2) uv)
         {
-            return SetUV(vertices, index, uv.Item1, uv.Item2);
+            SetUV(vertices, index, uv.Item1, uv.Item2);
         }
 
-        public static int SetUV(this UIVertex[] vertices, int index, Vector2 uv0, Vector2 uv1)
+        public static void SetUV(this UIVertex[] vertices, int index, Vector2 uv0, Vector2 uv1)
         {
             vertices[index + 0].uv0 = new Vector2(uv0.x, uv0.y);
             vertices[index + 1].uv0 = new Vector2(uv0.x, uv1.y);
             vertices[index + 2].uv0 = new Vector2(uv1.x, uv1.y);
             vertices[index + 3].uv0 = new Vector2(uv1.x, uv0.y);
-            return 4;
         }
 
-        public static int SetColor(this Color32[] colors, int index, Color32 color)
+        public static void SetColor(this Color32[] colors, int index, Color32 color)
         {
             colors[index + 0] = color;
             colors[index + 1] = color;
             colors[index + 2] = color;
             colors[index + 3] = color;
-            return 4;
         }
 
-        public static int SetColor(this UIVertex[] vertices, int index, Color32 color)
+        public static void SetColor(this UIVertex[] vertices, int index, Color32 color)
         {
             vertices[index + 0].color = color;
             vertices[index + 1].color = color;
             vertices[index + 2].color = color;
             vertices[index + 3].color = color;
-            return 4;
         }
 
-        public static int SetTriangle(this int[] triangles, int index, int vertexIndex)
+        public static void SetTriangle(this int[] triangles, int index, int vertexIndex)
         {
             triangles[index + 0] = vertexIndex + 0;
             triangles[index + 1] = vertexIndex + 1;
@@ -153,7 +148,6 @@ namespace JSSoft.UI
             triangles[index + 3] = vertexIndex + 2;
             triangles[index + 4] = vertexIndex + 3;
             triangles[index + 5] = vertexIndex + 0;
-            return 6;
         }
 
         public static void SetTriangles(this int[] triangles, int index, int vertexIndex, int count)

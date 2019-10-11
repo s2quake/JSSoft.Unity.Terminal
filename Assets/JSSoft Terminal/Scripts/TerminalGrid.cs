@@ -484,9 +484,7 @@ namespace JSSoft.UI
 
         private void Terminal_OutputTextChanged(object sender, EventArgs e)
         {
-            Debug.Log(1);
             this.Text = this.Terminal.Text;
-            Debug.Log(2);
         }
 
         private void Terminal_PromptTextChanged(object sender, EventArgs e)
