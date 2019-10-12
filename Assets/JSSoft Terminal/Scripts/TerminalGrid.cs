@@ -402,11 +402,6 @@ namespace JSSoft.UI
             this.OnCompositionStringChanged(EventArgs.Empty);
         }
 
-        // protected override void OnPopulateMesh(VertexHelper vh)
-        // {
-        //     base.OnPopulateMesh(vh);
-        // }
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -414,14 +409,14 @@ namespace JSSoft.UI
             this.material.color = base.color;
             this.AttachEvent();
             this.SetVerticesDirty();
-            Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnEnable)}");
+            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             this.DetachEvent();
-            Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnDisable)}");
+            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnDisable)}");
         }
 
         private void UpdateGrid()
@@ -473,6 +468,7 @@ namespace JSSoft.UI
             this.Terminal.OutputTextChanged += Terminal_OutputTextChanged;
             this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
             this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            this.Terminal.CompositionStringChanged += Terminal_CompositionStringChanged;
         }
 
         private void DetachEvent()
@@ -480,6 +476,7 @@ namespace JSSoft.UI
             this.Terminal.OutputTextChanged -= Terminal_OutputTextChanged;
             this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
             this.Terminal.CursorPositionChanged -= Terminal_CursorPositionChanged;
+            this.Terminal.CompositionStringChanged += Terminal_CompositionStringChanged;
         }
 
         private void Terminal_OutputTextChanged(object sender, EventArgs e)
@@ -498,6 +495,11 @@ namespace JSSoft.UI
             var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
             this.CursorPosition = this.IndexToPoint(index);
             this.VisibleIndex = int.MaxValue;
+        }
+
+        private void Terminal_CompositionStringChanged(object sender, EventArgs e)
+        {
+            this.CompositionString = this.Terminal.CompositionString;
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)

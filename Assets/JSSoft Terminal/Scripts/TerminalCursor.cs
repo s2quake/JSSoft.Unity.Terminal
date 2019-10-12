@@ -31,15 +31,20 @@ namespace JSSoft.UI
 {
     public class TerminalCursor : MaskableGraphic
     {
+        private static readonly int lineWidth = 2;
         [SerializeField]
         private TerminalGrid grid = null;
         [SerializeField]
         private int cursorLeft;
         [SerializeField]
         private int cursorTop;
-        private TerminalRect terminalRect = new TerminalRect();
         [SerializeField]
         private bool isVisible = true;
+        [SerializeField]
+        private bool isFocused = false;
+
+        private int volume = 1;
+        private readonly TerminalRect terminalRect = new TerminalRect();
 
         public TerminalCursor()
         {
@@ -80,6 +85,18 @@ namespace JSSoft.UI
             }
         }
 
+        public bool IsFocused
+        {
+            get => this.isFocused;
+            set
+            {
+                this.isFocused = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        public Terminal Terminal => this.grid?.Terminal;
+
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
@@ -90,11 +107,39 @@ namespace JSSoft.UI
                 var itemHeight = TerminalGrid.GetItemHeight(this.grid);
                 var x = this.cursorLeft * itemWidth;
                 var y = this.cursorTop * itemHeight;
-                var itemRect = new GlyphRect(x, y, itemWidth, itemHeight);
-                this.terminalRect.Count = 1;
-                this.terminalRect.SetVertex(0, itemRect, this.rectTransform.rect);
-                this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
-                this.terminalRect.SetColor(0, TerminalColors.Gray);
+                var itemRect = new GlyphRect(x, y, itemWidth * this.volume, itemHeight);
+                if (this.isFocused == true)
+                {
+                    this.terminalRect.Count = 1;
+                    this.terminalRect.SetVertex(0, itemRect, this.rectTransform.rect);
+                    this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
+                    this.terminalRect.SetColor(0, TerminalColors.Gray);
+                }
+                else
+                {
+                    var right = x + itemWidth * this.volume;
+                    var bottom = y + itemHeight;
+                    var size = lineWidth;
+                    var lt1 = new Vector2(x, y);
+                    var rt1 = new Vector2(right, y);
+                    var lb1 = new Vector2(x, bottom);
+                    var rb1 = new Vector2(right, bottom);
+                    var lt2 = new Vector2(x + size, y + size);
+                    var rt2 = new Vector2(right - size, y + size);
+                    var lb2 = new Vector2(x + size, bottom - size);
+                    var rb2 = new Vector2(right - size, bottom - size);
+                    this.terminalRect.Count = 4;
+                    this.terminalRect.SetVertex(0, lt1, rt1, lt2, rt2, this.rectTransform.rect);
+                    this.terminalRect.SetVertex(1, lt1, lt2, lb1, lb2, this.rectTransform.rect);
+                    this.terminalRect.SetVertex(2, lb2, rb2, lb1, rb1, this.rectTransform.rect);
+                    this.terminalRect.SetVertex(3, rt2, rt1, rb2, rb1, this.rectTransform.rect);
+
+                    for (var i = 0; i < this.terminalRect.Count; i++)
+                    {
+                        this.terminalRect.SetUV(i, (Vector2.zero, Vector2.one));
+                        this.terminalRect.SetColor(i, TerminalColors.Gray);
+                    }
+                }
             }
             else
             {
@@ -125,6 +170,8 @@ namespace JSSoft.UI
             {
                 this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+                this.Terminal.GotFocus += Terminal_GotFocus;
+                this.Terminal.LostFocus += Terminal_LostFocus;
                 this.isVisible = this.grid.IsCursorVisible;
             }
         }
@@ -136,13 +183,14 @@ namespace JSSoft.UI
             {
                 this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+                this.Terminal.GotFocus -= Terminal_GotFocus;
+                this.Terminal.LostFocus -= Terminal_LostFocus;
             }
         }
 
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            // Debug.Log($"{nameof(TerminalCursor)}.{nameof(OnRectTransformDimensionsChange)}");
         }
 
         private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
@@ -155,10 +203,23 @@ namespace JSSoft.UI
             this.UpdateLayout();
         }
 
+        private void Terminal_GotFocus(object sender, EventArgs e)
+        {
+            this.IsFocused = this.Terminal.IsFocused;
+        }
+
+        private void Terminal_LostFocus(object sender, EventArgs e)
+        {
+            this.IsFocused = this.Terminal.IsFocused;
+        }
+
         private void UpdateLayout()
         {
+            var point = this.grid.CursorPosition;
+            var cell = this.grid.Rows[point.Y].Cells[point.X];
             this.cursorLeft = this.grid.CursorPosition.X;
             this.cursorTop = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
+            this.volume = Math.Max(cell.Volume, 1);
             this.isVisible = this.grid.IsCursorVisible;
             this.SetVerticesDirty();
         }

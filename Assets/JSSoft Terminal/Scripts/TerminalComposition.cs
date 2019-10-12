@@ -101,7 +101,7 @@ namespace JSSoft.UI
             }
         }
 
-        public Vector2 Offset { get; set; }
+        public Vector2 Offset { get; set; } = new Vector2(2, 0);
 
         public override Texture mainTexture => this.texture;
 
@@ -173,10 +173,10 @@ namespace JSSoft.UI
                 var texture = fontAsset.atlasTexture;
                 var itemWidth = TerminalGrid.GetItemWidth(this.grid);
                 var itemHeight = TerminalGrid.GetItemHeight(this.grid);
-                var bx = this.columnIndex * itemWidth;
-                var by = this.rowIndex * itemHeight;
+                var bx = this.columnIndex * itemWidth + (int)this.Offset.x;
+                var by = this.rowIndex * itemHeight + (int)this.Offset.y;
                 var foregroundRect = FontUtility.GetForegroundRect(fontAsset, character, bx, by);
-                var backgroundRect = foregroundRect.Expand(1);
+                var backgroundRect = new Rect(bx, by, itemWidth, itemHeight);
                 var uv = FontUtility.GetUV(fontAsset, character);
 
                 this.vertices.SetVertex(0, backgroundRect);

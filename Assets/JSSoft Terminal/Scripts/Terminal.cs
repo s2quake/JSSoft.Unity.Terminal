@@ -38,6 +38,7 @@ namespace JSSoft.UI
         private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
+        private readonly TerminalEventCollection events = new TerminalEventCollection();
 
         private string promptText = string.Empty;
         [SerializeField]
@@ -53,6 +54,7 @@ namespace JSSoft.UI
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
+        private bool isFocused;
         private int cursorPosition;
         private string compositionString;
         private Color32?[] foregroundColors = new Color32?[] { };
@@ -60,7 +62,8 @@ namespace JSSoft.UI
         private Color32?[] promptForegroundColors = new Color32?[] { };
         private Color32?[] promptBackgroundColors = new Color32?[] { };
 
-        private Event processingEvent = new Event();
+        // private Event processingEvent = new Event();
+        // private Event[] events = new Event[] { };
         private EventHandler<TerminalExecuteEventArgs> executed;
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
@@ -341,12 +344,14 @@ namespace JSSoft.UI
         {
             base.OnSelect(eventData);
             this.InputSystem.imeCompositionMode = IMECompositionMode.On;
+            this.IsFocused = true;
         }
 
         public override void OnDeselect(BaseEventData eventData)
         {
             base.OnDeselect(eventData);
             // Debug.Log(nameof(OnDeselect));
+            this.IsFocused = false;
         }
 
         public void ResetColor()
@@ -411,6 +416,21 @@ namespace JSSoft.UI
             }
         }
 
+        public bool IsFocused
+        {
+            get => this.isFocused;
+            set
+            {
+                if (this.isFocused == value)
+                    return;
+                this.isFocused = value;
+                if (this.isFocused == true)
+                    this.OnGotFocus(EventArgs.Empty);
+                else
+                    this.OnLostFocus(EventArgs.Empty);
+            }
+        }
+
         public OnCompletion onCompletion { get; set; }
 
         public OnDrawPrompt onDrawPrompt { get; set; }
@@ -422,6 +442,10 @@ namespace JSSoft.UI
         public event EventHandler CompositionStringChanged;
 
         public event EventHandler CursorPositionChanged;
+
+        public event EventHandler GotFocus;
+
+        public event EventHandler LostFocus;
 
         protected virtual void OnOutputTextChanged(EventArgs e)
         {
@@ -441,6 +465,16 @@ namespace JSSoft.UI
         protected virtual void OnCursorPositionChanged(EventArgs e)
         {
             this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnGotFocus(EventArgs e)
+        {
+            this.GotFocus?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnLostFocus(EventArgs e)
+        {
+            this.LostFocus?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)
@@ -488,10 +522,28 @@ namespace JSSoft.UI
         }
 #endif
 
-        protected virtual bool OnPreviewKeyDown(Event e)
+        protected virtual void OnTranslateEvents(IList<Event> eventList)
         {
-            var keyCode = e.keyCode;
-            var modifiers = e.modifiers;
+            for (var i = 0; i < eventList.Count; i++)
+            {
+                var item = eventList[i];
+                // ime 에 의해서 문자가 조합중일때 enter 키 입력시 이벤트가 두번 호출되는 어이없는 상황을 하드코딩으로 방어
+                if (item.rawType == EventType.KeyDown &&
+                    item.keyCode == KeyCode.Return &&
+                    item.modifiers == EventModifiers.None &&
+                    i + 1 < eventList.Count)
+                {
+                    var nextItem = eventList[i + 1];
+                    if (nextItem.character != '\n')
+                    {
+                        eventList[i] = null;
+                    }
+                }
+            }
+        }
+
+        protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers modifiers)
+        {
             var key = $"{modifiers}+{keyCode}";
             if (bindingByKey.ContainsKey(key) == true)
             {
@@ -499,11 +551,13 @@ namespace JSSoft.UI
                 if (binding.Verify(this) == true && binding.Action(this) == true)
                     return true;
             }
-            // Debug.Log($"{modifiers}+{keyCode}");
-            if (e.character == '\n' || e.character == '\t' || e.character == 25)
-            {
+            return false;
+        }
+
+        protected virtual bool OnPreviewKeyPress(char character)
+        {
+            if (character == '\n')
                 return true;
-            }
             return false;
         }
 
@@ -635,6 +689,11 @@ namespace JSSoft.UI
             return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
         }
 
+        private bool ProcessEvent(Event e)
+        {
+            return false;
+        }
+
         internal Color32? GetForegroundColor(int index)
         {
             if (index < this.Text.Length && this.Text[index] == ' ')
@@ -700,22 +759,25 @@ namespace JSSoft.UI
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
-            while (Event.PopEvent(this.processingEvent))
+            if (this.events.PopEvents() == false)
+                return;
+
+            this.OnTranslateEvents(this.events);
+            for (var i = 0; i < this.events.Count; i++)
             {
-                if (this.processingEvent.rawType == EventType.KeyDown)
+                var item = this.events[i];
+                if (item == null)
+                    continue;
+                if (item.rawType == EventType.KeyDown)
                 {
-                    var keyCode = this.processingEvent.keyCode;
-                    var modifiers = this.processingEvent.modifiers;
-                    var key = $"{modifiers}+{keyCode}";
-                    if (this.OnPreviewKeyDown(this.processingEvent) == true)
-                    {
-                        // Debug.Log($"{key}: true");
+                    var keyCode = item.keyCode;
+                    var modifiers = item.modifiers;
+                    if (this.OnPreviewKeyDown(keyCode, modifiers) == true)
                         continue;
-                    }
-                    if (this.processingEvent.character != 0)
+                    if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
                     {
                         var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                        this.text = this.text.Insert(index, $"{this.processingEvent.character}");
+                        this.text = this.text.Insert(index, $"{item.character}");
                         this.promptText = this.Text.Substring(this.outputText.Length);
                         this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
                         this.completion = string.Empty;

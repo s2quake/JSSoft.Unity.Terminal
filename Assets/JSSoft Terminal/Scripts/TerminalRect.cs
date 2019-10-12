@@ -74,6 +74,17 @@ namespace JSSoft.UI
             this.vertices.Transform(index * 4, transform);
         }
 
+        public void SetVertex(int index, Vector2 lt, Vector2 rt, Vector2 lb, Vector2 rb, Rect transform)
+        {
+            if (index < 0 || index >= this.count)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            this.vertices[index * 4 + 0] = lt;
+            this.vertices[index * 4 + 1] = lb;
+            this.vertices[index * 4 + 2] = rb;
+            this.vertices[index * 4 + 3] = rt;
+            this.vertices.Transform(index * 4, transform);
+        }
+
         public void SetUV(int index, (Vector2, Vector2) value)
         {
             if (index < 0 || index >= this.count)
