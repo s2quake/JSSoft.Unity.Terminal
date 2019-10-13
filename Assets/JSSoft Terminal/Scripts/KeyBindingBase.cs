@@ -25,12 +25,12 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public abstract class KeyBindingBase<T> : IKeyBinding
+    public abstract class KeyBindingBase<T> : IKeyBinding where T : class
     {
         protected KeyBindingBase(EventModifiers modifiers, KeyCode keyCode)
         {
             this.Modifiers = modifiers;
-            this.KeyCode= keyCode;
+            this.KeyCode = keyCode;
         }
 
         protected abstract bool OnVerify(T obj);
@@ -47,11 +47,19 @@ namespace JSSoft.UI
 
         bool IKeyBinding.Action(object obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+            if (this.Type.IsAssignableFrom(obj.GetType()) == false)
+                throw new ArgumentException("invalid type", nameof(obj));
             return this.OnAction((T)obj);
         }
 
         bool IKeyBinding.Verify(object obj)
         {
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+            if (this.Type.IsAssignableFrom(obj.GetType()) == false)
+                throw new ArgumentException("invalid type", nameof(obj));
             return this.OnVerify((T)obj);
         }
 

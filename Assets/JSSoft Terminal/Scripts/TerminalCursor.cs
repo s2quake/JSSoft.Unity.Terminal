@@ -170,8 +170,8 @@ namespace JSSoft.UI
             {
                 this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-                this.Terminal.GotFocus += Terminal_GotFocus;
-                this.Terminal.LostFocus += Terminal_LostFocus;
+                this.grid.GotFocus += TerminalGrid_GotFocus;
+                this.grid.LostFocus += TerminalGrid_LostFocus;
                 this.isVisible = this.grid.IsCursorVisible;
             }
         }
@@ -183,8 +183,8 @@ namespace JSSoft.UI
             {
                 this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-                this.Terminal.GotFocus -= Terminal_GotFocus;
-                this.Terminal.LostFocus -= Terminal_LostFocus;
+                this.grid.GotFocus -= TerminalGrid_GotFocus;
+                this.grid.LostFocus -= TerminalGrid_LostFocus;
             }
         }
 
@@ -203,14 +203,14 @@ namespace JSSoft.UI
             this.UpdateLayout();
         }
 
-        private void Terminal_GotFocus(object sender, EventArgs e)
+        private void TerminalGrid_GotFocus(object sender, EventArgs e)
         {
-            this.IsFocused = this.Terminal.IsFocused;
+            this.IsFocused = this.grid.IsFocused;
         }
 
-        private void Terminal_LostFocus(object sender, EventArgs e)
+        private void TerminalGrid_LostFocus(object sender, EventArgs e)
         {
-            this.IsFocused = this.Terminal.IsFocused;
+            this.IsFocused = this.grid.IsFocused;
         }
 
         private void UpdateLayout()

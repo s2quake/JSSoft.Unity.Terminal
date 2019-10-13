@@ -70,6 +70,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRow.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRowCollection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalScrollbar.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalSelectionMode.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />

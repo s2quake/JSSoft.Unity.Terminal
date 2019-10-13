@@ -29,12 +29,29 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections.ObjectModel;
 using UnityEngine.TextCore;
+using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.TerminalGrid>;
 
 namespace JSSoft.UI
 {
     [RequireComponent(typeof(Terminal))]
-    public partial class TerminalGrid : MaskableGraphic, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IPointerDownHandler
+    [RequireComponent(typeof(RectTransform))]
+    [DisallowMultipleComponent]
+    [ExecuteAlways]
+    [SelectionBase]
+    public partial class TerminalGrid : MaskableGraphic,
+        IBeginDragHandler,
+        IDragHandler,
+        IEndDragHandler,
+        IPointerClickHandler,
+        IPointerDownHandler,
+        IPointerEnterHandler,
+        IPointerExitHandler,
+        IUpdateSelectedHandler,
+        ISelectHandler,
+        IDeselectHandler
     {
+        private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
+
         [SerializeField]
         private TMP_FontAsset fontAsset = null;
         [SerializeField]
@@ -51,12 +68,21 @@ namespace JSSoft.UI
         [SerializeField]
         private string compositionString = string.Empty;
 
+        private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
         private readonly TerminalCharacterInfoCollection characterInfos;
+
         private Terminal terminal;
         private bool isSelecting;
         private TerminalPoint startPoint;
         private TerminalPoint endPoint;
+        private bool isFocused;
+
+        // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
+        static TerminalGrid()
+        {
+
+        }
 
         public TerminalGrid()
         {
@@ -177,7 +203,7 @@ namespace JSSoft.UI
 
         public Vector2 WorldToGrid(Vector2 position)
         {
-            var rect = this.rectTransform.rect;
+            var rect = this.GetComponent<RectTransform>().rect;
             position.y = rect.height - position.y;
             position.y += GetItemHeight(this) * this.visibleIndex;
             return position;
@@ -241,6 +267,21 @@ namespace JSSoft.UI
             this.text.Remove(startIndex, length);
             this.UpdateRows();
             this.OnTextChanged(EventArgs.Empty);
+        }
+
+        public bool IsFocused
+        {
+            get => this.isFocused;
+            set
+            {
+                if (this.isFocused == value)
+                    return;
+                this.isFocused = value;
+                if (this.isFocused == true)
+                    this.OnGotFocus(EventArgs.Empty);
+                else
+                    this.OnLostFocus(EventArgs.Empty);
+            }
         }
 
         public string Text
@@ -342,6 +383,10 @@ namespace JSSoft.UI
 
         public event EventHandler CompositionStringChanged;
 
+        public event EventHandler GotFocus;
+
+        public event EventHandler LostFocus;
+
         protected virtual void OnTextChanged(EventArgs e)
         {
             this.TextChanged?.Invoke(this, EventArgs.Empty);
@@ -372,6 +417,16 @@ namespace JSSoft.UI
             this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        protected virtual void OnGotFocus(EventArgs e)
+        {
+            this.GotFocus?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnLostFocus(EventArgs e)
+        {
+            this.LostFocus?.Invoke(this, EventArgs.Empty);
+        }
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -384,8 +439,8 @@ namespace JSSoft.UI
             this.OnVisibleIndexChanged(EventArgs.Empty);
             this.OnCursorPositionChanged(EventArgs.Empty);
             this.OnCompositionStringChanged(EventArgs.Empty);
-            Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnValidate)}");
-            this.SetVerticesDirty();
+            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnValidate)}");
+            // this.SetVerticesDirty();
         }
 #endif
 
@@ -396,7 +451,7 @@ namespace JSSoft.UI
             this.UpdateVisibleIndex();
             this.UpdateRows();
             this.UpdateCursorPosition();
-            this.SetVerticesDirty();
+            // this.SetVerticesDirty();
             this.OnTextChanged(EventArgs.Empty);
             this.OnCursorPositionChanged(EventArgs.Empty);
             this.OnCompositionStringChanged(EventArgs.Empty);
@@ -405,10 +460,10 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
-            this.material.color = base.color;
+            // this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
+            // this.material.color = base.color;
             this.AttachEvent();
-            this.SetVerticesDirty();
+            // this.SetVerticesDirty();
             // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnEnable)}");
         }
 
@@ -419,11 +474,52 @@ namespace JSSoft.UI
             // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnDisable)}");
         }
 
+        protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers modifiers)
+        {
+            if (this.Terminal.ProcessKeyEvent(keyCode, modifiers) == true)
+                return true;
+            var key = $"{modifiers}+{keyCode}";
+            if (bindingByKey.ContainsKey(key) == true)
+            {
+                var binding = bindingByKey[key];
+                if (binding.Verify(this) == true && binding.Action(this) == true)
+                    return true;
+            }
+            return false;
+        }
+
+        protected virtual bool OnPreviewKeyPress(char character)
+        {
+            if (character == '\n')
+                return true;
+            return false;
+        }
+
+        protected virtual void OnTranslateEvents(IList<Event> eventList)
+        {
+            for (var i = 0; i < eventList.Count; i++)
+            {
+                var item = eventList[i];
+                // ime 에 의해서 문자가 조합중일때 enter 키 입력시 이벤트가 두번 호출되는 어이없는 상황을 하드코딩으로 방어
+                if (item.rawType == EventType.KeyDown &&
+                    item.keyCode == KeyCode.Return &&
+                    item.modifiers == EventModifiers.None &&
+                    i + 1 < eventList.Count)
+                {
+                    var nextItem = eventList[i + 1];
+                    if (nextItem.character != '\n')
+                    {
+                        eventList[i] = null;
+                    }
+                }
+            }
+        }
+
         private void UpdateGrid()
         {
             if (this.fontAsset != null)
             {
-                var rect = this.rectTransform.rect;
+                var rect = this.GetComponent<RectTransform>().rect;
                 var fontAsset = this.fontAsset;
                 var itemWidth = FontUtility.GetItemWidth(fontAsset);
                 var itemHeight = FontUtility.GetItemHeight(fontAsset);
@@ -468,7 +564,7 @@ namespace JSSoft.UI
             this.Terminal.OutputTextChanged += Terminal_OutputTextChanged;
             this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
             this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
-            this.Terminal.CompositionStringChanged += Terminal_CompositionStringChanged;
+            // this.Terminal.CompositionStringChanged += Terminal_CompositionStringChanged;
         }
 
         private void DetachEvent()
@@ -476,7 +572,7 @@ namespace JSSoft.UI
             this.Terminal.OutputTextChanged -= Terminal_OutputTextChanged;
             this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
             this.Terminal.CursorPositionChanged -= Terminal_CursorPositionChanged;
-            this.Terminal.CompositionStringChanged += Terminal_CompositionStringChanged;
+            // this.Terminal.CompositionStringChanged += Terminal_CompositionStringChanged;
         }
 
         private void Terminal_OutputTextChanged(object sender, EventArgs e)
@@ -497,9 +593,9 @@ namespace JSSoft.UI
             this.VisibleIndex = int.MaxValue;
         }
 
-        private void Terminal_CompositionStringChanged(object sender, EventArgs e)
+        private static void AddBinding(IKeyBinding binding)
         {
-            this.CompositionString = this.Terminal.CompositionString;
+            bindingByKey.Add($"{binding.Modifiers}+{binding.KeyCode}", binding);
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
@@ -523,50 +619,77 @@ namespace JSSoft.UI
             return query;
         }
 
+        private string GetCompositionString()
+        {
+            return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
+        }
+
+        private BaseInput InputSystem
+        {
+            get
+            {
+                if (EventSystem.current && EventSystem.current.currentInputModule)
+                    return EventSystem.current.currentInputModule.input;
+                return null;
+            }
+        }
+
         #region implemetations
+
+        void ISelectHandler.OnSelect(BaseEventData eventData)
+        {
+            this.InputSystem.imeCompositionMode = IMECompositionMode.On;
+            this.IsFocused = true;
+        }
+
+        void IDeselectHandler.OnDeselect(BaseEventData eventData)
+        {
+            // Debug.Log(nameof(OnDeselect));
+            this.IsFocused = false;
+        }
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                this.endPoint = this.Intersect(position);
-                this.isSelecting = true;
-            }
+            // if (eventData.button == PointerEventData.InputButton.Left)
+            // {
+            //     var position = this.WorldToGrid(eventData.position);
+            //     this.endPoint = this.Intersect(position);
+            //     this.isSelecting = true;
+            // }
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                var endPoint = this.Intersect(position);
-                if (this.endPoint != endPoint)
-                {
-                    this.endPoint = endPoint;
-                    this.OnLayoutChanged(EventArgs.Empty);
-                }
-            }
+            // if (eventData.button == PointerEventData.InputButton.Left)
+            // {
+            //     var position = this.WorldToGrid(eventData.position);
+            //     var endPoint = this.Intersect(position);
+            //     if (this.endPoint != endPoint)
+            //     {
+            //         this.endPoint = endPoint;
+            //         this.OnLayoutChanged(EventArgs.Empty);
+            //     }
+            // }
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            this.isSelecting = false;
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                var s1 = this.startPoint;
-                var s2 = this.Intersect(position);
-                var p1 = s1 < s2 ? s1 : s2;
-                var p2 = s1 > s2 ? s1 : s2;
-                foreach (var item in this.GetCells(p1, p2))
-                {
-                    item.IsSelected = !item.IsSelected;
-                }
-                this.startPoint = TerminalPoint.Invalid;
-                this.endPoint = TerminalPoint.Invalid;
-                this.OnSelectionChanged(EventArgs.Empty);
-            }
+            // this.isSelecting = false;
+            // if (eventData.button == PointerEventData.InputButton.Left)
+            // {
+            //     var position = this.WorldToGrid(eventData.position);
+            //     var s1 = this.startPoint;
+            //     var s2 = this.Intersect(position);
+            //     var p1 = s1 < s2 ? s1 : s2;
+            //     var p2 = s1 > s2 ? s1 : s2;
+            //     foreach (var item in this.GetCells(p1, p2))
+            //     {
+            //         item.IsSelected = !item.IsSelected;
+            //     }
+            //     this.startPoint = TerminalPoint.Invalid;
+            //     this.endPoint = TerminalPoint.Invalid;
+            //     this.OnSelectionChanged(EventArgs.Empty);
+            // }
         }
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
@@ -588,6 +711,52 @@ namespace JSSoft.UI
                 var position = this.WorldToGrid(eventData.position);
                 this.startPoint = this.Intersect(position);
             }
+            eventData.selectedObject = this.gameObject;
+        }
+
+        #endregion
+
+        #region IUpdateSelectedHandler
+
+        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
+        {
+            if (this.events.PopEvents() == false)
+                return;
+
+            this.OnTranslateEvents(events);
+            for (var i = 0; i < events.Count; i++)
+            {
+                var item = events[i];
+                if (item == null)
+                    continue;
+                if (item.rawType == EventType.KeyDown)
+                {
+                    var keyCode = item.keyCode;
+                    var modifiers = item.modifiers;
+                    if (this.OnPreviewKeyDown(keyCode, modifiers) == true)
+                        continue;
+                    if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
+                    {
+                        this.Terminal.InsertCharacter(item.character);
+                    }
+                    else
+                    {
+                        //this.CompositionString = this.GetCompositionString();
+                    }
+                }
+            }
+
+            eventData.Use();
+        }
+
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
+        {
+            // Debug.Log("enter");
+        }
+
+        void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
+        {
+            // Debug.Log("exit");
         }
 
         #endregion

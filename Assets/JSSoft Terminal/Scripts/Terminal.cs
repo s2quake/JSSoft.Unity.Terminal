@@ -29,16 +29,17 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.Terminal>;
 
 namespace JSSoft.UI
 {
     [AddComponentMenu("UI/Terminal", 15)]
-    public class Terminal : Selectable, ITerminal, IUpdateSelectedHandler
+    public class Terminal : UIBehaviour, ITerminal
     {
         private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
+
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
-        private readonly TerminalEventCollection events = new TerminalEventCollection();
 
         private string promptText = string.Empty;
         [SerializeField]
@@ -54,7 +55,6 @@ namespace JSSoft.UI
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
-        private bool isFocused;
         private int cursorPosition;
         private string compositionString;
         private Color32?[] foregroundColors = new Color32?[] { };
@@ -62,15 +62,12 @@ namespace JSSoft.UI
         private Color32?[] promptForegroundColors = new Color32?[] { };
         private Color32?[] promptBackgroundColors = new Color32?[] { };
 
-        // private Event processingEvent = new Event();
-        // private Event[] events = new Event[] { };
         private EventHandler<TerminalExecuteEventArgs> executed;
 
-        // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static Terminal()
         {
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow,
-                            (t) => t.PrevHistory()));
+                                        (t) => t.PrevHistory()));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow,
                             (t) => t.NextHistory()));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow,
@@ -94,9 +91,9 @@ namespace JSSoft.UI
             AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.DownArrow,
                             (t) => true));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return,
-                            (t) => t.Execute(), (t) => t.isReadOnly == false));
+                            (t) => t.Execute(), (t) => t.IsReadOnly == false));
             AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter,
-                            (t) => t.Execute(), (t) => t.isReadOnly == false));
+                            (t) => t.Execute(), (t) => t.IsReadOnly == false));
             AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace,
                             (t) => t.Backspace()));
             // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.None + KeyCode.Backspace 가 호출됨.
@@ -159,9 +156,9 @@ namespace JSSoft.UI
             this.commandText = string.Empty;
             this.completion = string.Empty;
             this.promptText = this.prompt;
+            this.text = this.outputText + this.promptText;
             this.cursorPosition = 0;
-            this.OnPropmtTextChanged(EventArgs.Empty);
-            this.OnCursorPositionChanged(EventArgs.Empty);
+            this.InvokePromptTextChangedEvent();
         }
 
         public void MoveToFirst()
@@ -340,29 +337,44 @@ namespace JSSoft.UI
             return text;
         }
 
-        public override void OnSelect(BaseEventData eventData)
-        {
-            base.OnSelect(eventData);
-            this.InputSystem.imeCompositionMode = IMECompositionMode.On;
-            this.IsFocused = true;
-        }
-
-        public override void OnDeselect(BaseEventData eventData)
-        {
-            base.OnDeselect(eventData);
-            // Debug.Log(nameof(OnDeselect));
-            this.IsFocused = false;
-        }
-
         public void ResetColor()
         {
             this.ForegroundColor = null;
             this.BackgroundColor = null;
         }
 
+        public void InsertCharacter(char character)
+        {
+            var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+            this.text = this.text.Insert(index, $"{character}");
+            this.promptText = this.Text.Substring(this.outputText.Length);
+            this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
+            this.completion = string.Empty;
+            this.cursorPosition++;
+            this.InvokePromptTextChangedEvent();
+        }
+
+        public bool ProcessKeyEvent(KeyCode keyCode, EventModifiers modifiers)
+        {
+            var key = $"{modifiers}+{keyCode}";
+            if (bindingByKey.ContainsKey(key) == true)
+            {
+                var binding = bindingByKey[key];
+                if (binding.Verify(this) == true && binding.Action(this) == true)
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
+
+        public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+
         public Color32? ForegroundColor { get; set; }
 
         public Color32? BackgroundColor { get; set; }
+
+        public bool IsReadOnly => this.isReadOnly;
 
         public int CursorPosition
         {
@@ -406,31 +418,6 @@ namespace JSSoft.UI
 
         public string CommandText => this.commandText;
 
-        public string CompositionString
-        {
-            get => this.compositionString ?? string.Empty;
-            private set
-            {
-                this.compositionString = value;
-                this.OnCompositionStringChanged(EventArgs.Empty);
-            }
-        }
-
-        public bool IsFocused
-        {
-            get => this.isFocused;
-            set
-            {
-                if (this.isFocused == value)
-                    return;
-                this.isFocused = value;
-                if (this.isFocused == true)
-                    this.OnGotFocus(EventArgs.Empty);
-                else
-                    this.OnLostFocus(EventArgs.Empty);
-            }
-        }
-
         public OnCompletion onCompletion { get; set; }
 
         public OnDrawPrompt onDrawPrompt { get; set; }
@@ -439,13 +426,7 @@ namespace JSSoft.UI
 
         public event EventHandler PromptTextChanged;
 
-        public event EventHandler CompositionStringChanged;
-
         public event EventHandler CursorPositionChanged;
-
-        public event EventHandler GotFocus;
-
-        public event EventHandler LostFocus;
 
         protected virtual void OnOutputTextChanged(EventArgs e)
         {
@@ -457,24 +438,9 @@ namespace JSSoft.UI
             this.PromptTextChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnCompositionStringChanged(EventArgs e)
-        {
-            this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);
-        }
-
         protected virtual void OnCursorPositionChanged(EventArgs e)
         {
             this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnGotFocus(EventArgs e)
-        {
-            this.GotFocus?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnLostFocus(EventArgs e)
-        {
-            this.LostFocus?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)
@@ -499,11 +465,6 @@ namespace JSSoft.UI
             Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}1");
         }
 
-        protected override void Awake()
-        {
-            base.Awake();
-        }
-
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -518,47 +479,15 @@ namespace JSSoft.UI
             this.cursorPosition = this.commandText.Length;
             this.OnOutputTextChanged(EventArgs.Empty);
             this.OnCursorPositionChanged(EventArgs.Empty);
-            Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
+            // Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
         }
 #endif
 
-        protected virtual void OnTranslateEvents(IList<Event> eventList)
-        {
-            for (var i = 0; i < eventList.Count; i++)
-            {
-                var item = eventList[i];
-                // ime 에 의해서 문자가 조합중일때 enter 키 입력시 이벤트가 두번 호출되는 어이없는 상황을 하드코딩으로 방어
-                if (item.rawType == EventType.KeyDown &&
-                    item.keyCode == KeyCode.Return &&
-                    item.modifiers == EventModifiers.None &&
-                    i + 1 < eventList.Count)
-                {
-                    var nextItem = eventList[i + 1];
-                    if (nextItem.character != '\n')
-                    {
-                        eventList[i] = null;
-                    }
-                }
-            }
-        }
-
-        protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers modifiers)
-        {
-            var key = $"{modifiers}+{keyCode}";
-            if (bindingByKey.ContainsKey(key) == true)
-            {
-                var binding = bindingByKey[key];
-                if (binding.Verify(this) == true && binding.Action(this) == true)
-                    return true;
-            }
-            return false;
-        }
-
-        protected virtual bool OnPreviewKeyPress(char character)
+        protected virtual bool IsValidCharacter(char character)
         {
             if (character == '\n')
-                return true;
-            return false;
+                return false;
+            return true;
         }
 
         private static void AddBinding(IKeyBinding binding)
@@ -670,30 +599,6 @@ namespace JSSoft.UI
             this.InsertPrompt(prompt);
         }
 
-        private static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
-
-        private static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
-
-        private BaseInput InputSystem
-        {
-            get
-            {
-                if (EventSystem.current && EventSystem.current.currentInputModule)
-                    return EventSystem.current.currentInputModule.input;
-                return null;
-            }
-        }
-
-        private string GetCompositionString()
-        {
-            return this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
-        }
-
-        private bool ProcessEvent(Event e)
-        {
-            return false;
-        }
-
         internal Color32? GetForegroundColor(int index)
         {
             if (index < this.Text.Length && this.Text[index] == ' ')
@@ -752,47 +657,6 @@ namespace JSSoft.UI
         }
 
         string ITerminal.OutputText => this.outputText;
-
-        #endregion
-
-        #region IUpdateSelectedHandler
-
-        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
-        {
-            if (this.events.PopEvents() == false)
-                return;
-
-            this.OnTranslateEvents(this.events);
-            for (var i = 0; i < this.events.Count; i++)
-            {
-                var item = this.events[i];
-                if (item == null)
-                    continue;
-                if (item.rawType == EventType.KeyDown)
-                {
-                    var keyCode = item.keyCode;
-                    var modifiers = item.modifiers;
-                    if (this.OnPreviewKeyDown(keyCode, modifiers) == true)
-                        continue;
-                    if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
-                    {
-                        var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
-                        this.text = this.text.Insert(index, $"{item.character}");
-                        this.promptText = this.Text.Substring(this.outputText.Length);
-                        this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
-                        this.completion = string.Empty;
-                        this.cursorPosition++;
-                        this.InvokePromptTextChangedEvent();
-                    }
-                    else
-                    {
-                        this.CompositionString = this.GetCompositionString();
-                    }
-                }
-            }
-
-            eventData.Use();
-        }
 
         #endregion
     }
