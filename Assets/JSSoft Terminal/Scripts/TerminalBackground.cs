@@ -101,7 +101,7 @@ namespace JSSoft.UI
             }
         }
 
-        private bool Predicate(TerminalCell cell)
+        private bool Predicate(ITerminalCell cell)
         {
             if (cell.BackgroundColor is Color32)
                 return true;

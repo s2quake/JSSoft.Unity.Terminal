@@ -30,30 +30,34 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalCell
+    class TerminalCell : ITerminalCell
     {
-        private char character;
+        private readonly Action modifiedAction;
+        private bool isSelected;
 
-        public TerminalCell(TerminalRow row, int index)
+        public TerminalCell(TerminalRow row, int index, Action modifiedAction)
         {
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            this.Row = row ?? throw new ArgumentNullException(nameof(row));
             this.Index = index;
-            this.Row = row;
-            this.UpdateLayout();
+            this.modifiedAction = modifiedAction ?? throw new ArgumentNullException(nameof(modifiedAction));
+            this.Reset();
         }
 
         public override string ToString()
         {
-            return $"{{{this.Index},{this.Row.Index}}}: '{this.character}'";
+            return $"{{{this.Index},{this.Row.Index}}}: '{this.Character}'";
         }
 
-        public static Color32 GetBackgroundColor(TerminalCell cell)
+        public static Color32 GetBackgroundColor(ITerminalCell cell)
         {
             if (cell == null)
                 throw new ArgumentNullException(nameof(cell));
             return cell.BackgroundColor ?? TerminalRow.GetBackgroundColor(cell.Row);
         }
 
-        public static Color32 GetForegroundColor(TerminalCell cell)
+        public static Color32 GetForegroundColor(ITerminalCell cell)
         {
             if (cell == null)
                 throw new ArgumentNullException(nameof(cell));
@@ -65,6 +69,42 @@ namespace JSSoft.UI
             return this.BackgroundRect.Intersect(position);
         }
 
+        public void SetCharacter(TMP_FontAsset fontAsset, char character, int volume)
+        {
+            if (fontAsset == null)
+                throw new ArgumentException(nameof(fontAsset));
+            var rect = TerminalGrid.GetCellRect(this.Grid, this);
+            this.IsSelected = false;
+            this.IsEnabled = true;
+            this.Character = character;
+            this.Volume = volume;
+            this.BackgroundRect = new GlyphRect(rect.x, rect.y, rect.width * volume, rect.height);
+            this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, rect.x, rect.y);
+            this.BackgroundUV = (Vector2.zero, Vector2.zero);
+            this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
+            this.FontAsset = fontAsset;
+            this.modifiedAction();
+        }
+
+        public void Reset()
+        {
+            var rect = TerminalGrid.GetCellRect(this.Grid, this);
+            var uv = (Vector2.zero, Vector2.zero);
+            this.IsSelected = false;
+            this.IsEnabled = false;
+            this.Character = char.MinValue;
+            this.Volume = 0;
+            this.BackgroundRect = rect;
+            this.ForegroundRect = new Rect(rect.x, rect.y, rect.width, rect.height);
+            this.BackgroundUV = uv;
+            this.ForegroundUV = uv;
+            this.FontAsset = null;
+            this.BackgroundColor = null;
+            this.ForegroundColor = null;
+            this.FontAsset = null;
+            this.modifiedAction();
+        }
+
         public int Index { get; }
 
         public TerminalRow Row { get; }
@@ -73,19 +113,24 @@ namespace JSSoft.UI
 
         public TMP_FontAsset FontAsset { get; private set; }
 
-        public char Character
-        {
-            get => this.character;
-            set
-            {
-                this.character = value;
-                this.UpdateLayout();
-            }
-        }
+        public char Character { get; private set; }
 
         public int Volume { get; private set; }
 
-        public bool IsSelected { get; set; }
+        public bool IsSelected
+        {
+            get => this.isSelected;
+            set
+            {
+                if (this.isSelected != value)
+                {
+                    this.isSelected = value;
+                    this.modifiedAction();
+                }
+            }
+        }
+
+        public bool IsEnabled { get; private set; }
 
         public GlyphRect BackgroundRect { get; private set; }
 
@@ -101,32 +146,10 @@ namespace JSSoft.UI
 
         public TerminalPoint Point => new TerminalPoint(this.Index, this.Row.Index);
 
-        private void UpdateLayout()
-        {
-            var originAsset = this.Grid.FontAsset;
-            var character = this.character;
-            var rect = TerminalGrid.GetCellRect(this.Grid, this);
-            var fontAsset = FontUtility.GetFontAsset(originAsset, character);
-            if (fontAsset != null)
-            {
-                var characterWidth = TerminalGrid.GetItemWidth(this.Grid, character);
-                this.Volume = FontUtility.GetCharacterVolume(fontAsset, character);
-                this.BackgroundRect = new GlyphRect(rect.x, rect.y, characterWidth, rect.height);
-                this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, rect.x, rect.y);
-                this.BackgroundUV = (Vector2.zero, Vector2.zero);
-                this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
-                this.FontAsset = fontAsset;
-            }
-            else
-            {
-                var uv = (Vector2.zero, Vector2.zero);
-                this.Volume = 0;
-                this.BackgroundRect = rect;
-                this.ForegroundRect = new Rect(rect.x, rect.y, rect.width, rect.height);
-                this.BackgroundUV = uv;
-                this.ForegroundUV = uv;
-            }
-            // this.TextIndex = -1;
-        }
+        #region ITerminalCell
+
+        ITerminalRow ITerminalCell.Row => this.Row;
+
+        #endregion
     }
 }

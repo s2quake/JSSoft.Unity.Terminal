@@ -31,12 +31,12 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalRow
+    class TerminalRow : ITerminalRow
     {
         private readonly List<TerminalCell> cells = new List<TerminalCell>();
         private readonly Stack<TerminalCell> pool = new Stack<TerminalCell>();
-        private Color32? backgroundColor;
-        private Color32? foregroundColor;
+        private bool isSelected;
+        private bool isEmpty;
 
         public TerminalRow(TerminalGrid grid, int index)
         {
@@ -45,35 +45,58 @@ namespace JSSoft.UI
             this.cells.Capacity = grid.ColumnCount;
             for (var i = 0; i < grid.ColumnCount; i++)
             {
-                this.cells.Add(new TerminalCell(this, i));
+                this.cells.Add(new TerminalCell(this, i, () => this.IsModified = true));
             }
             this.UpdateRect();
+            this.IsModified = false;
         }
 
-        public static Color32 GetBackgroundColor(TerminalRow row)
+        public static Color32 GetBackgroundColor(ITerminalRow row)
         {
             if (row == null)
                 throw new ArgumentNullException(nameof(row));
             return row.BackgroundColor ?? TerminalGrid.GetBackgroundColor(row.Grid);
         }
 
-        public static Color32 GetForegroundColor(TerminalRow row)
+        public static Color32 GetForegroundColor(ITerminalRow row)
         {
             if (row == null)
                 throw new ArgumentNullException(nameof(row));
             return row.ForegroundColor ?? TerminalGrid.GetForegroundColor(row.Grid);
         }
 
-        public TerminalCell Intersect(Vector2 position)
+        public TerminalPoint Intersect(Vector2 position)
+        {
+            if (this.Rect.Intersect(position) == true)
+            {
+                foreach (var item in this.cells)
+                {
+                    if (item.IsEnabled == true && item.Intersect(position) == true)
+                        return item.Point;
+                }
+                return new TerminalPoint(this.Grid.ColumnCount, this.Index);
+            }
+            return TerminalPoint.Invalid;
+        }
+
+        public TerminalCell IntersectWithCell(Vector2 position)
         {
             if (this.Rect.Intersect(position) == false)
                 return null;
             foreach (var item in this.cells)
             {
-                if (item.Intersect(position) == true)
+                if (item.IsEnabled == true && item.Intersect(position) == true)
                     return item;
             }
-            throw new NotImplementedException();
+            return null;
+        }
+
+        public void ClearSelection()
+        {
+            foreach (var item in this.cells)
+            {
+                item.IsSelected = false;
+            }
         }
 
         public TerminalGrid Grid { get; }
@@ -82,13 +105,45 @@ namespace JSSoft.UI
 
         public IReadOnlyList<TerminalCell> Cells => this.cells;
 
-        public bool IsSelected { get; set; }
+        public bool IsSelected
+        {
+            get
+            {
+                this.UpdateFlag();
+                return this.isSelected;
+            }
+        }
+
+        public bool IsEmpty
+        {
+            get
+            {
+                this.UpdateFlag();
+                return this.isEmpty;
+            }
+        }
 
         public GlyphRect Rect { get; private set; }
 
         public Color32? BackgroundColor { get; set; }
 
         public Color32? ForegroundColor { get; set; }
+
+        public bool IsModified { get; private set; }
+
+        public void Reset()
+        {
+            this.ResetAfter(0);
+        }
+
+        public void ResetAfter(int index)
+        {
+            for (var i = index; i < this.cells.Count; i++)
+            {
+                var item = this.cells[i];
+                item.Reset();
+            }
+        }
 
         public void Resize(int columnCount)
         {
@@ -99,16 +154,11 @@ namespace JSSoft.UI
             }
             for (var i = this.cells.Count; i < columnCount; i++)
             {
-                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i);
+                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i, () => this.IsModified = true);
+                item.Reset();
                 this.cells.Add(item);
             }
-            for (var i = 0; i < this.cells.Count; i++)
-            {
-                var item = this.cells[i];
-                item.Character = char.MinValue;
-                item.BackgroundColor = null;
-                item.ForegroundColor = null;
-            }
+            this.UpdateRect();
         }
 
         private void UpdateRect()
@@ -122,6 +172,24 @@ namespace JSSoft.UI
             this.Rect = new GlyphRect(x, y, width, height);
         }
 
-        private IEnumerable<TerminalCell> ValidCells => this.Cells.Where(item => item.Character != 0);
+        private void UpdateFlag()
+        {
+            if (this.IsModified == true)
+            {
+                this.isSelected = this.cells.Any(item => item.IsSelected);
+                this.isEmpty = this.cells.Any(item => item.Character != char.MinValue) == false;
+            }
+        }
+
+        #region ITerminalRow
+
+        ITerminalCell ITerminalRow.Intersect(Vector2 position)
+        {
+            return this.IntersectWithCell(position);
+        }
+
+        IReadOnlyList<ITerminalCell> ITerminalRow.Cells => this.cells;
+
+        #endregion
     }
 }

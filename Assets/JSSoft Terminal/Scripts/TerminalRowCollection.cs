@@ -53,20 +53,39 @@ namespace JSSoft.UI
             if (fontAsset != null && this.text != text)
             {
                 var volume = characterInfos.Volume;
-                var index = 0;//this.FindUpdateIndex(fontAsset, text, columnCount);
+                var index = this.FindUpdateIndex(fontAsset, text, columnCount);
+                var dic = new Dictionary<int, int>(this.Count);
                 this.Resize(this.grid.ColumnCount, volume.Bottom);
                 for (var i = index; i < text.Length; i++)
                 {
                     var characterInfo = characterInfos[i];
                     var point = characterInfo.Point;
                     var character = characterInfo.Character;
-                    if (point.X < columnCount)
+                    var characterFontAsset = characterInfo.FontAsset;
+                    var characterVolume = characterInfo.Volume;
+                    var row = this.Prepare(point.Y);
+                    var cell = row.Cells[point.X];
+                    if (characterFontAsset != null)
                     {
-                        var cell = this.Prepare(point);
-                        cell.Character = character;
+                        cell.SetCharacter(characterFontAsset, character, characterVolume);
                         cell.BackgroundColor = characterInfo.BackgroundColor;
                         cell.ForegroundColor = characterInfo.ForegroundColor;
                     }
+                    else
+                    {
+                        cell.Reset();
+                    }
+                    dic[point.Y] = point.X;
+                }
+                foreach (var item in dic)
+                {
+                    var row = this[item.Key];
+                    row.ResetAfter(item.Value);
+                }
+                for (var i = this.Count; i < this.grid.RowCount; i++)
+                {
+                    var row = this.Prepare(i);
+                    row.Reset();
                 }
             }
 
@@ -75,15 +94,15 @@ namespace JSSoft.UI
             this.columnCount = columnCount;
         }
 
-        public TerminalCell Prepare(TerminalPoint point)
+        public TerminalRow Prepare(int index)
         {
-            if (point.Y >= this.Count)
+            if (index >= this.Count)
             {
                 var row = this.pool.Any() == true ? this.pool.Pop() : new TerminalRow(this.grid, this.Count);
                 this.Add(row);
             }
 
-            return this[point.Y].Cells[point.X];
+            return this[index];
         }
 
         private void Resize(int columnCount, int rowCount)
@@ -96,6 +115,7 @@ namespace JSSoft.UI
             for (var i = this.Count; i < rowCount; i++)
             {
                 var item = this.pool.Any() ? this.pool.Pop() : new TerminalRow(this.grid, i);
+                item.Reset();
                 this.Add(item);
             }
             for (var i = this.Count - 1; i >= 0; i--)

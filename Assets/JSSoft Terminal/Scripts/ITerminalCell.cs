@@ -21,23 +21,43 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.TextCore;
+using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public struct TerminalCharacterInfo
+    public interface ITerminalCell
     {
-        public char Character { get; set; }
+        bool Intersect(Vector2 position);
 
-        public Color32? BackgroundColor { get; set; }
+        int Index { get; }
 
-        public Color32? ForegroundColor { get; set; }
+        ITerminalRow Row { get; }
 
-        public int Volume { get; set; }
+        TMP_FontAsset FontAsset { get; }
 
-        public TerminalPoint Point { get; set; }
+        char Character { get; }
 
-        public TMP_FontAsset FontAsset { get; set; }
+        int Volume { get; }
+
+        bool IsSelected { get; }
+
+        bool IsEnabled { get; }
+
+        GlyphRect BackgroundRect { get; }
+
+        Rect ForegroundRect { get; }
+
+        (Vector2, Vector2) BackgroundUV { get; }
+
+        (Vector2, Vector2) ForegroundUV { get; }
+
+        Color32? BackgroundColor { get; set; }
+
+        Color32? ForegroundColor { get; set; }
     }
 }

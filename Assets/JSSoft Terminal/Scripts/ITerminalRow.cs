@@ -21,23 +21,32 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.TextCore;
+using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public struct TerminalCharacterInfo
+    public interface ITerminalRow
     {
-        public char Character { get; set; }
+        ITerminalCell Intersect(Vector2 position);
 
-        public Color32? BackgroundColor { get; set; }
+        TerminalGrid Grid { get; }
 
-        public Color32? ForegroundColor { get; set; }
+        int Index { get; }
 
-        public int Volume { get; set; }
+        IReadOnlyList<ITerminalCell> Cells { get; }
 
-        public TerminalPoint Point { get; set; }
+        bool IsSelected { get; }
 
-        public TMP_FontAsset FontAsset { get; set; }
+        GlyphRect Rect { get; }
+
+        Color32? BackgroundColor { get; }
+
+        Color32? ForegroundColor { get; }
     }
 }

@@ -57,10 +57,15 @@ namespace JSSoft.UI
                 {
                     Array.Resize(ref this.items, text.Length);
                 }
-                while (index < text.Length)
+                do
                 {
                     var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
+                    if (character == char.MinValue)
+                    {
+                        int qwer=0;
+                    }
+                    var characterFontAsset = FontUtility.GetFontAsset(fontAsset, character);
                     var volume = FontUtility.GetCharacterVolume(fontAsset, character);
                     if (point.X + volume > columnCount)
                     {
@@ -72,14 +77,30 @@ namespace JSSoft.UI
                     characterInfo.Point = point;
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
-                    this.items[index++] = characterInfo;
-                    point.X += volume;
+                    characterInfo.FontAsset = characterFontAsset;
                     if (character == '\n')
                     {
-                        point.X = 0;
-                        point.Y++;
+                        if (point.X != 0)
+                        {
+                            point.X = 0;
+                            point.Y++;
+                            characterInfo.FontAsset = null;
+                            characterInfo.Character = char.MinValue;
+                            characterInfo.Volume = 0;
+                        }
                     }
-                }
+                    else
+                    {
+                        point.X += volume;
+                        if (point.X == columnCount)
+                        {
+                            point.X = 0;
+                            point.Y++;
+                        }
+                    }
+                    this.items[index] = characterInfo;
+
+                } while (++index < text.Length);
                 this.lt.Y = 0;
                 this.rb.Y = point.Y + 1;
             }
@@ -130,7 +151,7 @@ namespace JSSoft.UI
         }
 
         public (int Left, int Top, int Right, int Bottom) Volume => (this.lt.X, this.lt.Y, this.rb.X, this.rb.Y);
-        
+
         private int FindUpdateIndex(TMP_FontAsset fontAsset, string text, int columnCount)
         {
             if (this.fontAsset != fontAsset || this.columnCount != columnCount)
