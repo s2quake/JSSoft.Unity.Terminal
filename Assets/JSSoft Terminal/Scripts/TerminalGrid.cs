@@ -74,7 +74,8 @@ namespace JSSoft.UI
 
         private Terminal terminal;
         private bool isSelecting;
-        private TerminalPoint startPoint;
+        private TerminalPoint downPoint;
+        private TerminalPoint beginPoint;
         private TerminalPoint endPoint;
         private bool isFocused;
         private bool hasSelection;
@@ -181,8 +182,8 @@ namespace JSSoft.UI
         {
             if (grid != null && grid.isSelecting == true)
             {
-                var p1 = grid.startPoint < grid.endPoint ? grid.startPoint : grid.endPoint;
-                var p2 = grid.startPoint > grid.endPoint ? grid.startPoint : grid.endPoint;
+                var p1 = grid.beginPoint < grid.endPoint ? grid.beginPoint : grid.endPoint;
+                var p2 = grid.beginPoint > grid.endPoint ? grid.beginPoint : grid.endPoint;
                 return point >= p1 && point <= p2;
             }
             return false;
@@ -627,8 +628,8 @@ namespace JSSoft.UI
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
         {
-            var s1 = p1 < p2 ? p1 : p2;
-            var s2 = p1 > p2 ? p1 : p2;
+            var s1 = p1;
+            var s2 = p2;
             var x = s1.X;
             var y = s1.Y;
             for (; y <= s2.Y; y++)
@@ -638,12 +639,64 @@ namespace JSSoft.UI
                 {
                     columnCount = this.ColumnCount - 1;
                 }
-                for (; x < columnCount; x++)
+                for (; x <= columnCount; x++)
                 {
                     yield return this.rows[y].Cells[x];
                 }
                 x = 0;
             }
+        }
+
+        private void Select(TerminalPoint p1, TerminalPoint p2)
+        {
+            foreach (var item in this.GetCells(p1, p2))
+            {
+                item.IsSelected = !item.IsSelected;
+            }
+        }
+
+        private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint p1, TerminalPoint p2)
+        {
+            var s1 = p1 < p2 ? p1 : p2;
+            var s2 = p1 > p2 ? p1 : p2;
+
+            var row1 = this.rows[s1.Y];
+            if (row1.IsEmpty == true)
+            {
+                s1.X = this.ColumnCount;
+            }
+            else
+            {
+                var cell = row1.Cells[s1.X];
+                if (cell.IsEnabled == false)
+                {
+                    var j = Math.Max(0, s1.X - 6);
+                    for (var i = s1.X; i >= j; i--)
+                    {
+                        var item = row1.Cells[i];
+                        if (item.IsEnabled == true)
+                        {
+                            s1.X = i + 1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var row2 = this.rows[s2.Y];
+            if (row2.IsEmpty == true)
+            {
+                s2.X = this.ColumnCount;
+            }
+            else
+            {
+                var cell = row2.Cells[s2.X];
+                if (cell.IsEnabled == false)
+                {
+                    s2.X = this.ColumnCount;
+                }
+            }
+            return (s1, s2);
         }
 
         private IEnumerable<TerminalCell> GetCells()
@@ -682,7 +735,8 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                this.endPoint = this.Intersect(position);
+                var point = this.Intersect(position);
+                (this.beginPoint, this.endPoint) = this.UpdatePoint(this.downPoint, point);
                 this.isSelecting = true;
             }
         }
@@ -692,12 +746,9 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                var endPoint = this.Intersect(position);
-                if (this.endPoint != endPoint)
-                {
-                    this.endPoint = endPoint;
-                    this.OnLayoutChanged(EventArgs.Empty);
-                }
+                var point = this.Intersect(position);
+                (this.beginPoint, this.endPoint) = this.UpdatePoint(this.downPoint, point);
+                this.OnLayoutChanged(EventArgs.Empty);
             }
         }
 
@@ -707,16 +758,13 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                var s1 = this.startPoint;
-                var s2 = this.Intersect(position);
-                foreach (var item in this.GetCells(s1, s2))
-                {
-                    item.IsSelected = !item.IsSelected;
-                }
-                // Debug.Log($"{this.startPoint}, {this.endPoint}");
-                this.startPoint = TerminalPoint.Invalid;
+                var point = this.Intersect(position);
+                var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
+                this.downPoint = TerminalPoint.Invalid;
+                this.beginPoint = TerminalPoint.Invalid;
                 this.endPoint = TerminalPoint.Invalid;
                 this.hasSelection = true;
+                this.Select(beginPoint, endPoint);
                 this.OnSelectionChanged(EventArgs.Empty);
             }
         }
@@ -736,29 +784,7 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                var point = this.Intersect(position);
-                var row = this.rows[this.startPoint.Y];
-                if (row.IsEmpty == true)
-                {
-                    point.X = this.ColumnCount;
-                }
-                else
-                {
-                    // var cell = row.Cells[point.X];
-                    // if (cell.IsEnabled == false)
-                    // {
-                    //     for (var i = point.X - 1; i >= 0; i--)
-                    //     {
-                    //         if (row.Cells[i].IsEnabled)
-                    //             break;
-                    //         point.X = i;
-                    //     }
-                    // }
-                }
-                // Debug.Log(row.IsEmpty);
-                Debug.Log(point);
-
-                this.startPoint = point;
+                this.downPoint = this.Intersect(position); ;
                 this.ClearSelection();
                 eventData.useDragThreshold = false;
             }

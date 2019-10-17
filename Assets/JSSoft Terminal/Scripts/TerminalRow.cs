@@ -71,7 +71,7 @@ namespace JSSoft.UI
             {
                 foreach (var item in this.cells)
                 {
-                    if (item.IsEnabled == true && item.Intersect(position) == true)
+                    if (item.Intersect(position) == true)
                         return item.Point;
                 }
                 return new TerminalPoint(this.Grid.ColumnCount, this.Index);
@@ -85,7 +85,7 @@ namespace JSSoft.UI
                 return null;
             foreach (var item in this.cells)
             {
-                if (item.IsEnabled == true && item.Intersect(position) == true)
+                if (item.Intersect(position) == true)
                     return item;
             }
             return null;
