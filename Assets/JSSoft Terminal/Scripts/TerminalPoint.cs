@@ -48,9 +48,26 @@ namespace JSSoft.UI
             return base.Equals(obj);
         }
 
-        public void Shift(int x, int y, int columnCount)
+        public int DistanceOf(TerminalPoint point, int columnCount)
         {
-
+            var (s1, s2, op) = this < point ? (this, point, 1) : (point, this, -1);
+            var x = s1.X;
+            var y = s1.Y;
+            var c = 0;
+            for (; y <= s2.Y; y++)
+            {
+                var count = y == s2.Y ? s2.X : columnCount;
+                if (count >= columnCount)
+                {
+                    count = columnCount - 1;
+                }
+                for (; x <= count; x++)
+                {
+                    c++;
+                }
+                x = 0;
+            }
+            return c * op;
         }
 
         public override int GetHashCode()

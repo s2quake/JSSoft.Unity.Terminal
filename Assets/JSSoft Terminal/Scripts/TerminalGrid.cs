@@ -628,8 +628,7 @@ namespace JSSoft.UI
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
         {
-            var s1 = p1;
-            var s2 = p2;
+            var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
             var x = s1.X;
             var y = s1.Y;
             for (; y <= s2.Y; y++)
@@ -657,9 +656,7 @@ namespace JSSoft.UI
 
         private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint p1, TerminalPoint p2)
         {
-            var s1 = p1 < p2 ? p1 : p2;
-            var s2 = p1 > p2 ? p1 : p2;
-
+            var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
             var cell1 = this.rows[s1.Y].Cells[s1.X];
             var cell2 = this.rows[s2.Y].Cells[s2.X];
             if (cell1.IsEnabled == true && cell2.IsEnabled == true)
@@ -668,18 +665,26 @@ namespace JSSoft.UI
             }
             else if (cell1.IsEnabled == true)
             {
-                var row2 = this.rows[s2.Y];
-                if (row2.IsEmpty == true)
+                var row2 = cell2.Row;
+                var l2 = s2;
+                for (var i = s2.X; i >= 0; i--)
+                {
+                    var cell = cell2.Row.Cells[i];
+                    if (cell.IsEnabled == true)
+                    {
+                        l2.X = i + 1;
+                        break;
+                    }
+                }
+                var distance = l2.DistanceOf(s2, this.ColumnCount);
+                // Debug.Log(distance);
+                if (distance > 5)
                 {
                     s2.X = this.ColumnCount;
                 }
                 else
                 {
-                    var cell = row2.Cells[s2.X];
-                    if (cell.IsEnabled == false)
-                    {
-                        s2.X = this.ColumnCount;
-                    }
+                    s2.X = l2.X;
                 }
             }
             else if (cell2.IsEnabled == true)
