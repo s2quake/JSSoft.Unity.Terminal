@@ -27,7 +27,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections.ObjectModel;
 using UnityEngine.TextCore;
 using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.TerminalGrid>;
 
@@ -83,13 +82,13 @@ namespace JSSoft.UI
 
         private Terminal terminal;
         private bool isSelecting;
+        private bool isFocused;
+        private bool isScrolling;
         private TerminalPoint downPoint;
         private TerminalPoint beginPoint;
         private TerminalPoint endPoint;
-        private bool isFocused;
-        private bool hasSelection;
         private float scrollPos;
-        private bool isScrolling;
+        private List<TerminalPoint> selectionList = new List<TerminalPoint>();
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static TerminalGrid()
@@ -106,6 +105,10 @@ namespace JSSoft.UI
                         KeyCode.Home, (g) => g.ScrollToTop()));
                 AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,
                         KeyCode.End, (g) => g.ScrollToBottom()));
+                AddBinding(new KeyBinding(EventModifiers.Command,
+                        KeyCode.C, (g) => g.Copy()));
+                AddBinding(new KeyBinding(EventModifiers.Command,
+                        KeyCode.A, (g) => g.SelectAll()));
             }
         }
 
@@ -198,7 +201,7 @@ namespace JSSoft.UI
                 throw new ArgumentNullException(nameof(cell));
             var point = new TerminalPoint(cell.Index, cell.Row.Index);
             var isSelecting = IsSelecting(grid, point);
-            return cell.IsSelected != isSelecting;
+            return IsSelected(grid, point) != isSelecting;
         }
 
         public static bool IsSelecting(TerminalGrid grid, TerminalPoint point)
@@ -207,6 +210,17 @@ namespace JSSoft.UI
             {
                 var p1 = grid.beginPoint < grid.endPoint ? grid.beginPoint : grid.endPoint;
                 var p2 = grid.beginPoint > grid.endPoint ? grid.beginPoint : grid.endPoint;
+                return point >= p1 && point <= p2;
+            }
+            return false;
+        }
+
+        public static bool IsSelected(TerminalGrid grid, TerminalPoint point)
+        {
+            if (grid != null && grid.selectionList.Any())
+            {
+                var p1 = grid.selectionList.First();
+                var p2 = grid.selectionList.Last();
                 return point >= p1 && point <= p2;
             }
             return false;
@@ -266,13 +280,9 @@ namespace JSSoft.UI
 
         public void ClearSelection()
         {
-            if (this.hasSelection == true)
+            if (this.selectionList.Any() == true)
             {
-                foreach (var item in this.rows)
-                {
-                    item.ClearSelection();
-                }
-                this.hasSelection = false;
+                this.selectionList.Clear();
                 this.OnSelectionChanged(EventArgs.Empty);
             }
         }
@@ -353,6 +363,40 @@ namespace JSSoft.UI
                 this.VisibleIndex = visibleIndex;
                 this.isScrolling = false;
             }
+        }
+
+        public void Copy()
+        {
+            if (this.selectionList.Any() == true)
+            {
+                var p1 = this.selectionList.First();
+                var p2 = this.selectionList.Last();
+                var capacity = p1.DistanceOf(p2, this.ColumnCount);
+                var list = new List<char>(capacity);
+                var i1 = this.characterInfos.PointToIndex(p1);
+                var i2 = this.characterInfos.PointToIndex(p2);
+                for (var i = i1; i <= i2; i++)
+                {
+                    var item = this.characterInfos[i];
+                    if (item.Character != char.MinValue)
+                    {
+                        list.Add(item.Character);
+                    }
+                }
+                ClipboardUtility.Text = new string(list.ToArray());
+            }
+            else
+            {
+                ClipboardUtility.Text = string.Empty;
+            }
+        }
+
+        public void SelectAll()
+        {
+            this.selectionList.Clear();
+            this.selectionList.Add(new TerminalPoint(0, 0));
+            this.selectionList.Add(new TerminalPoint(this.ColumnCount, this.rows.Count));
+            this.OnSelectionChanged(EventArgs.Empty);
         }
 
         public Terminal Terminal
@@ -606,7 +650,7 @@ namespace JSSoft.UI
             if (this.Terminal.ProcessKeyEvent(keyCode, modifiers) == true)
                 return true;
             var key = $"{modifiers}+{keyCode}";
-            Debug.Log(key);
+            // Debug.Log(key);
             if (bindingByKey.ContainsKey(key) == true)
             {
                 var binding = bindingByKey[key];
@@ -618,7 +662,8 @@ namespace JSSoft.UI
 
         protected virtual bool OnPreviewKeyPress(char character)
         {
-            if (character == '\n')
+            // 27: escape key
+            if (character == '\n' || character == 27)
                 return true;
             return false;
         }
@@ -746,42 +791,54 @@ namespace JSSoft.UI
             }
         }
 
-        private void Select(TerminalPoint p1, TerminalPoint p2)
-        {
-            foreach (var item in this.GetCells(p1, p2))
-            {
-                item.IsSelected = !item.IsSelected;
-            }
-        }
-
         private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint p1, TerminalPoint p2)
         {
             var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
             var cell1 = this.rows[s1.Y].Cells[s1.X];
             var cell2 = this.rows[s2.Y].Cells[s2.X];
+            var row1 = cell1.Row;
+            var row2 = cell2.Row;
             var columnCount = this.ColumnCount;
+            var gap = 5;
             if (cell1.IsEnabled == true && cell2.IsEnabled == true)
             {
                 return (s1, s2);
             }
             else if (cell1.IsEnabled == true)
             {
-                var row2 = cell2.Row;
                 var l2 = row2.LastPoint(false);
                 var distance = l2.DistanceOf(s2, columnCount);
-                s2.X = distance > 5 ? columnCount : l2.X;
+                s2.X = distance > gap ? columnCount : l2.X;
             }
             else if (cell2.IsEnabled == true)
             {
-                var row1 = cell1.Row;
                 var l1 = row1.LastPoint(true);
                 var distance = l1.DistanceOf(s1, columnCount);
-                s1.X = distance > 5 ? columnCount : l1.X;
+                s1.X = distance > gap ? columnCount : l1.X;
             }
             else
             {
-                s1.X = columnCount;
-                s2.X = columnCount;
+                if (row1.IsEmpty == false)
+                {
+                    var l1 = row1.LastPoint(false);
+                    var distance = l1.DistanceOf(s1, columnCount);
+                    s1.X = distance > gap ? columnCount : l1.X;
+                }
+                else
+                {
+                    s1.X = columnCount;
+                }
+
+                if (row2.IsEmpty == false)
+                {
+                    var l2 = row2.LastPoint(false);
+                    var distance = l2.DistanceOf(s2, columnCount);
+                    s2.X = distance > gap ? columnCount : l2.X;
+                }
+                else
+                {
+                    s2.X = columnCount;
+                }
             }
             return (s1, s2);
         }
@@ -847,11 +904,13 @@ namespace JSSoft.UI
                 var position = this.WorldToGrid(eventData.position);
                 var point = this.Intersect(position);
                 var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
+                this.selectionList.Clear();
+                this.selectionList.Add(beginPoint);
+                this.selectionList.Add(endPoint);
+                this.selectionList.Sort();
                 this.downPoint = TerminalPoint.Invalid;
                 this.beginPoint = TerminalPoint.Invalid;
                 this.endPoint = TerminalPoint.Invalid;
-                this.hasSelection = true;
-                this.Select(beginPoint, endPoint);
                 this.OnSelectionChanged(EventArgs.Empty);
             }
         }

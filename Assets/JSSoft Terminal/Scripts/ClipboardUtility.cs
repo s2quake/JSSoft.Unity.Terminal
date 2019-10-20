@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -30,8 +31,34 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public static class StringUtility
+    public static class ClipboardUtility
     {
-        
+        private static PropertyInfo property;
+
+        private static PropertyInfo Property
+        {
+            get
+            {
+                if (property == null)
+                {
+                    property = typeof(GUIUtility).GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
+                    if (property == null)
+                        throw new Exception("Can't access internal member 'GUIUtility.systemCopyBuffer' it may have been removed / renamed");
+                }
+                return property;
+            }
+        }
+
+        public static string Text
+        {
+            get => (string)Property.GetValue(null, null);
+            set
+            {
+                var textEditor = new TextEditor();
+                textEditor.text = value;
+                textEditor.SelectAll();
+                textEditor.Copy();
+            }
+        }
     }
 }

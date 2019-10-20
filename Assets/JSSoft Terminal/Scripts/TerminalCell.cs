@@ -33,7 +33,7 @@ namespace JSSoft.UI
     class TerminalCell : ITerminalCell
     {
         private readonly Action modifiedAction;
-        private bool isSelected;
+        // private bool isSelected;
 
         public TerminalCell(TerminalRow row, int index, Action modifiedAction)
         {
@@ -74,7 +74,7 @@ namespace JSSoft.UI
             if (fontAsset == null)
                 throw new ArgumentException(nameof(fontAsset));
             var rect = TerminalGrid.GetCellRect(this.Grid, this);
-            this.IsSelected = false;
+            // this.IsSelected = false;
             this.IsEnabled = true;
             this.Character = character;
             this.Volume = volume;
@@ -90,7 +90,7 @@ namespace JSSoft.UI
         {
             var rect = TerminalGrid.GetCellRect(this.Grid, this);
             var uv = (Vector2.zero, Vector2.zero);
-            this.IsSelected = false;
+            // this.IsSelected = false;
             this.IsEnabled = false;
             this.Character = char.MinValue;
             this.Volume = 0;
@@ -117,18 +117,20 @@ namespace JSSoft.UI
 
         public int Volume { get; private set; }
 
-        public bool IsSelected
-        {
-            get => this.isSelected;
-            set
-            {
-                if (this.isSelected != value)
-                {
-                    this.isSelected = value;
-                    this.modifiedAction();
-                }
-            }
-        }
+        public bool IsSelected => TerminalGrid.IsSelected(this.Grid, this.Point);
+
+        // public bool IsSelected
+        // {
+        //     get => this.isSelected;
+        //     set
+        //     {
+        //         if (this.isSelected != value)
+        //         {
+        //             this.isSelected = value;
+        //             this.modifiedAction();
+        //         }
+        //     }
+        // }
 
         public bool IsEnabled { get; private set; }
 

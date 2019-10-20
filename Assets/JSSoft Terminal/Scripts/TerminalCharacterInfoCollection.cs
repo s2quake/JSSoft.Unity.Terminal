@@ -81,7 +81,7 @@ namespace JSSoft.UI
                             point.X = 0;
                             point.Y++;
                             characterInfo.FontAsset = null;
-                            characterInfo.Character = char.MinValue;
+                            // characterInfo.Character = char.MinValue;
                             characterInfo.Volume = 0;
                         }
                     }

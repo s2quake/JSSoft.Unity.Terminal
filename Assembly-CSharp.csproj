@@ -44,7 +44,8 @@
     <ImplicitlyExpandNETStandardFacades>false</ImplicitlyExpandNETStandardFacades>
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
-  <ItemGroup>     <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
+  <ItemGroup>     <Compile Include="Assets\JSSoft Terminal\Scripts\ClipboardUtility.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\FontUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminal.cs" />
@@ -53,7 +54,6 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminalRow.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingBase.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\StringUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Terminal.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalBackground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCell.cs" />

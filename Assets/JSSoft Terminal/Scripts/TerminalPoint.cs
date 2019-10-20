@@ -26,7 +26,7 @@ using UnityEngine;
 namespace JSSoft.UI
 {
     [Serializable]
-    public struct TerminalPoint : IEquatable<TerminalPoint>
+    public struct TerminalPoint : IEquatable<TerminalPoint>, IComparable
     {
         [SerializeField]
         private int x;
@@ -126,11 +126,26 @@ namespace JSSoft.UI
 
         public static readonly TerminalPoint Invalid = new TerminalPoint(-1, -1);
 
-        #region IEquatable
+        #region implementations
 
         bool IEquatable<TerminalPoint>.Equals(TerminalPoint other)
         {
             return this.X == other.X && this.Y == other.Y;
+        }
+
+        int IComparable.CompareTo(object obj)
+        {
+            if (obj == null)
+                return 1;
+            if (obj is TerminalPoint point)
+            {
+                if (this < point)
+                    return -1;
+                else if (this > point)
+                    return 1;
+                return 0;
+            }
+            throw new ArgumentException("invalid object", nameof(obj));
         }
 
         #endregion

@@ -91,13 +91,13 @@ namespace JSSoft.UI
             return null;
         }
 
-        public void ClearSelection()
-        {
-            foreach (var item in this.cells)
-            {
-                item.IsSelected = false;
-            }
-        }
+        // public void ClearSelection()
+        // {
+        //     foreach (var item in this.cells)
+        //     {
+        //         item.IsSelected = false;
+        //     }
+        // }
 
         public TerminalPoint LastPoint(bool isCursor)
         {

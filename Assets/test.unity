@@ -284,47 +284,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 459233088}
   m_CullTransparentMesh: 0
---- !u!21 &478319185
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TextMeshPro/Bitmap
-  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _FaceTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _ColorMask: 15
-    - _MaskSoftnessX: 0
-    - _MaskSoftnessY: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _VertexOffsetX: 0
-    - _VertexOffsetY: 0
-    m_Colors:
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &548016343
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,47 +422,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566498932}
   m_CullTransparentMesh: 0
---- !u!21 &683031487
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TextMeshPro/Bitmap
-  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _FaceTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _ColorMask: 15
-    - _MaskSoftnessX: 0
-    - _MaskSoftnessY: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _VertexOffsetX: 0
-    - _VertexOffsetY: 0
-    m_Colors:
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &737875553
 GameObject:
   m_ObjectHideFlags: 0
@@ -666,15 +584,15 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745717590}
   m_CullTransparentMesh: 0
---- !u!21 &904512970
+--- !u!21 &895565182
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: TextMeshPro/Bitmap
+  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -684,10 +602,29 @@ Material:
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
+    m_TexEnvs:
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
     m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &967481278
 GameObject:
   m_ObjectHideFlags: 0
@@ -921,7 +858,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283e6a0a03ab0477eaeff767ea73c85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 478319185}
+  m_Material: {fileID: 2072092566}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1141,7 +1078,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 566498933}
   m_Direction: 3
   m_Value: 1
-  m_Size: 0.0254842
+  m_Size: 0.027654868
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1260,7 +1197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 904512970}
+  m_Material: {fileID: 2001794548}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1341,394 +1278,403 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   fontAsset: {fileID: 11400000, guid: 32e57321513a94fafbed115139352789, type: 2}
-  text: "//Released under the MIT License.\n//\n//Copyright (c) 2018 Ntreev Soft co.,
-    Ltd.\n//\n//Permission is hereby granted, free of charge, to any person obtaining
-    a copy of this software and associated \n//documentation files (the \"Software\"),
-    to deal in the Software without restriction, including without limitation the
-    \n//rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-    sell copies of the Software, and to permit \n//persons to whom the Software is
-    furnished to do so, subject to the following conditions:\n//\n//The above copyright
-    notice and this permission notice shall be included in all copies or substantial
-    portions of the \n//Software.\n//\n//THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
-    WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE \n//WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
-    EVENT SHALL THE AUTHORS OR \n//COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-    OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \n//OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.\n\nusing System;\nusing System.Collections.Generic;\nusing System.IO;\nusing
-    System.Linq;\nusing System.Security;\nusing System.Text;\nusing System.Text.RegularExpressions;\nusing
-    System.Threading;\n\nnamespace Ntreev.Library.Commands\n{\n    public class Terminal\n
-    \   {\n        private static ConsoleKeyInfo cancelKeyInfo = new ConsoleKeyInfo('\\u0003',
-    ConsoleKey.C, false, false, true);\n        private static readonly Dictionary<char,
-    int> charToWidth = new Dictionary<char, int>(char.MaxValue);\n        private
-    static int bufferWidth = 80;\n\n        private readonly Dictionary<ConsoleKeyInfo,
-    Action> actionMaps = new Dictionary<ConsoleKeyInfo, Action>();\n        private
-    readonly List<string> histories = new List<string>();\n        private readonly
-    List<string> completions = new List<string>();\n\n        private int y = Console.CursorTop;\n
-    \       private int width = Console.BufferWidth;\n        private int fullIndex;\n
-    \       private int start = 0;\n        private int historyIndex;\n        private
-    string fullText;\n        private string inputText;\n        private string completion
-    = string.Empty;\n        private TextWriter writer;\n        private bool isHidden;\n
-    \       private bool treatControlCAsInput;\n        private bool isCancellationRequested;\n\n
-    \       static Terminal()\n        {\n            {\n                var name
-    = $\"{typeof(Terminal).Namespace}.{PlatformID.Win32NT}.dat\";\n                using
-    (var stream = typeof(Terminal).Assembly.GetManifestResourceStream(name))\n                {\n
-    \                   var buffer = new byte[stream.Length];\n                    stream.Read(buffer,
-    0, buffer.Length);\n\n                    for (var i = char.MinValue; i < char.MaxValue;
-    i++)\n                    {\n                        charToWidth.Add(i, buffer[i]);\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    static bool IsOutputRedirected\n        {\n            get\n            {\n#if
-    !NET35\n                return Console.IsOutputRedirected;\n#else\n                return
-    true;\n#endif\n\n            }\n        }\n        public static bool IsInputRedirected\n
-    \       {\n            get\n            {\n#if !NET35\n                return
-    Console.IsInputRedirected;\n#else\n                return true;\n#endif\n            }\n
-    \       }\n\n        public static int GetLength(string text)\n        {\n            var
-    length = 0;\n            foreach (var item in text)\n            {\n                length
-    += charToWidth[item];\n            }\n            return length;\n        }\n\n
-    \       public Terminal()\n        {\n            if (Terminal.IsInputRedirected
-    == true)\n                throw new Exception(\"Terminal cannot use. Console.IsInputRedirected
-    must be false\");\n            this.actionMaps.Add(new ConsoleKeyInfo('\\u001b',
-    ConsoleKey.Escape, false, false, false), this.Clear);\n            if (Environment.OSVersion.Platform
-    == PlatformID.Unix)\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\0',
-    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
-    \           else\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\b',
-    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.Delete, false,
-    false, false), this.Delete);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
-    ConsoleKey.Home, false, false, false), this.Home);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\0', ConsoleKey.Home, false, false, true), this.DeleteToHome);\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.End, false,
-    false, false), this.End);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
-    ConsoleKey.End, false, false, true), this.DeleteToEnd);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\0', ConsoleKey.UpArrow, false, false, false), this.PrevHistory);\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.DownArrow,
-    false, false, false), this.NextHistory);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\0', ConsoleKey.LeftArrow, false, false, false), this.Left);\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.RightArrow,
-    false, false, false), this.Right);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\t',
-    ConsoleKey.Tab, false, false, false), this.NextCompletion);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\t', ConsoleKey.Tab, true, false, false), this.PrevCompletion);\n
-    \       }\n\n        public long? ReadLong(string prompt)\n        {\n            var
-    result = this.ReadNumber(prompt, null, i => long.TryParse(i, out long v));\n            if
-    (result is long)\n            {\n                return (long)result;\n            }\n
-    \           return null;\n        }\n\n        public long? ReadLong(string prompt,
-    long defaultValue)\n        {\n            var result = this.ReadNumber(prompt,
-    defaultValue, i => long.TryParse(i, out long v));\n            if (result is long)\n
-    \           {\n                return (long)result;\n            }\n            return
-    null;\n        }\n\n        public double? ReadDouble(string prompt)\n        {\n
-    \           var result = this.ReadNumber(prompt, null, i => double.TryParse(i,
-    out double v));\n            if (result is double)\n            {\n                return
-    (double)result;\n            }\n            return null;\n        }\n\n        public
-    double? ReadDouble(string prompt, double defaultValue)\n        {\n            var
-    result = this.ReadNumber(prompt, defaultValue, i => double.TryParse(i, out double
-    v));\n            if (result is double)\n            {\n                return
-    (double)result;\n            }\n            return null;\n        }\n\n        public
-    string ReadString(string prompt)\n        {\n            return ReadString(prompt,
-    string.Empty);\n        }\n\n        public string ReadString(string prompt, bool
-    isHidden)\n        {\n            return this.ReadString(prompt, string.Empty,
-    isHidden);\n        }\n\n        public string ReadString(string prompt, string
-    defaultText)\n        {\n            return this.ReadString(prompt, defaultText,
-    false);\n        }\n\n        public string ReadString(string prompt, string defaultText,
-    bool isHidden)\n        {\n            this.Initialize(prompt, defaultText, isHidden);\n\n
-    \           try\n            {\n                return ReadLineImpl(i => true,
-    false);\n            }\n            finally\n            {\n                this.Release();\n
-    \           }\n        }\n\n        public SecureString ReadSecureString(string
-    prompt)\n        {\n            var text = this.ReadString(prompt, true);\n            var
-    secureString = new SecureString();\n            foreach (var item in text)\n            {\n
-    \               secureString.AppendChar(item);\n            }\n            return
-    secureString;\n        }\n\n        public ConsoleKey ReadKey(string prompt, params
-    ConsoleKey[] filters)\n        {\n            this.Initialize(prompt, string.Empty,
-    false);\n            try\n            {\n                return ReadKeyImpl(filters);\n
-    \           }\n            finally\n            {\n                this.Release();\n
-    \           }\n        }\n\n        public void NextHistory()\n        {\n            if
-    (this.historyIndex + 1 < this.histories.Count)\n            {\n                var
-    text = this.histories[this.historyIndex + 1];\n                this.ClearText();\n
-    \               this.InsertText(text);\n                this.SetInputText();\n
-    \               this.historyIndex++;\n            }\n        }\n\n        public
-    void PrevHistory()\n        {\n            if (this.historyIndex > 0)\n            {\n
-    \               var text = this.histories[this.historyIndex - 1];\n                this.ClearText();\n
-    \               this.InsertText(text);\n                this.SetInputText();\n
-    \               this.historyIndex--;\n            }\n            else if (this.histories.Count
-    == 1)\n            {\n                var text = this.histories[0];\n                this.ClearText();\n
-    \               this.InsertText(text);\n                this.SetInputText();\n
-    \               this.historyIndex = 0;\n            }\n        }\n\n        public
-    IList<string> Histories\n        {\n            get { return this.histories; }\n
-    \       }\n\n        public IList<string> Completions\n        {\n            get
-    { return this.completions; }\n        }\n\n        public void Cancel()\n        {\n
-    \           this.isCancellationRequested = true;\n        }\n\n        public
-    void Clear()\n        {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.ClearText();\n
-    \                   this.SetInputText();\n                }\n            }\n        }\n\n
-    \       public void Delete()\n        {\n            lock (LockedObject)\n            {\n
-    \               if (this.Index < this.Length)\n                {\n                    using
-    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
-    \                       this.Backspace();\n                        this.SetInputText();\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    void Home()\n        {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
-    = 0;\n                }\n            }\n        }\n\n        public void End()\n
-    \       {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
-    = this.Length;\n                }\n            }\n        }\n\n        public
-    void Left()\n        {\n            lock (LockedObject)\n            {\n                if
-    (this.Index > 0)\n                {\n                    using (TerminalCursorVisible.Set(false))\n
-    \                   {\n                        this.Index--;\n                        this.SetInputText();\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    void Right()\n        {\n            lock (LockedObject)\n            {\n                if
-    (this.Index + 1 <= this.Length)\n                {\n                    using
-    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
-    \                       this.SetInputText();\n                    }\n                }\n
-    \           }\n        }\n\n        public void Backspace()\n        {\n            lock
-    (LockedObject)\n            {\n                if (this.Index > 0)\n                {\n
-    \                   using (TerminalCursorVisible.Set(false))\n                    {\n
-    \                       this.BackspaceImpl();\n                        this.SetInputText();\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    void DeleteToEnd()\n        {\n            lock (LockedObject)\n            {\n
-    \               using (TerminalCursorVisible.Set(false))\n                {\n
-    \                   var index = this.Index;\n                    this.Index =
-    this.Length;\n                    while (this.Index > index)\n                    {\n
-    \                       this.BackspaceImpl();\n                    }\n                    this.SetInputText();\n
-    \               }\n            }\n        }\n\n        public void DeleteToHome()\n
-    \       {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    while
-    (this.Index > 0)\n                    {\n                        this.BackspaceImpl();\n
-    \                   }\n                    this.SetInputText();\n                }\n
-    \           }\n        }\n\n        public void NextCompletion()\n        {\n
-    \           lock (LockedObject)\n            {\n                this.CompletionImpl(NextCompletion);\n
-    \           }\n        }\n\n        public void PrevCompletion()\n        {\n
-    \           lock (LockedObject)\n            {\n                this.CompletionImpl(PrevCompletion);\n
-    \           }\n        }\n\n        public int Index\n        {\n            get
-    { return this.FullIndex - this.start; }\n            set\n            {\n                this.FullIndex
-    = value + this.start;\n            }\n        }\n\n        public string Text\n
-    \       {\n            get { return this.fullText.Substring(this.start); }\n        }\n\n
-    \       public string Prompt\n        {\n            get { return this.fullText.Substring(0,
-    this.start); }\n        }\n\n        public bool IsReading\n        {\n            get
-    { return this.writer != null; }\n        }\n\n        public int Top\n        {\n
-    \           get\n            {\n                if (this.width != Console.BufferWidth)\n
-    \               {\n                    this.y = Console.CursorTop - this.fullIndex
-    / Console.BufferWidth;\n                    this.width = Console.BufferWidth;\n
-    \               }\n                return this.y;\n            }\n            internal
-    set\n            {\n                this.y = value;\n            }\n        }\n\n
-    \       public bool IsEnabled { get; set; } = true;\n\n        public static int
-    BufferWidth\n        {\n            get\n            {\n                if (Terminal.IsOutputRedirected
-    == false)\n                    return Console.BufferWidth;\n                return
-    bufferWidth;\n            }\n            set\n            {\n                if
-    (Terminal.IsOutputRedirected == false)\n                    throw new InvalidOperationException(\"console
-    output is redirected.\");\n                if (value <= 0)\n                    throw
-    new ArgumentOutOfRangeException();\n                bufferWidth = value;\n            }\n
-    \       }\n\n        public static string NextCompletion(string[] completions,
-    string text)\n        {\n            completions = completions.OrderBy(item =>
-    item)\n                .ToArray();\n            if (completions.Contains(text)
-    == true)\n            {\n                for (var i = 0; i < completions.Length;
-    i++)\n                {\n                    var r = string.Compare(text, completions[i],
-    true);\n                    if (r == 0)\n                    {\n                        if
-    (i + 1 < completions.Length)\n                            return completions[i
-    + 1];\n                        else\n                            return completions.First();\n
-    \                   }\n                }\n            }\n            else\n            {\n
-    \               for (var i = 0; i < completions.Length; i++)\n                {\n
-    \                   var r = string.Compare(text, completions[i], true);\n                    if
-    (r < 0)\n                    {\n                        return completions[i];\n
-    \                   }\n                }\n            }\n            return text;\n
-    \       }\n\n        public static string PrevCompletion(string[] completions,
-    string text)\n        {\n            completions = completions.OrderBy(item =>
-    item)\n                .ToArray();\n            if (completions.Contains(text)
-    == true)\n            {\n                for (var i = completions.Length - 1;
-    i >= 0; i--)\n                {\n                    var r = string.Compare(text,
-    completions[i], true);\n                    if (r == 0)\n                    {\n
-    \                       if (i - 1 >= 0)\n                            return completions[i
-    - 1];\n                        else\n                            return completions.Last();\n
-    \                   }\n                }\n            }\n            else\n            {\n
-    \               for (var i = completions.Length - 1; i >= 0; i--)\n                {\n
-    \                   var r = string.Compare(text, completions[i], true);\n                    if
-    (r < 0)\n                    {\n                        return completions[i];\n
-    \                   }\n                }\n            }\n            return text;\n
-    \       }\n\n        public void SetPrompt(string prompt)\n        {\n            if
-    (this.writer == null)\n                throw new Exception(\"prompt can set only
-    on read mode.\");\n\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    var
-    text = this.Text;\n                    var index = this.Index;\n                    this.start
-    = 0;\n                    this.Clear();\n                    this.InsertText(prompt);\n
-    \                   this.start = this.Index;\n                    this.InsertText(text);\n
-    \                   this.Index = index;\n                    this.Draw();\n                }\n
-    \           }\n        }\n\n        public event TerminalCancelEventHandler CancelKeyPress;\n\n
-    \       public event EventHandler Cancelled;\n\n        protected virtual void
-    OnCancelKeyPress(TerminalCancelEventArgs e)\n        {\n            this.CancelKeyPress?.Invoke(this,
-    e);\n        }\n\n        protected virtual void OnCancelled(EventArgs e)\n        {\n
-    \           this.Cancelled?.Invoke(this, e);\n        }\n\n        protected virtual
-    string[] GetCompletion(string[] items, string find)\n        {\n            var
-    query = from item in this.completions\n                        where item.StartsWith(find)\n
-    \                       select item;\n            return query.ToArray();\n        }\n\n
-    \       protected virtual void OnDrawPrompt(TextWriter writer, string prompt)\n
-    \       {\n            writer.Write(prompt);\n        }\n\n        protected virtual
-    void OnDrawText(TextWriter writer, string text)\n        {\n            writer.Write(text);\n
-    \       }\n\n        private int Length\n        {\n            get { return this.fullText.Length
-    - this.start; }\n        }\n\n        private void ClearText()\n        {\n            lock
-    (LockedObject)\n            {\n                var x = 0;\n                var
-    y = this.Top;\n                this.Erase();\n                this.fullText =
-    this.fullText.Substring(0, this.start);\n                this.start = this.fullText.Length;\n
-    \               this.fullIndex = this.start;\n                this.inputText =
-    string.Empty;\n                Console.SetCursorPosition(x, y);\n                this.Draw();\n
-    \           }\n        }\n\n        private void InsertText(string text)\n        {\n
-    \           if (text == string.Empty)\n                return;\n            lock
-    (LockedObject)\n            {\n                this.fullText = this.fullText.Insert(this.fullIndex,
-    text);\n                this.fullIndex += text.Length;\n\n                if (this.isHidden
-    == true)\n                    return;\n\n                var index = this.fullIndex;\n
-    \               var text1 = this.fullText.Substring(this.start);\n\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.FullIndex
-    = this.start;\n                    this.OnDrawText(this.writer, text1);\n\n\n
-    \                   var x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText,
-    ref x, ref y);\n\n                    if (y >= Console.BufferHeight)\n                    {\n
-    \                       if (Environment.OSVersion.Platform == PlatformID.Unix
-    && x == 0)\n                        {\n                            this.writer.WriteLine();\n
-    \                       }\n                        this.y--;\n                    }\n
-    \                   this.FullIndex = index;\n                }\n            }\n
-    \       }\n\n        private void BackspaceImpl()\n        {\n            var
-    extraText = this.fullText.Substring(this.fullIndex);\n            var inputIndex
-    = this.Index;\n            this.Index = this.Length;\n            if (this.isHidden
-    == false)\n            {\n                if (Console.CursorLeft == 0)\n                {\n
-    \                   var i = this.Index;\n                    this.Index--;\n                    if
-    (Environment.OSVersion.Platform == PlatformID.Unix)\n                        this.writer.Write(\"
-    \");\n                    else\n                        this.writer.Write(\"\\0\");\n
-    \                   this.Index--;\n                }\n                else\n                {\n
-    \                   this.writer.Write(\"\\b\\0\");\n                }\n            }\n\n
-    \           this.Index = inputIndex;\n            this.Index--;\n            this.fullText
-    = this.fullText.Remove(this.fullIndex, 1);\n            if (this.isHidden == false)\n
-    \           {\n                this.writer.Write(extraText);\n            }\n
-    \           this.Index = this.Index;\n        }\n\n        private void CompletionImpl(Func<string[],
-    string, string> func)\n        {\n            var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));\n
-    \           var find = string.Empty;\n            var prefix = false;\n            var
-    postfix = false;\n            var leftText = this.inputText;\n            if (matches.Count
-    > 0)\n            {\n                var match = matches.Last();\n                var
-    matchText = match.Value;\n                if (matchText.Length > 0 && matchText.First()
-    == '\\\"')\n                {\n                    prefix = true;\n                    matchText
-    = matchText.Substring(1);\n                }\n                if (matchText.Length
-    > 1 && matchText.Last() == '\\\"')\n                {\n                    postfix
-    = true;\n                    matchText = matchText.Remove(matchText.Length - 1);\n
-    \               }\n                if (matchText == string.Empty || matchText.Trim()
-    != string.Empty)\n                {\n                    find = matchText;\n                    matches.RemoveAt(matches.Count
-    - 1);\n                    leftText = this.inputText.Remove(match.Index);\n                }\n
-    \           }\n\n            var argList = new List<string>();\n            for
-    (var i = 0; i < matches.Count; i++)\n            {\n                var matchText
-    = CommandStringUtility.TrimQuot(matches[i].Value).Trim();\n                if
-    (matchText != string.Empty)\n                    argList.Add(matchText);\n            }\n\n
-    \           var completions = this.GetCompletion(argList.ToArray(), find);\n            if
-    (completions != null && completions.Any())\n            {\n                this.completion
-    = func(completions, this.completion);\n                using (TerminalCursorVisible.Set(false))\n
-    \               {\n                    var inputText = this.inputText;\n                    this.ClearText();\n
-    \                   if (prefix == true || postfix == true)\n                    {\n
-    \                       this.InsertText(leftText + \"\\\"\" + this.completion
-    + \"\\\"\");\n                    }\n                    else\n                    {\n
-    \                       this.InsertText(leftText + this.completion);\n                    }\n
-    \                   this.inputText = inputText;\n                }\n            }\n
-    \       }\n\n        private void SetInputText()\n        {\n            this.inputText
-    = this.Text.Remove(this.Index, this.Text.Length - this.Index);\n            this.completion
-    = string.Empty;\n        }\n\n        private object ReadNumber(string prompt,
-    object defaultValue, Func<string, bool> validation)\n        {\n            this.Initialize(prompt,
-    $\"{defaultValue}\", false);\n            try\n            {\n                return
-    ReadLineImpl(validation, false);\n            }\n            finally\n            {\n
-    \               this.Release();\n            }\n        }\n\n        private string
-    ReadLineImpl(Func<string, bool> validation, bool recordHistory)\n        {\n            while
-    (true)\n            {\n                Thread.Sleep(1);\n                if (this.isCancellationRequested
-    == true)\n                    return null;\n                if (this.IsEnabled
-    == false)\n                    continue;\n                var keys = this.ReadKeys().ToArray();\n
-    \               if (this.isCancellationRequested == true)\n                    return
-    null;\n\n                var keyChars = string.Empty;\n                foreach
-    (var key in keys)\n                {\n                    if (key == cancelKeyInfo)\n
-    \                   {\n                        var args = new TerminalCancelEventArgs(ConsoleSpecialKey.ControlC);\n
-    \                       this.OnCancelKeyPress(args);\n                        if
-    (args.Cancel == false)\n                        {\n                            this.OnCancelled(EventArgs.Empty);\n
-    \                           throw new OperationCanceledException($\"ReadLine is
-    cancelled.\");\n                        }\n                    }\n                    else
-    if (this.actionMaps.ContainsKey(key) == true)\n                    {\n                        this.actionMaps[key]();\n
-    \                   }\n                    else if (key.Key == ConsoleKey.Enter)\n
-    \                   {\n                        var text = this.Text;\n                        this.fullText
-    = string.Empty;\n                        this.start = 0;\n                        this.fullIndex
-    = 0;\n\n                        if (recordHistory == true)\n                        {\n
-    \                           if (this.isHidden == false && text != string.Empty)\n
-    \                           {\n                                if (this.histories.Contains(text)
-    == false)\n                                {\n                                    this.histories.Add(text);\n
-    \                                   this.historyIndex = this.histories.Count;\n
-    \                               }\n                                else\n                                {\n
-    \                                   this.historyIndex = this.histories.LastIndexOf(text)
-    + 1;\n                                }\n                            }\n                        }\n
-    \                       return text;\n                    }\n                    else
-    if (key.KeyChar != '\\0')\n                    {\n                        keyChars
-    += key.KeyChar;\n                    }\n                }\n\n                if
-    (keyChars != string.Empty && validation(this.Text + keyChars) == true)\n                {\n
-    \                   this.InsertText(keyChars);\n                    this.SetInputText();\n
-    \               }\n            }\n        }\n\n        private IEnumerable<ConsoleKeyInfo>
-    ReadKeys()\n        {\n            while (this.isCancellationRequested == false)\n
-    \           {\n                var count = 0;\n                while (true)\n
-    \               {\n                    if (Console.KeyAvailable == true)\n                    {\n
-    \                       yield return Console.ReadKey(true);\n                    }\n
-    \                   else if (count > 1)\n                    {\n                        yield
-    break;\n                    }\n                    else\n                    {\n
-    \                       Thread.Sleep(1);\n                        count++;\n                    }\n
-    \               }\n            }\n        }\n\n        private ConsoleKey ReadKeyImpl(params
-    ConsoleKey[] filters)\n        {\n            while (true)\n            {\n                var
-    key = Console.ReadKey(true);\n\n                if ((int)key.Modifiers != 0)\n
-    \                   continue;\n\n                if (filters.Any() == false ||
-    filters.Any(item => item == key.Key) == true)\n                {\n                    this.InsertText(key.Key.ToString());\n
-    \                   return key.Key;\n                }\n            }\n        }\n\n
-    \       private void Initialize(string prompt, string defaultText, bool isHidden)\n
-    \       {\n            lock (LockedObject)\n            {\n                this.writer
-    = Console.Out;\n                Console.SetOut(new TerminalTextWriter(Console.Out,
-    this, Console.OutputEncoding));\n                this.treatControlCAsInput = Console.TreatControlCAsInput;\n
-    \               Console.TreatControlCAsInput = true;\n\n                this.y
-    = Console.CursorTop;\n                this.width = Console.BufferWidth;\n                this.start
-    = 0;\n                this.isHidden = false;\n                this.fullText =
-    prompt;\n                this.fullIndex = prompt.Length;\n                this.OnDrawPrompt(this.writer,
-    this.fullText);\n                this.FullIndex = this.fullIndex;\n                this.start
-    = this.fullIndex;\n                this.isHidden = isHidden;\n                this.InsertText(defaultText);\n
-    \               this.inputText = defaultText;\n            }\n        }\n\n        private
-    void Release()\n        {\n            lock (LockedObject)\n            {\n                Console.TreatControlCAsInput
-    = this.treatControlCAsInput;\n                Console.SetOut(this.writer);\n                Console.WriteLine();\n
-    \               this.writer = null;\n                this.isHidden = false;\n
-    \           }\n        }\n\n        internal static void NextPosition(string text,
-    ref int x, ref int y)\n        {\n            for (var i = 0; i < text.Length;
-    i++)\n            {\n                var ch = text[i];\n                if (ch
-    == '\\r')\n                {\n                    x = 0;\n                    continue;\n
-    \               }\n                else if (ch == '\\n')\n                {\n
-    \                   x = 0;\n                    y++;\n                    continue;\n
-    \               }\n\n                var w = charToWidth[ch];\n                if
-    (x + w >= Console.BufferWidth)\n                {\n                    x = x +
-    w - Console.BufferWidth;\n                    y++;\n                }\n                else\n
-    \               {\n                    x += w;\n                }\n            }\n
-    \       }\n\n        internal string ReadStringInternal(string prompt)\n        {\n
-    \           this.Initialize(prompt, string.Empty, false);\n\n            try\n
-    \           {\n                return ReadLineImpl(i => true, true);\n            }\n
-    \           finally\n            {\n                this.Release();\n            }\n
-    \       }\n\n        internal void Erase()\n        {\n            var x1 = Console.CursorLeft;\n
-    \           var y1 = Console.CursorTop;\n\n            var prompt = this.fullText.Substring(0,
-    this.start);\n            var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
-    \           var x = 0;\n            var y = this.y;\n            NextPosition(prompt,
-    ref x, ref y);\n            NextPosition(text, ref x, ref y);\n\n            for
-    (var i = this.y; i <= y; i++)\n            {\n                Console.SetCursorPosition(0,
-    i);\n                if (Environment.OSVersion.Platform != PlatformID.Unix)\n
-    \               {\n                    Console.MoveBufferArea(Console.BufferWidth
-    - 1, i, 1, 1, 0, i);\n                    this.writer?.Write($\"\\r{new string('\\0',
-    Console.BufferWidth - 1)}\\r\");\n                }\n                else\n                {\n
-    \                   this.writer?.Write(\"\\r\" + new string(' ', Console.BufferWidth)
-    + \"\\r\");\n                }\n            }\n            Console.SetCursorPosition(x1,
-    y1);\n        }\n\n        internal void Draw()\n        {\n            Console.SetCursorPosition(0,
-    this.y);\n            var index = this.FullIndex;\n            var y = Console.CursorTop;\n
-    \           var x = 0;\n            var prompt = this.fullText.Substring(0, this.start);\n
-    \           var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
-    \           this.OnDrawPrompt(this.writer, prompt);\n            this.OnDrawText(this.writer,
-    text);\n            NextPosition(prompt, ref x, ref y);\n            NextPosition(text,
-    ref x, ref y);\n\n            if (y >= Console.BufferHeight)\n            {\n
-    \               if (Environment.OSVersion.Platform == PlatformID.Unix && x ==
-    0)\n                {\n                    this.writer.WriteLine();\n                }\n
-    \               this.y--;\n            }\n            if (index < this.FullIndex)\n
-    \               this.FullIndex = index;\n        }\n\n        internal static
-    object LockedObject { get; } = new object();\n\n        internal int FullIndex\n
-    \       {\n            get { return this.fullIndex; }\n            set\n            {\n
-    \               if (value < 0 || value > this.fullText.Length)\n                    throw
-    new ArgumentOutOfRangeException(nameof(value));\n\n                this.fullIndex
-    = value;\n                if (this.isHidden == false)\n                {\n                    var
-    x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText.Substring(0,
-    value), ref x, ref y);\n                    Console.SetCursorPosition(x, Math.Min(y,
-    Console.BufferHeight - 1));\n                }\n            }\n        }\n    }\n}\nc:\\>cls"
+  text: "// MIT License\n// \n// Copyright (c) 2019 Jeesu Choi\n// \n// Permission
+    is hereby granted, free of charge, to any person obtaining a copy\n// of this
+    software and associated documentation files (the \"Software\"), to deal\n// in
+    the Software without restriction, including without limitation the rights\n//
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n//
+    copies of the Software, and to permit persons to whom the Software is\n// furnished
+    to do so, subject to the following conditions:\n// \n// The above copyright notice
+    and this permission notice shall be included in all\n// copies or substantial
+    portions of the Software.\n// \n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR\n// IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    WARRANTIES OF MERCHANTABILITY,\n// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE\n// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER\n// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM,\n// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE\n// SOFTWARE.\n\nusing System;\nusing System.Linq;\nusing System.Collections.Generic;\nusing
+    TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\nusing UnityEngine.EventSystems;\nusing
+    System.Collections.ObjectModel;\nusing UnityEngine.TextCore;\nusing KeyBinding
+    = JSSoft.UI.KeyBinding<JSSoft.UI.TerminalGrid>;\n\nnamespace JSSoft.UI\n{\n    [RequireComponent(typeof(Terminal))]\n
+    \   [RequireComponent(typeof(RectTransform))]\n    [DisallowMultipleComponent]\n
+    \   [ExecuteAlways]\n    [SelectionBase]\n    public partial class TerminalGrid
+    : MaskableGraphic,\n        IBeginDragHandler,\n        IDragHandler,\n        IEndDragHandler,\n
+    \       IPointerClickHandler,\n        IPointerDownHandler,\n        IPointerEnterHandler,\n
+    \       IPointerExitHandler,\n        IScrollHandler,\n        IUpdateSelectedHandler,\n
+    \       ISelectHandler,\n        IDeselectHandler\n    {\n        public static
+    readonly Color32 DefaultSelectionColor = new Color32(49, 79, 129, 255);\n        public
+    static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);\n
+    \       public static readonly Color32 DefaultForegroundColor = new Color32(255,
+    255, 255, 255);\n        public static readonly Color32 DefaultCursorColor = new
+    Color32(139, 139, 139, 255);\n        private static readonly Dictionary<string,
+    IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();\n\n        [SerializeField]\n
+    \       private TMP_FontAsset fontAsset = null;\n        [SerializeField]\n        [TextArea(5,
+    10)]\n        public string text = string.Empty;\n        [SerializeField]\n        private
+    Color32 fontColor = DefaultForegroundColor;\n        [SerializeField]\n        private
+    Color32 selectionColor = DefaultSelectionColor;\n        [SerializeField]\n        private
+    Color32 cursorColor = DefaultCursorColor;\n        [SerializeField]\n        private
+    int visibleIndex;\n        [SerializeField]\n        private TerminalPoint cursorPosition;\n
+    \       [SerializeField]\n        private bool isCursorVisible = true;\n        [SerializeField]\n
+    \       private string compositionString = string.Empty;\n\n        private readonly
+    TerminalEventCollection events = new TerminalEventCollection();\n        private
+    readonly TerminalRowCollection rows;\n        private readonly TerminalCharacterInfoCollection
+    characterInfos;\n\n        private Terminal terminal;\n        private bool isSelecting;\n
+    \       private bool isFocused;\n        // private bool hasSelection;\n        private
+    bool isScrolling;\n        private TerminalPoint downPoint;\n        private TerminalPoint
+    beginPoint;\n        private TerminalPoint endPoint;\n        private TerminalPoint
+    selectionPoint1 = TerminalPoint.Invalid;\n        private TerminalPoint selectionPoint2
+    = TerminalPoint.Invalid;\n        private float scrollPos;\n\n        // \uC804\uCCB4\uC801\uC73C\uB85C
+    \uC65C \uD0A4 \uC774\uBCA4\uD2B8 \uD638\uCD9C\uC2DC\uC5D0 EventModifiers.FunctionKey
+    \uAC00 \uAE30\uBCF8\uC801\uC73C\uB85C \uC124\uC815\uB418\uC5B4 \uC788\uB294\uC9C0
+    \uBAA8\uB974\uACA0\uC74C.\n        static TerminalGrid()\n        {\n            AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey, KeyCode.PageUp, (g) => g.PageUp()));\n
+    \           AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageDown,
+    (g) => g.PageDown()));\n            if (Terminal.IsMac)\n            {\n                AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,\n
+    \                       KeyCode.PageUp, (g) => g.LineUp()));\n                AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,\n
+    \                       KeyCode.PageDown, (g) => g.LineDown()));\n                AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,\n                        KeyCode.Home,
+    (g) => g.ScrollToTop()));\n                AddBinding(new KeyBinding(EventModifiers.FunctionKey
+    | EventModifiers.Command,\n                        KeyCode.End, (g) => g.ScrollToBottom()));\n
+    \               AddBinding(new KeyBinding(EventModifiers.Command,\n                        KeyCode.C,
+    (g) => g.Copy()));\n            }\n        }\n\n        public TerminalGrid()\n
+    \       {\n            this.rows = new TerminalRowCollection(this);\n            this.characterInfos
+    = new TerminalCharacterInfoCollection(this);\n        }\n\n        public static
+    Rect TransformRect(TerminalGrid grid, Rect rect)\n        {\n            if (grid
+    != null && grid.fontAsset != null && grid.rows.Count > 0)\n            {\n                var
+    itemHeight = FontUtility.GetItemHeight(grid.fontAsset);\n                rect.y
+    += itemHeight * grid.visibleIndex;\n            }\n            return rect;\n
+    \       }\n\n        public static IEnumerable<ITerminalCell> GetVisibleCells(TerminalGrid
+    grid, Func<ITerminalCell, bool> predicate)\n        {\n            if (grid !=
+    null)\n            {\n                var topIndex = grid.visibleIndex;\n                var
+    bottomIndex = topIndex + grid.RowCount;\n                var query = from row
+    in grid.Rows\n                            where row.Index >= topIndex && row.Index
+    < bottomIndex\n                            from cell in row.Cells\n                            where
+    predicate(cell)\n                            select cell;\n                return
+    query;\n            }\n            return Enumerable.Empty<TerminalCell>();\n
+    \       }\n\n        public static ITerminalCell GetCell(TerminalGrid grid, int
+    cursorLeft, int cursorTop)\n        {\n            if (grid != null)\n            {\n
+    \               if (cursorTop >= grid.Rows.Count)\n                    throw new
+    ArgumentOutOfRangeException(nameof(cursorTop));\n                if (cursorLeft
+    >= grid.ColumnCount)\n                    throw new ArgumentOutOfRangeException(nameof(cursorLeft));\n
+    \               return grid.Rows[cursorTop].Cells[cursorLeft];\n            }\n
+    \           return null;\n        }\n\n        public static int GetItemWidth(TerminalGrid
+    grid)\n        {\n            if (grid != null && grid.fontAsset != null)\n            {\n
+    \               return FontUtility.GetItemWidth(grid.fontAsset);\n            }\n
+    \           return 0;\n        }\n\n        public static int GetItemHeight(TerminalGrid
+    grid)\n        {\n            if (grid != null && grid.fontAsset != null)\n            {\n
+    \               return FontUtility.GetItemHeight(grid.fontAsset);\n            }\n
+    \           return 0;\n        }\n\n        public static GlyphRect GetCellRect(TerminalGrid
+    grid, ITerminalCell cell)\n        {\n            if (cell == null)\n                throw
+    new ArgumentNullException(nameof(cell));\n            var itemWidth = TerminalGrid.GetItemWidth(grid);\n
+    \           var itemHeight = TerminalGrid.GetItemHeight(grid);\n            var
+    x = cell.Index * itemWidth;\n            var y = cell.Row.Index * itemHeight;\n
+    \           return new GlyphRect(x, y, itemWidth, itemHeight);\n        }\n\n
+    \       public static int GetItemWidth(TerminalGrid grid, char character)\n        {\n
+    \           if (grid != null && grid.fontAsset != null)\n            {\n                return
+    FontUtility.GetItemWidth(grid.fontAsset, character);\n            }\n            return
+    0;\n        }\n\n        public static bool IsSelecting(TerminalGrid grid, ITerminalCell
+    cell)\n        {\n            if (cell == null)\n                throw new ArgumentNullException(nameof(cell));\n
+    \           var point = new TerminalPoint(cell.Index, cell.Row.Index);\n            var
+    isSelecting = IsSelecting(grid, point);\n            return cell.IsSelected !=
+    isSelecting;\n        }\n\n        public static bool IsSelecting(TerminalGrid
+    grid, TerminalPoint point)\n        {\n            if (grid != null && grid.isSelecting
+    == true)\n            {\n                var p1 = grid.beginPoint < grid.endPoint
+    ? grid.beginPoint : grid.endPoint;\n                var p2 = grid.beginPoint >
+    grid.endPoint ? grid.beginPoint : grid.endPoint;\n                return point
+    >= p1 && point <= p2;\n            }\n            return false;\n        }\n\n
+    \       public static Color32 GetBackgroundColor(TerminalGrid grid)\n        {\n
+    \           if (grid == null)\n                throw new ArgumentNullException(nameof(grid));\n
+    \           return grid.BackgroundColor ?? grid.color;\n        }\n\n        public
+    static Color32 GetForegroundColor(TerminalGrid grid)\n        {\n            if
+    (grid == null)\n                throw new ArgumentNullException(nameof(grid));\n
+    \           return grid.ForegroundColor ?? grid.fontColor;\n        }\n\n        public
+    static Color32 GetSelectionColor(TerminalGrid grid)\n        {\n            return
+    grid != null ? grid.SelectionColor : DefaultSelectionColor;\n        }\n\n        public
+    Vector2 WorldToGrid(Vector2 position)\n        {\n            var rect = this.GetComponent<RectTransform>().rect;\n
+    \           position.y = rect.height - position.y;\n            position.y +=
+    GetItemHeight(this) * this.visibleIndex;\n            return position;\n        }\n\n
+    \       public TerminalPoint Intersect(Vector2 position)\n        {\n            foreach
+    (var item in this.rows)\n            {\n                var point = item.Intersect(position);\n
+    \               if (point != TerminalPoint.Invalid)\n                {\n                    return
+    point;\n                }\n            }\n            return TerminalPoint.Invalid;\n
+    \       }\n\n        public ITerminalCell IntersectWithCell(Vector2 position)\n
+    \       {\n            foreach (var item in this.rows)\n            {\n                if
+    (item.IntersectWithCell(position) is TerminalCell cell)\n                {\n                    return
+    cell;\n                }\n            }\n            return null;\n        }\n\n
+    \       public void ClearSelection()\n        {\n            if (this.selectionPoint1
+    != this.selectionPoint2)\n            {\n                foreach (var item in
+    this.rows)\n                {\n                    item.ClearSelection();\n                }\n
+    \               this.selectionPoint1 = this.selectionPoint2 = TerminalPoint.Invalid;\n
+    \               this.OnSelectionChanged(EventArgs.Empty);\n            }\n        }\n\n
+    \       public TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;\n\n
+    \       public int PointToIndex(TerminalPoint point) => this.characterInfos.PointToIndex(point);\n\n
+    \       public Color32? IndexToBackgroundColor(int index) => this.Terminal.GetBackgroundColor(index);\n\n
+    \       public Color32? IndexToForegroundColor(int index) => this.Terminal.GetForegroundColor(index);\n\n
+    \       public void Append(string text)\n        {\n            this.Append(text,
+    this.text.Length);\n        }\n\n        public void Append(string text, int index)\n
+    \       {\n            this.text = this.text.Insert(index, text);\n            this.UpdateRows();\n
+    \           this.OnTextChanged(EventArgs.Empty);\n        }\n\n        public
+    void Remove(int startIndex, int length)\n        {\n            this.text.Remove(startIndex,
+    length);\n            this.UpdateRows();\n            this.OnTextChanged(EventArgs.Empty);\n
+    \       }\n\n        public void ScrollToTop()\n        {\n            if (this.MaximumVisibleIndex
+    > 0)\n            {\n                this.isScrolling = true;\n                this.VisibleIndex
+    = 0;\n                this.isScrolling = false;\n            }\n        }\n\n
+    \       public void ScrollToBottom()\n        {\n            if (this.MaximumVisibleIndex
+    > 0)\n            {\n                this.isScrolling = true;\n                this.VisibleIndex
+    = this.MaximumVisibleIndex;\n                this.isScrolling = false;\n            }\n
+    \       }\n\n        public void PageUp()\n        {\n            this.Scroll(-this.RowCount);\n
+    \       }\n\n        public void PageDown()\n        {\n            this.Scroll(this.RowCount);\n
+    \       }\n\n        public void LineUp()\n        {\n            this.Scroll(-1);\n
+    \       }\n\n        public void LineDown()\n        {\n            this.Scroll(1);\n
+    \       }\n\n        public void Scroll(int value)\n        {\n            var
+    visibleIndex = this.VisibleIndex + value;\n            if (visibleIndex >= 0 &&
+    visibleIndex <= this.MaximumVisibleIndex)\n            {\n                this.isScrolling
+    = true;\n                this.VisibleIndex = visibleIndex;\n                this.isScrolling
+    = false;\n            }\n        }\n\n        public void Copy()\n        {\n
+    \           if (this.selectionPoint1 != this.selectionPoint2)\n            {\n
+    \               var capacity = this.selectionPoint1.DistanceOf(this.selectionPoint2,
+    this.ColumnCount);\n                var list = new List<char>(capacity);\n                var
+    i1 = this.characterInfos.PointToIndex(this.selectionPoint1);\n                var
+    i2 = this.characterInfos.PointToIndex(this.selectionPoint2);\n                for
+    (var i = i1; i <= i2; i++)\n                {\n                    var item =
+    this.characterInfos[i];\n                    if (item.Character != char.MinValue)\n
+    \                   {\n                        list.Add(item.Character);\n                    }\n
+    \               }\n                ClipboardUtility.Text = new string(list.ToArray());\n
+    \           }\n            else\n            {\n                ClipboardUtility.Text
+    = string.Empty;\n            }\n        }\n\n        public void SelectAll()\n
+    \       {\n            this.selectionPoint1 = new TerminalPoint(0, 0);\n            this.selectionPoint2
+    = new TerminalPoint(this.rows.Count, this.ColumnCount - 1);\n            foreach
+    (var item in this.GetCells(this.selectionPoint1, this.selectionPoint2))\n            {\n
+    \               item.IsSelected = true;\n            }\n        }\n\n        public
+    Terminal Terminal\n        {\n            get\n            {\n                if
+    (this.terminal == null)\n                {\n                    this.terminal
+    = this.GetComponent<Terminal>();\n                }\n                return this.terminal;\n
+    \           }\n        }\n\n        public bool IsFocused\n        {\n            get
+    => this.isFocused;\n            set\n            {\n                if (this.isFocused
+    == value)\n                    return;\n                this.isFocused = value;\n
+    \               if (this.isFocused == true)\n                    this.OnGotFocus(EventArgs.Empty);\n
+    \               else\n                    this.OnLostFocus(EventArgs.Empty);\n
+    \           }\n        }\n\n        public string Text\n        {\n            get
+    => this.text;\n            set\n            {\n                var newValue =
+    value ?? throw new ArgumentNullException(nameof(value));\n                var
+    oldValue = this.text;\n                var minLength = Math.Min(newValue.Length,
+    oldValue.Length);\n                var index = minLength;\n\n                for
+    (var i = 0; i < minLength; i++)\n                {\n                    if (newValue[i]
+    != oldValue[i])\n                    {\n                        index = i;\n                        break;\n
+    \                   }\n                }\n\n                this.text = newValue;\n
+    \               this.UpdateRows();\n                this.OnTextChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        public TMP_FontAsset FontAsset => this.fontAsset;\n\n
+    \       public int ColumnCount { get; private set; }\n\n        public int RowCount
+    { get; private set; }\n\n        public IReadOnlyList<ITerminalRow> Rows => this.rows;\n\n
+    \       public int VisibleIndex\n        {\n            get => this.visibleIndex;\n
+    \           set\n            {\n                if (value < 0 || value > this.MaximumVisibleIndex)\n
+    \                   throw new ArgumentNullException(nameof(value));\n                if
+    (this.visibleIndex != value)\n                {\n                    this.visibleIndex
+    = value;\n                    this.UpdateVisibleIndex();\n                    this.scrollPos
+    = this.visibleIndex;\n                    this.OnVisibleIndexChanged(EventArgs.Empty);\n
+    \               }\n            }\n        }\n\n        public int MaximumVisibleIndex\n
+    \       {\n            get\n            {\n                if (this.visibleIndex
+    < 0 || this.Rows.Count < this.RowCount)\n                    return 0;\n                return
+    this.Rows.Count - this.RowCount;\n            }\n        }\n\n        public Color32?
+    BackgroundColor { get; set; }\n\n        public Color32? ForegroundColor { get;
+    set; }\n\n        public Color32 SelectionColor\n        {\n            get =>
+    this.selectionColor;\n            set\n            {\n                this.selectionColor
+    = value;\n                this.OnLayoutChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public Color32 CursorColor\n        {\n            get =>
+    this.cursorColor;\n            set\n            {\n                this.cursorColor
+    = value;\n                this.OnLayoutChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public TerminalPoint CursorPosition\n        {\n            get
+    => this.cursorPosition;\n            set\n            {\n                if (this.cursorPosition
+    != value)\n                {\n                    this.cursorPosition = value;\n
+    \                   this.UpdateCursorPosition();\n                    this.OnCursorPositionChanged(EventArgs.Empty);\n
+    \               }\n                this.ClearSelection();\n            }\n        }\n\n
+    \       public bool IsCursorVisible\n        {\n            get => this.isCursorVisible;\n
+    \           set\n            {\n                this.isCursorVisible = value;\n
+    \               this.OnCursorPositionChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public bool IsScrolling => this.isScrolling;\n\n        public
+    string CompositionString\n        {\n            get => this.compositionString;\n
+    \           set\n            {\n                this.compositionString = value
+    ?? throw new ArgumentNullException(nameof(value));\n                this.OnCompositionStringChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        public event EventHandler TextChanged;\n\n
+    \       public event EventHandler VisibleIndexChanged;\n\n        public event
+    EventHandler LayoutChanged;\n\n        public event EventHandler SelectionChanged;\n\n
+    \       public event EventHandler CursorPositionChanged;\n\n        public event
+    EventHandler CompositionStringChanged;\n\n        public event EventHandler GotFocus;\n\n
+    \       public event EventHandler LostFocus;\n\n        protected virtual void
+    OnTextChanged(EventArgs e)\n        {\n            this.TextChanged?.Invoke(this,
+    EventArgs.Empty);\n        }\n\n        protected virtual void OnLayoutChanged(EventArgs
+    e)\n        {\n            this.LayoutChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnVisibleIndexChanged(EventArgs e)\n
+    \       {\n            this.VisibleIndexChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnSelectionChanged(EventArgs e)\n
+    \       {\n            this.SelectionChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnCursorPositionChanged(EventArgs
+    e)\n        {\n            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnCompositionStringChanged(EventArgs
+    e)\n        {\n            this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnGotFocus(EventArgs e)\n        {\n
+    \           this.GotFocus?.Invoke(this, EventArgs.Empty);\n        }\n\n        protected
+    virtual void OnLostFocus(EventArgs e)\n        {\n            this.LostFocus?.Invoke(this,
+    EventArgs.Empty);\n        }\n\n#if UNITY_EDITOR\n        protected override void
+    OnValidate()\n        {\n            base.OnValidate();\n            this.UpdateGrid();\n
+    \           this.UpdateVisibleIndex();\n            this.UpdateRows();\n            this.UpdateCursorPosition();\n
+    \           this.OnTextChanged(EventArgs.Empty);\n            this.OnVisibleIndexChanged(EventArgs.Empty);\n
+    \           this.OnCursorPositionChanged(EventArgs.Empty);\n            this.OnCompositionStringChanged(EventArgs.Empty);\n
+    \           // Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnValidate)}\");\n
+    \       }\n#endif\n\n        protected override void OnRectTransformDimensionsChange()\n
+    \       {\n            base.OnRectTransformDimensionsChange();\n            this.UpdateGrid();\n
+    \           this.UpdateVisibleIndex();\n            this.UpdateRows();\n            this.UpdateCursorPosition();\n
+    \           this.OnTextChanged(EventArgs.Empty);\n            this.OnCursorPositionChanged(EventArgs.Empty);\n
+    \           this.OnCompositionStringChanged(EventArgs.Empty);\n        }\n\n        protected
+    override void OnEnable()\n        {\n            base.OnEnable();\n            this.AttachEvent();\n
+    \           this.VisibleIndex = this.MaximumVisibleIndex;\n        }\n\n        protected
+    override void OnDisable()\n        {\n            base.OnDisable();\n            this.DetachEvent();\n
+    \           // Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnDisable)}\");\n        }\n\n
+    \       protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers
+    modifiers)\n        {\n            if (this.Terminal.ProcessKeyEvent(keyCode,
+    modifiers) == true)\n                return true;\n            var key = $\"{modifiers}+{keyCode}\";\n
+    \           // Debug.Log(key);\n            if (bindingByKey.ContainsKey(key)
+    == true)\n            {\n                var binding = bindingByKey[key];\n                if
+    (binding.Verify(this) == true && binding.Action(this) == true)\n                    return
+    true;\n            }\n            return false;\n        }\n\n        protected
+    virtual bool OnPreviewKeyPress(char character)\n        {\n            // 27:
+    escape key\n            if (character == '\\n' || character == 27)\n                return
+    true;\n            return false;\n        }\n\n        protected virtual void
+    OnTranslateEvents(IList<Event> eventList)\n        {\n            for (var i =
+    0; i < eventList.Count; i++)\n            {\n                var item = eventList[i];\n
+    \               // ime \uC5D0 \uC758\uD574\uC11C \uBB38\uC790\uAC00 \uC870\uD569\uC911\uC77C\uB54C
+    enter \uD0A4 \uC785\uB825\uC2DC \uC774\uBCA4\uD2B8\uAC00 \uB450\uBC88 \uD638\uCD9C\uB418\uB294
+    \uC5B4\uC774\uC5C6\uB294 \uC0C1\uD669\uC744 \uD558\uB4DC\uCF54\uB529\uC73C\uB85C
+    \uBC29\uC5B4\n                if (item.rawType == EventType.KeyDown &&\n                    item.keyCode
+    == KeyCode.Return &&\n                    item.modifiers == EventModifiers.None
+    &&\n                    i + 1 < eventList.Count)\n                {\n                    var
+    nextItem = eventList[i + 1];\n                    if (nextItem.character != '\\n')\n
+    \                   {\n                        eventList[i] = null;\n                    }\n
+    \               }\n            }\n        }\n\n        private void UpdateGrid()\n
+    \       {\n            if (this.fontAsset != null)\n            {\n                var
+    rect = this.GetComponent<RectTransform>().rect;\n                var fontAsset
+    = this.fontAsset;\n                var itemWidth = FontUtility.GetItemWidth(fontAsset);\n
+    \               var itemHeight = FontUtility.GetItemHeight(fontAsset);\n                this.ColumnCount
+    = (int)(rect.width / itemWidth);\n                this.RowCount = (int)(rect.height
+    / itemHeight);\n                // this.startPoint = new TerminalPoint(0, 0);\n
+    \               // this.endPoint = new TerminalPoint(this.ColumnCount, this.RowCount);\n
+    \           }\n            else\n            {\n                this.ColumnCount
+    = 0;\n                this.RowCount = 0;\n            }\n        }\n\n        private
+    void UpdateVisibleIndex()\n        {\n            if (this.visibleIndex < 0 ||
+    this.Rows.Count < this.RowCount)\n                this.visibleIndex = 0;\n            else\n
+    \               this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count
+    - this.RowCount);\n        }\n\n        private void UpdateCursorPosition()\n
+    \       {\n            var x = this.cursorPosition.X;\n            var y = this.cursorPosition.Y;\n
+    \           var maxRowCount = Math.Max(this.RowCount, this.rows.Count);\n            x
+    = Math.Min(x, this.ColumnCount - 1);\n            x = Math.Max(x, 0);\n            y
+    = Math.Min(y, maxRowCount - 1);\n            y = Math.Max(y, 0);\n            this.cursorPosition
+    = new TerminalPoint(x, y);\n        }\n\n        private void UpdateRows()\n        {\n
+    \           this.characterInfos.Update();\n            this.rows.Udpate(this.characterInfos);\n
+    \       }\n\n        private void AttachEvent()\n        {\n            this.Terminal.OutputTextChanged
+    += Terminal_OutputTextChanged;\n            this.Terminal.PromptTextChanged +=
+    Terminal_PromptTextChanged;\n            this.Terminal.CursorPositionChanged +=
+    Terminal_CursorPositionChanged;\n        }\n\n        private void DetachEvent()\n
+    \       {\n            this.Terminal.OutputTextChanged -= Terminal_OutputTextChanged;\n
+    \           this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;\n            this.Terminal.CursorPositionChanged
+    -= Terminal_CursorPositionChanged;\n        }\n\n        private void Terminal_OutputTextChanged(object
+    sender, EventArgs e)\n        {\n            this.Text = this.Terminal.Text;\n
+    \       }\n\n        private void Terminal_PromptTextChanged(object sender, EventArgs
+    e)\n        {\n            this.Text = this.Terminal.Text;\n            this.VisibleIndex
+    = this.MaximumVisibleIndex;\n        }\n\n        private void Terminal_CursorPositionChanged(object
+    sender, EventArgs e)\n        {\n            var index = this.Terminal.CursorPosition
+    + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;\n            this.CursorPosition
+    = this.IndexToPoint(index);\n            this.VisibleIndex = this.MaximumVisibleIndex;\n
+    \       }\n\n        private static void AddBinding(IKeyBinding binding)\n        {\n
+    \           bindingByKey.Add($\"{binding.Modifiers}+{binding.KeyCode}\", binding);\n
+    \       }\n\n        private IEnumerable<TerminalCell> GetCells(TerminalPoint
+    p1, TerminalPoint p2)\n        {\n            var (s1, s2) = p1 < p2 ? (p1, p2)
+    : (p2, p1);\n            var x = s1.X;\n            var y = s1.Y;\n            for
+    (; y <= s2.Y; y++)\n            {\n                var columnCount = y == s2.Y
+    ? s2.X : this.ColumnCount;\n                if (columnCount >= this.ColumnCount)\n
+    \               {\n                    columnCount = this.ColumnCount - 1;\n                }\n
+    \               for (; x <= columnCount; x++)\n                {\n                    yield
+    return this.rows[y].Cells[x];\n                }\n                x = 0;\n            }\n
+    \       }\n\n        private void Select(TerminalPoint p1, TerminalPoint p2)\n
+    \       {\n            foreach (var item in this.GetCells(p1, p2))\n            {\n
+    \               item.IsSelected = !item.IsSelected;\n            }\n        }\n\n
+    \       private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint
+    p1, TerminalPoint p2)\n        {\n            var (s1, s2) = p1 < p2 ? (p1, p2)
+    : (p2, p1);\n            var cell1 = this.rows[s1.Y].Cells[s1.X];\n            var
+    cell2 = this.rows[s2.Y].Cells[s2.X];\n            var columnCount = this.ColumnCount;\n
+    \           if (cell1.IsEnabled == true && cell2.IsEnabled == true)\n            {\n
+    \               return (s1, s2);\n            }\n            else if (cell1.IsEnabled
+    == true)\n            {\n                var row2 = cell2.Row;\n                var
+    l2 = row2.LastPoint(false);\n                var distance = l2.DistanceOf(s2,
+    columnCount);\n                s2.X = distance > 5 ? columnCount : l2.X;\n            }\n
+    \           else if (cell2.IsEnabled == true)\n            {\n                var
+    row1 = cell1.Row;\n                var l1 = row1.LastPoint(true);\n                var
+    distance = l1.DistanceOf(s1, columnCount);\n                s1.X = distance >
+    5 ? columnCount : l1.X;\n            }\n            else\n            {\n                s1.X
+    = columnCount;\n                s2.X = columnCount;\n            }\n            return
+    (s1, s2);\n        }\n\n        private IEnumerable<TerminalCell> GetCells()\n
+    \       {\n            var query = from row in this.rows\n                        from
+    cell in row.Cells\n                        select cell;\n            return query;\n
+    \       }\n\n        private BaseInput InputSystem\n        {\n            get\n
+    \           {\n                if (EventSystem.current && EventSystem.current.currentInputModule)\n
+    \                   return EventSystem.current.currentInputModule.input;\n                return
+    null;\n            }\n        }\n\n        #region implemetations\n\n        void
+    ISelectHandler.OnSelect(BaseEventData eventData)\n        {\n            this.InputSystem.imeCompositionMode
+    = IMECompositionMode.On;\n            this.IsFocused = true;\n        }\n\n        void
+    IDeselectHandler.OnDeselect(BaseEventData eventData)\n        {\n            this.IsFocused
+    = false;\n        }\n\n        void IBeginDragHandler.OnBeginDrag(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                (this.beginPoint,
+    this.endPoint) = this.UpdatePoint(this.downPoint, point);\n                this.isSelecting
+    = true;\n            }\n        }\n\n        void IDragHandler.OnDrag(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                (this.beginPoint,
+    this.endPoint) = this.UpdatePoint(this.downPoint, point);\n                this.OnLayoutChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        void IEndDragHandler.OnEndDrag(PointerEventData
+    eventData)\n        {\n            Debug.Log(\"EndDrawg\");\n            this.isSelecting
+    = false;\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                var (beginPoint,
+    endPoint) = this.UpdatePoint(this.downPoint, point);\n                this.selectionPoint1
+    = beginPoint;\n                this.selectionPoint2 = endPoint;\n                this.downPoint
+    = TerminalPoint.Invalid;\n                this.beginPoint = TerminalPoint.Invalid;\n
+    \               this.endPoint = TerminalPoint.Invalid;\n                this.Select(beginPoint,
+    endPoint);\n                this.OnSelectionChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        void IPointerClickHandler.OnPointerClick(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                // Debug.Log($\"Intersect:
+    {point}\");\n            }\n        }\n\n        void IPointerDownHandler.OnPointerDown(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               this.downPoint = this.Intersect(position);\n                this.ClearSelection();\n
+    \               eventData.useDragThreshold = false;\n            }\n            eventData.selectedObject
+    = this.gameObject;\n        }\n\n        void IPointerEnterHandler.OnPointerEnter(PointerEventData
+    eventData)\n        {\n            // Debug.Log(\"enter\");\n        }\n\n        void
+    IPointerExitHandler.OnPointerExit(PointerEventData eventData)\n        {\n            //
+    Debug.Log(\"exit\");\n        }\n\n        void IScrollHandler.OnScroll(PointerEventData
+    eventData)\n        {\n            this.scrollPos -= eventData.scrollDelta.y;\n
+    \           this.scrollPos = Math.Max((int)this.scrollPos, 0);\n            this.scrollPos
+    = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);\n            this.visibleIndex
+    = (int)this.scrollPos;\n            this.isScrolling = true;\n            this.UpdateVisibleIndex();\n
+    \           this.OnVisibleIndexChanged(EventArgs.Empty);\n            this.isScrolling
+    = false;\n        }\n\n        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData
+    eventData)\n        {\n            if (this.events.PopEvents() == false)\n                return;\n\n
+    \           this.OnTranslateEvents(events);\n            for (var i = 0; i < events.Count;
+    i++)\n            {\n                var item = events[i];\n                if
+    (item == null)\n                    continue;\n                if (item.rawType
+    == EventType.KeyDown)\n                {\n                    var keyCode = item.keyCode;\n
+    \                   var modifiers = item.modifiers;\n                    if (this.OnPreviewKeyDown(keyCode,
+    modifiers) == true)\n                        continue;\n                    if
+    (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)\n                    {\n
+    \                       this.Terminal.InsertCharacter(item.character);\n                    }\n
+    \                   else\n                    {\n                        this.CompositionString
+    = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;\n
+    \                   }\n                }\n            }\n\n            eventData.Use();\n
+    \       }\n\n        #endregion\n    }\n}\nc:\\>cls"
   fontColor:
     serializedVersion: 2
     rgba: 4294967295
@@ -1738,10 +1684,10 @@ MonoBehaviour:
   cursorColor:
     serializedVersion: 2
     rgba: 4287335307
-  visibleIndex: 956
+  visibleIndex: 879
   cursorPosition:
     x: 7
-    y: 980
+    y: 903
   isCursorVisible: 1
   compositionString: 
 --- !u!222 &1914692750
@@ -1764,394 +1710,403 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac32324f888247949e70e0eb77d3791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outputText: "//Released under the MIT License.\n//\n//Copyright (c) 2018 Ntreev
-    Soft co., Ltd.\n//\n//Permission is hereby granted, free of charge, to any person
-    obtaining a copy of this software and associated \n//documentation files (the
-    \"Software\"), to deal in the Software without restriction, including without
-    limitation the \n//rights to use, copy, modify, merge, publish, distribute, sublicense,
-    and/or sell copies of the Software, and to permit \n//persons to whom the Software
-    is furnished to do so, subject to the following conditions:\n//\n//The above copyright
-    notice and this permission notice shall be included in all copies or substantial
-    portions of the \n//Software.\n//\n//THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
-    WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE \n//WARRANTIES
-    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
-    EVENT SHALL THE AUTHORS OR \n//COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
-    OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \n//OTHERWISE, ARISING
-    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-    THE SOFTWARE.\n\nusing System;\nusing System.Collections.Generic;\nusing System.IO;\nusing
-    System.Linq;\nusing System.Security;\nusing System.Text;\nusing System.Text.RegularExpressions;\nusing
-    System.Threading;\n\nnamespace Ntreev.Library.Commands\n{\n    public class Terminal\n
-    \   {\n        private static ConsoleKeyInfo cancelKeyInfo = new ConsoleKeyInfo('\\u0003',
-    ConsoleKey.C, false, false, true);\n        private static readonly Dictionary<char,
-    int> charToWidth = new Dictionary<char, int>(char.MaxValue);\n        private
-    static int bufferWidth = 80;\n\n        private readonly Dictionary<ConsoleKeyInfo,
-    Action> actionMaps = new Dictionary<ConsoleKeyInfo, Action>();\n        private
-    readonly List<string> histories = new List<string>();\n        private readonly
-    List<string> completions = new List<string>();\n\n        private int y = Console.CursorTop;\n
-    \       private int width = Console.BufferWidth;\n        private int fullIndex;\n
-    \       private int start = 0;\n        private int historyIndex;\n        private
-    string fullText;\n        private string inputText;\n        private string completion
-    = string.Empty;\n        private TextWriter writer;\n        private bool isHidden;\n
-    \       private bool treatControlCAsInput;\n        private bool isCancellationRequested;\n\n
-    \       static Terminal()\n        {\n            {\n                var name
-    = $\"{typeof(Terminal).Namespace}.{PlatformID.Win32NT}.dat\";\n                using
-    (var stream = typeof(Terminal).Assembly.GetManifestResourceStream(name))\n                {\n
-    \                   var buffer = new byte[stream.Length];\n                    stream.Read(buffer,
-    0, buffer.Length);\n\n                    for (var i = char.MinValue; i < char.MaxValue;
-    i++)\n                    {\n                        charToWidth.Add(i, buffer[i]);\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    static bool IsOutputRedirected\n        {\n            get\n            {\n#if
-    !NET35\n                return Console.IsOutputRedirected;\n#else\n                return
-    true;\n#endif\n\n            }\n        }\n        public static bool IsInputRedirected\n
-    \       {\n            get\n            {\n#if !NET35\n                return
-    Console.IsInputRedirected;\n#else\n                return true;\n#endif\n            }\n
-    \       }\n\n        public static int GetLength(string text)\n        {\n            var
-    length = 0;\n            foreach (var item in text)\n            {\n                length
-    += charToWidth[item];\n            }\n            return length;\n        }\n\n
-    \       public Terminal()\n        {\n            if (Terminal.IsInputRedirected
-    == true)\n                throw new Exception(\"Terminal cannot use. Console.IsInputRedirected
-    must be false\");\n            this.actionMaps.Add(new ConsoleKeyInfo('\\u001b',
-    ConsoleKey.Escape, false, false, false), this.Clear);\n            if (Environment.OSVersion.Platform
-    == PlatformID.Unix)\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\0',
-    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
-    \           else\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\b',
-    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.Delete, false,
-    false, false), this.Delete);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
-    ConsoleKey.Home, false, false, false), this.Home);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\0', ConsoleKey.Home, false, false, true), this.DeleteToHome);\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.End, false,
-    false, false), this.End);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
-    ConsoleKey.End, false, false, true), this.DeleteToEnd);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\0', ConsoleKey.UpArrow, false, false, false), this.PrevHistory);\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.DownArrow,
-    false, false, false), this.NextHistory);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\0', ConsoleKey.LeftArrow, false, false, false), this.Left);\n
-    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.RightArrow,
-    false, false, false), this.Right);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\t',
-    ConsoleKey.Tab, false, false, false), this.NextCompletion);\n            this.actionMaps.Add(new
-    ConsoleKeyInfo('\\t', ConsoleKey.Tab, true, false, false), this.PrevCompletion);\n
-    \       }\n\n        public long? ReadLong(string prompt)\n        {\n            var
-    result = this.ReadNumber(prompt, null, i => long.TryParse(i, out long v));\n            if
-    (result is long)\n            {\n                return (long)result;\n            }\n
-    \           return null;\n        }\n\n        public long? ReadLong(string prompt,
-    long defaultValue)\n        {\n            var result = this.ReadNumber(prompt,
-    defaultValue, i => long.TryParse(i, out long v));\n            if (result is long)\n
-    \           {\n                return (long)result;\n            }\n            return
-    null;\n        }\n\n        public double? ReadDouble(string prompt)\n        {\n
-    \           var result = this.ReadNumber(prompt, null, i => double.TryParse(i,
-    out double v));\n            if (result is double)\n            {\n                return
-    (double)result;\n            }\n            return null;\n        }\n\n        public
-    double? ReadDouble(string prompt, double defaultValue)\n        {\n            var
-    result = this.ReadNumber(prompt, defaultValue, i => double.TryParse(i, out double
-    v));\n            if (result is double)\n            {\n                return
-    (double)result;\n            }\n            return null;\n        }\n\n        public
-    string ReadString(string prompt)\n        {\n            return ReadString(prompt,
-    string.Empty);\n        }\n\n        public string ReadString(string prompt, bool
-    isHidden)\n        {\n            return this.ReadString(prompt, string.Empty,
-    isHidden);\n        }\n\n        public string ReadString(string prompt, string
-    defaultText)\n        {\n            return this.ReadString(prompt, defaultText,
-    false);\n        }\n\n        public string ReadString(string prompt, string defaultText,
-    bool isHidden)\n        {\n            this.Initialize(prompt, defaultText, isHidden);\n\n
-    \           try\n            {\n                return ReadLineImpl(i => true,
-    false);\n            }\n            finally\n            {\n                this.Release();\n
-    \           }\n        }\n\n        public SecureString ReadSecureString(string
-    prompt)\n        {\n            var text = this.ReadString(prompt, true);\n            var
-    secureString = new SecureString();\n            foreach (var item in text)\n            {\n
-    \               secureString.AppendChar(item);\n            }\n            return
-    secureString;\n        }\n\n        public ConsoleKey ReadKey(string prompt, params
-    ConsoleKey[] filters)\n        {\n            this.Initialize(prompt, string.Empty,
-    false);\n            try\n            {\n                return ReadKeyImpl(filters);\n
-    \           }\n            finally\n            {\n                this.Release();\n
-    \           }\n        }\n\n        public void NextHistory()\n        {\n            if
-    (this.historyIndex + 1 < this.histories.Count)\n            {\n                var
-    text = this.histories[this.historyIndex + 1];\n                this.ClearText();\n
-    \               this.InsertText(text);\n                this.SetInputText();\n
-    \               this.historyIndex++;\n            }\n        }\n\n        public
-    void PrevHistory()\n        {\n            if (this.historyIndex > 0)\n            {\n
-    \               var text = this.histories[this.historyIndex - 1];\n                this.ClearText();\n
-    \               this.InsertText(text);\n                this.SetInputText();\n
-    \               this.historyIndex--;\n            }\n            else if (this.histories.Count
-    == 1)\n            {\n                var text = this.histories[0];\n                this.ClearText();\n
-    \               this.InsertText(text);\n                this.SetInputText();\n
-    \               this.historyIndex = 0;\n            }\n        }\n\n        public
-    IList<string> Histories\n        {\n            get { return this.histories; }\n
-    \       }\n\n        public IList<string> Completions\n        {\n            get
-    { return this.completions; }\n        }\n\n        public void Cancel()\n        {\n
-    \           this.isCancellationRequested = true;\n        }\n\n        public
-    void Clear()\n        {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.ClearText();\n
-    \                   this.SetInputText();\n                }\n            }\n        }\n\n
-    \       public void Delete()\n        {\n            lock (LockedObject)\n            {\n
-    \               if (this.Index < this.Length)\n                {\n                    using
-    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
-    \                       this.Backspace();\n                        this.SetInputText();\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    void Home()\n        {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
-    = 0;\n                }\n            }\n        }\n\n        public void End()\n
-    \       {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
-    = this.Length;\n                }\n            }\n        }\n\n        public
-    void Left()\n        {\n            lock (LockedObject)\n            {\n                if
-    (this.Index > 0)\n                {\n                    using (TerminalCursorVisible.Set(false))\n
-    \                   {\n                        this.Index--;\n                        this.SetInputText();\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    void Right()\n        {\n            lock (LockedObject)\n            {\n                if
-    (this.Index + 1 <= this.Length)\n                {\n                    using
-    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
-    \                       this.SetInputText();\n                    }\n                }\n
-    \           }\n        }\n\n        public void Backspace()\n        {\n            lock
-    (LockedObject)\n            {\n                if (this.Index > 0)\n                {\n
-    \                   using (TerminalCursorVisible.Set(false))\n                    {\n
-    \                       this.BackspaceImpl();\n                        this.SetInputText();\n
-    \                   }\n                }\n            }\n        }\n\n        public
-    void DeleteToEnd()\n        {\n            lock (LockedObject)\n            {\n
-    \               using (TerminalCursorVisible.Set(false))\n                {\n
-    \                   var index = this.Index;\n                    this.Index =
-    this.Length;\n                    while (this.Index > index)\n                    {\n
-    \                       this.BackspaceImpl();\n                    }\n                    this.SetInputText();\n
-    \               }\n            }\n        }\n\n        public void DeleteToHome()\n
-    \       {\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    while
-    (this.Index > 0)\n                    {\n                        this.BackspaceImpl();\n
-    \                   }\n                    this.SetInputText();\n                }\n
-    \           }\n        }\n\n        public void NextCompletion()\n        {\n
-    \           lock (LockedObject)\n            {\n                this.CompletionImpl(NextCompletion);\n
-    \           }\n        }\n\n        public void PrevCompletion()\n        {\n
-    \           lock (LockedObject)\n            {\n                this.CompletionImpl(PrevCompletion);\n
-    \           }\n        }\n\n        public int Index\n        {\n            get
-    { return this.FullIndex - this.start; }\n            set\n            {\n                this.FullIndex
-    = value + this.start;\n            }\n        }\n\n        public string Text\n
-    \       {\n            get { return this.fullText.Substring(this.start); }\n        }\n\n
-    \       public string Prompt\n        {\n            get { return this.fullText.Substring(0,
-    this.start); }\n        }\n\n        public bool IsReading\n        {\n            get
-    { return this.writer != null; }\n        }\n\n        public int Top\n        {\n
-    \           get\n            {\n                if (this.width != Console.BufferWidth)\n
-    \               {\n                    this.y = Console.CursorTop - this.fullIndex
-    / Console.BufferWidth;\n                    this.width = Console.BufferWidth;\n
-    \               }\n                return this.y;\n            }\n            internal
-    set\n            {\n                this.y = value;\n            }\n        }\n\n
-    \       public bool IsEnabled { get; set; } = true;\n\n        public static int
-    BufferWidth\n        {\n            get\n            {\n                if (Terminal.IsOutputRedirected
-    == false)\n                    return Console.BufferWidth;\n                return
-    bufferWidth;\n            }\n            set\n            {\n                if
-    (Terminal.IsOutputRedirected == false)\n                    throw new InvalidOperationException(\"console
-    output is redirected.\");\n                if (value <= 0)\n                    throw
-    new ArgumentOutOfRangeException();\n                bufferWidth = value;\n            }\n
-    \       }\n\n        public static string NextCompletion(string[] completions,
-    string text)\n        {\n            completions = completions.OrderBy(item =>
-    item)\n                .ToArray();\n            if (completions.Contains(text)
-    == true)\n            {\n                for (var i = 0; i < completions.Length;
-    i++)\n                {\n                    var r = string.Compare(text, completions[i],
-    true);\n                    if (r == 0)\n                    {\n                        if
-    (i + 1 < completions.Length)\n                            return completions[i
-    + 1];\n                        else\n                            return completions.First();\n
-    \                   }\n                }\n            }\n            else\n            {\n
-    \               for (var i = 0; i < completions.Length; i++)\n                {\n
-    \                   var r = string.Compare(text, completions[i], true);\n                    if
-    (r < 0)\n                    {\n                        return completions[i];\n
-    \                   }\n                }\n            }\n            return text;\n
-    \       }\n\n        public static string PrevCompletion(string[] completions,
-    string text)\n        {\n            completions = completions.OrderBy(item =>
-    item)\n                .ToArray();\n            if (completions.Contains(text)
-    == true)\n            {\n                for (var i = completions.Length - 1;
-    i >= 0; i--)\n                {\n                    var r = string.Compare(text,
-    completions[i], true);\n                    if (r == 0)\n                    {\n
-    \                       if (i - 1 >= 0)\n                            return completions[i
-    - 1];\n                        else\n                            return completions.Last();\n
-    \                   }\n                }\n            }\n            else\n            {\n
-    \               for (var i = completions.Length - 1; i >= 0; i--)\n                {\n
-    \                   var r = string.Compare(text, completions[i], true);\n                    if
-    (r < 0)\n                    {\n                        return completions[i];\n
-    \                   }\n                }\n            }\n            return text;\n
-    \       }\n\n        public void SetPrompt(string prompt)\n        {\n            if
-    (this.writer == null)\n                throw new Exception(\"prompt can set only
-    on read mode.\");\n\n            lock (LockedObject)\n            {\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    var
-    text = this.Text;\n                    var index = this.Index;\n                    this.start
-    = 0;\n                    this.Clear();\n                    this.InsertText(prompt);\n
-    \                   this.start = this.Index;\n                    this.InsertText(text);\n
-    \                   this.Index = index;\n                    this.Draw();\n                }\n
-    \           }\n        }\n\n        public event TerminalCancelEventHandler CancelKeyPress;\n\n
-    \       public event EventHandler Cancelled;\n\n        protected virtual void
-    OnCancelKeyPress(TerminalCancelEventArgs e)\n        {\n            this.CancelKeyPress?.Invoke(this,
-    e);\n        }\n\n        protected virtual void OnCancelled(EventArgs e)\n        {\n
-    \           this.Cancelled?.Invoke(this, e);\n        }\n\n        protected virtual
-    string[] GetCompletion(string[] items, string find)\n        {\n            var
-    query = from item in this.completions\n                        where item.StartsWith(find)\n
-    \                       select item;\n            return query.ToArray();\n        }\n\n
-    \       protected virtual void OnDrawPrompt(TextWriter writer, string prompt)\n
-    \       {\n            writer.Write(prompt);\n        }\n\n        protected virtual
-    void OnDrawText(TextWriter writer, string text)\n        {\n            writer.Write(text);\n
-    \       }\n\n        private int Length\n        {\n            get { return this.fullText.Length
-    - this.start; }\n        }\n\n        private void ClearText()\n        {\n            lock
-    (LockedObject)\n            {\n                var x = 0;\n                var
-    y = this.Top;\n                this.Erase();\n                this.fullText =
-    this.fullText.Substring(0, this.start);\n                this.start = this.fullText.Length;\n
-    \               this.fullIndex = this.start;\n                this.inputText =
-    string.Empty;\n                Console.SetCursorPosition(x, y);\n                this.Draw();\n
-    \           }\n        }\n\n        private void InsertText(string text)\n        {\n
-    \           if (text == string.Empty)\n                return;\n            lock
-    (LockedObject)\n            {\n                this.fullText = this.fullText.Insert(this.fullIndex,
-    text);\n                this.fullIndex += text.Length;\n\n                if (this.isHidden
-    == true)\n                    return;\n\n                var index = this.fullIndex;\n
-    \               var text1 = this.fullText.Substring(this.start);\n\n                using
-    (TerminalCursorVisible.Set(false))\n                {\n                    this.FullIndex
-    = this.start;\n                    this.OnDrawText(this.writer, text1);\n\n\n
-    \                   var x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText,
-    ref x, ref y);\n\n                    if (y >= Console.BufferHeight)\n                    {\n
-    \                       if (Environment.OSVersion.Platform == PlatformID.Unix
-    && x == 0)\n                        {\n                            this.writer.WriteLine();\n
-    \                       }\n                        this.y--;\n                    }\n
-    \                   this.FullIndex = index;\n                }\n            }\n
-    \       }\n\n        private void BackspaceImpl()\n        {\n            var
-    extraText = this.fullText.Substring(this.fullIndex);\n            var inputIndex
-    = this.Index;\n            this.Index = this.Length;\n            if (this.isHidden
-    == false)\n            {\n                if (Console.CursorLeft == 0)\n                {\n
-    \                   var i = this.Index;\n                    this.Index--;\n                    if
-    (Environment.OSVersion.Platform == PlatformID.Unix)\n                        this.writer.Write(\"
-    \");\n                    else\n                        this.writer.Write(\"\\0\");\n
-    \                   this.Index--;\n                }\n                else\n                {\n
-    \                   this.writer.Write(\"\\b\\0\");\n                }\n            }\n\n
-    \           this.Index = inputIndex;\n            this.Index--;\n            this.fullText
-    = this.fullText.Remove(this.fullIndex, 1);\n            if (this.isHidden == false)\n
-    \           {\n                this.writer.Write(extraText);\n            }\n
-    \           this.Index = this.Index;\n        }\n\n        private void CompletionImpl(Func<string[],
-    string, string> func)\n        {\n            var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));\n
-    \           var find = string.Empty;\n            var prefix = false;\n            var
-    postfix = false;\n            var leftText = this.inputText;\n            if (matches.Count
-    > 0)\n            {\n                var match = matches.Last();\n                var
-    matchText = match.Value;\n                if (matchText.Length > 0 && matchText.First()
-    == '\\\"')\n                {\n                    prefix = true;\n                    matchText
-    = matchText.Substring(1);\n                }\n                if (matchText.Length
-    > 1 && matchText.Last() == '\\\"')\n                {\n                    postfix
-    = true;\n                    matchText = matchText.Remove(matchText.Length - 1);\n
-    \               }\n                if (matchText == string.Empty || matchText.Trim()
-    != string.Empty)\n                {\n                    find = matchText;\n                    matches.RemoveAt(matches.Count
-    - 1);\n                    leftText = this.inputText.Remove(match.Index);\n                }\n
-    \           }\n\n            var argList = new List<string>();\n            for
-    (var i = 0; i < matches.Count; i++)\n            {\n                var matchText
-    = CommandStringUtility.TrimQuot(matches[i].Value).Trim();\n                if
-    (matchText != string.Empty)\n                    argList.Add(matchText);\n            }\n\n
-    \           var completions = this.GetCompletion(argList.ToArray(), find);\n            if
-    (completions != null && completions.Any())\n            {\n                this.completion
-    = func(completions, this.completion);\n                using (TerminalCursorVisible.Set(false))\n
-    \               {\n                    var inputText = this.inputText;\n                    this.ClearText();\n
-    \                   if (prefix == true || postfix == true)\n                    {\n
-    \                       this.InsertText(leftText + \"\\\"\" + this.completion
-    + \"\\\"\");\n                    }\n                    else\n                    {\n
-    \                       this.InsertText(leftText + this.completion);\n                    }\n
-    \                   this.inputText = inputText;\n                }\n            }\n
-    \       }\n\n        private void SetInputText()\n        {\n            this.inputText
-    = this.Text.Remove(this.Index, this.Text.Length - this.Index);\n            this.completion
-    = string.Empty;\n        }\n\n        private object ReadNumber(string prompt,
-    object defaultValue, Func<string, bool> validation)\n        {\n            this.Initialize(prompt,
-    $\"{defaultValue}\", false);\n            try\n            {\n                return
-    ReadLineImpl(validation, false);\n            }\n            finally\n            {\n
-    \               this.Release();\n            }\n        }\n\n        private string
-    ReadLineImpl(Func<string, bool> validation, bool recordHistory)\n        {\n            while
-    (true)\n            {\n                Thread.Sleep(1);\n                if (this.isCancellationRequested
-    == true)\n                    return null;\n                if (this.IsEnabled
-    == false)\n                    continue;\n                var keys = this.ReadKeys().ToArray();\n
-    \               if (this.isCancellationRequested == true)\n                    return
-    null;\n\n                var keyChars = string.Empty;\n                foreach
-    (var key in keys)\n                {\n                    if (key == cancelKeyInfo)\n
-    \                   {\n                        var args = new TerminalCancelEventArgs(ConsoleSpecialKey.ControlC);\n
-    \                       this.OnCancelKeyPress(args);\n                        if
-    (args.Cancel == false)\n                        {\n                            this.OnCancelled(EventArgs.Empty);\n
-    \                           throw new OperationCanceledException($\"ReadLine is
-    cancelled.\");\n                        }\n                    }\n                    else
-    if (this.actionMaps.ContainsKey(key) == true)\n                    {\n                        this.actionMaps[key]();\n
-    \                   }\n                    else if (key.Key == ConsoleKey.Enter)\n
-    \                   {\n                        var text = this.Text;\n                        this.fullText
-    = string.Empty;\n                        this.start = 0;\n                        this.fullIndex
-    = 0;\n\n                        if (recordHistory == true)\n                        {\n
-    \                           if (this.isHidden == false && text != string.Empty)\n
-    \                           {\n                                if (this.histories.Contains(text)
-    == false)\n                                {\n                                    this.histories.Add(text);\n
-    \                                   this.historyIndex = this.histories.Count;\n
-    \                               }\n                                else\n                                {\n
-    \                                   this.historyIndex = this.histories.LastIndexOf(text)
-    + 1;\n                                }\n                            }\n                        }\n
-    \                       return text;\n                    }\n                    else
-    if (key.KeyChar != '\\0')\n                    {\n                        keyChars
-    += key.KeyChar;\n                    }\n                }\n\n                if
-    (keyChars != string.Empty && validation(this.Text + keyChars) == true)\n                {\n
-    \                   this.InsertText(keyChars);\n                    this.SetInputText();\n
-    \               }\n            }\n        }\n\n        private IEnumerable<ConsoleKeyInfo>
-    ReadKeys()\n        {\n            while (this.isCancellationRequested == false)\n
-    \           {\n                var count = 0;\n                while (true)\n
-    \               {\n                    if (Console.KeyAvailable == true)\n                    {\n
-    \                       yield return Console.ReadKey(true);\n                    }\n
-    \                   else if (count > 1)\n                    {\n                        yield
-    break;\n                    }\n                    else\n                    {\n
-    \                       Thread.Sleep(1);\n                        count++;\n                    }\n
-    \               }\n            }\n        }\n\n        private ConsoleKey ReadKeyImpl(params
-    ConsoleKey[] filters)\n        {\n            while (true)\n            {\n                var
-    key = Console.ReadKey(true);\n\n                if ((int)key.Modifiers != 0)\n
-    \                   continue;\n\n                if (filters.Any() == false ||
-    filters.Any(item => item == key.Key) == true)\n                {\n                    this.InsertText(key.Key.ToString());\n
-    \                   return key.Key;\n                }\n            }\n        }\n\n
-    \       private void Initialize(string prompt, string defaultText, bool isHidden)\n
-    \       {\n            lock (LockedObject)\n            {\n                this.writer
-    = Console.Out;\n                Console.SetOut(new TerminalTextWriter(Console.Out,
-    this, Console.OutputEncoding));\n                this.treatControlCAsInput = Console.TreatControlCAsInput;\n
-    \               Console.TreatControlCAsInput = true;\n\n                this.y
-    = Console.CursorTop;\n                this.width = Console.BufferWidth;\n                this.start
-    = 0;\n                this.isHidden = false;\n                this.fullText =
-    prompt;\n                this.fullIndex = prompt.Length;\n                this.OnDrawPrompt(this.writer,
-    this.fullText);\n                this.FullIndex = this.fullIndex;\n                this.start
-    = this.fullIndex;\n                this.isHidden = isHidden;\n                this.InsertText(defaultText);\n
-    \               this.inputText = defaultText;\n            }\n        }\n\n        private
-    void Release()\n        {\n            lock (LockedObject)\n            {\n                Console.TreatControlCAsInput
-    = this.treatControlCAsInput;\n                Console.SetOut(this.writer);\n                Console.WriteLine();\n
-    \               this.writer = null;\n                this.isHidden = false;\n
-    \           }\n        }\n\n        internal static void NextPosition(string text,
-    ref int x, ref int y)\n        {\n            for (var i = 0; i < text.Length;
-    i++)\n            {\n                var ch = text[i];\n                if (ch
-    == '\\r')\n                {\n                    x = 0;\n                    continue;\n
-    \               }\n                else if (ch == '\\n')\n                {\n
-    \                   x = 0;\n                    y++;\n                    continue;\n
-    \               }\n\n                var w = charToWidth[ch];\n                if
-    (x + w >= Console.BufferWidth)\n                {\n                    x = x +
-    w - Console.BufferWidth;\n                    y++;\n                }\n                else\n
-    \               {\n                    x += w;\n                }\n            }\n
-    \       }\n\n        internal string ReadStringInternal(string prompt)\n        {\n
-    \           this.Initialize(prompt, string.Empty, false);\n\n            try\n
-    \           {\n                return ReadLineImpl(i => true, true);\n            }\n
-    \           finally\n            {\n                this.Release();\n            }\n
-    \       }\n\n        internal void Erase()\n        {\n            var x1 = Console.CursorLeft;\n
-    \           var y1 = Console.CursorTop;\n\n            var prompt = this.fullText.Substring(0,
-    this.start);\n            var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
-    \           var x = 0;\n            var y = this.y;\n            NextPosition(prompt,
-    ref x, ref y);\n            NextPosition(text, ref x, ref y);\n\n            for
-    (var i = this.y; i <= y; i++)\n            {\n                Console.SetCursorPosition(0,
-    i);\n                if (Environment.OSVersion.Platform != PlatformID.Unix)\n
-    \               {\n                    Console.MoveBufferArea(Console.BufferWidth
-    - 1, i, 1, 1, 0, i);\n                    this.writer?.Write($\"\\r{new string('\\0',
-    Console.BufferWidth - 1)}\\r\");\n                }\n                else\n                {\n
-    \                   this.writer?.Write(\"\\r\" + new string(' ', Console.BufferWidth)
-    + \"\\r\");\n                }\n            }\n            Console.SetCursorPosition(x1,
-    y1);\n        }\n\n        internal void Draw()\n        {\n            Console.SetCursorPosition(0,
-    this.y);\n            var index = this.FullIndex;\n            var y = Console.CursorTop;\n
-    \           var x = 0;\n            var prompt = this.fullText.Substring(0, this.start);\n
-    \           var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
-    \           this.OnDrawPrompt(this.writer, prompt);\n            this.OnDrawText(this.writer,
-    text);\n            NextPosition(prompt, ref x, ref y);\n            NextPosition(text,
-    ref x, ref y);\n\n            if (y >= Console.BufferHeight)\n            {\n
-    \               if (Environment.OSVersion.Platform == PlatformID.Unix && x ==
-    0)\n                {\n                    this.writer.WriteLine();\n                }\n
-    \               this.y--;\n            }\n            if (index < this.FullIndex)\n
-    \               this.FullIndex = index;\n        }\n\n        internal static
-    object LockedObject { get; } = new object();\n\n        internal int FullIndex\n
-    \       {\n            get { return this.fullIndex; }\n            set\n            {\n
-    \               if (value < 0 || value > this.fullText.Length)\n                    throw
-    new ArgumentOutOfRangeException(nameof(value));\n\n                this.fullIndex
-    = value;\n                if (this.isHidden == false)\n                {\n                    var
-    x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText.Substring(0,
-    value), ref x, ref y);\n                    Console.SetCursorPosition(x, Math.Min(y,
-    Console.BufferHeight - 1));\n                }\n            }\n        }\n    }\n}\n"
+  outputText: "// MIT License\n// \n// Copyright (c) 2019 Jeesu Choi\n// \n// Permission
+    is hereby granted, free of charge, to any person obtaining a copy\n// of this
+    software and associated documentation files (the \"Software\"), to deal\n// in
+    the Software without restriction, including without limitation the rights\n//
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n//
+    copies of the Software, and to permit persons to whom the Software is\n// furnished
+    to do so, subject to the following conditions:\n// \n// The above copyright notice
+    and this permission notice shall be included in all\n// copies or substantial
+    portions of the Software.\n// \n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR\n// IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    WARRANTIES OF MERCHANTABILITY,\n// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE\n// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER\n// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM,\n// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE\n// SOFTWARE.\n\nusing System;\nusing System.Linq;\nusing System.Collections.Generic;\nusing
+    TMPro;\nusing UnityEngine;\nusing UnityEngine.UI;\nusing UnityEngine.EventSystems;\nusing
+    System.Collections.ObjectModel;\nusing UnityEngine.TextCore;\nusing KeyBinding
+    = JSSoft.UI.KeyBinding<JSSoft.UI.TerminalGrid>;\n\nnamespace JSSoft.UI\n{\n    [RequireComponent(typeof(Terminal))]\n
+    \   [RequireComponent(typeof(RectTransform))]\n    [DisallowMultipleComponent]\n
+    \   [ExecuteAlways]\n    [SelectionBase]\n    public partial class TerminalGrid
+    : MaskableGraphic,\n        IBeginDragHandler,\n        IDragHandler,\n        IEndDragHandler,\n
+    \       IPointerClickHandler,\n        IPointerDownHandler,\n        IPointerEnterHandler,\n
+    \       IPointerExitHandler,\n        IScrollHandler,\n        IUpdateSelectedHandler,\n
+    \       ISelectHandler,\n        IDeselectHandler\n    {\n        public static
+    readonly Color32 DefaultSelectionColor = new Color32(49, 79, 129, 255);\n        public
+    static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);\n
+    \       public static readonly Color32 DefaultForegroundColor = new Color32(255,
+    255, 255, 255);\n        public static readonly Color32 DefaultCursorColor = new
+    Color32(139, 139, 139, 255);\n        private static readonly Dictionary<string,
+    IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();\n\n        [SerializeField]\n
+    \       private TMP_FontAsset fontAsset = null;\n        [SerializeField]\n        [TextArea(5,
+    10)]\n        public string text = string.Empty;\n        [SerializeField]\n        private
+    Color32 fontColor = DefaultForegroundColor;\n        [SerializeField]\n        private
+    Color32 selectionColor = DefaultSelectionColor;\n        [SerializeField]\n        private
+    Color32 cursorColor = DefaultCursorColor;\n        [SerializeField]\n        private
+    int visibleIndex;\n        [SerializeField]\n        private TerminalPoint cursorPosition;\n
+    \       [SerializeField]\n        private bool isCursorVisible = true;\n        [SerializeField]\n
+    \       private string compositionString = string.Empty;\n\n        private readonly
+    TerminalEventCollection events = new TerminalEventCollection();\n        private
+    readonly TerminalRowCollection rows;\n        private readonly TerminalCharacterInfoCollection
+    characterInfos;\n\n        private Terminal terminal;\n        private bool isSelecting;\n
+    \       private bool isFocused;\n        // private bool hasSelection;\n        private
+    bool isScrolling;\n        private TerminalPoint downPoint;\n        private TerminalPoint
+    beginPoint;\n        private TerminalPoint endPoint;\n        private TerminalPoint
+    selectionPoint1 = TerminalPoint.Invalid;\n        private TerminalPoint selectionPoint2
+    = TerminalPoint.Invalid;\n        private float scrollPos;\n\n        // \uC804\uCCB4\uC801\uC73C\uB85C
+    \uC65C \uD0A4 \uC774\uBCA4\uD2B8 \uD638\uCD9C\uC2DC\uC5D0 EventModifiers.FunctionKey
+    \uAC00 \uAE30\uBCF8\uC801\uC73C\uB85C \uC124\uC815\uB418\uC5B4 \uC788\uB294\uC9C0
+    \uBAA8\uB974\uACA0\uC74C.\n        static TerminalGrid()\n        {\n            AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey, KeyCode.PageUp, (g) => g.PageUp()));\n
+    \           AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageDown,
+    (g) => g.PageDown()));\n            if (Terminal.IsMac)\n            {\n                AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,\n
+    \                       KeyCode.PageUp, (g) => g.LineUp()));\n                AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,\n
+    \                       KeyCode.PageDown, (g) => g.LineDown()));\n                AddBinding(new
+    KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,\n                        KeyCode.Home,
+    (g) => g.ScrollToTop()));\n                AddBinding(new KeyBinding(EventModifiers.FunctionKey
+    | EventModifiers.Command,\n                        KeyCode.End, (g) => g.ScrollToBottom()));\n
+    \               AddBinding(new KeyBinding(EventModifiers.Command,\n                        KeyCode.C,
+    (g) => g.Copy()));\n            }\n        }\n\n        public TerminalGrid()\n
+    \       {\n            this.rows = new TerminalRowCollection(this);\n            this.characterInfos
+    = new TerminalCharacterInfoCollection(this);\n        }\n\n        public static
+    Rect TransformRect(TerminalGrid grid, Rect rect)\n        {\n            if (grid
+    != null && grid.fontAsset != null && grid.rows.Count > 0)\n            {\n                var
+    itemHeight = FontUtility.GetItemHeight(grid.fontAsset);\n                rect.y
+    += itemHeight * grid.visibleIndex;\n            }\n            return rect;\n
+    \       }\n\n        public static IEnumerable<ITerminalCell> GetVisibleCells(TerminalGrid
+    grid, Func<ITerminalCell, bool> predicate)\n        {\n            if (grid !=
+    null)\n            {\n                var topIndex = grid.visibleIndex;\n                var
+    bottomIndex = topIndex + grid.RowCount;\n                var query = from row
+    in grid.Rows\n                            where row.Index >= topIndex && row.Index
+    < bottomIndex\n                            from cell in row.Cells\n                            where
+    predicate(cell)\n                            select cell;\n                return
+    query;\n            }\n            return Enumerable.Empty<TerminalCell>();\n
+    \       }\n\n        public static ITerminalCell GetCell(TerminalGrid grid, int
+    cursorLeft, int cursorTop)\n        {\n            if (grid != null)\n            {\n
+    \               if (cursorTop >= grid.Rows.Count)\n                    throw new
+    ArgumentOutOfRangeException(nameof(cursorTop));\n                if (cursorLeft
+    >= grid.ColumnCount)\n                    throw new ArgumentOutOfRangeException(nameof(cursorLeft));\n
+    \               return grid.Rows[cursorTop].Cells[cursorLeft];\n            }\n
+    \           return null;\n        }\n\n        public static int GetItemWidth(TerminalGrid
+    grid)\n        {\n            if (grid != null && grid.fontAsset != null)\n            {\n
+    \               return FontUtility.GetItemWidth(grid.fontAsset);\n            }\n
+    \           return 0;\n        }\n\n        public static int GetItemHeight(TerminalGrid
+    grid)\n        {\n            if (grid != null && grid.fontAsset != null)\n            {\n
+    \               return FontUtility.GetItemHeight(grid.fontAsset);\n            }\n
+    \           return 0;\n        }\n\n        public static GlyphRect GetCellRect(TerminalGrid
+    grid, ITerminalCell cell)\n        {\n            if (cell == null)\n                throw
+    new ArgumentNullException(nameof(cell));\n            var itemWidth = TerminalGrid.GetItemWidth(grid);\n
+    \           var itemHeight = TerminalGrid.GetItemHeight(grid);\n            var
+    x = cell.Index * itemWidth;\n            var y = cell.Row.Index * itemHeight;\n
+    \           return new GlyphRect(x, y, itemWidth, itemHeight);\n        }\n\n
+    \       public static int GetItemWidth(TerminalGrid grid, char character)\n        {\n
+    \           if (grid != null && grid.fontAsset != null)\n            {\n                return
+    FontUtility.GetItemWidth(grid.fontAsset, character);\n            }\n            return
+    0;\n        }\n\n        public static bool IsSelecting(TerminalGrid grid, ITerminalCell
+    cell)\n        {\n            if (cell == null)\n                throw new ArgumentNullException(nameof(cell));\n
+    \           var point = new TerminalPoint(cell.Index, cell.Row.Index);\n            var
+    isSelecting = IsSelecting(grid, point);\n            return cell.IsSelected !=
+    isSelecting;\n        }\n\n        public static bool IsSelecting(TerminalGrid
+    grid, TerminalPoint point)\n        {\n            if (grid != null && grid.isSelecting
+    == true)\n            {\n                var p1 = grid.beginPoint < grid.endPoint
+    ? grid.beginPoint : grid.endPoint;\n                var p2 = grid.beginPoint >
+    grid.endPoint ? grid.beginPoint : grid.endPoint;\n                return point
+    >= p1 && point <= p2;\n            }\n            return false;\n        }\n\n
+    \       public static Color32 GetBackgroundColor(TerminalGrid grid)\n        {\n
+    \           if (grid == null)\n                throw new ArgumentNullException(nameof(grid));\n
+    \           return grid.BackgroundColor ?? grid.color;\n        }\n\n        public
+    static Color32 GetForegroundColor(TerminalGrid grid)\n        {\n            if
+    (grid == null)\n                throw new ArgumentNullException(nameof(grid));\n
+    \           return grid.ForegroundColor ?? grid.fontColor;\n        }\n\n        public
+    static Color32 GetSelectionColor(TerminalGrid grid)\n        {\n            return
+    grid != null ? grid.SelectionColor : DefaultSelectionColor;\n        }\n\n        public
+    Vector2 WorldToGrid(Vector2 position)\n        {\n            var rect = this.GetComponent<RectTransform>().rect;\n
+    \           position.y = rect.height - position.y;\n            position.y +=
+    GetItemHeight(this) * this.visibleIndex;\n            return position;\n        }\n\n
+    \       public TerminalPoint Intersect(Vector2 position)\n        {\n            foreach
+    (var item in this.rows)\n            {\n                var point = item.Intersect(position);\n
+    \               if (point != TerminalPoint.Invalid)\n                {\n                    return
+    point;\n                }\n            }\n            return TerminalPoint.Invalid;\n
+    \       }\n\n        public ITerminalCell IntersectWithCell(Vector2 position)\n
+    \       {\n            foreach (var item in this.rows)\n            {\n                if
+    (item.IntersectWithCell(position) is TerminalCell cell)\n                {\n                    return
+    cell;\n                }\n            }\n            return null;\n        }\n\n
+    \       public void ClearSelection()\n        {\n            if (this.selectionPoint1
+    != this.selectionPoint2)\n            {\n                foreach (var item in
+    this.rows)\n                {\n                    item.ClearSelection();\n                }\n
+    \               this.selectionPoint1 = this.selectionPoint2 = TerminalPoint.Invalid;\n
+    \               this.OnSelectionChanged(EventArgs.Empty);\n            }\n        }\n\n
+    \       public TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;\n\n
+    \       public int PointToIndex(TerminalPoint point) => this.characterInfos.PointToIndex(point);\n\n
+    \       public Color32? IndexToBackgroundColor(int index) => this.Terminal.GetBackgroundColor(index);\n\n
+    \       public Color32? IndexToForegroundColor(int index) => this.Terminal.GetForegroundColor(index);\n\n
+    \       public void Append(string text)\n        {\n            this.Append(text,
+    this.text.Length);\n        }\n\n        public void Append(string text, int index)\n
+    \       {\n            this.text = this.text.Insert(index, text);\n            this.UpdateRows();\n
+    \           this.OnTextChanged(EventArgs.Empty);\n        }\n\n        public
+    void Remove(int startIndex, int length)\n        {\n            this.text.Remove(startIndex,
+    length);\n            this.UpdateRows();\n            this.OnTextChanged(EventArgs.Empty);\n
+    \       }\n\n        public void ScrollToTop()\n        {\n            if (this.MaximumVisibleIndex
+    > 0)\n            {\n                this.isScrolling = true;\n                this.VisibleIndex
+    = 0;\n                this.isScrolling = false;\n            }\n        }\n\n
+    \       public void ScrollToBottom()\n        {\n            if (this.MaximumVisibleIndex
+    > 0)\n            {\n                this.isScrolling = true;\n                this.VisibleIndex
+    = this.MaximumVisibleIndex;\n                this.isScrolling = false;\n            }\n
+    \       }\n\n        public void PageUp()\n        {\n            this.Scroll(-this.RowCount);\n
+    \       }\n\n        public void PageDown()\n        {\n            this.Scroll(this.RowCount);\n
+    \       }\n\n        public void LineUp()\n        {\n            this.Scroll(-1);\n
+    \       }\n\n        public void LineDown()\n        {\n            this.Scroll(1);\n
+    \       }\n\n        public void Scroll(int value)\n        {\n            var
+    visibleIndex = this.VisibleIndex + value;\n            if (visibleIndex >= 0 &&
+    visibleIndex <= this.MaximumVisibleIndex)\n            {\n                this.isScrolling
+    = true;\n                this.VisibleIndex = visibleIndex;\n                this.isScrolling
+    = false;\n            }\n        }\n\n        public void Copy()\n        {\n
+    \           if (this.selectionPoint1 != this.selectionPoint2)\n            {\n
+    \               var capacity = this.selectionPoint1.DistanceOf(this.selectionPoint2,
+    this.ColumnCount);\n                var list = new List<char>(capacity);\n                var
+    i1 = this.characterInfos.PointToIndex(this.selectionPoint1);\n                var
+    i2 = this.characterInfos.PointToIndex(this.selectionPoint2);\n                for
+    (var i = i1; i <= i2; i++)\n                {\n                    var item =
+    this.characterInfos[i];\n                    if (item.Character != char.MinValue)\n
+    \                   {\n                        list.Add(item.Character);\n                    }\n
+    \               }\n                ClipboardUtility.Text = new string(list.ToArray());\n
+    \           }\n            else\n            {\n                ClipboardUtility.Text
+    = string.Empty;\n            }\n        }\n\n        public void SelectAll()\n
+    \       {\n            this.selectionPoint1 = new TerminalPoint(0, 0);\n            this.selectionPoint2
+    = new TerminalPoint(this.rows.Count, this.ColumnCount - 1);\n            foreach
+    (var item in this.GetCells(this.selectionPoint1, this.selectionPoint2))\n            {\n
+    \               item.IsSelected = true;\n            }\n        }\n\n        public
+    Terminal Terminal\n        {\n            get\n            {\n                if
+    (this.terminal == null)\n                {\n                    this.terminal
+    = this.GetComponent<Terminal>();\n                }\n                return this.terminal;\n
+    \           }\n        }\n\n        public bool IsFocused\n        {\n            get
+    => this.isFocused;\n            set\n            {\n                if (this.isFocused
+    == value)\n                    return;\n                this.isFocused = value;\n
+    \               if (this.isFocused == true)\n                    this.OnGotFocus(EventArgs.Empty);\n
+    \               else\n                    this.OnLostFocus(EventArgs.Empty);\n
+    \           }\n        }\n\n        public string Text\n        {\n            get
+    => this.text;\n            set\n            {\n                var newValue =
+    value ?? throw new ArgumentNullException(nameof(value));\n                var
+    oldValue = this.text;\n                var minLength = Math.Min(newValue.Length,
+    oldValue.Length);\n                var index = minLength;\n\n                for
+    (var i = 0; i < minLength; i++)\n                {\n                    if (newValue[i]
+    != oldValue[i])\n                    {\n                        index = i;\n                        break;\n
+    \                   }\n                }\n\n                this.text = newValue;\n
+    \               this.UpdateRows();\n                this.OnTextChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        public TMP_FontAsset FontAsset => this.fontAsset;\n\n
+    \       public int ColumnCount { get; private set; }\n\n        public int RowCount
+    { get; private set; }\n\n        public IReadOnlyList<ITerminalRow> Rows => this.rows;\n\n
+    \       public int VisibleIndex\n        {\n            get => this.visibleIndex;\n
+    \           set\n            {\n                if (value < 0 || value > this.MaximumVisibleIndex)\n
+    \                   throw new ArgumentNullException(nameof(value));\n                if
+    (this.visibleIndex != value)\n                {\n                    this.visibleIndex
+    = value;\n                    this.UpdateVisibleIndex();\n                    this.scrollPos
+    = this.visibleIndex;\n                    this.OnVisibleIndexChanged(EventArgs.Empty);\n
+    \               }\n            }\n        }\n\n        public int MaximumVisibleIndex\n
+    \       {\n            get\n            {\n                if (this.visibleIndex
+    < 0 || this.Rows.Count < this.RowCount)\n                    return 0;\n                return
+    this.Rows.Count - this.RowCount;\n            }\n        }\n\n        public Color32?
+    BackgroundColor { get; set; }\n\n        public Color32? ForegroundColor { get;
+    set; }\n\n        public Color32 SelectionColor\n        {\n            get =>
+    this.selectionColor;\n            set\n            {\n                this.selectionColor
+    = value;\n                this.OnLayoutChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public Color32 CursorColor\n        {\n            get =>
+    this.cursorColor;\n            set\n            {\n                this.cursorColor
+    = value;\n                this.OnLayoutChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public TerminalPoint CursorPosition\n        {\n            get
+    => this.cursorPosition;\n            set\n            {\n                if (this.cursorPosition
+    != value)\n                {\n                    this.cursorPosition = value;\n
+    \                   this.UpdateCursorPosition();\n                    this.OnCursorPositionChanged(EventArgs.Empty);\n
+    \               }\n                this.ClearSelection();\n            }\n        }\n\n
+    \       public bool IsCursorVisible\n        {\n            get => this.isCursorVisible;\n
+    \           set\n            {\n                this.isCursorVisible = value;\n
+    \               this.OnCursorPositionChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        public bool IsScrolling => this.isScrolling;\n\n        public
+    string CompositionString\n        {\n            get => this.compositionString;\n
+    \           set\n            {\n                this.compositionString = value
+    ?? throw new ArgumentNullException(nameof(value));\n                this.OnCompositionStringChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        public event EventHandler TextChanged;\n\n
+    \       public event EventHandler VisibleIndexChanged;\n\n        public event
+    EventHandler LayoutChanged;\n\n        public event EventHandler SelectionChanged;\n\n
+    \       public event EventHandler CursorPositionChanged;\n\n        public event
+    EventHandler CompositionStringChanged;\n\n        public event EventHandler GotFocus;\n\n
+    \       public event EventHandler LostFocus;\n\n        protected virtual void
+    OnTextChanged(EventArgs e)\n        {\n            this.TextChanged?.Invoke(this,
+    EventArgs.Empty);\n        }\n\n        protected virtual void OnLayoutChanged(EventArgs
+    e)\n        {\n            this.LayoutChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnVisibleIndexChanged(EventArgs e)\n
+    \       {\n            this.VisibleIndexChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnSelectionChanged(EventArgs e)\n
+    \       {\n            this.SelectionChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnCursorPositionChanged(EventArgs
+    e)\n        {\n            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnCompositionStringChanged(EventArgs
+    e)\n        {\n            this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);\n
+    \       }\n\n        protected virtual void OnGotFocus(EventArgs e)\n        {\n
+    \           this.GotFocus?.Invoke(this, EventArgs.Empty);\n        }\n\n        protected
+    virtual void OnLostFocus(EventArgs e)\n        {\n            this.LostFocus?.Invoke(this,
+    EventArgs.Empty);\n        }\n\n#if UNITY_EDITOR\n        protected override void
+    OnValidate()\n        {\n            base.OnValidate();\n            this.UpdateGrid();\n
+    \           this.UpdateVisibleIndex();\n            this.UpdateRows();\n            this.UpdateCursorPosition();\n
+    \           this.OnTextChanged(EventArgs.Empty);\n            this.OnVisibleIndexChanged(EventArgs.Empty);\n
+    \           this.OnCursorPositionChanged(EventArgs.Empty);\n            this.OnCompositionStringChanged(EventArgs.Empty);\n
+    \           // Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnValidate)}\");\n
+    \       }\n#endif\n\n        protected override void OnRectTransformDimensionsChange()\n
+    \       {\n            base.OnRectTransformDimensionsChange();\n            this.UpdateGrid();\n
+    \           this.UpdateVisibleIndex();\n            this.UpdateRows();\n            this.UpdateCursorPosition();\n
+    \           this.OnTextChanged(EventArgs.Empty);\n            this.OnCursorPositionChanged(EventArgs.Empty);\n
+    \           this.OnCompositionStringChanged(EventArgs.Empty);\n        }\n\n        protected
+    override void OnEnable()\n        {\n            base.OnEnable();\n            this.AttachEvent();\n
+    \           this.VisibleIndex = this.MaximumVisibleIndex;\n        }\n\n        protected
+    override void OnDisable()\n        {\n            base.OnDisable();\n            this.DetachEvent();\n
+    \           // Debug.Log($\"{nameof(TerminalGrid)}.{nameof(OnDisable)}\");\n        }\n\n
+    \       protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers
+    modifiers)\n        {\n            if (this.Terminal.ProcessKeyEvent(keyCode,
+    modifiers) == true)\n                return true;\n            var key = $\"{modifiers}+{keyCode}\";\n
+    \           // Debug.Log(key);\n            if (bindingByKey.ContainsKey(key)
+    == true)\n            {\n                var binding = bindingByKey[key];\n                if
+    (binding.Verify(this) == true && binding.Action(this) == true)\n                    return
+    true;\n            }\n            return false;\n        }\n\n        protected
+    virtual bool OnPreviewKeyPress(char character)\n        {\n            // 27:
+    escape key\n            if (character == '\\n' || character == 27)\n                return
+    true;\n            return false;\n        }\n\n        protected virtual void
+    OnTranslateEvents(IList<Event> eventList)\n        {\n            for (var i =
+    0; i < eventList.Count; i++)\n            {\n                var item = eventList[i];\n
+    \               // ime \uC5D0 \uC758\uD574\uC11C \uBB38\uC790\uAC00 \uC870\uD569\uC911\uC77C\uB54C
+    enter \uD0A4 \uC785\uB825\uC2DC \uC774\uBCA4\uD2B8\uAC00 \uB450\uBC88 \uD638\uCD9C\uB418\uB294
+    \uC5B4\uC774\uC5C6\uB294 \uC0C1\uD669\uC744 \uD558\uB4DC\uCF54\uB529\uC73C\uB85C
+    \uBC29\uC5B4\n                if (item.rawType == EventType.KeyDown &&\n                    item.keyCode
+    == KeyCode.Return &&\n                    item.modifiers == EventModifiers.None
+    &&\n                    i + 1 < eventList.Count)\n                {\n                    var
+    nextItem = eventList[i + 1];\n                    if (nextItem.character != '\\n')\n
+    \                   {\n                        eventList[i] = null;\n                    }\n
+    \               }\n            }\n        }\n\n        private void UpdateGrid()\n
+    \       {\n            if (this.fontAsset != null)\n            {\n                var
+    rect = this.GetComponent<RectTransform>().rect;\n                var fontAsset
+    = this.fontAsset;\n                var itemWidth = FontUtility.GetItemWidth(fontAsset);\n
+    \               var itemHeight = FontUtility.GetItemHeight(fontAsset);\n                this.ColumnCount
+    = (int)(rect.width / itemWidth);\n                this.RowCount = (int)(rect.height
+    / itemHeight);\n                // this.startPoint = new TerminalPoint(0, 0);\n
+    \               // this.endPoint = new TerminalPoint(this.ColumnCount, this.RowCount);\n
+    \           }\n            else\n            {\n                this.ColumnCount
+    = 0;\n                this.RowCount = 0;\n            }\n        }\n\n        private
+    void UpdateVisibleIndex()\n        {\n            if (this.visibleIndex < 0 ||
+    this.Rows.Count < this.RowCount)\n                this.visibleIndex = 0;\n            else\n
+    \               this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count
+    - this.RowCount);\n        }\n\n        private void UpdateCursorPosition()\n
+    \       {\n            var x = this.cursorPosition.X;\n            var y = this.cursorPosition.Y;\n
+    \           var maxRowCount = Math.Max(this.RowCount, this.rows.Count);\n            x
+    = Math.Min(x, this.ColumnCount - 1);\n            x = Math.Max(x, 0);\n            y
+    = Math.Min(y, maxRowCount - 1);\n            y = Math.Max(y, 0);\n            this.cursorPosition
+    = new TerminalPoint(x, y);\n        }\n\n        private void UpdateRows()\n        {\n
+    \           this.characterInfos.Update();\n            this.rows.Udpate(this.characterInfos);\n
+    \       }\n\n        private void AttachEvent()\n        {\n            this.Terminal.OutputTextChanged
+    += Terminal_OutputTextChanged;\n            this.Terminal.PromptTextChanged +=
+    Terminal_PromptTextChanged;\n            this.Terminal.CursorPositionChanged +=
+    Terminal_CursorPositionChanged;\n        }\n\n        private void DetachEvent()\n
+    \       {\n            this.Terminal.OutputTextChanged -= Terminal_OutputTextChanged;\n
+    \           this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;\n            this.Terminal.CursorPositionChanged
+    -= Terminal_CursorPositionChanged;\n        }\n\n        private void Terminal_OutputTextChanged(object
+    sender, EventArgs e)\n        {\n            this.Text = this.Terminal.Text;\n
+    \       }\n\n        private void Terminal_PromptTextChanged(object sender, EventArgs
+    e)\n        {\n            this.Text = this.Terminal.Text;\n            this.VisibleIndex
+    = this.MaximumVisibleIndex;\n        }\n\n        private void Terminal_CursorPositionChanged(object
+    sender, EventArgs e)\n        {\n            var index = this.Terminal.CursorPosition
+    + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;\n            this.CursorPosition
+    = this.IndexToPoint(index);\n            this.VisibleIndex = this.MaximumVisibleIndex;\n
+    \       }\n\n        private static void AddBinding(IKeyBinding binding)\n        {\n
+    \           bindingByKey.Add($\"{binding.Modifiers}+{binding.KeyCode}\", binding);\n
+    \       }\n\n        private IEnumerable<TerminalCell> GetCells(TerminalPoint
+    p1, TerminalPoint p2)\n        {\n            var (s1, s2) = p1 < p2 ? (p1, p2)
+    : (p2, p1);\n            var x = s1.X;\n            var y = s1.Y;\n            for
+    (; y <= s2.Y; y++)\n            {\n                var columnCount = y == s2.Y
+    ? s2.X : this.ColumnCount;\n                if (columnCount >= this.ColumnCount)\n
+    \               {\n                    columnCount = this.ColumnCount - 1;\n                }\n
+    \               for (; x <= columnCount; x++)\n                {\n                    yield
+    return this.rows[y].Cells[x];\n                }\n                x = 0;\n            }\n
+    \       }\n\n        private void Select(TerminalPoint p1, TerminalPoint p2)\n
+    \       {\n            foreach (var item in this.GetCells(p1, p2))\n            {\n
+    \               item.IsSelected = !item.IsSelected;\n            }\n        }\n\n
+    \       private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint
+    p1, TerminalPoint p2)\n        {\n            var (s1, s2) = p1 < p2 ? (p1, p2)
+    : (p2, p1);\n            var cell1 = this.rows[s1.Y].Cells[s1.X];\n            var
+    cell2 = this.rows[s2.Y].Cells[s2.X];\n            var columnCount = this.ColumnCount;\n
+    \           if (cell1.IsEnabled == true && cell2.IsEnabled == true)\n            {\n
+    \               return (s1, s2);\n            }\n            else if (cell1.IsEnabled
+    == true)\n            {\n                var row2 = cell2.Row;\n                var
+    l2 = row2.LastPoint(false);\n                var distance = l2.DistanceOf(s2,
+    columnCount);\n                s2.X = distance > 5 ? columnCount : l2.X;\n            }\n
+    \           else if (cell2.IsEnabled == true)\n            {\n                var
+    row1 = cell1.Row;\n                var l1 = row1.LastPoint(true);\n                var
+    distance = l1.DistanceOf(s1, columnCount);\n                s1.X = distance >
+    5 ? columnCount : l1.X;\n            }\n            else\n            {\n                s1.X
+    = columnCount;\n                s2.X = columnCount;\n            }\n            return
+    (s1, s2);\n        }\n\n        private IEnumerable<TerminalCell> GetCells()\n
+    \       {\n            var query = from row in this.rows\n                        from
+    cell in row.Cells\n                        select cell;\n            return query;\n
+    \       }\n\n        private BaseInput InputSystem\n        {\n            get\n
+    \           {\n                if (EventSystem.current && EventSystem.current.currentInputModule)\n
+    \                   return EventSystem.current.currentInputModule.input;\n                return
+    null;\n            }\n        }\n\n        #region implemetations\n\n        void
+    ISelectHandler.OnSelect(BaseEventData eventData)\n        {\n            this.InputSystem.imeCompositionMode
+    = IMECompositionMode.On;\n            this.IsFocused = true;\n        }\n\n        void
+    IDeselectHandler.OnDeselect(BaseEventData eventData)\n        {\n            this.IsFocused
+    = false;\n        }\n\n        void IBeginDragHandler.OnBeginDrag(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                (this.beginPoint,
+    this.endPoint) = this.UpdatePoint(this.downPoint, point);\n                this.isSelecting
+    = true;\n            }\n        }\n\n        void IDragHandler.OnDrag(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                (this.beginPoint,
+    this.endPoint) = this.UpdatePoint(this.downPoint, point);\n                this.OnLayoutChanged(EventArgs.Empty);\n
+    \           }\n        }\n\n        void IEndDragHandler.OnEndDrag(PointerEventData
+    eventData)\n        {\n            Debug.Log(\"EndDrawg\");\n            this.isSelecting
+    = false;\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                var (beginPoint,
+    endPoint) = this.UpdatePoint(this.downPoint, point);\n                this.selectionPoint1
+    = beginPoint;\n                this.selectionPoint2 = endPoint;\n                this.downPoint
+    = TerminalPoint.Invalid;\n                this.beginPoint = TerminalPoint.Invalid;\n
+    \               this.endPoint = TerminalPoint.Invalid;\n                this.Select(beginPoint,
+    endPoint);\n                this.OnSelectionChanged(EventArgs.Empty);\n            }\n
+    \       }\n\n        void IPointerClickHandler.OnPointerClick(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               var point = this.Intersect(position);\n                // Debug.Log($\"Intersect:
+    {point}\");\n            }\n        }\n\n        void IPointerDownHandler.OnPointerDown(PointerEventData
+    eventData)\n        {\n            if (eventData.button == PointerEventData.InputButton.Left)\n
+    \           {\n                var position = this.WorldToGrid(eventData.position);\n
+    \               this.downPoint = this.Intersect(position);\n                this.ClearSelection();\n
+    \               eventData.useDragThreshold = false;\n            }\n            eventData.selectedObject
+    = this.gameObject;\n        }\n\n        void IPointerEnterHandler.OnPointerEnter(PointerEventData
+    eventData)\n        {\n            // Debug.Log(\"enter\");\n        }\n\n        void
+    IPointerExitHandler.OnPointerExit(PointerEventData eventData)\n        {\n            //
+    Debug.Log(\"exit\");\n        }\n\n        void IScrollHandler.OnScroll(PointerEventData
+    eventData)\n        {\n            this.scrollPos -= eventData.scrollDelta.y;\n
+    \           this.scrollPos = Math.Max((int)this.scrollPos, 0);\n            this.scrollPos
+    = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);\n            this.visibleIndex
+    = (int)this.scrollPos;\n            this.isScrolling = true;\n            this.UpdateVisibleIndex();\n
+    \           this.OnVisibleIndexChanged(EventArgs.Empty);\n            this.isScrolling
+    = false;\n        }\n\n        void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData
+    eventData)\n        {\n            if (this.events.PopEvents() == false)\n                return;\n\n
+    \           this.OnTranslateEvents(events);\n            for (var i = 0; i < events.Count;
+    i++)\n            {\n                var item = events[i];\n                if
+    (item == null)\n                    continue;\n                if (item.rawType
+    == EventType.KeyDown)\n                {\n                    var keyCode = item.keyCode;\n
+    \                   var modifiers = item.modifiers;\n                    if (this.OnPreviewKeyDown(keyCode,
+    modifiers) == true)\n                        continue;\n                    if
+    (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)\n                    {\n
+    \                       this.Terminal.InsertCharacter(item.character);\n                    }\n
+    \                   else\n                    {\n                        this.CompositionString
+    = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;\n
+    \                   }\n                }\n            }\n\n            eventData.Use();\n
+    \       }\n\n        #endregion\n    }\n}\n"
   prompt: c:\>
   commandText: cls
 --- !u!1 &1949075380
@@ -2203,7 +2158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bd18a3f9e414890ba0af99286e8afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 683031487}
+  m_Material: {fileID: 895565182}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -2218,6 +2173,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1949075380}
   m_CullTransparentMesh: 0
+--- !u!21 &2001794548
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &2050778122
 GameObject:
   m_ObjectHideFlags: 0
@@ -2283,6 +2260,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2050778122}
   m_CullTransparentMesh: 0
+--- !u!21 &2072092566
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Bitmap
+  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &2101046975
 GameObject:
   m_ObjectHideFlags: 0
