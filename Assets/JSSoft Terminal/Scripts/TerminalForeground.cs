@@ -78,12 +78,6 @@ namespace JSSoft.UI
             this.terminalRect.Fill(vh);
         }
 
-        // public override void Rebuild(CanvasUpdate executing)
-        // {
-        //     base.Rebuild(executing);
-        //     Debug.Log($"{nameof(TerminalForeground)}.{nameof(Rebuild)}: {executing}");
-        // }
-
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
@@ -92,9 +86,6 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            // this.material = new Material(Shader.Find("TextMeshPro/Distance Field"));
-            // this.material.color = base.color;
-
             if (this.grid != null)
             {
                 this.grid.TextChanged += TerminalGrid_TextChanged;

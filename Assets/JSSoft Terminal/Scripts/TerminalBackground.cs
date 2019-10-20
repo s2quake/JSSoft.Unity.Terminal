@@ -48,6 +48,7 @@ namespace JSSoft.UI
             var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
             var visibleCells = TerminalGrid.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
+            var selectionColor = TerminalGrid.GetSelectionColor(this.grid); 
             this.terminalRect.Count = visibleCells.Count();
             foreach (var item in visibleCells)
             {
@@ -56,7 +57,7 @@ namespace JSSoft.UI
                 if (item.BackgroundColor is Color32 color)
                     this.terminalRect.SetColor(index, color);
                 else
-                    this.terminalRect.SetColor(index, TerminalColors.Green);
+                    this.terminalRect.SetColor(index, selectionColor);
                 index++;
             }
             this.material.color = base.color;

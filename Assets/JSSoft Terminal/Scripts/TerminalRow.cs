@@ -99,6 +99,58 @@ namespace JSSoft.UI
             }
         }
 
+        public TerminalPoint LastPoint(bool isCursor)
+        {
+            var columnCount = this.Grid.ColumnCount;
+            var index = this.Index;
+            var point = new TerminalPoint(columnCount, index);
+            if (this.IsEmpty == false)
+            {
+                for (var i = columnCount - 1; i >= 0; i--)
+                {
+                    var item = this.Cells[i];
+                    if (item.IsEnabled == true)
+                    {
+                        point.X = i;
+                        if (isCursor)
+                            point.X++;
+                        break;
+                    }
+                }
+            }
+            return point;
+        }
+
+        public void Reset()
+        {
+            this.ResetAfter(0);
+        }
+
+        public void ResetAfter(int index)
+        {
+            for (var i = index; i < this.cells.Count; i++)
+            {
+                var item = this.cells[i];
+                item.Reset();
+            }
+        }
+
+        public void Resize(int columnCount)
+        {
+            for (var i = this.cells.Count - 1; i >= columnCount; i--)
+            {
+                this.pool.Push(this.cells[i]);
+                this.cells.RemoveAt(i);
+            }
+            for (var i = this.cells.Count; i < columnCount; i++)
+            {
+                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i, () => this.IsModified = true);
+                item.Reset();
+                this.cells.Add(item);
+            }
+            this.UpdateRect();
+        }
+
         public TerminalGrid Grid { get; }
 
         public int Index { get; }
@@ -130,36 +182,6 @@ namespace JSSoft.UI
         public Color32? ForegroundColor { get; set; }
 
         public bool IsModified { get; private set; }
-
-        public void Reset()
-        {
-            this.ResetAfter(0);
-        }
-
-        public void ResetAfter(int index)
-        {
-            for (var i = index; i < this.cells.Count; i++)
-            {
-                var item = this.cells[i];
-                item.Reset();
-            }
-        }
-
-        public void Resize(int columnCount)
-        {
-            for (var i = this.cells.Count - 1; i >= columnCount; i--)
-            {
-                this.pool.Push(this.cells[i]);
-                this.cells.RemoveAt(i);
-            }
-            for (var i = this.cells.Count; i < columnCount; i++)
-            {
-                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i, () => this.IsModified = true);
-                item.Reset();
-                this.cells.Add(item);
-            }
-            this.UpdateRect();
-        }
 
         private void UpdateRect()
         {

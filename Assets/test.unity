@@ -284,6 +284,47 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 459233088}
   m_CullTransparentMesh: 0
+--- !u!21 &478319185
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TextMeshPro/Bitmap
+  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _FaceTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _MaskSoftnessX: 0
+    - _MaskSoftnessY: 0
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _VertexOffsetX: 0
+    - _VertexOffsetY: 0
+    m_Colors:
+    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
+    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &548016343
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,13 +434,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566498932}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -413,7 +454,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 0.5
 --- !u!222 &566498935
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -422,7 +463,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 566498932}
   m_CullTransparentMesh: 0
---- !u!21 &680737578
+--- !u!21 &683031487
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -625,7 +666,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 745717590}
   m_CullTransparentMesh: 0
---- !u!21 &783564694
+--- !u!21 &904512970
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
@@ -880,7 +921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 283e6a0a03ab0477eaeff767ea73c85f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1602962171}
+  m_Material: {fileID: 478319185}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -888,7 +929,7 @@ MonoBehaviour:
       m_Calls: []
   grid: {fileID: 1914692749}
   cursorLeft: 7
-  cursorTop: 6
+  cursorTop: 24
   isVisible: 1
   isFocused: 0
 --- !u!222 &1250052429
@@ -965,47 +1006,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1602962171
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: TextMeshPro/Bitmap
-  m_Shader: {fileID: 4800000, guid: 128e987d567d4e2c824d754223b3f3b0, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _FaceTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _ColorMask: 15
-    - _MaskSoftnessX: 0
-    - _MaskSoftnessY: 0
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _VertexOffsetX: 0
-    - _VertexOffsetY: 0
-    m_Colors:
-    - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1684732831
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,8 +1017,8 @@ GameObject:
   - component: {fileID: 1684732832}
   - component: {fileID: 1684732835}
   - component: {fileID: 1684732834}
-  - component: {fileID: 1684732833}
   - component: {fileID: 1684732836}
+  - component: {fileID: 1684732833}
   m_Layer: 5
   m_Name: TerminalScrollbar
   m_TagString: Untagged
@@ -1043,7 +1043,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10, y: 0}
+  m_AnchoredPosition: {x: -12, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1684732833
@@ -1053,47 +1053,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1684732831}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a761e435bcd646f6be7a698a3f7a535, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 2
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_SelectedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_SelectedTrigger: Selected
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1684732834}
-  m_HandleRect: {fileID: 566498933}
-  m_Direction: 3
-  m_Value: 0
-  m_Size: 1
-  m_NumberOfSteps: 0
-  m_OnValueChanged:
-    m_PersistentCalls:
-      m_Calls: []
+  grid: {fileID: 1914692749}
+  useFade: 1
+  watingTime: 1
+  fadingTime: 0.25
 --- !u!114 &1684732834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1107,7 +1075,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1142,7 +1110,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c40668b22dcdb4ddca84c8a2ab9446ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grid: {fileID: 1914692749}
+  m_Navigation:
+    m_Mode: 3
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1684732834}
+  m_HandleRect: {fileID: 566498933}
+  m_Direction: 3
+  m_Value: 1
+  m_Size: 0.0254842
+  m_NumberOfSteps: 0
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1847478501
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,7 +1260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 783564694}
+  m_Material: {fileID: 904512970}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1267,7 +1270,7 @@ MonoBehaviour:
   fontColor: {r: 1, g: 1, b: 1, a: 1}
   grid: {fileID: 1914692749}
   columnIndex: 7
-  rowIndex: 6
+  rowIndex: 24
 --- !u!222 &1858257003
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1332,21 +1335,413 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   fontAsset: {fileID: 11400000, guid: 32e57321513a94fafbed115139352789, type: 2}
-  text: "21wewe we rlsajdflk dsajfl;ksadj f;lksaj1\n132423 2423 \n12121\nd f;laskjf
-    \nwe r234234\n23\nc:\\>cls"
+  text: "//Released under the MIT License.\n//\n//Copyright (c) 2018 Ntreev Soft co.,
+    Ltd.\n//\n//Permission is hereby granted, free of charge, to any person obtaining
+    a copy of this software and associated \n//documentation files (the \"Software\"),
+    to deal in the Software without restriction, including without limitation the
+    \n//rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the Software, and to permit \n//persons to whom the Software is
+    furnished to do so, subject to the following conditions:\n//\n//The above copyright
+    notice and this permission notice shall be included in all copies or substantial
+    portions of the \n//Software.\n//\n//THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE \n//WARRANTIES
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+    EVENT SHALL THE AUTHORS OR \n//COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+    OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \n//OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.\n\nusing System;\nusing System.Collections.Generic;\nusing System.IO;\nusing
+    System.Linq;\nusing System.Security;\nusing System.Text;\nusing System.Text.RegularExpressions;\nusing
+    System.Threading;\n\nnamespace Ntreev.Library.Commands\n{\n    public class Terminal\n
+    \   {\n        private static ConsoleKeyInfo cancelKeyInfo = new ConsoleKeyInfo('\\u0003',
+    ConsoleKey.C, false, false, true);\n        private static readonly Dictionary<char,
+    int> charToWidth = new Dictionary<char, int>(char.MaxValue);\n        private
+    static int bufferWidth = 80;\n\n        private readonly Dictionary<ConsoleKeyInfo,
+    Action> actionMaps = new Dictionary<ConsoleKeyInfo, Action>();\n        private
+    readonly List<string> histories = new List<string>();\n        private readonly
+    List<string> completions = new List<string>();\n\n        private int y = Console.CursorTop;\n
+    \       private int width = Console.BufferWidth;\n        private int fullIndex;\n
+    \       private int start = 0;\n        private int historyIndex;\n        private
+    string fullText;\n        private string inputText;\n        private string completion
+    = string.Empty;\n        private TextWriter writer;\n        private bool isHidden;\n
+    \       private bool treatControlCAsInput;\n        private bool isCancellationRequested;\n\n
+    \       static Terminal()\n        {\n            {\n                var name
+    = $\"{typeof(Terminal).Namespace}.{PlatformID.Win32NT}.dat\";\n                using
+    (var stream = typeof(Terminal).Assembly.GetManifestResourceStream(name))\n                {\n
+    \                   var buffer = new byte[stream.Length];\n                    stream.Read(buffer,
+    0, buffer.Length);\n\n                    for (var i = char.MinValue; i < char.MaxValue;
+    i++)\n                    {\n                        charToWidth.Add(i, buffer[i]);\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    static bool IsOutputRedirected\n        {\n            get\n            {\n#if
+    !NET35\n                return Console.IsOutputRedirected;\n#else\n                return
+    true;\n#endif\n\n            }\n        }\n        public static bool IsInputRedirected\n
+    \       {\n            get\n            {\n#if !NET35\n                return
+    Console.IsInputRedirected;\n#else\n                return true;\n#endif\n            }\n
+    \       }\n\n        public static int GetLength(string text)\n        {\n            var
+    length = 0;\n            foreach (var item in text)\n            {\n                length
+    += charToWidth[item];\n            }\n            return length;\n        }\n\n
+    \       public Terminal()\n        {\n            if (Terminal.IsInputRedirected
+    == true)\n                throw new Exception(\"Terminal cannot use. Console.IsInputRedirected
+    must be false\");\n            this.actionMaps.Add(new ConsoleKeyInfo('\\u001b',
+    ConsoleKey.Escape, false, false, false), this.Clear);\n            if (Environment.OSVersion.Platform
+    == PlatformID.Unix)\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\0',
+    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
+    \           else\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\b',
+    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.Delete, false,
+    false, false), this.Delete);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
+    ConsoleKey.Home, false, false, false), this.Home);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\0', ConsoleKey.Home, false, false, true), this.DeleteToHome);\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.End, false,
+    false, false), this.End);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
+    ConsoleKey.End, false, false, true), this.DeleteToEnd);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\0', ConsoleKey.UpArrow, false, false, false), this.PrevHistory);\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.DownArrow,
+    false, false, false), this.NextHistory);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\0', ConsoleKey.LeftArrow, false, false, false), this.Left);\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.RightArrow,
+    false, false, false), this.Right);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\t',
+    ConsoleKey.Tab, false, false, false), this.NextCompletion);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\t', ConsoleKey.Tab, true, false, false), this.PrevCompletion);\n
+    \       }\n\n        public long? ReadLong(string prompt)\n        {\n            var
+    result = this.ReadNumber(prompt, null, i => long.TryParse(i, out long v));\n            if
+    (result is long)\n            {\n                return (long)result;\n            }\n
+    \           return null;\n        }\n\n        public long? ReadLong(string prompt,
+    long defaultValue)\n        {\n            var result = this.ReadNumber(prompt,
+    defaultValue, i => long.TryParse(i, out long v));\n            if (result is long)\n
+    \           {\n                return (long)result;\n            }\n            return
+    null;\n        }\n\n        public double? ReadDouble(string prompt)\n        {\n
+    \           var result = this.ReadNumber(prompt, null, i => double.TryParse(i,
+    out double v));\n            if (result is double)\n            {\n                return
+    (double)result;\n            }\n            return null;\n        }\n\n        public
+    double? ReadDouble(string prompt, double defaultValue)\n        {\n            var
+    result = this.ReadNumber(prompt, defaultValue, i => double.TryParse(i, out double
+    v));\n            if (result is double)\n            {\n                return
+    (double)result;\n            }\n            return null;\n        }\n\n        public
+    string ReadString(string prompt)\n        {\n            return ReadString(prompt,
+    string.Empty);\n        }\n\n        public string ReadString(string prompt, bool
+    isHidden)\n        {\n            return this.ReadString(prompt, string.Empty,
+    isHidden);\n        }\n\n        public string ReadString(string prompt, string
+    defaultText)\n        {\n            return this.ReadString(prompt, defaultText,
+    false);\n        }\n\n        public string ReadString(string prompt, string defaultText,
+    bool isHidden)\n        {\n            this.Initialize(prompt, defaultText, isHidden);\n\n
+    \           try\n            {\n                return ReadLineImpl(i => true,
+    false);\n            }\n            finally\n            {\n                this.Release();\n
+    \           }\n        }\n\n        public SecureString ReadSecureString(string
+    prompt)\n        {\n            var text = this.ReadString(prompt, true);\n            var
+    secureString = new SecureString();\n            foreach (var item in text)\n            {\n
+    \               secureString.AppendChar(item);\n            }\n            return
+    secureString;\n        }\n\n        public ConsoleKey ReadKey(string prompt, params
+    ConsoleKey[] filters)\n        {\n            this.Initialize(prompt, string.Empty,
+    false);\n            try\n            {\n                return ReadKeyImpl(filters);\n
+    \           }\n            finally\n            {\n                this.Release();\n
+    \           }\n        }\n\n        public void NextHistory()\n        {\n            if
+    (this.historyIndex + 1 < this.histories.Count)\n            {\n                var
+    text = this.histories[this.historyIndex + 1];\n                this.ClearText();\n
+    \               this.InsertText(text);\n                this.SetInputText();\n
+    \               this.historyIndex++;\n            }\n        }\n\n        public
+    void PrevHistory()\n        {\n            if (this.historyIndex > 0)\n            {\n
+    \               var text = this.histories[this.historyIndex - 1];\n                this.ClearText();\n
+    \               this.InsertText(text);\n                this.SetInputText();\n
+    \               this.historyIndex--;\n            }\n            else if (this.histories.Count
+    == 1)\n            {\n                var text = this.histories[0];\n                this.ClearText();\n
+    \               this.InsertText(text);\n                this.SetInputText();\n
+    \               this.historyIndex = 0;\n            }\n        }\n\n        public
+    IList<string> Histories\n        {\n            get { return this.histories; }\n
+    \       }\n\n        public IList<string> Completions\n        {\n            get
+    { return this.completions; }\n        }\n\n        public void Cancel()\n        {\n
+    \           this.isCancellationRequested = true;\n        }\n\n        public
+    void Clear()\n        {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.ClearText();\n
+    \                   this.SetInputText();\n                }\n            }\n        }\n\n
+    \       public void Delete()\n        {\n            lock (LockedObject)\n            {\n
+    \               if (this.Index < this.Length)\n                {\n                    using
+    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
+    \                       this.Backspace();\n                        this.SetInputText();\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    void Home()\n        {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
+    = 0;\n                }\n            }\n        }\n\n        public void End()\n
+    \       {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
+    = this.Length;\n                }\n            }\n        }\n\n        public
+    void Left()\n        {\n            lock (LockedObject)\n            {\n                if
+    (this.Index > 0)\n                {\n                    using (TerminalCursorVisible.Set(false))\n
+    \                   {\n                        this.Index--;\n                        this.SetInputText();\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    void Right()\n        {\n            lock (LockedObject)\n            {\n                if
+    (this.Index + 1 <= this.Length)\n                {\n                    using
+    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
+    \                       this.SetInputText();\n                    }\n                }\n
+    \           }\n        }\n\n        public void Backspace()\n        {\n            lock
+    (LockedObject)\n            {\n                if (this.Index > 0)\n                {\n
+    \                   using (TerminalCursorVisible.Set(false))\n                    {\n
+    \                       this.BackspaceImpl();\n                        this.SetInputText();\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    void DeleteToEnd()\n        {\n            lock (LockedObject)\n            {\n
+    \               using (TerminalCursorVisible.Set(false))\n                {\n
+    \                   var index = this.Index;\n                    this.Index =
+    this.Length;\n                    while (this.Index > index)\n                    {\n
+    \                       this.BackspaceImpl();\n                    }\n                    this.SetInputText();\n
+    \               }\n            }\n        }\n\n        public void DeleteToHome()\n
+    \       {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    while
+    (this.Index > 0)\n                    {\n                        this.BackspaceImpl();\n
+    \                   }\n                    this.SetInputText();\n                }\n
+    \           }\n        }\n\n        public void NextCompletion()\n        {\n
+    \           lock (LockedObject)\n            {\n                this.CompletionImpl(NextCompletion);\n
+    \           }\n        }\n\n        public void PrevCompletion()\n        {\n
+    \           lock (LockedObject)\n            {\n                this.CompletionImpl(PrevCompletion);\n
+    \           }\n        }\n\n        public int Index\n        {\n            get
+    { return this.FullIndex - this.start; }\n            set\n            {\n                this.FullIndex
+    = value + this.start;\n            }\n        }\n\n        public string Text\n
+    \       {\n            get { return this.fullText.Substring(this.start); }\n        }\n\n
+    \       public string Prompt\n        {\n            get { return this.fullText.Substring(0,
+    this.start); }\n        }\n\n        public bool IsReading\n        {\n            get
+    { return this.writer != null; }\n        }\n\n        public int Top\n        {\n
+    \           get\n            {\n                if (this.width != Console.BufferWidth)\n
+    \               {\n                    this.y = Console.CursorTop - this.fullIndex
+    / Console.BufferWidth;\n                    this.width = Console.BufferWidth;\n
+    \               }\n                return this.y;\n            }\n            internal
+    set\n            {\n                this.y = value;\n            }\n        }\n\n
+    \       public bool IsEnabled { get; set; } = true;\n\n        public static int
+    BufferWidth\n        {\n            get\n            {\n                if (Terminal.IsOutputRedirected
+    == false)\n                    return Console.BufferWidth;\n                return
+    bufferWidth;\n            }\n            set\n            {\n                if
+    (Terminal.IsOutputRedirected == false)\n                    throw new InvalidOperationException(\"console
+    output is redirected.\");\n                if (value <= 0)\n                    throw
+    new ArgumentOutOfRangeException();\n                bufferWidth = value;\n            }\n
+    \       }\n\n        public static string NextCompletion(string[] completions,
+    string text)\n        {\n            completions = completions.OrderBy(item =>
+    item)\n                .ToArray();\n            if (completions.Contains(text)
+    == true)\n            {\n                for (var i = 0; i < completions.Length;
+    i++)\n                {\n                    var r = string.Compare(text, completions[i],
+    true);\n                    if (r == 0)\n                    {\n                        if
+    (i + 1 < completions.Length)\n                            return completions[i
+    + 1];\n                        else\n                            return completions.First();\n
+    \                   }\n                }\n            }\n            else\n            {\n
+    \               for (var i = 0; i < completions.Length; i++)\n                {\n
+    \                   var r = string.Compare(text, completions[i], true);\n                    if
+    (r < 0)\n                    {\n                        return completions[i];\n
+    \                   }\n                }\n            }\n            return text;\n
+    \       }\n\n        public static string PrevCompletion(string[] completions,
+    string text)\n        {\n            completions = completions.OrderBy(item =>
+    item)\n                .ToArray();\n            if (completions.Contains(text)
+    == true)\n            {\n                for (var i = completions.Length - 1;
+    i >= 0; i--)\n                {\n                    var r = string.Compare(text,
+    completions[i], true);\n                    if (r == 0)\n                    {\n
+    \                       if (i - 1 >= 0)\n                            return completions[i
+    - 1];\n                        else\n                            return completions.Last();\n
+    \                   }\n                }\n            }\n            else\n            {\n
+    \               for (var i = completions.Length - 1; i >= 0; i--)\n                {\n
+    \                   var r = string.Compare(text, completions[i], true);\n                    if
+    (r < 0)\n                    {\n                        return completions[i];\n
+    \                   }\n                }\n            }\n            return text;\n
+    \       }\n\n        public void SetPrompt(string prompt)\n        {\n            if
+    (this.writer == null)\n                throw new Exception(\"prompt can set only
+    on read mode.\");\n\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    var
+    text = this.Text;\n                    var index = this.Index;\n                    this.start
+    = 0;\n                    this.Clear();\n                    this.InsertText(prompt);\n
+    \                   this.start = this.Index;\n                    this.InsertText(text);\n
+    \                   this.Index = index;\n                    this.Draw();\n                }\n
+    \           }\n        }\n\n        public event TerminalCancelEventHandler CancelKeyPress;\n\n
+    \       public event EventHandler Cancelled;\n\n        protected virtual void
+    OnCancelKeyPress(TerminalCancelEventArgs e)\n        {\n            this.CancelKeyPress?.Invoke(this,
+    e);\n        }\n\n        protected virtual void OnCancelled(EventArgs e)\n        {\n
+    \           this.Cancelled?.Invoke(this, e);\n        }\n\n        protected virtual
+    string[] GetCompletion(string[] items, string find)\n        {\n            var
+    query = from item in this.completions\n                        where item.StartsWith(find)\n
+    \                       select item;\n            return query.ToArray();\n        }\n\n
+    \       protected virtual void OnDrawPrompt(TextWriter writer, string prompt)\n
+    \       {\n            writer.Write(prompt);\n        }\n\n        protected virtual
+    void OnDrawText(TextWriter writer, string text)\n        {\n            writer.Write(text);\n
+    \       }\n\n        private int Length\n        {\n            get { return this.fullText.Length
+    - this.start; }\n        }\n\n        private void ClearText()\n        {\n            lock
+    (LockedObject)\n            {\n                var x = 0;\n                var
+    y = this.Top;\n                this.Erase();\n                this.fullText =
+    this.fullText.Substring(0, this.start);\n                this.start = this.fullText.Length;\n
+    \               this.fullIndex = this.start;\n                this.inputText =
+    string.Empty;\n                Console.SetCursorPosition(x, y);\n                this.Draw();\n
+    \           }\n        }\n\n        private void InsertText(string text)\n        {\n
+    \           if (text == string.Empty)\n                return;\n            lock
+    (LockedObject)\n            {\n                this.fullText = this.fullText.Insert(this.fullIndex,
+    text);\n                this.fullIndex += text.Length;\n\n                if (this.isHidden
+    == true)\n                    return;\n\n                var index = this.fullIndex;\n
+    \               var text1 = this.fullText.Substring(this.start);\n\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.FullIndex
+    = this.start;\n                    this.OnDrawText(this.writer, text1);\n\n\n
+    \                   var x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText,
+    ref x, ref y);\n\n                    if (y >= Console.BufferHeight)\n                    {\n
+    \                       if (Environment.OSVersion.Platform == PlatformID.Unix
+    && x == 0)\n                        {\n                            this.writer.WriteLine();\n
+    \                       }\n                        this.y--;\n                    }\n
+    \                   this.FullIndex = index;\n                }\n            }\n
+    \       }\n\n        private void BackspaceImpl()\n        {\n            var
+    extraText = this.fullText.Substring(this.fullIndex);\n            var inputIndex
+    = this.Index;\n            this.Index = this.Length;\n            if (this.isHidden
+    == false)\n            {\n                if (Console.CursorLeft == 0)\n                {\n
+    \                   var i = this.Index;\n                    this.Index--;\n                    if
+    (Environment.OSVersion.Platform == PlatformID.Unix)\n                        this.writer.Write(\"
+    \");\n                    else\n                        this.writer.Write(\"\\0\");\n
+    \                   this.Index--;\n                }\n                else\n                {\n
+    \                   this.writer.Write(\"\\b\\0\");\n                }\n            }\n\n
+    \           this.Index = inputIndex;\n            this.Index--;\n            this.fullText
+    = this.fullText.Remove(this.fullIndex, 1);\n            if (this.isHidden == false)\n
+    \           {\n                this.writer.Write(extraText);\n            }\n
+    \           this.Index = this.Index;\n        }\n\n        private void CompletionImpl(Func<string[],
+    string, string> func)\n        {\n            var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));\n
+    \           var find = string.Empty;\n            var prefix = false;\n            var
+    postfix = false;\n            var leftText = this.inputText;\n            if (matches.Count
+    > 0)\n            {\n                var match = matches.Last();\n                var
+    matchText = match.Value;\n                if (matchText.Length > 0 && matchText.First()
+    == '\\\"')\n                {\n                    prefix = true;\n                    matchText
+    = matchText.Substring(1);\n                }\n                if (matchText.Length
+    > 1 && matchText.Last() == '\\\"')\n                {\n                    postfix
+    = true;\n                    matchText = matchText.Remove(matchText.Length - 1);\n
+    \               }\n                if (matchText == string.Empty || matchText.Trim()
+    != string.Empty)\n                {\n                    find = matchText;\n                    matches.RemoveAt(matches.Count
+    - 1);\n                    leftText = this.inputText.Remove(match.Index);\n                }\n
+    \           }\n\n            var argList = new List<string>();\n            for
+    (var i = 0; i < matches.Count; i++)\n            {\n                var matchText
+    = CommandStringUtility.TrimQuot(matches[i].Value).Trim();\n                if
+    (matchText != string.Empty)\n                    argList.Add(matchText);\n            }\n\n
+    \           var completions = this.GetCompletion(argList.ToArray(), find);\n            if
+    (completions != null && completions.Any())\n            {\n                this.completion
+    = func(completions, this.completion);\n                using (TerminalCursorVisible.Set(false))\n
+    \               {\n                    var inputText = this.inputText;\n                    this.ClearText();\n
+    \                   if (prefix == true || postfix == true)\n                    {\n
+    \                       this.InsertText(leftText + \"\\\"\" + this.completion
+    + \"\\\"\");\n                    }\n                    else\n                    {\n
+    \                       this.InsertText(leftText + this.completion);\n                    }\n
+    \                   this.inputText = inputText;\n                }\n            }\n
+    \       }\n\n        private void SetInputText()\n        {\n            this.inputText
+    = this.Text.Remove(this.Index, this.Text.Length - this.Index);\n            this.completion
+    = string.Empty;\n        }\n\n        private object ReadNumber(string prompt,
+    object defaultValue, Func<string, bool> validation)\n        {\n            this.Initialize(prompt,
+    $\"{defaultValue}\", false);\n            try\n            {\n                return
+    ReadLineImpl(validation, false);\n            }\n            finally\n            {\n
+    \               this.Release();\n            }\n        }\n\n        private string
+    ReadLineImpl(Func<string, bool> validation, bool recordHistory)\n        {\n            while
+    (true)\n            {\n                Thread.Sleep(1);\n                if (this.isCancellationRequested
+    == true)\n                    return null;\n                if (this.IsEnabled
+    == false)\n                    continue;\n                var keys = this.ReadKeys().ToArray();\n
+    \               if (this.isCancellationRequested == true)\n                    return
+    null;\n\n                var keyChars = string.Empty;\n                foreach
+    (var key in keys)\n                {\n                    if (key == cancelKeyInfo)\n
+    \                   {\n                        var args = new TerminalCancelEventArgs(ConsoleSpecialKey.ControlC);\n
+    \                       this.OnCancelKeyPress(args);\n                        if
+    (args.Cancel == false)\n                        {\n                            this.OnCancelled(EventArgs.Empty);\n
+    \                           throw new OperationCanceledException($\"ReadLine is
+    cancelled.\");\n                        }\n                    }\n                    else
+    if (this.actionMaps.ContainsKey(key) == true)\n                    {\n                        this.actionMaps[key]();\n
+    \                   }\n                    else if (key.Key == ConsoleKey.Enter)\n
+    \                   {\n                        var text = this.Text;\n                        this.fullText
+    = string.Empty;\n                        this.start = 0;\n                        this.fullIndex
+    = 0;\n\n                        if (recordHistory == true)\n                        {\n
+    \                           if (this.isHidden == false && text != string.Empty)\n
+    \                           {\n                                if (this.histories.Contains(text)
+    == false)\n                                {\n                                    this.histories.Add(text);\n
+    \                                   this.historyIndex = this.histories.Count;\n
+    \                               }\n                                else\n                                {\n
+    \                                   this.historyIndex = this.histories.LastIndexOf(text)
+    + 1;\n                                }\n                            }\n                        }\n
+    \                       return text;\n                    }\n                    else
+    if (key.KeyChar != '\\0')\n                    {\n                        keyChars
+    += key.KeyChar;\n                    }\n                }\n\n                if
+    (keyChars != string.Empty && validation(this.Text + keyChars) == true)\n                {\n
+    \                   this.InsertText(keyChars);\n                    this.SetInputText();\n
+    \               }\n            }\n        }\n\n        private IEnumerable<ConsoleKeyInfo>
+    ReadKeys()\n        {\n            while (this.isCancellationRequested == false)\n
+    \           {\n                var count = 0;\n                while (true)\n
+    \               {\n                    if (Console.KeyAvailable == true)\n                    {\n
+    \                       yield return Console.ReadKey(true);\n                    }\n
+    \                   else if (count > 1)\n                    {\n                        yield
+    break;\n                    }\n                    else\n                    {\n
+    \                       Thread.Sleep(1);\n                        count++;\n                    }\n
+    \               }\n            }\n        }\n\n        private ConsoleKey ReadKeyImpl(params
+    ConsoleKey[] filters)\n        {\n            while (true)\n            {\n                var
+    key = Console.ReadKey(true);\n\n                if ((int)key.Modifiers != 0)\n
+    \                   continue;\n\n                if (filters.Any() == false ||
+    filters.Any(item => item == key.Key) == true)\n                {\n                    this.InsertText(key.Key.ToString());\n
+    \                   return key.Key;\n                }\n            }\n        }\n\n
+    \       private void Initialize(string prompt, string defaultText, bool isHidden)\n
+    \       {\n            lock (LockedObject)\n            {\n                this.writer
+    = Console.Out;\n                Console.SetOut(new TerminalTextWriter(Console.Out,
+    this, Console.OutputEncoding));\n                this.treatControlCAsInput = Console.TreatControlCAsInput;\n
+    \               Console.TreatControlCAsInput = true;\n\n                this.y
+    = Console.CursorTop;\n                this.width = Console.BufferWidth;\n                this.start
+    = 0;\n                this.isHidden = false;\n                this.fullText =
+    prompt;\n                this.fullIndex = prompt.Length;\n                this.OnDrawPrompt(this.writer,
+    this.fullText);\n                this.FullIndex = this.fullIndex;\n                this.start
+    = this.fullIndex;\n                this.isHidden = isHidden;\n                this.InsertText(defaultText);\n
+    \               this.inputText = defaultText;\n            }\n        }\n\n        private
+    void Release()\n        {\n            lock (LockedObject)\n            {\n                Console.TreatControlCAsInput
+    = this.treatControlCAsInput;\n                Console.SetOut(this.writer);\n                Console.WriteLine();\n
+    \               this.writer = null;\n                this.isHidden = false;\n
+    \           }\n        }\n\n        internal static void NextPosition(string text,
+    ref int x, ref int y)\n        {\n            for (var i = 0; i < text.Length;
+    i++)\n            {\n                var ch = text[i];\n                if (ch
+    == '\\r')\n                {\n                    x = 0;\n                    continue;\n
+    \               }\n                else if (ch == '\\n')\n                {\n
+    \                   x = 0;\n                    y++;\n                    continue;\n
+    \               }\n\n                var w = charToWidth[ch];\n                if
+    (x + w >= Console.BufferWidth)\n                {\n                    x = x +
+    w - Console.BufferWidth;\n                    y++;\n                }\n                else\n
+    \               {\n                    x += w;\n                }\n            }\n
+    \       }\n\n        internal string ReadStringInternal(string prompt)\n        {\n
+    \           this.Initialize(prompt, string.Empty, false);\n\n            try\n
+    \           {\n                return ReadLineImpl(i => true, true);\n            }\n
+    \           finally\n            {\n                this.Release();\n            }\n
+    \       }\n\n        internal void Erase()\n        {\n            var x1 = Console.CursorLeft;\n
+    \           var y1 = Console.CursorTop;\n\n            var prompt = this.fullText.Substring(0,
+    this.start);\n            var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
+    \           var x = 0;\n            var y = this.y;\n            NextPosition(prompt,
+    ref x, ref y);\n            NextPosition(text, ref x, ref y);\n\n            for
+    (var i = this.y; i <= y; i++)\n            {\n                Console.SetCursorPosition(0,
+    i);\n                if (Environment.OSVersion.Platform != PlatformID.Unix)\n
+    \               {\n                    Console.MoveBufferArea(Console.BufferWidth
+    - 1, i, 1, 1, 0, i);\n                    this.writer?.Write($\"\\r{new string('\\0',
+    Console.BufferWidth - 1)}\\r\");\n                }\n                else\n                {\n
+    \                   this.writer?.Write(\"\\r\" + new string(' ', Console.BufferWidth)
+    + \"\\r\");\n                }\n            }\n            Console.SetCursorPosition(x1,
+    y1);\n        }\n\n        internal void Draw()\n        {\n            Console.SetCursorPosition(0,
+    this.y);\n            var index = this.FullIndex;\n            var y = Console.CursorTop;\n
+    \           var x = 0;\n            var prompt = this.fullText.Substring(0, this.start);\n
+    \           var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
+    \           this.OnDrawPrompt(this.writer, prompt);\n            this.OnDrawText(this.writer,
+    text);\n            NextPosition(prompt, ref x, ref y);\n            NextPosition(text,
+    ref x, ref y);\n\n            if (y >= Console.BufferHeight)\n            {\n
+    \               if (Environment.OSVersion.Platform == PlatformID.Unix && x ==
+    0)\n                {\n                    this.writer.WriteLine();\n                }\n
+    \               this.y--;\n            }\n            if (index < this.FullIndex)\n
+    \               this.FullIndex = index;\n        }\n\n        internal static
+    object LockedObject { get; } = new object();\n\n        internal int FullIndex\n
+    \       {\n            get { return this.fullIndex; }\n            set\n            {\n
+    \               if (value < 0 || value > this.fullText.Length)\n                    throw
+    new ArgumentOutOfRangeException(nameof(value));\n\n                this.fullIndex
+    = value;\n                if (this.isHidden == false)\n                {\n                    var
+    x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText.Substring(0,
+    value), ref x, ref y);\n                    Console.SetCursorPosition(x, Math.Min(y,
+    Console.BufferHeight - 1));\n                }\n            }\n        }\n    }\n}\nc:\\>cls"
   fontColor:
     serializedVersion: 2
     rgba: 4294967295
-  visibleIndex: 0
+  selectionColor:
+    serializedVersion: 2
+    rgba: 4286664497
+  cursorColor:
+    serializedVersion: 2
+    rgba: 4287335307
+  visibleIndex: 956
   cursorPosition:
     x: 7
-    y: 6
+    y: 980
   isCursorVisible: 1
   compositionString: 
 --- !u!222 &1914692750
@@ -1369,8 +1764,394 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac32324f888247949e70e0eb77d3791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outputText: "21wewe we rlsajdflk dsajfl;ksadj f;lksaj1\n132423 2423 \n12121\nd f;laskjf
-    \nwe r234234\n23\n"
+  outputText: "//Released under the MIT License.\n//\n//Copyright (c) 2018 Ntreev
+    Soft co., Ltd.\n//\n//Permission is hereby granted, free of charge, to any person
+    obtaining a copy of this software and associated \n//documentation files (the
+    \"Software\"), to deal in the Software without restriction, including without
+    limitation the \n//rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit \n//persons to whom the Software
+    is furnished to do so, subject to the following conditions:\n//\n//The above copyright
+    notice and this permission notice shall be included in all copies or substantial
+    portions of the \n//Software.\n//\n//THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE \n//WARRANTIES
+    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO
+    EVENT SHALL THE AUTHORS OR \n//COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES
+    OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR \n//OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.\n\nusing System;\nusing System.Collections.Generic;\nusing System.IO;\nusing
+    System.Linq;\nusing System.Security;\nusing System.Text;\nusing System.Text.RegularExpressions;\nusing
+    System.Threading;\n\nnamespace Ntreev.Library.Commands\n{\n    public class Terminal\n
+    \   {\n        private static ConsoleKeyInfo cancelKeyInfo = new ConsoleKeyInfo('\\u0003',
+    ConsoleKey.C, false, false, true);\n        private static readonly Dictionary<char,
+    int> charToWidth = new Dictionary<char, int>(char.MaxValue);\n        private
+    static int bufferWidth = 80;\n\n        private readonly Dictionary<ConsoleKeyInfo,
+    Action> actionMaps = new Dictionary<ConsoleKeyInfo, Action>();\n        private
+    readonly List<string> histories = new List<string>();\n        private readonly
+    List<string> completions = new List<string>();\n\n        private int y = Console.CursorTop;\n
+    \       private int width = Console.BufferWidth;\n        private int fullIndex;\n
+    \       private int start = 0;\n        private int historyIndex;\n        private
+    string fullText;\n        private string inputText;\n        private string completion
+    = string.Empty;\n        private TextWriter writer;\n        private bool isHidden;\n
+    \       private bool treatControlCAsInput;\n        private bool isCancellationRequested;\n\n
+    \       static Terminal()\n        {\n            {\n                var name
+    = $\"{typeof(Terminal).Namespace}.{PlatformID.Win32NT}.dat\";\n                using
+    (var stream = typeof(Terminal).Assembly.GetManifestResourceStream(name))\n                {\n
+    \                   var buffer = new byte[stream.Length];\n                    stream.Read(buffer,
+    0, buffer.Length);\n\n                    for (var i = char.MinValue; i < char.MaxValue;
+    i++)\n                    {\n                        charToWidth.Add(i, buffer[i]);\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    static bool IsOutputRedirected\n        {\n            get\n            {\n#if
+    !NET35\n                return Console.IsOutputRedirected;\n#else\n                return
+    true;\n#endif\n\n            }\n        }\n        public static bool IsInputRedirected\n
+    \       {\n            get\n            {\n#if !NET35\n                return
+    Console.IsInputRedirected;\n#else\n                return true;\n#endif\n            }\n
+    \       }\n\n        public static int GetLength(string text)\n        {\n            var
+    length = 0;\n            foreach (var item in text)\n            {\n                length
+    += charToWidth[item];\n            }\n            return length;\n        }\n\n
+    \       public Terminal()\n        {\n            if (Terminal.IsInputRedirected
+    == true)\n                throw new Exception(\"Terminal cannot use. Console.IsInputRedirected
+    must be false\");\n            this.actionMaps.Add(new ConsoleKeyInfo('\\u001b',
+    ConsoleKey.Escape, false, false, false), this.Clear);\n            if (Environment.OSVersion.Platform
+    == PlatformID.Unix)\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\0',
+    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
+    \           else\n            {\n                this.actionMaps.Add(new ConsoleKeyInfo('\\b',
+    ConsoleKey.Backspace, false, false, false), this.Backspace);\n            }\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.Delete, false,
+    false, false), this.Delete);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
+    ConsoleKey.Home, false, false, false), this.Home);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\0', ConsoleKey.Home, false, false, true), this.DeleteToHome);\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.End, false,
+    false, false), this.End);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\0',
+    ConsoleKey.End, false, false, true), this.DeleteToEnd);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\0', ConsoleKey.UpArrow, false, false, false), this.PrevHistory);\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.DownArrow,
+    false, false, false), this.NextHistory);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\0', ConsoleKey.LeftArrow, false, false, false), this.Left);\n
+    \           this.actionMaps.Add(new ConsoleKeyInfo('\\0', ConsoleKey.RightArrow,
+    false, false, false), this.Right);\n            this.actionMaps.Add(new ConsoleKeyInfo('\\t',
+    ConsoleKey.Tab, false, false, false), this.NextCompletion);\n            this.actionMaps.Add(new
+    ConsoleKeyInfo('\\t', ConsoleKey.Tab, true, false, false), this.PrevCompletion);\n
+    \       }\n\n        public long? ReadLong(string prompt)\n        {\n            var
+    result = this.ReadNumber(prompt, null, i => long.TryParse(i, out long v));\n            if
+    (result is long)\n            {\n                return (long)result;\n            }\n
+    \           return null;\n        }\n\n        public long? ReadLong(string prompt,
+    long defaultValue)\n        {\n            var result = this.ReadNumber(prompt,
+    defaultValue, i => long.TryParse(i, out long v));\n            if (result is long)\n
+    \           {\n                return (long)result;\n            }\n            return
+    null;\n        }\n\n        public double? ReadDouble(string prompt)\n        {\n
+    \           var result = this.ReadNumber(prompt, null, i => double.TryParse(i,
+    out double v));\n            if (result is double)\n            {\n                return
+    (double)result;\n            }\n            return null;\n        }\n\n        public
+    double? ReadDouble(string prompt, double defaultValue)\n        {\n            var
+    result = this.ReadNumber(prompt, defaultValue, i => double.TryParse(i, out double
+    v));\n            if (result is double)\n            {\n                return
+    (double)result;\n            }\n            return null;\n        }\n\n        public
+    string ReadString(string prompt)\n        {\n            return ReadString(prompt,
+    string.Empty);\n        }\n\n        public string ReadString(string prompt, bool
+    isHidden)\n        {\n            return this.ReadString(prompt, string.Empty,
+    isHidden);\n        }\n\n        public string ReadString(string prompt, string
+    defaultText)\n        {\n            return this.ReadString(prompt, defaultText,
+    false);\n        }\n\n        public string ReadString(string prompt, string defaultText,
+    bool isHidden)\n        {\n            this.Initialize(prompt, defaultText, isHidden);\n\n
+    \           try\n            {\n                return ReadLineImpl(i => true,
+    false);\n            }\n            finally\n            {\n                this.Release();\n
+    \           }\n        }\n\n        public SecureString ReadSecureString(string
+    prompt)\n        {\n            var text = this.ReadString(prompt, true);\n            var
+    secureString = new SecureString();\n            foreach (var item in text)\n            {\n
+    \               secureString.AppendChar(item);\n            }\n            return
+    secureString;\n        }\n\n        public ConsoleKey ReadKey(string prompt, params
+    ConsoleKey[] filters)\n        {\n            this.Initialize(prompt, string.Empty,
+    false);\n            try\n            {\n                return ReadKeyImpl(filters);\n
+    \           }\n            finally\n            {\n                this.Release();\n
+    \           }\n        }\n\n        public void NextHistory()\n        {\n            if
+    (this.historyIndex + 1 < this.histories.Count)\n            {\n                var
+    text = this.histories[this.historyIndex + 1];\n                this.ClearText();\n
+    \               this.InsertText(text);\n                this.SetInputText();\n
+    \               this.historyIndex++;\n            }\n        }\n\n        public
+    void PrevHistory()\n        {\n            if (this.historyIndex > 0)\n            {\n
+    \               var text = this.histories[this.historyIndex - 1];\n                this.ClearText();\n
+    \               this.InsertText(text);\n                this.SetInputText();\n
+    \               this.historyIndex--;\n            }\n            else if (this.histories.Count
+    == 1)\n            {\n                var text = this.histories[0];\n                this.ClearText();\n
+    \               this.InsertText(text);\n                this.SetInputText();\n
+    \               this.historyIndex = 0;\n            }\n        }\n\n        public
+    IList<string> Histories\n        {\n            get { return this.histories; }\n
+    \       }\n\n        public IList<string> Completions\n        {\n            get
+    { return this.completions; }\n        }\n\n        public void Cancel()\n        {\n
+    \           this.isCancellationRequested = true;\n        }\n\n        public
+    void Clear()\n        {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.ClearText();\n
+    \                   this.SetInputText();\n                }\n            }\n        }\n\n
+    \       public void Delete()\n        {\n            lock (LockedObject)\n            {\n
+    \               if (this.Index < this.Length)\n                {\n                    using
+    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
+    \                       this.Backspace();\n                        this.SetInputText();\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    void Home()\n        {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
+    = 0;\n                }\n            }\n        }\n\n        public void End()\n
+    \       {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.Index
+    = this.Length;\n                }\n            }\n        }\n\n        public
+    void Left()\n        {\n            lock (LockedObject)\n            {\n                if
+    (this.Index > 0)\n                {\n                    using (TerminalCursorVisible.Set(false))\n
+    \                   {\n                        this.Index--;\n                        this.SetInputText();\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    void Right()\n        {\n            lock (LockedObject)\n            {\n                if
+    (this.Index + 1 <= this.Length)\n                {\n                    using
+    (TerminalCursorVisible.Set(false))\n                    {\n                        this.Index++;\n
+    \                       this.SetInputText();\n                    }\n                }\n
+    \           }\n        }\n\n        public void Backspace()\n        {\n            lock
+    (LockedObject)\n            {\n                if (this.Index > 0)\n                {\n
+    \                   using (TerminalCursorVisible.Set(false))\n                    {\n
+    \                       this.BackspaceImpl();\n                        this.SetInputText();\n
+    \                   }\n                }\n            }\n        }\n\n        public
+    void DeleteToEnd()\n        {\n            lock (LockedObject)\n            {\n
+    \               using (TerminalCursorVisible.Set(false))\n                {\n
+    \                   var index = this.Index;\n                    this.Index =
+    this.Length;\n                    while (this.Index > index)\n                    {\n
+    \                       this.BackspaceImpl();\n                    }\n                    this.SetInputText();\n
+    \               }\n            }\n        }\n\n        public void DeleteToHome()\n
+    \       {\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    while
+    (this.Index > 0)\n                    {\n                        this.BackspaceImpl();\n
+    \                   }\n                    this.SetInputText();\n                }\n
+    \           }\n        }\n\n        public void NextCompletion()\n        {\n
+    \           lock (LockedObject)\n            {\n                this.CompletionImpl(NextCompletion);\n
+    \           }\n        }\n\n        public void PrevCompletion()\n        {\n
+    \           lock (LockedObject)\n            {\n                this.CompletionImpl(PrevCompletion);\n
+    \           }\n        }\n\n        public int Index\n        {\n            get
+    { return this.FullIndex - this.start; }\n            set\n            {\n                this.FullIndex
+    = value + this.start;\n            }\n        }\n\n        public string Text\n
+    \       {\n            get { return this.fullText.Substring(this.start); }\n        }\n\n
+    \       public string Prompt\n        {\n            get { return this.fullText.Substring(0,
+    this.start); }\n        }\n\n        public bool IsReading\n        {\n            get
+    { return this.writer != null; }\n        }\n\n        public int Top\n        {\n
+    \           get\n            {\n                if (this.width != Console.BufferWidth)\n
+    \               {\n                    this.y = Console.CursorTop - this.fullIndex
+    / Console.BufferWidth;\n                    this.width = Console.BufferWidth;\n
+    \               }\n                return this.y;\n            }\n            internal
+    set\n            {\n                this.y = value;\n            }\n        }\n\n
+    \       public bool IsEnabled { get; set; } = true;\n\n        public static int
+    BufferWidth\n        {\n            get\n            {\n                if (Terminal.IsOutputRedirected
+    == false)\n                    return Console.BufferWidth;\n                return
+    bufferWidth;\n            }\n            set\n            {\n                if
+    (Terminal.IsOutputRedirected == false)\n                    throw new InvalidOperationException(\"console
+    output is redirected.\");\n                if (value <= 0)\n                    throw
+    new ArgumentOutOfRangeException();\n                bufferWidth = value;\n            }\n
+    \       }\n\n        public static string NextCompletion(string[] completions,
+    string text)\n        {\n            completions = completions.OrderBy(item =>
+    item)\n                .ToArray();\n            if (completions.Contains(text)
+    == true)\n            {\n                for (var i = 0; i < completions.Length;
+    i++)\n                {\n                    var r = string.Compare(text, completions[i],
+    true);\n                    if (r == 0)\n                    {\n                        if
+    (i + 1 < completions.Length)\n                            return completions[i
+    + 1];\n                        else\n                            return completions.First();\n
+    \                   }\n                }\n            }\n            else\n            {\n
+    \               for (var i = 0; i < completions.Length; i++)\n                {\n
+    \                   var r = string.Compare(text, completions[i], true);\n                    if
+    (r < 0)\n                    {\n                        return completions[i];\n
+    \                   }\n                }\n            }\n            return text;\n
+    \       }\n\n        public static string PrevCompletion(string[] completions,
+    string text)\n        {\n            completions = completions.OrderBy(item =>
+    item)\n                .ToArray();\n            if (completions.Contains(text)
+    == true)\n            {\n                for (var i = completions.Length - 1;
+    i >= 0; i--)\n                {\n                    var r = string.Compare(text,
+    completions[i], true);\n                    if (r == 0)\n                    {\n
+    \                       if (i - 1 >= 0)\n                            return completions[i
+    - 1];\n                        else\n                            return completions.Last();\n
+    \                   }\n                }\n            }\n            else\n            {\n
+    \               for (var i = completions.Length - 1; i >= 0; i--)\n                {\n
+    \                   var r = string.Compare(text, completions[i], true);\n                    if
+    (r < 0)\n                    {\n                        return completions[i];\n
+    \                   }\n                }\n            }\n            return text;\n
+    \       }\n\n        public void SetPrompt(string prompt)\n        {\n            if
+    (this.writer == null)\n                throw new Exception(\"prompt can set only
+    on read mode.\");\n\n            lock (LockedObject)\n            {\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    var
+    text = this.Text;\n                    var index = this.Index;\n                    this.start
+    = 0;\n                    this.Clear();\n                    this.InsertText(prompt);\n
+    \                   this.start = this.Index;\n                    this.InsertText(text);\n
+    \                   this.Index = index;\n                    this.Draw();\n                }\n
+    \           }\n        }\n\n        public event TerminalCancelEventHandler CancelKeyPress;\n\n
+    \       public event EventHandler Cancelled;\n\n        protected virtual void
+    OnCancelKeyPress(TerminalCancelEventArgs e)\n        {\n            this.CancelKeyPress?.Invoke(this,
+    e);\n        }\n\n        protected virtual void OnCancelled(EventArgs e)\n        {\n
+    \           this.Cancelled?.Invoke(this, e);\n        }\n\n        protected virtual
+    string[] GetCompletion(string[] items, string find)\n        {\n            var
+    query = from item in this.completions\n                        where item.StartsWith(find)\n
+    \                       select item;\n            return query.ToArray();\n        }\n\n
+    \       protected virtual void OnDrawPrompt(TextWriter writer, string prompt)\n
+    \       {\n            writer.Write(prompt);\n        }\n\n        protected virtual
+    void OnDrawText(TextWriter writer, string text)\n        {\n            writer.Write(text);\n
+    \       }\n\n        private int Length\n        {\n            get { return this.fullText.Length
+    - this.start; }\n        }\n\n        private void ClearText()\n        {\n            lock
+    (LockedObject)\n            {\n                var x = 0;\n                var
+    y = this.Top;\n                this.Erase();\n                this.fullText =
+    this.fullText.Substring(0, this.start);\n                this.start = this.fullText.Length;\n
+    \               this.fullIndex = this.start;\n                this.inputText =
+    string.Empty;\n                Console.SetCursorPosition(x, y);\n                this.Draw();\n
+    \           }\n        }\n\n        private void InsertText(string text)\n        {\n
+    \           if (text == string.Empty)\n                return;\n            lock
+    (LockedObject)\n            {\n                this.fullText = this.fullText.Insert(this.fullIndex,
+    text);\n                this.fullIndex += text.Length;\n\n                if (this.isHidden
+    == true)\n                    return;\n\n                var index = this.fullIndex;\n
+    \               var text1 = this.fullText.Substring(this.start);\n\n                using
+    (TerminalCursorVisible.Set(false))\n                {\n                    this.FullIndex
+    = this.start;\n                    this.OnDrawText(this.writer, text1);\n\n\n
+    \                   var x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText,
+    ref x, ref y);\n\n                    if (y >= Console.BufferHeight)\n                    {\n
+    \                       if (Environment.OSVersion.Platform == PlatformID.Unix
+    && x == 0)\n                        {\n                            this.writer.WriteLine();\n
+    \                       }\n                        this.y--;\n                    }\n
+    \                   this.FullIndex = index;\n                }\n            }\n
+    \       }\n\n        private void BackspaceImpl()\n        {\n            var
+    extraText = this.fullText.Substring(this.fullIndex);\n            var inputIndex
+    = this.Index;\n            this.Index = this.Length;\n            if (this.isHidden
+    == false)\n            {\n                if (Console.CursorLeft == 0)\n                {\n
+    \                   var i = this.Index;\n                    this.Index--;\n                    if
+    (Environment.OSVersion.Platform == PlatformID.Unix)\n                        this.writer.Write(\"
+    \");\n                    else\n                        this.writer.Write(\"\\0\");\n
+    \                   this.Index--;\n                }\n                else\n                {\n
+    \                   this.writer.Write(\"\\b\\0\");\n                }\n            }\n\n
+    \           this.Index = inputIndex;\n            this.Index--;\n            this.fullText
+    = this.fullText.Remove(this.fullIndex, 1);\n            if (this.isHidden == false)\n
+    \           {\n                this.writer.Write(extraText);\n            }\n
+    \           this.Index = this.Index;\n        }\n\n        private void CompletionImpl(Func<string[],
+    string, string> func)\n        {\n            var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));\n
+    \           var find = string.Empty;\n            var prefix = false;\n            var
+    postfix = false;\n            var leftText = this.inputText;\n            if (matches.Count
+    > 0)\n            {\n                var match = matches.Last();\n                var
+    matchText = match.Value;\n                if (matchText.Length > 0 && matchText.First()
+    == '\\\"')\n                {\n                    prefix = true;\n                    matchText
+    = matchText.Substring(1);\n                }\n                if (matchText.Length
+    > 1 && matchText.Last() == '\\\"')\n                {\n                    postfix
+    = true;\n                    matchText = matchText.Remove(matchText.Length - 1);\n
+    \               }\n                if (matchText == string.Empty || matchText.Trim()
+    != string.Empty)\n                {\n                    find = matchText;\n                    matches.RemoveAt(matches.Count
+    - 1);\n                    leftText = this.inputText.Remove(match.Index);\n                }\n
+    \           }\n\n            var argList = new List<string>();\n            for
+    (var i = 0; i < matches.Count; i++)\n            {\n                var matchText
+    = CommandStringUtility.TrimQuot(matches[i].Value).Trim();\n                if
+    (matchText != string.Empty)\n                    argList.Add(matchText);\n            }\n\n
+    \           var completions = this.GetCompletion(argList.ToArray(), find);\n            if
+    (completions != null && completions.Any())\n            {\n                this.completion
+    = func(completions, this.completion);\n                using (TerminalCursorVisible.Set(false))\n
+    \               {\n                    var inputText = this.inputText;\n                    this.ClearText();\n
+    \                   if (prefix == true || postfix == true)\n                    {\n
+    \                       this.InsertText(leftText + \"\\\"\" + this.completion
+    + \"\\\"\");\n                    }\n                    else\n                    {\n
+    \                       this.InsertText(leftText + this.completion);\n                    }\n
+    \                   this.inputText = inputText;\n                }\n            }\n
+    \       }\n\n        private void SetInputText()\n        {\n            this.inputText
+    = this.Text.Remove(this.Index, this.Text.Length - this.Index);\n            this.completion
+    = string.Empty;\n        }\n\n        private object ReadNumber(string prompt,
+    object defaultValue, Func<string, bool> validation)\n        {\n            this.Initialize(prompt,
+    $\"{defaultValue}\", false);\n            try\n            {\n                return
+    ReadLineImpl(validation, false);\n            }\n            finally\n            {\n
+    \               this.Release();\n            }\n        }\n\n        private string
+    ReadLineImpl(Func<string, bool> validation, bool recordHistory)\n        {\n            while
+    (true)\n            {\n                Thread.Sleep(1);\n                if (this.isCancellationRequested
+    == true)\n                    return null;\n                if (this.IsEnabled
+    == false)\n                    continue;\n                var keys = this.ReadKeys().ToArray();\n
+    \               if (this.isCancellationRequested == true)\n                    return
+    null;\n\n                var keyChars = string.Empty;\n                foreach
+    (var key in keys)\n                {\n                    if (key == cancelKeyInfo)\n
+    \                   {\n                        var args = new TerminalCancelEventArgs(ConsoleSpecialKey.ControlC);\n
+    \                       this.OnCancelKeyPress(args);\n                        if
+    (args.Cancel == false)\n                        {\n                            this.OnCancelled(EventArgs.Empty);\n
+    \                           throw new OperationCanceledException($\"ReadLine is
+    cancelled.\");\n                        }\n                    }\n                    else
+    if (this.actionMaps.ContainsKey(key) == true)\n                    {\n                        this.actionMaps[key]();\n
+    \                   }\n                    else if (key.Key == ConsoleKey.Enter)\n
+    \                   {\n                        var text = this.Text;\n                        this.fullText
+    = string.Empty;\n                        this.start = 0;\n                        this.fullIndex
+    = 0;\n\n                        if (recordHistory == true)\n                        {\n
+    \                           if (this.isHidden == false && text != string.Empty)\n
+    \                           {\n                                if (this.histories.Contains(text)
+    == false)\n                                {\n                                    this.histories.Add(text);\n
+    \                                   this.historyIndex = this.histories.Count;\n
+    \                               }\n                                else\n                                {\n
+    \                                   this.historyIndex = this.histories.LastIndexOf(text)
+    + 1;\n                                }\n                            }\n                        }\n
+    \                       return text;\n                    }\n                    else
+    if (key.KeyChar != '\\0')\n                    {\n                        keyChars
+    += key.KeyChar;\n                    }\n                }\n\n                if
+    (keyChars != string.Empty && validation(this.Text + keyChars) == true)\n                {\n
+    \                   this.InsertText(keyChars);\n                    this.SetInputText();\n
+    \               }\n            }\n        }\n\n        private IEnumerable<ConsoleKeyInfo>
+    ReadKeys()\n        {\n            while (this.isCancellationRequested == false)\n
+    \           {\n                var count = 0;\n                while (true)\n
+    \               {\n                    if (Console.KeyAvailable == true)\n                    {\n
+    \                       yield return Console.ReadKey(true);\n                    }\n
+    \                   else if (count > 1)\n                    {\n                        yield
+    break;\n                    }\n                    else\n                    {\n
+    \                       Thread.Sleep(1);\n                        count++;\n                    }\n
+    \               }\n            }\n        }\n\n        private ConsoleKey ReadKeyImpl(params
+    ConsoleKey[] filters)\n        {\n            while (true)\n            {\n                var
+    key = Console.ReadKey(true);\n\n                if ((int)key.Modifiers != 0)\n
+    \                   continue;\n\n                if (filters.Any() == false ||
+    filters.Any(item => item == key.Key) == true)\n                {\n                    this.InsertText(key.Key.ToString());\n
+    \                   return key.Key;\n                }\n            }\n        }\n\n
+    \       private void Initialize(string prompt, string defaultText, bool isHidden)\n
+    \       {\n            lock (LockedObject)\n            {\n                this.writer
+    = Console.Out;\n                Console.SetOut(new TerminalTextWriter(Console.Out,
+    this, Console.OutputEncoding));\n                this.treatControlCAsInput = Console.TreatControlCAsInput;\n
+    \               Console.TreatControlCAsInput = true;\n\n                this.y
+    = Console.CursorTop;\n                this.width = Console.BufferWidth;\n                this.start
+    = 0;\n                this.isHidden = false;\n                this.fullText =
+    prompt;\n                this.fullIndex = prompt.Length;\n                this.OnDrawPrompt(this.writer,
+    this.fullText);\n                this.FullIndex = this.fullIndex;\n                this.start
+    = this.fullIndex;\n                this.isHidden = isHidden;\n                this.InsertText(defaultText);\n
+    \               this.inputText = defaultText;\n            }\n        }\n\n        private
+    void Release()\n        {\n            lock (LockedObject)\n            {\n                Console.TreatControlCAsInput
+    = this.treatControlCAsInput;\n                Console.SetOut(this.writer);\n                Console.WriteLine();\n
+    \               this.writer = null;\n                this.isHidden = false;\n
+    \           }\n        }\n\n        internal static void NextPosition(string text,
+    ref int x, ref int y)\n        {\n            for (var i = 0; i < text.Length;
+    i++)\n            {\n                var ch = text[i];\n                if (ch
+    == '\\r')\n                {\n                    x = 0;\n                    continue;\n
+    \               }\n                else if (ch == '\\n')\n                {\n
+    \                   x = 0;\n                    y++;\n                    continue;\n
+    \               }\n\n                var w = charToWidth[ch];\n                if
+    (x + w >= Console.BufferWidth)\n                {\n                    x = x +
+    w - Console.BufferWidth;\n                    y++;\n                }\n                else\n
+    \               {\n                    x += w;\n                }\n            }\n
+    \       }\n\n        internal string ReadStringInternal(string prompt)\n        {\n
+    \           this.Initialize(prompt, string.Empty, false);\n\n            try\n
+    \           {\n                return ReadLineImpl(i => true, true);\n            }\n
+    \           finally\n            {\n                this.Release();\n            }\n
+    \       }\n\n        internal void Erase()\n        {\n            var x1 = Console.CursorLeft;\n
+    \           var y1 = Console.CursorTop;\n\n            var prompt = this.fullText.Substring(0,
+    this.start);\n            var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
+    \           var x = 0;\n            var y = this.y;\n            NextPosition(prompt,
+    ref x, ref y);\n            NextPosition(text, ref x, ref y);\n\n            for
+    (var i = this.y; i <= y; i++)\n            {\n                Console.SetCursorPosition(0,
+    i);\n                if (Environment.OSVersion.Platform != PlatformID.Unix)\n
+    \               {\n                    Console.MoveBufferArea(Console.BufferWidth
+    - 1, i, 1, 1, 0, i);\n                    this.writer?.Write($\"\\r{new string('\\0',
+    Console.BufferWidth - 1)}\\r\");\n                }\n                else\n                {\n
+    \                   this.writer?.Write(\"\\r\" + new string(' ', Console.BufferWidth)
+    + \"\\r\");\n                }\n            }\n            Console.SetCursorPosition(x1,
+    y1);\n        }\n\n        internal void Draw()\n        {\n            Console.SetCursorPosition(0,
+    this.y);\n            var index = this.FullIndex;\n            var y = Console.CursorTop;\n
+    \           var x = 0;\n            var prompt = this.fullText.Substring(0, this.start);\n
+    \           var text = this.isHidden == true ? string.Empty : this.fullText.Substring(this.start);\n
+    \           this.OnDrawPrompt(this.writer, prompt);\n            this.OnDrawText(this.writer,
+    text);\n            NextPosition(prompt, ref x, ref y);\n            NextPosition(text,
+    ref x, ref y);\n\n            if (y >= Console.BufferHeight)\n            {\n
+    \               if (Environment.OSVersion.Platform == PlatformID.Unix && x ==
+    0)\n                {\n                    this.writer.WriteLine();\n                }\n
+    \               this.y--;\n            }\n            if (index < this.FullIndex)\n
+    \               this.FullIndex = index;\n        }\n\n        internal static
+    object LockedObject { get; } = new object();\n\n        internal int FullIndex\n
+    \       {\n            get { return this.fullIndex; }\n            set\n            {\n
+    \               if (value < 0 || value > this.fullText.Length)\n                    throw
+    new ArgumentOutOfRangeException(nameof(value));\n\n                this.fullIndex
+    = value;\n                if (this.isHidden == false)\n                {\n                    var
+    x = 0;\n                    var y = this.Top;\n                    NextPosition(this.fullText.Substring(0,
+    value), ref x, ref y);\n                    Console.SetCursorPosition(x, Math.Min(y,
+    Console.BufferHeight - 1));\n                }\n            }\n        }\n    }\n}\n"
   prompt: c:\>
   commandText: cls
 --- !u!1 &1949075380
@@ -1422,7 +2203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6bd18a3f9e414890ba0af99286e8afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 680737578}
+  m_Material: {fileID: 683031487}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:

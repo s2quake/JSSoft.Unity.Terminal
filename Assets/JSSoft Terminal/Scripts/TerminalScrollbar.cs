@@ -33,117 +33,24 @@ using System.Threading.Tasks;
 
 namespace JSSoft.UI
 {
-    [RequireComponent(typeof(Scrollbar))]
-    [ExecuteAlways]
-    public class TerminalScrollbar : UIBehaviour
+    public class TerminalScrollbar : Scrollbar
     {
-        [SerializeField]
-        private TerminalGrid grid = null;
-        private Scrollbar verticalScrollbar;
-
-        protected override void OnEnable()
+        public override void OnPointerDown(PointerEventData eventData)
         {
-            base.OnEnable();
-            this.verticalScrollbar = this.GetComponent<Scrollbar>();
-            this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
-            this.AttachEvent();
+            base.OnPointerDown(eventData);
         }
 
-        protected override void OnDisable()
+        public override void OnPointerUp(PointerEventData eventData)
         {
-            base.OnDisable();
-            this.verticalScrollbar.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);
-            this.DetachEvent();
+            base.OnPointerUp(eventData);
+            this.OnPointerUp(EventArgs.Empty);
         }
 
-        private void AttachEvent()
-        {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged += TerminalGrid_TextChanged;
-                this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-            }
-        }
+        public event EventHandler PointerUp;
 
-        private void DetachEvent()
+        protected virtual void OnPointerUp(EventArgs e)
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged -= TerminalGrid_TextChanged;
-                this.grid.LayoutChanged -= TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-            }
-        }
-
-        private void UpdateScrollbarVisible()
-        {
-            var gameObject = this.gameObject;
-            var grid = this.grid;
-            var isActive = grid.Rows.Count >= grid.RowCount;
-            if (this.verticalScrollbar.enabled != isActive)
-            {
-                this.verticalScrollbar.enabled = isActive;
-                if (this.verticalScrollbar.targetGraphic is Graphic targetGraphic)
-                {
-                    targetGraphic.enabled = isActive;
-                }
-                if (this.verticalScrollbar.handleRect is RectTransform rectTransform)
-                {
-                    if (rectTransform.GetComponent<Image>() is Image image)
-                    {
-                        image.enabled = isActive;
-                    }
-                }
-            }
-        }
-
-        private async void UpdateScrollbarSize()
-        {
-            var size1 = (float)Math.Max(1, grid.RowCount);
-            var size2 = (float)Math.Max(1, grid.Rows.Count);
-            var size = size1 / size2;
-            if (Application.isPlaying == false)
-                await Task.Delay(1);
-            this.verticalScrollbar.size = size;
-        }
-
-        private async void UpdateScrollbarValue()
-        {
-            var grid = this.grid;
-            var value1 = grid.VisibleIndex;
-            var value2 = (float)Math.Max(1, grid.Rows.Count - grid.RowCount);
-            var value = value1 / value2;
-            if (Application.isPlaying == false)
-                await Task.Delay(1);
-            this.verticalScrollbar.SetValueWithoutNotify(value);
-        }
-
-        private void TerminalGrid_TextChanged(object sender, EventArgs e)
-        {
-            this.UpdateScrollbarVisible();
-            this.UpdateScrollbarSize();
-        }
-
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
-        {
-            this.UpdateScrollbarVisible();
-            this.UpdateScrollbarSize();
-        }
-
-        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
-        {
-            this.UpdateScrollbarValue();
-        }
-
-        private void VerticalScrollbar_OnValueChanged(float arg0)
-        {
-            if (this.grid != null)
-            {
-                var value1 = (float)this.verticalScrollbar.value;
-                var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.RowCount);
-                this.grid.VisibleIndex = (int)(value1 * value2);
-            }
+            this.PointerUp?.Invoke(this, e);
         }
     }
 }

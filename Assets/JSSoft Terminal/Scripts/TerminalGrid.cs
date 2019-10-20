@@ -46,10 +46,15 @@ namespace JSSoft.UI
         IPointerDownHandler,
         IPointerEnterHandler,
         IPointerExitHandler,
+        IScrollHandler,
         IUpdateSelectedHandler,
         ISelectHandler,
         IDeselectHandler
     {
+        public static readonly Color32 DefaultSelectionColor = new Color32(49, 79, 129, 255);
+        public static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);
+        public static readonly Color32 DefaultForegroundColor = new Color32(255, 255, 255, 255);
+        public static readonly Color32 DefaultCursorColor = new Color32(139, 139, 139, 255);
         private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
 
         [SerializeField]
@@ -58,7 +63,11 @@ namespace JSSoft.UI
         [TextArea(5, 10)]
         public string text = string.Empty;
         [SerializeField]
-        private Color32 fontColor = TerminalColors.White;
+        private Color32 fontColor = DefaultForegroundColor;
+        [SerializeField]
+        private Color32 selectionColor = DefaultSelectionColor;
+        [SerializeField]
+        private Color32 cursorColor = DefaultCursorColor;
         [SerializeField]
         private int visibleIndex;
         [SerializeField]
@@ -79,11 +88,25 @@ namespace JSSoft.UI
         private TerminalPoint endPoint;
         private bool isFocused;
         private bool hasSelection;
+        private float scrollPos;
+        private bool isScrolling;
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static TerminalGrid()
         {
-
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageUp, (g) => g.PageUp()));
+            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageDown, (g) => g.PageDown()));
+            if (Terminal.IsMac)
+            {
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,
+                        KeyCode.PageUp, (g) => g.LineUp()));
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,
+                        KeyCode.PageDown, (g) => g.LineDown()));
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,
+                        KeyCode.Home, (g) => g.ScrollToTop()));
+                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,
+                        KeyCode.End, (g) => g.ScrollToBottom()));
+            }
         }
 
         public TerminalGrid()
@@ -203,6 +226,11 @@ namespace JSSoft.UI
             return grid.ForegroundColor ?? grid.fontColor;
         }
 
+        public static Color32 GetSelectionColor(TerminalGrid grid)
+        {
+            return grid != null ? grid.SelectionColor : DefaultSelectionColor;
+        }
+
         public Vector2 WorldToGrid(Vector2 position)
         {
             var rect = this.GetComponent<RectTransform>().rect;
@@ -257,18 +285,6 @@ namespace JSSoft.UI
 
         public Color32? IndexToForegroundColor(int index) => this.Terminal.GetForegroundColor(index);
 
-        public Terminal Terminal
-        {
-            get
-            {
-                if (this.terminal == null)
-                {
-                    this.terminal = this.GetComponent<Terminal>();
-                }
-                return this.terminal;
-            }
-        }
-
         public void Append(string text)
         {
             this.Append(text, this.text.Length);
@@ -286,6 +302,69 @@ namespace JSSoft.UI
             this.text.Remove(startIndex, length);
             this.UpdateRows();
             this.OnTextChanged(EventArgs.Empty);
+        }
+
+        public void ScrollToTop()
+        {
+            if (this.MaximumVisibleIndex > 0)
+            {
+                this.isScrolling = true;
+                this.VisibleIndex = 0;
+                this.isScrolling = false;
+            }
+        }
+
+        public void ScrollToBottom()
+        {
+            if (this.MaximumVisibleIndex > 0)
+            {
+                this.isScrolling = true;
+                this.VisibleIndex = this.MaximumVisibleIndex;
+                this.isScrolling = false;
+            }
+        }
+
+        public void PageUp()
+        {
+            this.Scroll(-this.RowCount);
+        }
+
+        public void PageDown()
+        {
+            this.Scroll(this.RowCount);
+        }
+
+        public void LineUp()
+        {
+            this.Scroll(-1);
+        }
+
+        public void LineDown()
+        {
+            this.Scroll(1);
+        }
+
+        public void Scroll(int value)
+        {
+            var visibleIndex = this.VisibleIndex + value;
+            if (visibleIndex >= 0 && visibleIndex <= this.MaximumVisibleIndex)
+            {
+                this.isScrolling = true;
+                this.VisibleIndex = visibleIndex;
+                this.isScrolling = false;
+            }
+        }
+
+        public Terminal Terminal
+        {
+            get
+            {
+                if (this.terminal == null)
+                {
+                    this.terminal = this.GetComponent<Terminal>();
+                }
+                return this.terminal;
+            }
         }
 
         public bool IsFocused
@@ -347,6 +426,7 @@ namespace JSSoft.UI
                 {
                     this.visibleIndex = value;
                     this.UpdateVisibleIndex();
+                    this.scrollPos = this.visibleIndex;
                     this.OnVisibleIndexChanged(EventArgs.Empty);
                 }
             }
@@ -358,13 +438,33 @@ namespace JSSoft.UI
             {
                 if (this.visibleIndex < 0 || this.Rows.Count < this.RowCount)
                     return 0;
-                return Math.Min(this.visibleIndex, this.Rows.Count - this.RowCount);
+                return this.Rows.Count - this.RowCount;
             }
         }
 
         public Color32? BackgroundColor { get; set; }
 
         public Color32? ForegroundColor { get; set; }
+
+        public Color32 SelectionColor
+        {
+            get => this.selectionColor;
+            set
+            {
+                this.selectionColor = value;
+                this.OnLayoutChanged(EventArgs.Empty);
+            }
+        }
+
+        public Color32 CursorColor
+        {
+            get => this.cursorColor;
+            set
+            {
+                this.cursorColor = value;
+                this.OnLayoutChanged(EventArgs.Empty);
+            }
+        }
 
         public TerminalPoint CursorPosition
         {
@@ -390,6 +490,8 @@ namespace JSSoft.UI
                 this.OnCursorPositionChanged(EventArgs.Empty);
             }
         }
+
+        public bool IsScrolling => this.isScrolling;
 
         public string CompositionString
         {
@@ -488,11 +590,8 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            // this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
-            // this.material.color = base.color;
             this.AttachEvent();
-            // this.SetVerticesDirty();
-            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnEnable)}");
+            this.VisibleIndex = this.MaximumVisibleIndex;
         }
 
         protected override void OnDisable()
@@ -507,6 +606,7 @@ namespace JSSoft.UI
             if (this.Terminal.ProcessKeyEvent(keyCode, modifiers) == true)
                 return true;
             var key = $"{modifiers}+{keyCode}";
+            Debug.Log(key);
             if (bindingByKey.ContainsKey(key) == true)
             {
                 var binding = bindingByKey[key];
@@ -659,6 +759,7 @@ namespace JSSoft.UI
             var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
             var cell1 = this.rows[s1.Y].Cells[s1.X];
             var cell2 = this.rows[s2.Y].Cells[s2.X];
+            var columnCount = this.ColumnCount;
             if (cell1.IsEnabled == true && cell2.IsEnabled == true)
             {
                 return (s1, s2);
@@ -666,53 +767,22 @@ namespace JSSoft.UI
             else if (cell1.IsEnabled == true)
             {
                 var row2 = cell2.Row;
-                var l2 = s2;
-                for (var i = s2.X; i >= 0; i--)
-                {
-                    var cell = cell2.Row.Cells[i];
-                    if (cell.IsEnabled == true)
-                    {
-                        l2.X = i + 1;
-                        break;
-                    }
-                }
-                var distance = l2.DistanceOf(s2, this.ColumnCount);
-                // Debug.Log(distance);
-                if (distance > 5)
-                {
-                    s2.X = this.ColumnCount;
-                }
-                else
-                {
-                    s2.X = l2.X;
-                }
+                var l2 = row2.LastPoint(false);
+                var distance = l2.DistanceOf(s2, columnCount);
+                s2.X = distance > 5 ? columnCount : l2.X;
             }
             else if (cell2.IsEnabled == true)
             {
-                var row1 = this.rows[s1.Y];
-                if (row1.IsEmpty == true)
-                {
-                    s1.X = this.ColumnCount;
-                }
-                else
-                {
-                    var cell = row1.Cells[s1.X];
-                    if (cell.IsEnabled == false)
-                    {
-                        var j = Math.Max(0, s1.X - 6);
-                        for (var i = s1.X; i >= j; i--)
-                        {
-                            cell = row1.Cells[i];
-                            if (cell.IsEnabled == true)
-                            {
-                                s1.X = i + 1;
-                                break;
-                            }
-                        }
-                    }
-                }
+                var row1 = cell1.Row;
+                var l1 = row1.LastPoint(true);
+                var distance = l1.DistanceOf(s1, columnCount);
+                s1.X = distance > 5 ? columnCount : l1.X;
             }
-
+            else
+            {
+                s1.X = columnCount;
+                s2.X = columnCount;
+            }
             return (s1, s2);
         }
 
@@ -801,7 +871,7 @@ namespace JSSoft.UI
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = this.WorldToGrid(eventData.position);
-                this.downPoint = this.Intersect(position); ;
+                this.downPoint = this.Intersect(position);
                 this.ClearSelection();
                 eventData.useDragThreshold = false;
             }
@@ -816,6 +886,18 @@ namespace JSSoft.UI
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
             // Debug.Log("exit");
+        }
+
+        void IScrollHandler.OnScroll(PointerEventData eventData)
+        {
+            this.scrollPos -= eventData.scrollDelta.y;
+            this.scrollPos = Math.Max((int)this.scrollPos, 0);
+            this.scrollPos = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);
+            this.visibleIndex = (int)this.scrollPos;
+            this.isScrolling = true;
+            this.UpdateVisibleIndex();
+            this.OnVisibleIndexChanged(EventArgs.Empty);
+            this.isScrolling = false;
         }
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)

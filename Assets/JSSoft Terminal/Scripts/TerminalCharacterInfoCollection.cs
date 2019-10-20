@@ -61,10 +61,6 @@ namespace JSSoft.UI
                 {
                     var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
-                    if (character == char.MinValue)
-                    {
-                        int qwer=0;
-                    }
                     var characterFontAsset = FontUtility.GetFontAsset(fontAsset, character);
                     var volume = FontUtility.GetCharacterVolume(fontAsset, character);
                     if (point.X + volume > columnCount)

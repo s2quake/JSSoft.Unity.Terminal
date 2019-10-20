@@ -462,7 +462,7 @@ namespace JSSoft.UI
             this.promptText = this.prompt + this.commandText;
             this.text = this.outputText + this.promptText;
             this.cursorPosition = this.commandText.Length;
-            Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}1");
+            // Debug.Log($"{nameof(Terminal)}.{nameof(OnEnable)}1");
         }
 
 #if UNITY_EDITOR

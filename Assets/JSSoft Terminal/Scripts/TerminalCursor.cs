@@ -169,6 +169,7 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+                this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
                 this.grid.GotFocus += TerminalGrid_GotFocus;
                 this.grid.LostFocus += TerminalGrid_LostFocus;
@@ -195,6 +196,12 @@ namespace JSSoft.UI
 
         private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
         {
+            this.UpdateLayout();
+        }
+
+        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        {
+            this.color = this.grid.CursorColor;
             this.UpdateLayout();
         }
 
