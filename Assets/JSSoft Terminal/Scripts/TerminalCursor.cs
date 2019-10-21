@@ -116,7 +116,7 @@ namespace JSSoft.UI
                 this.terminalRect.Count = 1;
                 this.terminalRect.SetVertex(0, itemRect, rect);
                 this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
-                this.terminalRect.SetColor(0, TerminalColors.Gray);
+                this.terminalRect.SetColor(0, base.color);
             }
             else
             {
@@ -161,8 +161,6 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
-            this.material.color = base.color;
             this.SetVerticesDirty();
             if (this.grid != null)
             {
@@ -172,6 +170,7 @@ namespace JSSoft.UI
                 this.grid.GotFocus += TerminalGrid_GotFocus;
                 this.grid.LostFocus += TerminalGrid_LostFocus;
                 this.isVisible = this.grid.IsCursorVisible;
+                base.color = TerminalGridUtility.GetCursorColor(this.grid);
             }
         }
 

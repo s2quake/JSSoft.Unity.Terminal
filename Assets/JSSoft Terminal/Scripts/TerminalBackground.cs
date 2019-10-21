@@ -77,8 +77,6 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.material = new Material(Shader.Find("TextMeshPro/Bitmap"));
-            this.material.color = base.color;
             this.SetVerticesDirty();
             if (this.grid != null)
             {

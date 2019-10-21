@@ -123,6 +123,11 @@ namespace JSSoft.UI
             return grid != null ? grid.SelectionColor : TerminalGrid.DefaultSelectionColor;
         }
 
+        public static Color32 GetCursorColor(ITerminalGrid grid)
+        {
+            return grid != null ? grid.CursorColor : TerminalGrid.DefaultCursorColor;
+        }
+
         public static Color32 GetBackgroundColor(ITerminalGrid grid)
         {
             if (grid == null)

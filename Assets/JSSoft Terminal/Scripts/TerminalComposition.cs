@@ -166,7 +166,7 @@ namespace JSSoft.UI
 
             if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount && this.text != string.Empty)
             {
-                var rect = this.rectTransform.rect;
+                var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, false);
                 var character = this.text.First();
                 var fontAsset = FontUtility.GetFontAsset(this.FontAsset, character);
                 var characterInfo = fontAsset.characterLookupTable[character];
