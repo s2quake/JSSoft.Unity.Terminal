@@ -37,7 +37,7 @@ namespace JSSoft.UI
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    public partial class TerminalGrid : MaskableGraphic,
+    class TerminalGrid : MaskableGraphic, ITerminalGrid,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
@@ -79,6 +79,7 @@ namespace JSSoft.UI
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
         private readonly TerminalCharacterInfoCollection characterInfos;
+        private readonly List<TerminalPoint> selectionList = new List<TerminalPoint>();
 
         private Terminal terminal;
         private bool isSelecting;
@@ -88,7 +89,8 @@ namespace JSSoft.UI
         private TerminalPoint beginPoint;
         private TerminalPoint endPoint;
         private float scrollPos;
-        private List<TerminalPoint> selectionList = new List<TerminalPoint>();
+        private Rect rectangle;
+        private Vector2 itemSize;
 
         // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
         static TerminalGrid()
@@ -118,83 +120,6 @@ namespace JSSoft.UI
             this.characterInfos = new TerminalCharacterInfoCollection(this);
         }
 
-        public static Rect TransformRect(TerminalGrid grid, Rect rect)
-        {
-            if (grid != null && grid.fontAsset != null && grid.rows.Count > 0)
-            {
-                var itemHeight = FontUtility.GetItemHeight(grid.fontAsset);
-                rect.y += itemHeight * grid.visibleIndex;
-            }
-            return rect;
-        }
-
-        public static IEnumerable<ITerminalCell> GetVisibleCells(TerminalGrid grid, Func<ITerminalCell, bool> predicate)
-        {
-            if (grid != null)
-            {
-                var topIndex = grid.visibleIndex;
-                var bottomIndex = topIndex + grid.RowCount;
-                var query = from row in grid.Rows
-                            where row.Index >= topIndex && row.Index < bottomIndex
-                            from cell in row.Cells
-                            where predicate(cell)
-                            select cell;
-                return query;
-            }
-            return Enumerable.Empty<TerminalCell>();
-        }
-
-        public static ITerminalCell GetCell(TerminalGrid grid, int cursorLeft, int cursorTop)
-        {
-            if (grid != null)
-            {
-                if (cursorTop >= grid.Rows.Count)
-                    throw new ArgumentOutOfRangeException(nameof(cursorTop));
-                if (cursorLeft >= grid.ColumnCount)
-                    throw new ArgumentOutOfRangeException(nameof(cursorLeft));
-                return grid.Rows[cursorTop].Cells[cursorLeft];
-            }
-            return null;
-        }
-
-        public static int GetItemWidth(TerminalGrid grid)
-        {
-            if (grid != null && grid.fontAsset != null)
-            {
-                return FontUtility.GetItemWidth(grid.fontAsset);
-            }
-            return 0;
-        }
-
-        public static int GetItemHeight(TerminalGrid grid)
-        {
-            if (grid != null && grid.fontAsset != null)
-            {
-                return FontUtility.GetItemHeight(grid.fontAsset);
-            }
-            return 0;
-        }
-
-        public static GlyphRect GetCellRect(TerminalGrid grid, ITerminalCell cell)
-        {
-            if (cell == null)
-                throw new ArgumentNullException(nameof(cell));
-            var itemWidth = TerminalGrid.GetItemWidth(grid);
-            var itemHeight = TerminalGrid.GetItemHeight(grid);
-            var x = cell.Index * itemWidth;
-            var y = cell.Row.Index * itemHeight;
-            return new GlyphRect(x, y, itemWidth, itemHeight);
-        }
-
-        public static int GetItemWidth(TerminalGrid grid, char character)
-        {
-            if (grid != null && grid.fontAsset != null)
-            {
-                return FontUtility.GetItemWidth(grid.fontAsset, character);
-            }
-            return 0;
-        }
-
         public static bool IsSelecting(TerminalGrid grid, ITerminalCell cell)
         {
             if (cell == null)
@@ -206,7 +131,9 @@ namespace JSSoft.UI
 
         public static bool IsSelecting(TerminalGrid grid, TerminalPoint point)
         {
-            if (grid != null && grid.isSelecting == true)
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            if (grid.isSelecting == true)
             {
                 var p1 = grid.beginPoint < grid.endPoint ? grid.beginPoint : grid.endPoint;
                 var p2 = grid.beginPoint > grid.endPoint ? grid.beginPoint : grid.endPoint;
@@ -217,7 +144,9 @@ namespace JSSoft.UI
 
         public static bool IsSelected(TerminalGrid grid, TerminalPoint point)
         {
-            if (grid != null && grid.selectionList.Any())
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            if (grid.selectionList.Any())
             {
                 var p1 = grid.selectionList.First();
                 var p2 = grid.selectionList.Last();
@@ -226,30 +155,11 @@ namespace JSSoft.UI
             return false;
         }
 
-        public static Color32 GetBackgroundColor(TerminalGrid grid)
-        {
-            if (grid == null)
-                throw new ArgumentNullException(nameof(grid));
-            return grid.BackgroundColor ?? grid.color;
-        }
-
-        public static Color32 GetForegroundColor(TerminalGrid grid)
-        {
-            if (grid == null)
-                throw new ArgumentNullException(nameof(grid));
-            return grid.ForegroundColor ?? grid.fontColor;
-        }
-
-        public static Color32 GetSelectionColor(TerminalGrid grid)
-        {
-            return grid != null ? grid.SelectionColor : DefaultSelectionColor;
-        }
-
         public Vector2 WorldToGrid(Vector2 position)
         {
             var rect = this.GetComponent<RectTransform>().rect;
             position.y = rect.height - position.y;
-            position.y += GetItemHeight(this) * this.visibleIndex;
+            position.y += TerminalGridUtility.GetItemHeight(this) * this.visibleIndex;
             return position;
         }
 
@@ -444,7 +354,6 @@ namespace JSSoft.UI
                         break;
                     }
                 }
-
                 this.text = newValue;
                 this.UpdateRows();
                 this.OnTextChanged(EventArgs.Empty);
@@ -524,6 +433,8 @@ namespace JSSoft.UI
                 this.ClearSelection();
             }
         }
+
+        public Rect Rectangle => this.rectangle;
 
         public bool IsCursorVisible
         {
@@ -615,7 +526,6 @@ namespace JSSoft.UI
             this.OnVisibleIndexChanged(EventArgs.Empty);
             this.OnCursorPositionChanged(EventArgs.Empty);
             this.OnCompositionStringChanged(EventArgs.Empty);
-            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnValidate)}");
         }
 #endif
 
@@ -642,7 +552,6 @@ namespace JSSoft.UI
         {
             base.OnDisable();
             this.DetachEvent();
-            // Debug.Log($"{nameof(TerminalGrid)}.{nameof(OnDisable)}");
         }
 
         protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers modifiers)
@@ -690,21 +599,31 @@ namespace JSSoft.UI
 
         private void UpdateGrid()
         {
+            var rect = this.GetComponent<RectTransform>().rect;
             if (this.fontAsset != null)
             {
-                var rect = this.GetComponent<RectTransform>().rect;
                 var fontAsset = this.fontAsset;
                 var itemWidth = FontUtility.GetItemWidth(fontAsset);
                 var itemHeight = FontUtility.GetItemHeight(fontAsset);
+                var rectWidth = itemWidth * this.ColumnCount;
+                var rectHeight = itemHeight * this.RowCount;
+                this.itemSize = new Vector2(itemWidth, itemHeight);
                 this.ColumnCount = (int)(rect.width / itemWidth);
                 this.RowCount = (int)(rect.height / itemHeight);
-                // this.startPoint = new TerminalPoint(0, 0);
-                // this.endPoint = new TerminalPoint(this.ColumnCount, this.RowCount);
+                this.rectangle.x = (int)((rect.width - rectWidth) / 2);
+                this.rectangle.y = (int)((rect.height - rectHeight) / 2);
+                this.rectangle.width = rectWidth;
+                this.rectangle.height = rectHeight;
             }
             else
             {
+                this.itemSize = new Vector2(0, 0);
                 this.ColumnCount = 0;
                 this.RowCount = 0;
+                this.rectangle.x = (int)(rect.width / 2);
+                this.rectangle.y = (int)(rect.height / 2);
+                this.rectangle.width = 0 * this.ColumnCount;
+                this.rectangle.height = 0 * this.RowCount;
             }
         }
 
@@ -989,6 +908,8 @@ namespace JSSoft.UI
 
             eventData.Use();
         }
+
+        ITerminal ITerminalGrid.Terminal => this.terminal;
 
         #endregion
     }

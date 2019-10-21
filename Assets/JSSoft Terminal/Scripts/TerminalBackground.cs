@@ -34,7 +34,7 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalGrid grid = null;
 
-        private TerminalRect terminalRect = new TerminalRect();
+        private readonly TerminalRect terminalRect = new TerminalRect();
 
         public TerminalBackground()
         {
@@ -45,10 +45,10 @@ namespace JSSoft.UI
         {
             base.OnPopulateMesh(vh);
 
-            var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, this.Predicate);
+            var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
-            var selectionColor = TerminalGrid.GetSelectionColor(this.grid); 
+            var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid); 
             this.terminalRect.Count = visibleCells.Count();
             foreach (var item in visibleCells)
             {

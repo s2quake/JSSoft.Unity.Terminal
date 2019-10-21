@@ -60,8 +60,8 @@ namespace JSSoft.UI
         {
             base.OnPopulateMesh(vh);
             var renderCount = 2;
-            var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-            var visibleCells = TerminalGrid.GetVisibleCells(this.grid, item => item.Character != 0 && item.FontAsset == this.fontAsset);
+            var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.FontAsset == this.fontAsset);
             var index = 0;
             this.terminalRect.Count = visibleCells.Count() * renderCount;
             foreach (var item in visibleCells)

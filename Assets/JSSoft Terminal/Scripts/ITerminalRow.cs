@@ -20,14 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Linq;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.TextCore;
-using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
@@ -35,7 +30,7 @@ namespace JSSoft.UI
     {
         ITerminalCell Intersect(Vector2 position);
 
-        TerminalGrid Grid { get; }
+        ITerminalGrid Grid { get; }
 
         int Index { get; }
 

@@ -100,50 +100,48 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            if (this.cursorLeft < this.ColumnCount && this.cursorTop < this.RowCount && this.isVisible == true)
-            {
-                var rect = TerminalGrid.TransformRect(this.grid, this.rectTransform.rect);
-                var itemWidth = TerminalGrid.GetItemWidth(this.grid);
-                var itemHeight = TerminalGrid.GetItemHeight(this.grid);
-                var x = this.cursorLeft * itemWidth;
-                var y = this.cursorTop * itemHeight;
-                var itemRect = new GlyphRect(x, y, itemWidth * this.volume, itemHeight);
-                if (this.isFocused == true)
-                {
-                    this.terminalRect.Count = 1;
-                    this.terminalRect.SetVertex(0, itemRect, this.rectTransform.rect);
-                    this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
-                    this.terminalRect.SetColor(0, TerminalColors.Gray);
-                }
-                else
-                {
-                    var right = x + itemWidth * this.volume;
-                    var bottom = y + itemHeight;
-                    var size = lineWidth;
-                    var lt1 = new Vector2(x, y);
-                    var rt1 = new Vector2(right, y);
-                    var lb1 = new Vector2(x, bottom);
-                    var rb1 = new Vector2(right, bottom);
-                    var lt2 = new Vector2(x + size, y + size);
-                    var rt2 = new Vector2(right - size, y + size);
-                    var lb2 = new Vector2(x + size, bottom - size);
-                    var rb2 = new Vector2(right - size, bottom - size);
-                    this.terminalRect.Count = 4;
-                    this.terminalRect.SetVertex(0, lt1, rt1, lt2, rt2, this.rectTransform.rect);
-                    this.terminalRect.SetVertex(1, lt1, lt2, lb1, lb2, this.rectTransform.rect);
-                    this.terminalRect.SetVertex(2, lb2, rb2, lb1, rb1, this.rectTransform.rect);
-                    this.terminalRect.SetVertex(3, rt2, rt1, rb2, rb1, this.rectTransform.rect);
 
-                    for (var i = 0; i < this.terminalRect.Count; i++)
-                    {
-                        this.terminalRect.SetUV(i, (Vector2.zero, Vector2.one));
-                        this.terminalRect.SetColor(i, TerminalColors.Gray);
-                    }
-                }
+            var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect);
+            var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
+            var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
+            var x = this.cursorLeft * itemWidth;
+            var y = this.cursorTop * itemHeight;
+            var itemRect = new GlyphRect(x, y, itemWidth * this.volume, itemHeight);
+            if (this.isVisible == false)
+            {
+                this.terminalRect.Count = 0;
+            }
+            else if (this.isFocused == true)
+            {
+                this.terminalRect.Count = 1;
+                this.terminalRect.SetVertex(0, itemRect, rect);
+                this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
+                this.terminalRect.SetColor(0, TerminalColors.Gray);
             }
             else
             {
-                this.terminalRect.Count = 0;
+                var right = x + itemWidth * this.volume;
+                var bottom = y + itemHeight;
+                var size = lineWidth;
+                var lt1 = new Vector2(x, y);
+                var rt1 = new Vector2(right, y);
+                var lb1 = new Vector2(x, bottom);
+                var rb1 = new Vector2(right, bottom);
+                var lt2 = new Vector2(x + size, y + size);
+                var rt2 = new Vector2(right - size, y + size);
+                var lb2 = new Vector2(x + size, bottom - size);
+                var rb2 = new Vector2(right - size, bottom - size);
+                this.terminalRect.Count = 4;
+                this.terminalRect.SetVertex(0, lt1, rt1, lt2, rt2, rect);
+                this.terminalRect.SetVertex(1, lt1, lt2, lb1, lb2, rect);
+                this.terminalRect.SetVertex(2, lb2, rb2, lb1, rb1, rect);
+                this.terminalRect.SetVertex(3, rt2, rt1, rb2, rb1, rect);
+
+                for (var i = 0; i < this.terminalRect.Count; i++)
+                {
+                    this.terminalRect.SetUV(i, (Vector2.zero, Vector2.one));
+                    this.terminalRect.SetColor(i, TerminalColors.Gray);
+                }
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);

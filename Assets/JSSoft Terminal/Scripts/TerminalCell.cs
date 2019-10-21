@@ -73,8 +73,7 @@ namespace JSSoft.UI
         {
             if (fontAsset == null)
                 throw new ArgumentException(nameof(fontAsset));
-            var rect = TerminalGrid.GetCellRect(this.Grid, this);
-            // this.IsSelected = false;
+            var rect = GetCellRect(this.Grid, this);
             this.IsEnabled = true;
             this.Character = character;
             this.Volume = volume;
@@ -88,9 +87,8 @@ namespace JSSoft.UI
 
         public void Reset()
         {
-            var rect = TerminalGrid.GetCellRect(this.Grid, this);
+            var rect = GetCellRect(this.Grid, this);
             var uv = (Vector2.zero, Vector2.zero);
-            // this.IsSelected = false;
             this.IsEnabled = false;
             this.Character = char.MinValue;
             this.Volume = 0;
@@ -147,6 +145,15 @@ namespace JSSoft.UI
         public Color32? ForegroundColor { get; set; }
 
         public TerminalPoint Point => new TerminalPoint(this.Index, this.Row.Index);
+
+        private static GlyphRect GetCellRect(TerminalGrid grid, ITerminalCell cell)
+        {
+            var itemWidth = TerminalGridUtility.GetItemWidth(grid);
+            var itemHeight = TerminalGridUtility.GetItemHeight(grid);
+            var x = cell.Index * itemWidth;
+            var y = cell.Row.Index * itemHeight;
+            return new GlyphRect(x, y, itemWidth, itemHeight);
+        }
 
         #region ITerminalCell
 

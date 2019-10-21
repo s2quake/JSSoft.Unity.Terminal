@@ -55,14 +55,14 @@ namespace JSSoft.UI
         {
             if (row == null)
                 throw new ArgumentNullException(nameof(row));
-            return row.BackgroundColor ?? TerminalGrid.GetBackgroundColor(row.Grid);
+            return row.BackgroundColor ?? TerminalGridUtility.GetBackgroundColor(row.Grid);
         }
 
         public static Color32 GetForegroundColor(ITerminalRow row)
         {
             if (row == null)
                 throw new ArgumentNullException(nameof(row));
-            return row.ForegroundColor ?? TerminalGrid.GetForegroundColor(row.Grid);
+            return row.ForegroundColor ?? TerminalGridUtility.GetForegroundColor(row.Grid);
         }
 
         public TerminalPoint Intersect(Vector2 position)
@@ -90,14 +90,6 @@ namespace JSSoft.UI
             }
             return null;
         }
-
-        // public void ClearSelection()
-        // {
-        //     foreach (var item in this.cells)
-        //     {
-        //         item.IsSelected = false;
-        //     }
-        // }
 
         public TerminalPoint LastPoint(bool isCursor)
         {
@@ -185,8 +177,8 @@ namespace JSSoft.UI
 
         private void UpdateRect()
         {
-            var itemWidth = TerminalGrid.GetItemWidth(this.Grid);
-            var itemHeight = TerminalGrid.GetItemHeight(this.Grid);
+            var itemWidth = TerminalGridUtility.GetItemWidth(this.Grid);
+            var itemHeight = TerminalGridUtility.GetItemHeight(this.Grid);
             var x = 0;
             var y = this.Index * itemHeight;
             var width = this.cells.Count * itemWidth;
@@ -211,6 +203,8 @@ namespace JSSoft.UI
         }
 
         IReadOnlyList<ITerminalCell> ITerminalRow.Cells => this.cells;
+
+        ITerminalGrid ITerminalRow.Grid => this.Grid;
 
         #endregion
     }

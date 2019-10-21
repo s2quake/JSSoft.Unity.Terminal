@@ -171,8 +171,8 @@ namespace JSSoft.UI
                 var fontAsset = FontUtility.GetFontAsset(this.FontAsset, character);
                 var characterInfo = fontAsset.characterLookupTable[character];
                 var texture = fontAsset.atlasTexture;
-                var itemWidth = TerminalGrid.GetItemWidth(this.grid);
-                var itemHeight = TerminalGrid.GetItemHeight(this.grid);
+                var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
+                var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
                 var bx = this.columnIndex * itemWidth + (int)this.Offset.x;
                 var by = this.rowIndex * itemHeight + (int)this.Offset.y;
                 var foregroundRect = FontUtility.GetForegroundRect(fontAsset, character, bx, by);
