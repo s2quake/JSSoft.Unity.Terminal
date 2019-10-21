@@ -795,34 +795,48 @@ namespace JSSoft.UI
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
+            if (eventData.button == PointerEventData.InputButton.Left && this.downPoint != TerminalPoint.Invalid)
             {
                 var position = this.WorldToGrid(eventData.position);
                 var point = this.Intersect(position);
-                (this.beginPoint, this.endPoint) = this.UpdatePoint(this.downPoint, point);
-                this.isSelecting = true;
+                if (point != TerminalPoint.Invalid)
+                {
+                    var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
+                    this.beginPoint = beginPoint;
+                    this.endPoint = endPoint;
+                    this.isSelecting = true;
+                }
             }
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
+            if (eventData.button == PointerEventData.InputButton.Left && this.downPoint != TerminalPoint.Invalid)
             {
                 var position = this.WorldToGrid(eventData.position);
                 var point = this.Intersect(position);
-                (this.beginPoint, this.endPoint) = this.UpdatePoint(this.downPoint, point);
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (point != TerminalPoint.Invalid)
+                {
+                    var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
+                    this.beginPoint = beginPoint;
+                    this.endPoint = endPoint;
+                    this.OnLayoutChanged(EventArgs.Empty);
+                }
             }
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            this.isSelecting = false;
-            if (eventData.button == PointerEventData.InputButton.Left)
+            if (eventData.button == PointerEventData.InputButton.Left && this.downPoint != TerminalPoint.Invalid)
             {
                 var position = this.WorldToGrid(eventData.position);
                 var point = this.Intersect(position);
-                var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
+                if (point != TerminalPoint.Invalid)
+                {
+                    var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
+                    this.beginPoint = beginPoint;
+                    this.endPoint = endPoint;
+                }
                 this.selectionList.Clear();
                 this.selectionList.Add(beginPoint);
                 this.selectionList.Add(endPoint);
@@ -830,18 +844,19 @@ namespace JSSoft.UI
                 this.downPoint = TerminalPoint.Invalid;
                 this.beginPoint = TerminalPoint.Invalid;
                 this.endPoint = TerminalPoint.Invalid;
+                this.isSelecting = false;
                 this.OnSelectionChanged(EventArgs.Empty);
             }
         }
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                var point = this.Intersect(position);
-                // Debug.Log($"Intersect: {point}");
-            }
+            // if (eventData.button == PointerEventData.InputButton.Left)
+            // {
+            //     var position = this.WorldToGrid(eventData.position);
+            //     var point = this.Intersect(position);
+            //     Debug.Log($"Intersect: {point}");
+            // }
         }
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
@@ -850,7 +865,10 @@ namespace JSSoft.UI
             {
                 var position = this.WorldToGrid(eventData.position);
                 this.downPoint = this.Intersect(position);
-                this.ClearSelection();
+                if (this.downPoint != TerminalPoint.Invalid)
+                {
+                    this.ClearSelection();
+                }
                 eventData.useDragThreshold = false;
             }
             eventData.selectedObject = this.gameObject;
@@ -868,14 +886,17 @@ namespace JSSoft.UI
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
         {
-            this.scrollPos -= eventData.scrollDelta.y;
-            this.scrollPos = Math.Max((int)this.scrollPos, 0);
-            this.scrollPos = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);
-            this.visibleIndex = (int)this.scrollPos;
-            this.isScrolling = true;
-            this.UpdateVisibleIndex();
-            this.OnVisibleIndexChanged(EventArgs.Empty);
-            this.isScrolling = false;
+            if (this.MaximumVisibleIndex > 0)
+            {
+                this.scrollPos -= eventData.scrollDelta.y;
+                this.scrollPos = Math.Max((int)this.scrollPos, 0);
+                this.scrollPos = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);
+                this.visibleIndex = (int)this.scrollPos;
+                this.isScrolling = true;
+                this.UpdateVisibleIndex();
+                this.OnVisibleIndexChanged(EventArgs.Empty);
+                this.isScrolling = false;
+            }
         }
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)

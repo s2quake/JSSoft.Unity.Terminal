@@ -405,6 +405,7 @@ namespace JSSoft.UI
                 this.promptForegroundColors = new Color32?[value.Length];
                 this.promptBackgroundColors = new Color32?[value.Length];
                 this.promptText = this.prompt + this.commandText;
+                this.text = this.outputText + this.promptText;
                 this.cursorPosition = this.commandText.Length;
                 this.InvokePromptTextChangedEvent();
                 if (this.onDrawPrompt != null)
@@ -593,9 +594,14 @@ namespace JSSoft.UI
 
         private void ExecuteEvent(string commandText, string prompt)
         {
-            var eventArgs = new TerminalExecuteEventArgs(commandText);
+            var action = new Action(() => this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt));
+            var eventArgs = new TerminalExecuteEventArgs(commandText, action);
+            this.isReadOnly = true;
             this.executed?.Invoke(this, eventArgs);
-            this.InsertPrompt(prompt);
+            if (eventArgs.IsAsync == false)
+            {
+                eventArgs.Handled = true;
+            }
         }
 
         internal Color32? GetForegroundColor(int index)

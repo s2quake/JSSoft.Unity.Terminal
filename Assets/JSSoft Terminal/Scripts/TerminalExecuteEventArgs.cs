@@ -27,14 +27,18 @@ namespace JSSoft.UI
 {
     public class TerminalExecuteEventArgs : EventArgs
     {
+        private readonly Action action;
         private bool handled;
 
-        public TerminalExecuteEventArgs(string command)
+        public TerminalExecuteEventArgs(string command, Action action)
         {
-            this.Command = command;
+            this.Command = command ?? throw new ArgumentNullException(nameof(command));
+            this.action = action ?? throw new ArgumentNullException(nameof(action));
         }
 
         public string Command { get; }
+
+        public bool IsAsync { get; set; }
 
         public bool Handled
         {
@@ -44,6 +48,7 @@ namespace JSSoft.UI
                 if (this.handled == false && value == true)
                 {
                     this.handled = true;
+                    this.action();
                 }
             }
         }

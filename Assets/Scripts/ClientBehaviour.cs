@@ -55,7 +55,7 @@ namespace JSSoft.Communication.Shells
             this.scheduler = DispatcherScheduler.Current;
             this.shell = Container.GetService<IShell>();
             this.commandContext = Container.GetService<CommandContext>();
-            this.terminal = Container.GetService<Terminal>();
+            this.terminal = Container.GetService<ITerminal>();
         }
 
         public async Task Start()
@@ -66,6 +66,7 @@ namespace JSSoft.Communication.Shells
                 this.writer = new CommandWriter(this.terminal);
                 this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
+                this.terminal.Reset();
                 this.terminal.AppendLine($"type 'open' to connect server.");
                 this.terminal.AppendLine($"example: open --host [address]");
                 this.terminal.Focus();
@@ -107,6 +108,7 @@ namespace JSSoft.Communication.Shells
 
         private async void Terminal_Executed(object sender, TerminalExecuteEventArgs e)
         {
+            e.IsAsync = true;
             await this.RunAsync(e.Command);
             e.Handled = true;
         }
