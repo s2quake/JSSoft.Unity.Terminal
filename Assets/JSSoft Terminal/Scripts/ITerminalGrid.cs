@@ -35,14 +35,6 @@ namespace JSSoft.UI
 
         void ClearSelection();
 
-        // TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;
-
-        // int PointToIndex(TerminalPoint point) => this.characterInfos.PointToIndex(point);
-
-        // Color32? IndexToBackgroundColor(int index) => this.Terminal.GetBackgroundColor(index);
-
-        // Color32? IndexToForegroundColor(int index) => this.Terminal.GetForegroundColor(index);
-
         void ScrollToTop();
 
         void ScrollToBottom();
