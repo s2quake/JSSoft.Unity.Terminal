@@ -36,7 +36,7 @@ namespace JSSoft.UI
     [AddComponentMenu("UI/Terminal", 15)]
     public class Terminal : UIBehaviour, ITerminal
     {
-        private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
+        private static KeyBindingCollection keyBindings;
 
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -66,63 +66,7 @@ namespace JSSoft.UI
 
         static Terminal()
         {
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow,
-                                        (t) => t.PrevHistory()));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow,
-                            (t) => t.NextHistory()));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow,
-                            (t) => t.CursorPosition--));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.RightArrow,
-                            (t) => t.CursorPosition++));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Shift, KeyCode.LeftArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Shift, KeyCode.RightArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Shift, KeyCode.UpArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Shift, KeyCode.DownArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.LeftArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.RightArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.UpArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Control, KeyCode.DownArrow,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Return,
-                            (t) => t.Execute(), (t) => t.IsReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter,
-                            (t) => t.Execute(), (t) => t.IsReadOnly == false));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace,
-                            (t) => t.Backspace()));
-            // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.None + KeyCode.Backspace 가 호출됨.
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Backspace,
-                            (t) => true));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Delete,
-                            (t) => t.Delete()));
-            AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Tab,
-                            (t) => t.NextCompletion()));
-            AddBinding(new KeyBinding(EventModifiers.Shift, KeyCode.Tab,
-                            (t) => t.PrevCompletion()));
-            if (IsMac == true)
-            {
-                AddBinding(new KeyBinding(EventModifiers.Control, KeyCode.U,
-                            (t) => t.Clear()));
-                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow,
-                            (t) => t.MoveToFirst()));
-                AddBinding(new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow,
-                            (t) => t.MoveToLast()));
-            }
-            if (IsWindows == true)
-            {
-                AddBinding(new KeyBinding(EventModifiers.None, KeyCode.Escape,
-                            (t) => t.Clear()));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home,
-                            (t) => t.MoveToFirst()));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.End,
-                            (t) => t.MoveToLast()));
-            }
+
         }
 
         public void Execute()
@@ -354,21 +298,33 @@ namespace JSSoft.UI
             this.InvokePromptTextChangedEvent();
         }
 
-        public bool ProcessKeyEvent(KeyCode keyCode, EventModifiers modifiers)
+        public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
         {
-            var key = $"{modifiers}+{keyCode}";
-            if (bindingByKey.ContainsKey(key) == true)
-            {
-                var binding = bindingByKey[key];
-                if (binding.Verify(this) == true && binding.Action(this) == true)
-                    return true;
-            }
-            return false;
+            return KeyBindings.Process(this, modifiers, keyCode);
         }
 
         public static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
 
         public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+
+        public static KeyBindingCollection KeyBindings
+        {
+            get
+            {
+                if (keyBindings == null)
+                {
+                    if (IsMac == true)
+                        return TerminalKeyBindings.Mac;
+                    else if (IsWindows == true)
+                        return TerminalKeyBindings.Windows;
+                }
+                return keyBindings;
+            }
+            set
+            {
+                keyBindings = value;
+            }
+        }
 
         public Color32? ForegroundColor { get; set; }
 
@@ -488,11 +444,6 @@ namespace JSSoft.UI
             if (character == '\n')
                 return false;
             return true;
-        }
-
-        private static void AddBinding(IKeyBinding binding)
-        {
-            bindingByKey.Add($"{binding.Modifiers}+{binding.KeyCode}", binding);
         }
 
         private void CompletionImpl(Func<string[], string, string> func)

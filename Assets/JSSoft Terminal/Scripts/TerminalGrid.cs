@@ -554,9 +554,9 @@ namespace JSSoft.UI
             this.DetachEvent();
         }
 
-        protected virtual bool OnPreviewKeyDown(KeyCode keyCode, EventModifiers modifiers)
+        protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
         {
-            if (this.Terminal.ProcessKeyEvent(keyCode, modifiers) == true)
+            if (this.Terminal.ProcessKeyEvent(modifiers, keyCode) == true)
                 return true;
             var key = $"{modifiers}+{keyCode}";
             // Debug.Log(key);
