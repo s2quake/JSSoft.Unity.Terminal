@@ -37,10 +37,10 @@ namespace JSSoft.UI
     {
         public static readonly KeyBindingCollection Common = new KeyBindingCollection()
         {
-            new KeyBinding(EventModifiers.None, KeyCode.UpArrow, (t) => t.PrevHistory()),
-            new KeyBinding(EventModifiers.None, KeyCode.DownArrow, (t) => t.NextHistory()),
-            new KeyBinding(EventModifiers.None, KeyCode.LeftArrow, (t) => t.CursorPosition--),
-            new KeyBinding(EventModifiers.None, KeyCode.RightArrow, (t) => t.CursorPosition++),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, (t) => t.PrevHistory()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, (t) => t.NextHistory()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.CursorPosition--),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.CursorPosition++),
             new KeyBinding(EventModifiers.Shift, KeyCode.LeftArrow, (t) => true),
             new KeyBinding(EventModifiers.Shift, KeyCode.RightArrow, (t) => true),
             new KeyBinding(EventModifiers.Shift, KeyCode.UpArrow, (t) => true),
@@ -51,26 +51,86 @@ namespace JSSoft.UI
             new KeyBinding(EventModifiers.Control, KeyCode.DownArrow, (t) => true),
             new KeyBinding(EventModifiers.None, KeyCode.Return, (t) => t.Execute(), (t) => t.IsReadOnly == false),
             new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter, (t) => t.Execute(), (t) => t.IsReadOnly == false),
-            new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => t.Backspace()),
-            // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.None + KeyCode.Backspace 가 호출됨.
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, (t) => t.Backspace()),
+            // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.FunctionKey + KeyCode.Backspace 가 호출됨.
             new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => true),
-            new KeyBinding(EventModifiers.None, KeyCode.Delete, (t) => t.Delete()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Delete, (t) => t.Delete()),
             new KeyBinding(EventModifiers.None, KeyCode.Tab, (t) => t.NextCompletion()),
             new KeyBinding(EventModifiers.Shift, KeyCode.Tab, (t) => t.PrevCompletion())
         };
 
         public static readonly KeyBindingCollection Mac = new KeyBindingCollection(Common)
         {
-            new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => t.Clear()),
-            new KeyBinding(EventModifiers.Command | EventModifiers.None, KeyCode.LeftArrow, (t) => t.MoveToFirst()),
-            new KeyBinding(EventModifiers.Command | EventModifiers.None, KeyCode.RightArrow, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => DeleteToFirst(t)),
+            new KeyBinding(EventModifiers.Control, KeyCode.K, (t) => DeleteToLast(t)),
+            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.MoveToFirst()),
+            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
+            new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
         };
 
         public static readonly KeyBindingCollection Windows = new KeyBindingCollection(Common)
         {
             new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Clear()),
-            new KeyBinding(EventModifiers.None, KeyCode.Home, (t) => t.MoveToFirst()),
-            new KeyBinding(EventModifiers.None, KeyCode.End, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
         };
+
+        private static void PrevWord(Terminal t)
+        {
+            var index = t.CursorPosition - 1;
+            var command = t.Command;
+            while (index >= 0)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == true)
+                    break;
+                index--;
+            }
+            while (index >= 0)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == false)
+                    break;
+                index--;
+            }
+            t.CursorPosition = index;
+        }
+
+        private static void NextWord(Terminal t)
+        {
+            var index = t.CursorPosition;
+            var command = t.Command;
+            while (index < command.Length)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == true)
+                    break;
+                index++;
+            }
+            while (index < command.Length)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == false)
+                    break;
+                index++;
+            }
+            t.CursorPosition = index;
+        }
+
+        private static void DeleteToLast(Terminal t)
+        {
+            var index = t.CursorPosition;
+            var command = t.Command;
+            t.Command = command.Substring(0, index);
+        }
+
+        private static void DeleteToFirst(Terminal t)
+        {
+            var index = t.CursorPosition;
+            var command = t.Command;
+            t.Command = command.Remove(0, index);
+            t.CursorPosition = 0;
+        }
     }
 }

@@ -64,11 +64,13 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColors.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalComposition.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCursor.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalEnvironment.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalEventCollection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalEvents.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPoint.cs" />

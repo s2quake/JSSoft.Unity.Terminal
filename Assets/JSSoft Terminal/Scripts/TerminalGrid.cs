@@ -54,7 +54,7 @@ namespace JSSoft.UI
         public static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);
         public static readonly Color32 DefaultForegroundColor = new Color32(255, 255, 255, 255);
         public static readonly Color32 DefaultCursorColor = new Color32(139, 139, 139, 255);
-        private static readonly Dictionary<string, IKeyBinding> bindingByKey = new Dictionary<string, IKeyBinding>();
+        private static KeyBindingCollection keyBindings;
 
         [SerializeField]
         private TMP_FontAsset fontAsset = null;
@@ -91,28 +91,6 @@ namespace JSSoft.UI
         private float scrollPos;
         private Rect rectangle;
         private Vector2 itemSize;
-
-        // 전체적으로 왜 키 이벤트 호출시에 EventModifiers.FunctionKey 가 기본적으로 설정되어 있는지 모르겠음.
-        static TerminalGrid()
-        {
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageUp, (g) => g.PageUp()));
-            AddBinding(new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageDown, (g) => g.PageDown()));
-            if (Terminal.IsMac)
-            {
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,
-                        KeyCode.PageUp, (g) => g.LineUp()));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command,
-                        KeyCode.PageDown, (g) => g.LineDown()));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,
-                        KeyCode.Home, (g) => g.ScrollToTop()));
-                AddBinding(new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command,
-                        KeyCode.End, (g) => g.ScrollToBottom()));
-                AddBinding(new KeyBinding(EventModifiers.Command,
-                        KeyCode.C, (g) => g.Copy()));
-                AddBinding(new KeyBinding(EventModifiers.Command,
-                        KeyCode.A, (g) => g.SelectAll()));
-            }
-        }
 
         public TerminalGrid()
         {
@@ -307,6 +285,25 @@ namespace JSSoft.UI
             this.selectionList.Add(new TerminalPoint(0, 0));
             this.selectionList.Add(new TerminalPoint(this.ColumnCount, this.rows.Count));
             this.OnSelectionChanged(EventArgs.Empty);
+        }
+
+        public static KeyBindingCollection KeyBindings
+        {
+            get
+            {
+                if (keyBindings == null)
+                {
+                    if (TerminalEnvironment.IsMac == true)
+                        return TerminalKeyBindings.Mac;
+                    else if (TerminalEnvironment.IsWindows == true)
+                        return TerminalKeyBindings.Windows;
+                }
+                return keyBindings;
+            }
+            set
+            {
+                keyBindings = value;
+            }
         }
 
         public Terminal Terminal
@@ -558,15 +555,7 @@ namespace JSSoft.UI
         {
             if (this.Terminal.ProcessKeyEvent(modifiers, keyCode) == true)
                 return true;
-            var key = $"{modifiers}+{keyCode}";
-            // Debug.Log(key);
-            if (bindingByKey.ContainsKey(key) == true)
-            {
-                var binding = bindingByKey[key];
-                if (binding.Verify(this) == true && binding.Action(this) == true)
-                    return true;
-            }
-            return false;
+            return KeyBindings.Process(this, modifiers, keyCode);
         }
 
         protected virtual bool OnPreviewKeyPress(char character)
@@ -683,11 +672,6 @@ namespace JSSoft.UI
             var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
             this.CursorPosition = this.IndexToPoint(index);
             this.VisibleIndex = this.MaximumVisibleIndex;
-        }
-
-        private static void AddBinding(IKeyBinding binding)
-        {
-            bindingByKey.Add($"{binding.Modifiers}+{binding.KeyCode}", binding);
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
@@ -914,7 +898,7 @@ namespace JSSoft.UI
                 {
                     var keyCode = item.keyCode;
                     var modifiers = item.modifiers;
-                    if (this.OnPreviewKeyDown(keyCode, modifiers) == true)
+                    if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
                         continue;
                     if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
                     {

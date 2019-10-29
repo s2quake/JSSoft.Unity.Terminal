@@ -1,4 +1,4 @@
-// MIT License
+﻿// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -21,48 +21,22 @@
 // SOFTWARE.
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.Terminal>;
 
 namespace JSSoft.UI
 {
-    public abstract class KeyBindingBase<T> : IKeyBinding where T : class
+    public static class TerminalEnvironment
     {
-        protected KeyBindingBase(EventModifiers modifiers, KeyCode keyCode)
-        {
-            this.Modifiers = modifiers;
-            this.KeyCode = keyCode;
-        }
+        public static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
 
-        protected abstract bool OnVerify(T obj);
-
-        protected abstract bool OnAction(T obj);
-
-        public EventModifiers Modifiers { get; }
-
-        public KeyCode KeyCode { get; }
-
-        public Type Type => typeof(T);
-
-        #region IKeyBinding
-
-        bool IKeyBinding.Action(object obj)
-        {
-            if (obj == null)
-                throw new ArgumentNullException(nameof(obj));
-            if (this.Type.IsAssignableFrom(obj.GetType()) == false)
-                throw new ArgumentException("invalid type", nameof(obj));
-            return this.OnAction((T)obj);
-        }
-
-        bool IKeyBinding.Verify(object obj)
-        {
-            if (obj == null)
-                return false;
-            if (this.Type.IsAssignableFrom(obj.GetType()) == false)
-                return false;
-            return this.OnVerify((T)obj);
-        }
-
-        #endregion
+        public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
     }
 }

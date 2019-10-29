@@ -91,6 +91,7 @@ namespace JSSoft.UI
                 this.grid.TextChanged += TerminalGrid_TextChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
             }
+            // base.material = new Material(Shader.Find("UI/Default"));
             this.SetVerticesDirty();
         }
 

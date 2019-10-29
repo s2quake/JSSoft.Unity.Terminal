@@ -49,7 +49,7 @@ namespace JSSoft.UI
         private string prompt = string.Empty;
         private string inputText = string.Empty;
         [SerializeField]
-        private string commandText = string.Empty;
+        private string command = string.Empty;
         private string completion;
         private string text = string.Empty;
         private int historyIndex;
@@ -71,7 +71,7 @@ namespace JSSoft.UI
 
         public void Execute()
         {
-            var commandText = this.commandText;
+            var commandText = this.command;
             var promptText = this.promptText;
             var prompt = this.prompt;
             if (this.histories.Contains(commandText) == false)
@@ -87,7 +87,7 @@ namespace JSSoft.UI
             this.prompt = string.Empty;
             this.promptText = string.Empty;
             this.inputText = string.Empty;
-            this.commandText = string.Empty;
+            this.command = string.Empty;
             this.completion = string.Empty;
             this.cursorPosition = 0;
             this.AppendLine(promptText);
@@ -97,7 +97,7 @@ namespace JSSoft.UI
         public void Clear()
         {
             this.inputText = string.Empty;
-            this.commandText = string.Empty;
+            this.command = string.Empty;
             this.completion = string.Empty;
             this.promptText = this.prompt;
             this.text = this.outputText + this.promptText;
@@ -112,14 +112,14 @@ namespace JSSoft.UI
 
         public void MoveToLast()
         {
-            this.CursorPosition = this.commandText.Length;
+            this.CursorPosition = this.command.Length;
         }
 
         public void ResetOutput()
         {
             this.outputText = string.Empty;
             this.inputText = string.Empty;
-            this.commandText = string.Empty;
+            this.command = string.Empty;
             this.completion = string.Empty;
             this.promptText = this.prompt;
             this.cursorPosition = 0;
@@ -152,10 +152,10 @@ namespace JSSoft.UI
 
         public void Delete()
         {
-            if (this.cursorPosition < this.commandText.Length)
+            if (this.cursorPosition < this.command.Length)
             {
-                this.commandText = this.commandText.Remove(this.cursorPosition, 1);
-                this.promptText = this.prompt + this.commandText;
+                this.command = this.command.Remove(this.cursorPosition, 1);
+                this.promptText = this.prompt + this.command;
                 this.text = this.outputText + this.promptText;
                 this.InvokePromptTextChangedEvent();
             }
@@ -165,8 +165,8 @@ namespace JSSoft.UI
         {
             if (this.cursorPosition > 0)
             {
-                this.commandText = this.commandText.Remove(this.cursorPosition - 1, 1);
-                this.promptText = this.prompt + this.commandText;
+                this.command = this.command.Remove(this.cursorPosition - 1, 1);
+                this.promptText = this.prompt + this.command;
                 this.cursorPosition--;
                 this.text = this.outputText + this.promptText;
                 this.InvokePromptTextChangedEvent();
@@ -177,9 +177,9 @@ namespace JSSoft.UI
         {
             if (this.historyIndex + 1 < this.histories.Count)
             {
-                this.inputText = this.commandText = this.histories[this.historyIndex + 1];
+                this.inputText = this.command = this.histories[this.historyIndex + 1];
                 this.promptText = this.prompt + this.inputText;
-                this.cursorPosition = this.commandText.Length;
+                this.cursorPosition = this.command.Length;
                 this.text = this.outputText + this.promptText;
                 this.historyIndex++;
                 this.InvokePromptTextChangedEvent();
@@ -190,18 +190,18 @@ namespace JSSoft.UI
         {
             if (this.historyIndex > 0)
             {
-                this.inputText = this.commandText = this.histories[this.historyIndex - 1];
+                this.inputText = this.command = this.histories[this.historyIndex - 1];
                 this.promptText = this.prompt + this.inputText;
-                this.cursorPosition = this.commandText.Length;
+                this.cursorPosition = this.command.Length;
                 this.text = this.outputText + this.promptText;
                 this.historyIndex--;
                 this.InvokePromptTextChangedEvent();
             }
             else if (this.histories.Count == 1)
             {
-                this.inputText = this.commandText = this.histories[0];
+                this.inputText = this.command = this.histories[0];
                 this.promptText = this.prompt + this.inputText;
-                this.cursorPosition = this.commandText.Length;
+                this.cursorPosition = this.command.Length;
                 this.text = this.outputText + this.promptText;
                 this.historyIndex = 0;
                 this.InvokePromptTextChangedEvent();
@@ -292,7 +292,7 @@ namespace JSSoft.UI
             var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
             this.text = this.text.Insert(index, $"{character}");
             this.promptText = this.Text.Substring(this.outputText.Length);
-            this.inputText = this.commandText = this.promptText.Substring(this.prompt.Length);
+            this.inputText = this.command = this.promptText.Substring(this.prompt.Length);
             this.completion = string.Empty;
             this.cursorPosition++;
             this.InvokePromptTextChangedEvent();
@@ -303,19 +303,15 @@ namespace JSSoft.UI
             return KeyBindings.Process(this, modifiers, keyCode);
         }
 
-        public static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
-
-        public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
-
         public static KeyBindingCollection KeyBindings
         {
             get
             {
                 if (keyBindings == null)
                 {
-                    if (IsMac == true)
+                    if (TerminalEnvironment.IsMac == true)
                         return TerminalKeyBindings.Mac;
-                    else if (IsWindows == true)
+                    else if (TerminalEnvironment.IsWindows == true)
                         return TerminalKeyBindings.Windows;
                 }
                 return keyBindings;
@@ -360,9 +356,9 @@ namespace JSSoft.UI
                 this.prompt = value;
                 this.promptForegroundColors = new Color32?[value.Length];
                 this.promptBackgroundColors = new Color32?[value.Length];
-                this.promptText = this.prompt + this.commandText;
+                this.promptText = this.prompt + this.command;
                 this.text = this.outputText + this.promptText;
-                this.cursorPosition = this.commandText.Length;
+                this.cursorPosition = this.command.Length;
                 this.InvokePromptTextChangedEvent();
                 if (this.onDrawPrompt != null)
                 {
@@ -373,7 +369,24 @@ namespace JSSoft.UI
 
         public string PromptText => this.promptText;
 
-        public string CommandText => this.commandText;
+        public string Command
+        {
+            get => this.command;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                this.command = value;
+                this.promptText = this.prompt + this.command;
+                this.text = this.outputText + this.promptText;
+                this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
+                this.InvokePromptTextChangedEvent();
+                if (this.onDrawPrompt != null)
+                {
+                    this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                }
+            }
+        }
 
         public OnCompletion onCompletion { get; set; }
 
@@ -415,10 +428,10 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.inputText = this.commandText;
-            this.promptText = this.prompt + this.commandText;
+            this.inputText = this.command;
+            this.promptText = this.prompt + this.command;
             this.text = this.outputText + this.promptText;
-            this.cursorPosition = this.commandText.Length;
+            this.cursorPosition = this.command.Length;
         }
 
 #if UNITY_EDITOR
@@ -429,10 +442,10 @@ namespace JSSoft.UI
             {
                 this.outputText += Environment.NewLine;
             }
-            this.inputText = this.commandText;
-            this.promptText = this.prompt + this.commandText;
+            this.inputText = this.command;
+            this.promptText = this.prompt + this.command;
             this.text = this.outputText + this.promptText;
-            this.cursorPosition = this.commandText.Length;
+            this.cursorPosition = this.command.Length;
             this.OnOutputTextChanged(EventArgs.Empty);
             this.OnCursorPositionChanged(EventArgs.Empty);
             // Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
@@ -490,16 +503,16 @@ namespace JSSoft.UI
                 var inputText = this.inputText;
                 if (prefix == true || postfix == true)
                 {
-                    this.commandText = leftText + "\"" + this.completion + "\"";
+                    this.command = leftText + "\"" + this.completion + "\"";
                 }
                 else
                 {
-                    this.commandText = leftText + this.completion;
+                    this.command = leftText + this.completion;
                 }
-                this.promptText = this.prompt + this.commandText;
+                this.promptText = this.prompt + this.command;
                 this.inputText = inputText;
                 this.text = this.outputText + this.promptText;
-                this.cursorPosition = this.commandText.Length;
+                this.cursorPosition = this.command.Length;
                 this.InvokePromptTextChangedEvent();
             }
         }
@@ -598,7 +611,7 @@ namespace JSSoft.UI
 
         }
 
-        string ITerminal.Command => this.commandText;
+        string ITerminal.Command => this.command;
 
         string ITerminal.Prompt
         {

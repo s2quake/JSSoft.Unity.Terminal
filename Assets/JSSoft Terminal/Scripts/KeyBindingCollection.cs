@@ -54,8 +54,12 @@ namespace JSSoft.UI
             if (this.itemByKey.ContainsKey(key) == true)
             {
                 var binding = this.itemByKey[key];
-                if (binding.Verify(this) == true && binding.Action(this) == true)
+                if (binding.Verify(obj) == true && binding.Action(obj) == true)
                     return true;
+            }
+            if (this.BaseBindings != null && this.BaseBindings.Process(obj, modifiers, keyCode) == true)
+            {
+                return true;
             }
             return false;
         }
