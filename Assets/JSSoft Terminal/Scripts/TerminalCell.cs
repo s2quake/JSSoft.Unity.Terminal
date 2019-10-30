@@ -21,19 +21,15 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.TextCore;
-using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
     class TerminalCell : ITerminalCell
     {
         private readonly Action modifiedAction;
-        // private bool isSelected;
 
         public TerminalCell(TerminalRow row, int index, Action modifiedAction)
         {

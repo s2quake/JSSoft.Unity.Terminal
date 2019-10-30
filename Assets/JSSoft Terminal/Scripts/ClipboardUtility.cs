@@ -21,13 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.TextCore;
-using UnityEngine.UI;
 
 namespace JSSoft.UI
 {

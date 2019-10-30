@@ -21,17 +21,9 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Ntreev.Library.Threading;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace JSSoft.UI
 {

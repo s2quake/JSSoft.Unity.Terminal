@@ -27,8 +27,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.TextCore;
-using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.TerminalGrid>;
 
 namespace JSSoft.UI
 {
@@ -835,12 +833,7 @@ namespace JSSoft.UI
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            // if (eventData.button == PointerEventData.InputButton.Left)
-            // {
-            //     var position = this.WorldToGrid(eventData.position);
-            //     var point = this.Intersect(position);
-            //     Debug.Log($"Intersect: {point}");
-            // }
+            
         }
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)

@@ -21,15 +21,11 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.Terminal>;
 
 namespace JSSoft.UI
 {

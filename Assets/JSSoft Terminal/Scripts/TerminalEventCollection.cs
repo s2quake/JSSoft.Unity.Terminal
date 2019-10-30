@@ -23,11 +23,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.TextCore;
-using UnityEngine.UI;
 using System.Collections;
 
 namespace JSSoft.UI
