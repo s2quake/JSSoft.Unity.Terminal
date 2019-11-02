@@ -111,7 +111,7 @@ namespace JSSoft.UI
 
         public int Volume { get; private set; }
 
-        public bool IsSelected => TerminalGrid.IsSelected(this.Grid, this.Point);
+        public bool IsSelected => TerminalGridUtility.IsSelected(this.Grid, this.Point);
 
         // public bool IsSelected
         // {

@@ -20,30 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.TextCore;
+using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public interface ITerminalRow
+    public interface IInputHandler
     {
-        ITerminalCell Intersect(Vector2 position);
+        bool BeginDrag(ITerminalGrid grid, PointerEventData eventData);
 
-        ITerminalGrid Grid { get; }
+        bool Drag(ITerminalGrid grid, PointerEventData eventData);
 
-        int Index { get; }
+        bool EndDrag(ITerminalGrid grid, PointerEventData eventData);
 
-        IReadOnlyList<ITerminalCell> Cells { get; }
+        bool PointerClick(ITerminalGrid grid, PointerEventData eventData);
 
-        bool IsSelected { get; }
+        bool PointerDown(ITerminalGrid grid, PointerEventData eventData);
 
-        bool IsEmpty { get; }
+        bool PointerUp(ITerminalGrid grid, PointerEventData eventData);
 
-        GlyphRect Rect { get; }
+        bool PointerEnter(ITerminalGrid grid, PointerEventData eventData);
 
-        Color32? BackgroundColor { get; }
-
-        Color32? ForegroundColor { get; }
+        bool PointerExit(ITerminalGrid grid, PointerEventData eventData);
     }
 }

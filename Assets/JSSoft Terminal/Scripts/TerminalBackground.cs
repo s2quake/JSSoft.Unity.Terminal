@@ -102,7 +102,7 @@ namespace JSSoft.UI
         {
             if (cell.BackgroundColor is Color32)
                 return true;
-            return TerminalGrid.IsSelecting(this.grid, cell);
+            return TerminalGridUtility.IsSelecting(this.grid, cell);
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)

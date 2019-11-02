@@ -20,30 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore;
+using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public interface ITerminalRow
+    public class InputHandlerContext : Dictionary<object, object>
     {
-        ITerminalCell Intersect(Vector2 position);
+        public InputHandlerContext(ITerminalGrid grid)
+        {
+            this.Grid = grid;
+        }
 
-        ITerminalGrid Grid { get; }
-
-        int Index { get; }
-
-        IReadOnlyList<ITerminalCell> Cells { get; }
-
-        bool IsSelected { get; }
-
-        bool IsEmpty { get; }
-
-        GlyphRect Rect { get; }
-
-        Color32? BackgroundColor { get; }
-
-        Color32? ForegroundColor { get; }
+        public ITerminalGrid Grid { get; }
     }
 }

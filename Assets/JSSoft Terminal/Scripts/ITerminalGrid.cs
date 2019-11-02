@@ -29,11 +29,13 @@ namespace JSSoft.UI
 {
     public interface ITerminalGrid
     {
+        Vector2 WorldToGrid(Vector2 position);
+
         TerminalPoint Intersect(Vector2 position);
 
         ITerminalCell IntersectWithCell(Vector2 position);
 
-        void ClearSelection();
+        void Focus();
 
         void ScrollToTop();
 
@@ -79,11 +81,15 @@ namespace JSSoft.UI
 
         TerminalPoint CursorPosition { get; set; }
 
+        IList<TerminalRange> Selections { get; }
+
         Rect Rectangle { get; }
 
         bool IsCursorVisible { get; set; }
 
-        bool IsScrolling { get; }
+        bool IsScrolling { get; set; }
+
+        TerminalRange SelectingRange { get; set; }
 
         string CompositionString { get; set; }
 

@@ -77,6 +77,46 @@ namespace JSSoft.UI
             return null;
         }
 
+        public static bool IsSelecting(ITerminalGrid grid, ITerminalCell cell)
+        {
+            if (cell == null)
+                throw new ArgumentNullException(nameof(cell));
+            var point = new TerminalPoint(cell.Index, cell.Row.Index);
+            var isSelecting = IsSelecting(grid, point);
+            return IsSelected(grid, point) != isSelecting;
+        }
+
+        public static bool IsSelecting(ITerminalGrid grid, TerminalPoint point)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            if (grid.SelectingRange != TerminalRange.Empty)
+            {
+                return grid.SelectingRange.Intersect(point);
+            }
+            return false;
+        }
+
+        public static bool IsSelected(ITerminalGrid grid, TerminalPoint point)
+        {
+            if (grid == null)
+                throw new ArgumentNullException(nameof(grid));
+            if (grid.Selections.Any())
+            {
+                foreach (var item in grid.Selections)
+                {
+                    var p1 = item.BeginPoint;
+                    var p2 = item.EndPoint;
+                    if (point >= p1 && point <= p2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+
         public static int GetItemWidth(ITerminalGrid grid)
         {
             if (grid != null && grid.FontAsset != null)

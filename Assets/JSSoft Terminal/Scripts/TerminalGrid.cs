@@ -41,6 +41,7 @@ namespace JSSoft.UI
         IEndDragHandler,
         IPointerClickHandler,
         IPointerDownHandler,
+        IPointerUpHandler,
         IPointerEnterHandler,
         IPointerExitHandler,
         IScrollHandler,
@@ -77,15 +78,11 @@ namespace JSSoft.UI
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
         private readonly TerminalCharacterInfoCollection characterInfos;
-        private readonly List<TerminalPoint> selectionList = new List<TerminalPoint>();
 
+        private IInputHandler inputHandler;
         private Terminal terminal;
-        private bool isSelecting;
         private bool isFocused;
-        private bool isScrolling;
-        private TerminalPoint downPoint;
-        private TerminalPoint beginPoint;
-        private TerminalPoint endPoint;
+        private TerminalRange selectingRange = TerminalRange.Empty;
         private float scrollPos;
         private Rect rectangle;
         private Vector2 itemSize;
@@ -94,41 +91,7 @@ namespace JSSoft.UI
         {
             this.rows = new TerminalRowCollection(this);
             this.characterInfos = new TerminalCharacterInfoCollection(this);
-        }
-
-        public static bool IsSelecting(TerminalGrid grid, ITerminalCell cell)
-        {
-            if (cell == null)
-                throw new ArgumentNullException(nameof(cell));
-            var point = new TerminalPoint(cell.Index, cell.Row.Index);
-            var isSelecting = IsSelecting(grid, point);
-            return IsSelected(grid, point) != isSelecting;
-        }
-
-        public static bool IsSelecting(TerminalGrid grid, TerminalPoint point)
-        {
-            if (grid == null)
-                throw new ArgumentNullException(nameof(grid));
-            if (grid.isSelecting == true)
-            {
-                var p1 = grid.beginPoint < grid.endPoint ? grid.beginPoint : grid.endPoint;
-                var p2 = grid.beginPoint > grid.endPoint ? grid.beginPoint : grid.endPoint;
-                return point >= p1 && point <= p2;
-            }
-            return false;
-        }
-
-        public static bool IsSelected(TerminalGrid grid, TerminalPoint point)
-        {
-            if (grid == null)
-                throw new ArgumentNullException(nameof(grid));
-            if (grid.selectionList.Any())
-            {
-                var p1 = grid.selectionList.First();
-                var p2 = grid.selectionList.Last();
-                return point >= p1 && point <= p2;
-            }
-            return false;
+            this.Selections = new TerminalGridSelection(() => this.OnSelectionChanged(EventArgs.Empty));
         }
 
         public Vector2 WorldToGrid(Vector2 position)
@@ -164,15 +127,6 @@ namespace JSSoft.UI
             return null;
         }
 
-        public void ClearSelection()
-        {
-            if (this.selectionList.Any() == true)
-            {
-                this.selectionList.Clear();
-                this.OnSelectionChanged(EventArgs.Empty);
-            }
-        }
-
         public TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;
 
         public int PointToIndex(TerminalPoint point) => this.characterInfos.PointToIndex(point);
@@ -200,13 +154,21 @@ namespace JSSoft.UI
             this.OnTextChanged(EventArgs.Empty);
         }
 
+        public void Focus()
+        {
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(this.gameObject);
+            }
+        }
+
         public void ScrollToTop()
         {
             if (this.MaximumVisibleIndex > 0)
             {
-                this.isScrolling = true;
+                this.IsScrolling = true;
                 this.VisibleIndex = 0;
-                this.isScrolling = false;
+                this.IsScrolling = false;
             }
         }
 
@@ -214,9 +176,9 @@ namespace JSSoft.UI
         {
             if (this.MaximumVisibleIndex > 0)
             {
-                this.isScrolling = true;
+                this.IsScrolling = true;
                 this.VisibleIndex = this.MaximumVisibleIndex;
-                this.isScrolling = false;
+                this.IsScrolling = false;
             }
         }
 
@@ -245,18 +207,19 @@ namespace JSSoft.UI
             var visibleIndex = this.VisibleIndex + value;
             if (visibleIndex >= 0 && visibleIndex <= this.MaximumVisibleIndex)
             {
-                this.isScrolling = true;
+                this.IsScrolling = true;
                 this.VisibleIndex = visibleIndex;
-                this.isScrolling = false;
+                this.IsScrolling = false;
             }
         }
 
         public void Copy()
         {
-            if (this.selectionList.Any() == true)
+            if (this.Selections.Any() == true)
             {
-                var p1 = this.selectionList.First();
-                var p2 = this.selectionList.Last();
+                var range = this.Selections.First();
+                var p1 = range.BeginPoint;
+                var p2 = range.EndPoint;
                 var capacity = p1.DistanceOf(p2, this.ColumnCount);
                 var list = new List<char>(capacity);
                 var i1 = this.characterInfos.PointToIndex(p1);
@@ -279,9 +242,11 @@ namespace JSSoft.UI
 
         public void SelectAll()
         {
-            this.selectionList.Clear();
-            this.selectionList.Add(new TerminalPoint(0, 0));
-            this.selectionList.Add(new TerminalPoint(this.ColumnCount, this.rows.Count));
+            var p1 = new TerminalPoint(0, 0);
+            var p2 = new TerminalPoint(this.ColumnCount, this.rows.Count);
+            var range = new TerminalRange(p1, p2);
+            this.Selections.Clear();
+            this.Selections.Add(range);
             this.OnSelectionChanged(EventArgs.Empty);
         }
 
@@ -302,6 +267,12 @@ namespace JSSoft.UI
             {
                 keyBindings = value;
             }
+        }
+
+        public IInputHandler InputHandler
+        {
+            get => this.inputHandler ?? JSSoft.UI.InputHandler.GetDefaultHandler();
+            set => this.inputHandler = value;
         }
 
         public Terminal Terminal
@@ -362,6 +333,8 @@ namespace JSSoft.UI
         public int RowCount { get; private set; }
 
         public IReadOnlyList<ITerminalRow> Rows => this.rows;
+
+        public TerminalGridSelection Selections { get; }
 
         public int VisibleIndex
         {
@@ -425,7 +398,7 @@ namespace JSSoft.UI
                     this.UpdateCursorPosition();
                     this.OnCursorPositionChanged(EventArgs.Empty);
                 }
-                this.ClearSelection();
+                this.Selections.Clear();
             }
         }
 
@@ -441,7 +414,20 @@ namespace JSSoft.UI
             }
         }
 
-        public bool IsScrolling => this.isScrolling;
+        public bool IsScrolling { get; set; }
+
+        public TerminalRange SelectingRange
+        {
+            get => this.selectingRange;
+            set
+            {
+                if (this.selectingRange != value)
+                {
+                    this.selectingRange = value;
+                    this.OnLayoutChanged(EventArgs.Empty);
+                }
+            }
+        }
 
         public string CompositionString
         {
@@ -777,88 +763,50 @@ namespace JSSoft.UI
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && this.downPoint != TerminalPoint.Invalid)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                var point = this.Intersect(position);
-                if (point != TerminalPoint.Invalid)
-                {
-                    var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
-                    this.beginPoint = beginPoint;
-                    this.endPoint = endPoint;
-                    this.isSelecting = true;
-                }
-            }
+            if (this.InputHandler.BeginDrag(this, eventData) == true)
+                return;
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && this.downPoint != TerminalPoint.Invalid)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                var point = this.Intersect(position);
-                if (point != TerminalPoint.Invalid)
-                {
-                    var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
-                    this.beginPoint = beginPoint;
-                    this.endPoint = endPoint;
-                    this.OnLayoutChanged(EventArgs.Empty);
-                }
-            }
+            if (this.InputHandler.Drag(this, eventData) == true)
+                return;
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left && this.downPoint != TerminalPoint.Invalid)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                var point = this.Intersect(position);
-                if (point != TerminalPoint.Invalid)
-                {
-                    var (beginPoint, endPoint) = this.UpdatePoint(this.downPoint, point);
-                    this.beginPoint = beginPoint;
-                    this.endPoint = endPoint;
-                }
-                this.selectionList.Clear();
-                this.selectionList.Add(beginPoint);
-                this.selectionList.Add(endPoint);
-                this.selectionList.Sort();
-                this.downPoint = TerminalPoint.Invalid;
-                this.beginPoint = TerminalPoint.Invalid;
-                this.endPoint = TerminalPoint.Invalid;
-                this.isSelecting = false;
-                this.OnSelectionChanged(EventArgs.Empty);
-            }
+            if (this.InputHandler.EndDrag(this, eventData) == true)
+                return;
         }
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            
+            if (this.InputHandler.PointerClick(this, eventData) == true)
+                return;
         }
 
         void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Left)
-            {
-                var position = this.WorldToGrid(eventData.position);
-                this.downPoint = this.Intersect(position);
-                if (this.downPoint != TerminalPoint.Invalid)
-                {
-                    this.ClearSelection();
-                }
-                eventData.useDragThreshold = false;
-            }
-            eventData.selectedObject = this.gameObject;
+            if (this.InputHandler.PointerDown(this, eventData) == true)
+                return;
+        }
+
+        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
+        {
+            if (this.InputHandler.PointerUp(this, eventData) == true)
+                return;
         }
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            // Debug.Log("enter");
+            if (this.InputHandler.PointerEnter(this, eventData) == true)
+                return;
         }
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            // Debug.Log("exit");
+            if (this.InputHandler.PointerExit(this, eventData) == true)
+                return;
         }
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
@@ -869,10 +817,10 @@ namespace JSSoft.UI
                 this.scrollPos = Math.Max((int)this.scrollPos, 0);
                 this.scrollPos = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);
                 this.visibleIndex = (int)this.scrollPos;
-                this.isScrolling = true;
+                this.IsScrolling = true;
                 this.UpdateVisibleIndex();
                 this.OnVisibleIndexChanged(EventArgs.Empty);
-                this.isScrolling = false;
+                this.IsScrolling = false;
             }
         }
 
@@ -908,6 +856,8 @@ namespace JSSoft.UI
         }
 
         ITerminal ITerminalGrid.Terminal => this.terminal;
+
+        IList<TerminalRange> ITerminalGrid.Selections => this.Selections;
 
         #endregion
     }
