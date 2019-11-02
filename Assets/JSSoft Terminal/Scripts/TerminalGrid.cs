@@ -53,7 +53,6 @@ namespace JSSoft.UI
         public static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);
         public static readonly Color32 DefaultForegroundColor = new Color32(255, 255, 255, 255);
         public static readonly Color32 DefaultCursorColor = new Color32(139, 139, 139, 255);
-        private static KeyBindingCollection keyBindings;
 
         [SerializeField]
         private TMP_FontAsset fontAsset = null;
@@ -86,6 +85,7 @@ namespace JSSoft.UI
         private float scrollPos;
         private Rect rectangle;
         private Vector2 itemSize;
+        private IKeyBindingCollection keyBindings;
 
         public TerminalGrid()
         {
@@ -99,6 +99,8 @@ namespace JSSoft.UI
             var rect = this.GetComponent<RectTransform>().rect;
             position.y = rect.height - position.y;
             position.y += TerminalGridUtility.GetItemHeight(this) * this.visibleIndex;
+            position.x -= this.Rectangle.x;
+            position.y -= this.Rectangle.y;
             return position;
         }
 
@@ -250,23 +252,10 @@ namespace JSSoft.UI
             this.OnSelectionChanged(EventArgs.Empty);
         }
 
-        public static KeyBindingCollection KeyBindings
+        public IKeyBindingCollection KeyBindings
         {
-            get
-            {
-                if (keyBindings == null)
-                {
-                    if (TerminalEnvironment.IsMac == true)
-                        return TerminalKeyBindings.Mac;
-                    else if (TerminalEnvironment.IsWindows == true)
-                        return TerminalKeyBindings.Windows;
-                }
-                return keyBindings;
-            }
-            set
-            {
-                keyBindings = value;
-            }
+            get => this.keyBindings ?? JSSoft.UI.KeyBindings.TerminalGridKeyBindings.GetDefaultBindings();
+            set => this.keyBindings = value;
         }
 
         public IInputHandler InputHandler
@@ -539,7 +528,7 @@ namespace JSSoft.UI
         {
             if (this.Terminal.ProcessKeyEvent(modifiers, keyCode) == true)
                 return true;
-            return KeyBindings.Process(this, modifiers, keyCode);
+            return this.KeyBindings.Process(this, modifiers, keyCode);
         }
 
         protected virtual bool OnPreviewKeyPress(char character)

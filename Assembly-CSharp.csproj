@@ -49,6 +49,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\FontUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IInputHandler.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBinding.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBindingCollection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\InputHandler.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\InputHandlerContext.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\InputHandlers\InputHandlerUtility.cs" />
@@ -62,6 +63,8 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingBase.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingCollection.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindings\TerminalGridKeyBindings.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindings\TerminalKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Terminal.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalBackground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCell.cs" />
@@ -76,10 +79,8 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridSelection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridUtility.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPoint.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRange.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalRect.cs" />

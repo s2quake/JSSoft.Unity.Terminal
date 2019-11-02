@@ -28,11 +28,11 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public class KeyBindingCollection : IEnumerable<IKeyBinding>
+    public class KeyBindingCollection : IKeyBindingCollection
     {
         private readonly Dictionary<string, IKeyBinding> itemByKey = new Dictionary<string, IKeyBinding>();
 
-        public KeyBindingCollection(KeyBindingCollection bindings)
+        public KeyBindingCollection(IKeyBindingCollection bindings)
         {
             this.BaseBindings = bindings ?? throw new ArgumentNullException(nameof(bindings));
         }
@@ -66,7 +66,7 @@ namespace JSSoft.UI
 
         public int Count => this.itemByKey.Count;
 
-        public KeyBindingCollection BaseBindings { get; }
+        public IKeyBindingCollection BaseBindings { get; }
 
         #region IEnumerable
 

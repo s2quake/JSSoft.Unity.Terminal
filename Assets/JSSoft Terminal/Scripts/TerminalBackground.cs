@@ -83,7 +83,6 @@ namespace JSSoft.UI
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
                 this.grid.SelectionChanged += TerminalGrid_SelectionChanged;
             }
-            // Debug.Log($"{nameof(TerminalBackground)}.{nameof(OnEnable)}");
         }
 
         protected override void OnDisable()

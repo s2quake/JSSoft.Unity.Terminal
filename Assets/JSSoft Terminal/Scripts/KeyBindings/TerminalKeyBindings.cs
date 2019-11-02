@@ -20,14 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using UnityEngine;
 using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.Terminal>;
 
-namespace JSSoft.UI
+namespace JSSoft.UI.KeyBindings
 {
     public static class TerminalKeyBindings
     {
-        public static readonly KeyBindingCollection Common = new KeyBindingCollection()
+        public static IKeyBindingCollection GetDefaultBindings()
+        {
+            if (TerminalEnvironment.IsMac == true)
+                return TerminalKeyBindings.Mac;
+            else if (TerminalEnvironment.IsWindows == true)
+                return TerminalKeyBindings.Windows;
+            throw new NotImplementedException();
+        }
+
+        public static readonly IKeyBindingCollection Common = new KeyBindingCollection()
         {
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, (t) => t.PrevHistory()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, (t) => t.NextHistory()),
@@ -51,7 +61,7 @@ namespace JSSoft.UI
             new KeyBinding(EventModifiers.Shift, KeyCode.Tab, (t) => t.PrevCompletion())
         };
 
-        public static readonly KeyBindingCollection Mac = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection Mac = new KeyBindingCollection(Common)
         {
             new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => DeleteToFirst(t)),
             new KeyBinding(EventModifiers.Control, KeyCode.K, (t) => DeleteToLast(t)),
@@ -64,7 +74,7 @@ namespace JSSoft.UI
             new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
         };
 
-        public static readonly KeyBindingCollection Windows = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection Windows = new KeyBindingCollection(Common)
         {
             new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Clear()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
@@ -75,20 +85,8 @@ namespace JSSoft.UI
         {
             var index = terminal.CursorPosition - 1;
             var command = terminal.Command;
-            while (index >= 0)
-            {
-                var ch = command[index];
-                if (char.IsLetterOrDigit(ch) == true)
-                    break;
-                index--;
-            }
-            while (index >= 0)
-            {
-                var ch = command[index];
-                if (char.IsLetterOrDigit(ch) == false)
-                    break;
-                index--;
-            }
+            index = SkipBackward(command, index, true);
+            index = SkipBackward(command, index, false);
             index++;
             terminal.CursorPosition = index;
             return terminal.CursorPosition;
@@ -98,20 +96,8 @@ namespace JSSoft.UI
         {
             var index = terminal.CursorPosition;
             var command = terminal.Command;
-            while (index < command.Length)
-            {
-                var ch = command[index];
-                if (char.IsLetterOrDigit(ch) == true)
-                    break;
-                index++;
-            }
-            while (index < command.Length)
-            {
-                var ch = command[index];
-                if (char.IsLetterOrDigit(ch) == false)
-                    break;
-                index++;
-            }
+            index = SkipForward(command, index, true);
+            index = SkipForward(command, index, false);
             terminal.CursorPosition = index;
             return terminal.CursorPosition;
         }
@@ -138,6 +124,30 @@ namespace JSSoft.UI
             var index1 = PrevWord(terminal);
             var length = index2 - index1;
             terminal.Command = command.Remove(index1, length);
+        }
+
+        private static int SkipForward(string command, int index, bool isLetter)
+        {
+            while (index < command.Length)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == isLetter)
+                    break;
+                index++;
+            }
+            return index;
+        }
+
+        private static int SkipBackward(string command, int index, bool isLetter)
+        {
+            while (index >= 0)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == isLetter)
+                    break;
+                index--;
+            }
+            return index;
         }
     }
 }

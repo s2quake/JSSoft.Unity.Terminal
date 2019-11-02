@@ -32,7 +32,6 @@ namespace JSSoft.UI
     [AddComponentMenu("UI/Terminal", 15)]
     public class Terminal : UIBehaviour, ITerminal
     {
-        private static KeyBindingCollection keyBindings;
 
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -57,6 +56,7 @@ namespace JSSoft.UI
         private Color32?[] backgroundColors = new Color32?[] { };
         private Color32?[] promptForegroundColors = new Color32?[] { };
         private Color32?[] promptBackgroundColors = new Color32?[] { };
+        private IKeyBindingCollection keyBindings;
 
         private EventHandler<TerminalExecuteEventArgs> executed;
 
@@ -296,26 +296,13 @@ namespace JSSoft.UI
 
         public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
         {
-            return KeyBindings.Process(this, modifiers, keyCode);
+            return this.KeyBindings.Process(this, modifiers, keyCode);
         }
 
-        public static KeyBindingCollection KeyBindings
+        public IKeyBindingCollection KeyBindings
         {
-            get
-            {
-                if (keyBindings == null)
-                {
-                    if (TerminalEnvironment.IsMac == true)
-                        return TerminalKeyBindings.Mac;
-                    else if (TerminalEnvironment.IsWindows == true)
-                        return TerminalKeyBindings.Windows;
-                }
-                return keyBindings;
-            }
-            set
-            {
-                keyBindings = value;
-            }
+            get => this.keyBindings ?? JSSoft.UI.KeyBindings.TerminalKeyBindings.GetDefaultBindings();
+            set => this.keyBindings = value;
         }
 
         public Color32? ForegroundColor { get; set; }

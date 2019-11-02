@@ -20,20 +20,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using UnityEngine;
 using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.TerminalGrid>;
 
-namespace JSSoft.UI
+namespace JSSoft.UI.KeyBindings
 {
     public static class TerminalGridKeyBindings
     {
-        public static readonly KeyBindingCollection Common = new KeyBindingCollection()
+        public static IKeyBindingCollection GetDefaultBindings()
+        {
+            if (TerminalEnvironment.IsMac == true)
+                return TerminalKeyBindings.Mac;
+            else if (TerminalEnvironment.IsWindows == true)
+                return TerminalKeyBindings.Windows;
+            throw new NotImplementedException();
+        }
+        public static readonly IKeyBindingCollection Common = new KeyBindingCollection()
         {
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageUp, (g) => g.PageUp()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageDown, (g) => g.PageDown())
         };
 
-        public static readonly KeyBindingCollection Mac = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection Mac = new KeyBindingCollection(Common)
         {
             new KeyBinding(EventModifiers.Alt | EventModifiers.Command, KeyCode.PageUp, (g) => g.LineUp()),
             new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command, KeyCode.PageDown, (g) => g.LineDown()),
@@ -43,7 +52,7 @@ namespace JSSoft.UI
             new KeyBinding(EventModifiers.Command, KeyCode.A, (g) => g.SelectAll()),
         };
 
-        public static readonly KeyBindingCollection Windows = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection Windows = new KeyBindingCollection(Common)
         {
 
         };
