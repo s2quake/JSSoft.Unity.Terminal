@@ -34,6 +34,7 @@ namespace JSSoft.UI
         private readonly Stack<TerminalCell> pool = new Stack<TerminalCell>();
         private bool isSelected;
         private bool isEmpty;
+        private string text;
 
         public TerminalRow(TerminalGrid grid, int index)
         {
@@ -164,6 +165,15 @@ namespace JSSoft.UI
             }
         }
 
+        public string Text
+        {
+            get
+            {
+                this.UpdateFlag();
+                return this.text;
+            }
+        }
+
         public GlyphRect Rect { get; private set; }
 
         public Color32? BackgroundColor { get; set; }
@@ -189,6 +199,14 @@ namespace JSSoft.UI
             {
                 this.isSelected = this.cells.Any(item => item.IsSelected);
                 this.isEmpty = this.cells.Any(item => item.Character != char.MinValue) == false;
+                this.text = string.Empty;
+                foreach (var item in this.cells)
+                {
+                    if (item.Character != char.MinValue)
+                    {
+                        this.text += item.Character;
+                    }
+                }
             }
         }
 

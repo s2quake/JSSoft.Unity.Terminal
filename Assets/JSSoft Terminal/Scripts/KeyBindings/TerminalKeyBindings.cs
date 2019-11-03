@@ -22,7 +22,7 @@
 
 using System;
 using UnityEngine;
-using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.Terminal>;
+using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.ITerminal>;
 
 namespace JSSoft.UI.KeyBindings
 {
@@ -65,10 +65,10 @@ namespace JSSoft.UI.KeyBindings
         {
             new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => DeleteToFirst(t)),
             new KeyBinding(EventModifiers.Control, KeyCode.K, (t) => DeleteToLast(t)),
-            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.MoveToFirst()),
-            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.MoveToLast()),
-            new KeyBinding(EventModifiers.Control, KeyCode.E, (t) => t.MoveToLast()),
-            new KeyBinding(EventModifiers.Control, KeyCode.A, (t) => t.MoveToFirst()),
+            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.CursorPosition = 0),
+            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.CursorPosition = t.Command.Length),
+            new KeyBinding(EventModifiers.Control, KeyCode.E, (t) => t.CursorPosition = t.Command.Length),
+            new KeyBinding(EventModifiers.Control, KeyCode.A, (t) => t.CursorPosition = 0),
             new KeyBinding(EventModifiers.Control, KeyCode.W, (t) => DeletePrevWord(t)),
             new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
             new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
@@ -76,40 +76,40 @@ namespace JSSoft.UI.KeyBindings
 
         public static readonly IKeyBindingCollection Windows = new KeyBindingCollection(Common)
         {
-            new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Clear()),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Prompt = string.Empty),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.CursorPosition = 0),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.CursorPosition = t.Command.Length),
         };
 
-        private static int PrevWord(Terminal terminal)
+        private static int PrevWord(ITerminal terminal)
         {
             var index = terminal.CursorPosition - 1;
             var command = terminal.Command;
-            index = SkipBackward(command, index, true);
-            index = SkipBackward(command, index, false);
+            index = CommandStringUtility.SkipBackward(command, index, true);
+            index = CommandStringUtility.SkipBackward(command, index, false);
             index++;
             terminal.CursorPosition = index;
             return terminal.CursorPosition;
         }
 
-        private static int NextWord(Terminal terminal)
+        private static int NextWord(ITerminal terminal)
         {
             var index = terminal.CursorPosition;
             var command = terminal.Command;
-            index = SkipForward(command, index, true);
-            index = SkipForward(command, index, false);
+            index = CommandStringUtility.SkipForward(command, index, true);
+            index = CommandStringUtility.SkipForward(command, index, false);
             terminal.CursorPosition = index;
             return terminal.CursorPosition;
         }
 
-        private static void DeleteToLast(Terminal terminal)
+        private static void DeleteToLast(ITerminal terminal)
         {
             var index = terminal.CursorPosition;
             var command = terminal.Command;
             terminal.Command = command.Substring(0, index);
         }
 
-        private static void DeleteToFirst(Terminal terminal)
+        private static void DeleteToFirst(ITerminal terminal)
         {
             var index = terminal.CursorPosition;
             var command = terminal.Command;
@@ -117,37 +117,13 @@ namespace JSSoft.UI.KeyBindings
             terminal.CursorPosition = 0;
         }
 
-        private static void DeletePrevWord(Terminal terminal)
+        private static void DeletePrevWord(ITerminal terminal)
         {
             var index2 = terminal.CursorPosition;
             var command = terminal.Command;
             var index1 = PrevWord(terminal);
             var length = index2 - index1;
             terminal.Command = command.Remove(index1, length);
-        }
-
-        private static int SkipForward(string command, int index, bool isLetter)
-        {
-            while (index < command.Length)
-            {
-                var ch = command[index];
-                if (char.IsLetterOrDigit(ch) == isLetter)
-                    break;
-                index++;
-            }
-            return index;
-        }
-
-        private static int SkipBackward(string command, int index, bool isLetter)
-        {
-            while (index >= 0)
-            {
-                var ch = command[index];
-                if (char.IsLetterOrDigit(ch) == isLetter)
-                    break;
-                index--;
-            }
-            return index;
         }
     }
 }

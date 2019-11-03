@@ -79,7 +79,7 @@ namespace JSSoft.UI
 
         Color32 CursorColor { get; set; }
 
-        TerminalPoint CursorPosition { get; set; }
+        TerminalPoint CursorPoint { get; set; }
 
         IList<TerminalRange> Selections { get; }
 
@@ -101,7 +101,7 @@ namespace JSSoft.UI
 
         event EventHandler SelectionChanged;
 
-        event EventHandler CursorPositionChanged;
+        event EventHandler CursorPointChanged;
 
         event EventHandler CompositionStringChanged;
 

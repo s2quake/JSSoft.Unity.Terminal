@@ -162,7 +162,7 @@ namespace JSSoft.UI
             this.SetVerticesDirty();
             if (this.grid != null)
             {
-                this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+                this.grid.CursorPointChanged += TerminalGrid_CursorPointChanged;
                 this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
                 this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
                 this.grid.GotFocus += TerminalGrid_GotFocus;
@@ -177,7 +177,7 @@ namespace JSSoft.UI
             base.OnDisable();
             if (this.grid != null)
             {
-                this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
+                this.grid.CursorPointChanged -= TerminalGrid_CursorPointChanged;
                 this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
                 this.grid.GotFocus -= TerminalGrid_GotFocus;
                 this.grid.LostFocus -= TerminalGrid_LostFocus;
@@ -189,7 +189,7 @@ namespace JSSoft.UI
             base.OnRectTransformDimensionsChange();
         }
 
-        private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
+        private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
         {
             this.UpdateLayout();
         }
@@ -217,10 +217,10 @@ namespace JSSoft.UI
 
         private void UpdateLayout()
         {
-            var point = this.grid.CursorPosition;
+            var point = this.grid.CursorPoint;
             var cell = this.grid.Rows[point.Y].Cells[point.X];
-            this.cursorLeft = this.grid.CursorPosition.X;
-            this.cursorTop = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
+            this.cursorLeft = this.grid.CursorPoint.X;
+            this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
             this.volume = Math.Max(cell.Volume, 1);
             this.isVisible = this.grid.IsCursorVisible;
             this.SetVerticesDirty();

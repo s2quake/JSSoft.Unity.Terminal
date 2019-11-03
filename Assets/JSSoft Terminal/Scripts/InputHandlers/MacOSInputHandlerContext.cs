@@ -32,6 +32,9 @@ namespace JSSoft.UI.InputHandlers
         private TerminalPoint downPoint;
         private TerminalPoint beginPoint;
         private TerminalPoint endPoint;
+        private float clickThreshold = 0.5f;
+        private float time;
+        private int downCount;
 
         public MacOSInputHandlerContext(ITerminalGrid grid)
             : base(grid)
@@ -105,13 +108,40 @@ namespace JSSoft.UI.InputHandlers
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var position = grid.WorldToGrid(eventData.position);
-                this.downPoint = grid.Intersect(position);
-                if (this.downPoint != TerminalPoint.Invalid)
+                var newPoint = grid.Intersect(position);
+                var newTime = Time.time;
+                var oldPoint = this.downPoint;
+                var oldTime = this.time;
+                var downCount = this.downCount;
+                var clickThreshold = this.clickThreshold;
+                var diffTime = newTime - oldTime;
+                if (diffTime > clickThreshold || newPoint != oldPoint)
+                {
+                    downCount = 1;
+                }
+                else
+                {
+                    downCount++;
+                }
+                if (downCount == 1)
                 {
                     grid.Selections.Clear();
                 }
+                else if (downCount == 2)
+                {
+                    TerminalGridUtility.SelectWord(grid, newPoint);
+                }
+                else if (downCount == 3)
+                {
+                    TerminalGridUtility.SelectLine(grid, newPoint.Y);
+                }
+
                 eventData.useDragThreshold = false;
                 grid.Focus();
+
+                this.downPoint = newPoint;
+                this.downCount = downCount;
+                this.time = newTime;
                 return true;
             }
             return false;

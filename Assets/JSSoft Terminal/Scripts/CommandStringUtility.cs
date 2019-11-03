@@ -216,5 +216,29 @@ namespace JSSoft.UI
             }
             return properties;
         }
+        
+        public static int SkipForward(string command, int index, bool isLetter)
+        {
+            while (index < command.Length)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == isLetter)
+                    break;
+                index++;
+            }
+            return index;
+        }
+
+        public static int SkipBackward(string command, int index, bool isLetter)
+        {
+            while (index >= 0)
+            {
+                var ch = command[index];
+                if (char.IsLetterOrDigit(ch) == isLetter)
+                    break;
+                index--;
+            }
+            return index;
+        }
     }
 }

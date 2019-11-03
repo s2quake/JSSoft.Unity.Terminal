@@ -589,13 +589,6 @@ namespace JSSoft.UI
 
         void ITerminal.Reset() => this.ResetOutput();
 
-        void ITerminal.Focus()
-        {
-
-        }
-
-        string ITerminal.Command => this.command;
-
         string ITerminal.Prompt
         {
             get => this.Prompt;

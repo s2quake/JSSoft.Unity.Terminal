@@ -376,7 +376,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalPoint CursorPosition
+        public TerminalPoint CursorPoint
         {
             get => this.cursorPosition;
             set
@@ -385,7 +385,7 @@ namespace JSSoft.UI
                 {
                     this.cursorPosition = value;
                     this.UpdateCursorPosition();
-                    this.OnCursorPositionChanged(EventArgs.Empty);
+                    this.OnCursorPointChanged(EventArgs.Empty);
                 }
                 this.Selections.Clear();
             }
@@ -399,7 +399,7 @@ namespace JSSoft.UI
             set
             {
                 this.isCursorVisible = value;
-                this.OnCursorPositionChanged(EventArgs.Empty);
+                this.OnCursorPointChanged(EventArgs.Empty);
             }
         }
 
@@ -436,7 +436,7 @@ namespace JSSoft.UI
 
         public event EventHandler SelectionChanged;
 
-        public event EventHandler CursorPositionChanged;
+        public event EventHandler CursorPointChanged;
 
         public event EventHandler CompositionStringChanged;
 
@@ -464,9 +464,9 @@ namespace JSSoft.UI
             this.SelectionChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnCursorPositionChanged(EventArgs e)
+        protected virtual void OnCursorPointChanged(EventArgs e)
         {
-            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
+            this.CursorPointChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnCompositionStringChanged(EventArgs e)
@@ -494,7 +494,7 @@ namespace JSSoft.UI
             this.UpdateCursorPosition();
             this.OnTextChanged(EventArgs.Empty);
             this.OnVisibleIndexChanged(EventArgs.Empty);
-            this.OnCursorPositionChanged(EventArgs.Empty);
+            this.OnCursorPointChanged(EventArgs.Empty);
             this.OnCompositionStringChanged(EventArgs.Empty);
         }
 #endif
@@ -507,7 +507,7 @@ namespace JSSoft.UI
             this.UpdateRows();
             this.UpdateCursorPosition();
             this.OnTextChanged(EventArgs.Empty);
-            this.OnCursorPositionChanged(EventArgs.Empty);
+            this.OnCursorPointChanged(EventArgs.Empty);
             this.OnCompositionStringChanged(EventArgs.Empty);
         }
 
@@ -643,7 +643,7 @@ namespace JSSoft.UI
         private void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
             var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
-            this.CursorPosition = this.IndexToPoint(index);
+            this.CursorPoint = this.IndexToPoint(index);
             this.VisibleIndex = this.MaximumVisibleIndex;
         }
 

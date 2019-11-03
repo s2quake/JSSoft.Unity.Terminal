@@ -40,6 +40,8 @@ namespace JSSoft.UI
 
         bool IsEmpty { get; }
 
+        string Text { get; }
+
         GlyphRect Rect { get; }
 
         Color32? BackgroundColor { get; }

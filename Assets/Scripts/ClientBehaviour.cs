@@ -69,7 +69,6 @@ namespace JSSoft.Communication.Shells
                 this.terminal.Reset();
                 this.terminal.AppendLine($"type 'open' to connect server.");
                 this.terminal.AppendLine($"example: open --host [address]");
-                this.terminal.Focus();
                 this.terminal.CursorPosition = 0;
             }
         }

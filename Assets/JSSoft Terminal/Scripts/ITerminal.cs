@@ -45,15 +45,17 @@ namespace JSSoft.UI
 
         void PrevHistory();
 
-        void Focus();
+        void Execute();
 
-        string Command { get; }
+        string Command { get; set; }
 
         string Prompt { get; set; }
 
         string OutputText { get; }
 
         int CursorPosition { get; set; }
+
+        bool IsReadOnly { get; }
 
         Color32? ForegroundColor { get; set; }
 

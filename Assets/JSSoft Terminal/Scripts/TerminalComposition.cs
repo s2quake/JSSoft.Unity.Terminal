@@ -128,7 +128,7 @@ namespace JSSoft.UI
             this.material.color = base.color;
             if (this.grid != null)
             {
-                this.grid.CursorPositionChanged += TerminalGrid_CursorPositionChanged;
+                this.grid.CursorPointChanged += TerminalGrid_CursorPointChanged;
                 this.grid.CompositionStringChanged += TerminalGrid_CompositionStringChanged;
             }
         }
@@ -139,15 +139,15 @@ namespace JSSoft.UI
             this.mesh = null;
             if (this.grid != null)
             {
-                this.grid.CursorPositionChanged -= TerminalGrid_CursorPositionChanged;
+                this.grid.CursorPointChanged -= TerminalGrid_CursorPointChanged;
                 this.grid.CompositionStringChanged -= TerminalGrid_CompositionStringChanged;
             }
         }
 
-        private void TerminalGrid_CursorPositionChanged(object sender, EventArgs e)
+        private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
         {
-            this.columnIndex = this.grid.CursorPosition.X;
-            this.rowIndex = this.grid.CursorPosition.Y - this.grid.VisibleIndex;
+            this.columnIndex = this.grid.CursorPoint.X;
+            this.rowIndex = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
             this.SetVerticesDirty();
         }
 

@@ -178,5 +178,33 @@ namespace JSSoft.UI
                 return TerminalGrid.DefaultForegroundColor;
             return grid.ForegroundColor ?? TerminalGrid.DefaultForegroundColor;
         }
+
+        public static void SelectWord(ITerminalGrid grid, TerminalPoint point)
+        {
+            var terminal = grid.Terminal;
+            var row = grid.Rows[point.Y];
+            var text = row.Text;
+
+            
+            grid.Selections.Clear();
+            if (point.X >= text.Length)
+            {
+
+            }
+            else
+            {
+                
+            }
+        }
+
+        public static void SelectLine(ITerminalGrid grid, int index)
+        {
+            var columnCount = grid.ColumnCount;
+            var p1 = new TerminalPoint(0, index);
+            var p2 = new TerminalPoint(columnCount, index);
+            var range = new TerminalRange(p1, p2);
+            grid.Selections.Clear();
+            grid.Selections.Add(range);
+        }
     }
 }
