@@ -36,9 +36,7 @@ namespace JSSoft.UI
 
         IReadOnlyList<ITerminalCell> Cells { get; }
 
-        bool IsSelected { get; }
-
-        bool IsEmpty { get; }
+        TerminalRowAttributes Attributes { get; }
 
         string Text { get; }
 

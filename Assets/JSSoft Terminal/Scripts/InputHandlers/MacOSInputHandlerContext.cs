@@ -123,17 +123,23 @@ namespace JSSoft.UI.InputHandlers
                 {
                     downCount++;
                 }
-                if (downCount == 1)
+                if (newPoint != TerminalPoint.Invalid)
                 {
-                    grid.Selections.Clear();
-                }
-                else if (downCount == 2)
-                {
-                    TerminalGridUtility.SelectWord(grid, newPoint);
-                }
-                else if (downCount == 3)
-                {
-                    TerminalGridUtility.SelectLine(grid, newPoint.Y);
+                    var row = grid.Rows[newPoint.Y];
+                    Debug.Log(row.Attributes);
+                    if (downCount == 1)
+                    {
+                        
+                        grid.Selections.Clear();
+                    }
+                    else if (downCount == 2)
+                    {
+                        TerminalGridUtility.SelectWord(grid, newPoint);
+                    }
+                    else if (downCount == 3)
+                    {
+                        TerminalGridUtility.SelectLine(grid, newPoint.Y);
+                    }
                 }
 
                 eventData.useDragThreshold = false;
@@ -160,6 +166,16 @@ namespace JSSoft.UI.InputHandlers
         public bool PointerUp(PointerEventData eventData)
         {
             return false;
+        }
+
+        private void SelectWord(TerminalPoint point)
+        {
+
+        }
+
+        private void SelectLine(TerminalPoint point)
+        {
+            
         }
     }
 }

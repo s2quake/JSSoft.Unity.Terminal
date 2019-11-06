@@ -323,6 +323,8 @@ namespace JSSoft.UI
 
         public IReadOnlyList<ITerminalRow> Rows => this.rows;
 
+        public IReadOnlyList<TerminalCharacterInfo> CharacterInfos => this.characterInfos;
+
         public TerminalGridSelection Selections { get; }
 
         public int VisibleIndex
@@ -694,7 +696,7 @@ namespace JSSoft.UI
             }
             else
             {
-                if (row1.IsEmpty == false)
+                if (row1.Text != string.Empty)
                 {
                     var l1 = row1.LastPoint(false);
                     var distance = l1.DistanceOf(s1, columnCount);
@@ -705,7 +707,7 @@ namespace JSSoft.UI
                     s1.X = columnCount;
                 }
 
-                if (row2.IsEmpty == false)
+                if (row2.Text != string.Empty)
                 {
                     var l2 = row2.LastPoint(false);
                     var distance = l2.DistanceOf(s2, columnCount);

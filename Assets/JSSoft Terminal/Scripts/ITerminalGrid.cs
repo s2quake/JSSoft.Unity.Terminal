@@ -69,6 +69,8 @@ namespace JSSoft.UI
 
         IReadOnlyList<ITerminalRow> Rows { get; }
 
+        IReadOnlyList<TerminalCharacterInfo> CharacterInfos { get; }
+
         int VisibleIndex { get; set; }
 
         Color32? BackgroundColor { get; set; }

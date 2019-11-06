@@ -28,7 +28,7 @@ using System.Collections;
 
 namespace JSSoft.UI
 {
-    class TerminalCharacterInfoCollection : IEnumerable<TerminalCharacterInfo>
+    class TerminalCharacterInfoCollection : IReadOnlyList<TerminalCharacterInfo>
     {
         private readonly TerminalGrid grid;
         private TerminalCharacterInfo[] items = new TerminalCharacterInfo[] { };
@@ -74,6 +74,7 @@ namespace JSSoft.UI
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
                     characterInfo.FontAsset = characterFontAsset;
+                    characterInfo.Index = index;
                     if (character == '\n')
                     {
                         if (point.X != 0)
@@ -81,7 +82,6 @@ namespace JSSoft.UI
                             point.X = 0;
                             point.Y++;
                             characterInfo.FontAsset = null;
-                            // characterInfo.Character = char.MinValue;
                             characterInfo.Volume = 0;
                         }
                     }

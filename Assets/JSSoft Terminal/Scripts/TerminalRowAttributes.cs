@@ -21,28 +21,22 @@
 // SOFTWARE.
 
 using System;
-using TMPro;
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
-    public struct TerminalCharacterInfo
+    [Flags]
+    public enum TerminalRowAttributes
     {
-        /// <summary>
-        /// index of terminal text.
-        /// </summary>
-        public int Index { get; set; }
+        None = 0,
 
-        public char Character { get; set; }
+        IsSelected = 1,
 
-        public Color32? BackgroundColor { get; set; }
+        HasText = 2,
 
-        public Color32? ForegroundColor { get; set; }
-
-        public int Volume { get; set; }
-
-        public TerminalPoint Point { get; set; }
-
-        public TMP_FontAsset FontAsset { get; set; }
+        Multiline = 4,
     }
 }

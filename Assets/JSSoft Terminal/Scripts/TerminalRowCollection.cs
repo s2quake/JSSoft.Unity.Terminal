@@ -71,6 +71,8 @@ namespace JSSoft.UI
                     {
                         cell.Reset();
                     }
+                    var i2 = characterInfo.Index + 1;
+                    // 멀티라인 확인
                     dic[point.Y] = point.X;
                 }
                 foreach (var item in dic)

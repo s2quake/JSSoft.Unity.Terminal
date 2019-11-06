@@ -32,8 +32,7 @@ namespace JSSoft.UI
     {
         private readonly List<TerminalCell> cells = new List<TerminalCell>();
         private readonly Stack<TerminalCell> pool = new Stack<TerminalCell>();
-        private bool isSelected;
-        private bool isEmpty;
+        private TerminalRowAttributes attributes;
         private string text;
 
         public TerminalRow(TerminalGrid grid, int index)
@@ -43,7 +42,7 @@ namespace JSSoft.UI
             this.cells.Capacity = grid.ColumnCount;
             for (var i = 0; i < grid.ColumnCount; i++)
             {
-                this.cells.Add(new TerminalCell(this, i, () => this.IsModified = true));
+                this.cells.Add(new TerminalCell(this, i));
             }
             this.UpdateRect();
             this.IsModified = false;
@@ -89,12 +88,17 @@ namespace JSSoft.UI
             return null;
         }
 
+        public void SetModified()
+        {
+            this.IsModified = true;
+        }
+
         public TerminalPoint LastPoint(bool isCursor)
         {
             var columnCount = this.Grid.ColumnCount;
             var index = this.Index;
             var point = new TerminalPoint(columnCount, index);
-            if (this.IsEmpty == false)
+            if (this.Text != string.Empty)
             {
                 for (var i = columnCount - 1; i >= 0; i--)
                 {
@@ -134,7 +138,7 @@ namespace JSSoft.UI
             }
             for (var i = this.cells.Count; i < columnCount; i++)
             {
-                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i, () => this.IsModified = true);
+                var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i);
                 item.Reset();
                 this.cells.Add(item);
             }
@@ -147,30 +151,42 @@ namespace JSSoft.UI
 
         public IReadOnlyList<TerminalCell> Cells => this.cells;
 
+        public TerminalRowAttributes Attributes => this.attributes;
+
         public bool IsSelected
         {
-            get
+            get => this.attributes.HasFlag(TerminalRowAttributes.IsSelected);
+            private set
             {
-                this.UpdateFlag();
-                return this.isSelected;
+                if (value == true)
+                    this.attributes |= TerminalRowAttributes.IsSelected;
+                else
+                    this.attributes &= ~TerminalRowAttributes.IsSelected;
             }
         }
 
-        public bool IsEmpty
+        public bool IsMultiline
         {
-            get
+            get => this.attributes.HasFlag(TerminalRowAttributes.Multiline);
+            set
             {
-                this.UpdateFlag();
-                return this.isEmpty;
+                if (value == true)
+                    this.attributes |= TerminalRowAttributes.Multiline;
+                else
+                    this.attributes &= ~TerminalRowAttributes.Multiline;
             }
         }
 
         public string Text
         {
-            get
+            get => this.text;
+            private set
             {
-                this.UpdateFlag();
-                return this.text;
+                this.text = value ?? throw new ArgumentNullException(nameof(value));
+                if (this.text != string.Empty)
+                    this.attributes |= TerminalRowAttributes.HasText;
+                else
+                    this.attributes &= ~TerminalRowAttributes.HasText;
             }
         }
 
@@ -197,8 +213,9 @@ namespace JSSoft.UI
         {
             if (this.IsModified == true)
             {
-                this.isSelected = this.cells.Any(item => item.IsSelected);
-                this.isEmpty = this.cells.Any(item => item.Character != char.MinValue) == false;
+                this.attributes = TerminalRowAttributes.None;
+                if (this.cells.Any(item => item.IsSelected))
+                    this.attributes |= TerminalRowAttributes.IsSelected;
                 this.text = string.Empty;
                 foreach (var item in this.cells)
                 {
@@ -207,6 +224,12 @@ namespace JSSoft.UI
                         this.text += item.Character;
                     }
                 }
+                if (this.text != string.Empty)
+                {
+                    this.attributes |= TerminalRowAttributes.HasText;
+                }
+
+                this.text = this.cells.Where(item => item.Character != char.MinValue).Aggregate(string.Empty, (t, n) => t += n.Character);
             }
         }
 

@@ -29,15 +29,12 @@ namespace JSSoft.UI
 {
     class TerminalCell : ITerminalCell
     {
-        private readonly Action modifiedAction;
-
-        public TerminalCell(TerminalRow row, int index, Action modifiedAction)
+        public TerminalCell(TerminalRow row, int index)
         {
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
             this.Row = row ?? throw new ArgumentNullException(nameof(row));
             this.Index = index;
-            this.modifiedAction = modifiedAction ?? throw new ArgumentNullException(nameof(modifiedAction));
             this.Reset();
         }
 
@@ -78,7 +75,7 @@ namespace JSSoft.UI
             this.BackgroundUV = (Vector2.zero, Vector2.zero);
             this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
             this.FontAsset = fontAsset;
-            this.modifiedAction();
+            this.Row.SetModified();
         }
 
         public void Reset()
@@ -96,7 +93,7 @@ namespace JSSoft.UI
             this.BackgroundColor = null;
             this.ForegroundColor = null;
             this.FontAsset = null;
-            this.modifiedAction();
+            this.Row.SetModified();
         }
 
         public int Index { get; }
@@ -112,19 +109,6 @@ namespace JSSoft.UI
         public int Volume { get; private set; }
 
         public bool IsSelected => TerminalGridUtility.IsSelected(this.Grid, this.Point);
-
-        // public bool IsSelected
-        // {
-        //     get => this.isSelected;
-        //     set
-        //     {
-        //         if (this.isSelected != value)
-        //         {
-        //             this.isSelected = value;
-        //             this.modifiedAction();
-        //         }
-        //     }
-        // }
 
         public bool IsEnabled { get; private set; }
 

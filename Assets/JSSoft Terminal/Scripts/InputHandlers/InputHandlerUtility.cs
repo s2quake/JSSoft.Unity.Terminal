@@ -56,7 +56,7 @@ namespace JSSoft.UI.InputHandlers
             }
             else
             {
-                if (row1.IsEmpty == false)
+                if (row1.Text != string.Empty)
                 {
                     var l1 = LastPoint(row1, false);
                     var distance = l1.DistanceOf(s1, columnCount);
@@ -67,7 +67,7 @@ namespace JSSoft.UI.InputHandlers
                     s1.X = columnCount;
                 }
 
-                if (row2.IsEmpty == false)
+                if (row2.Text != string.Empty)
                 {
                     var l2 = LastPoint(row2, false);
                     var distance = l2.DistanceOf(s2, columnCount);
@@ -86,7 +86,7 @@ namespace JSSoft.UI.InputHandlers
             var columnCount = row.Grid.ColumnCount;
             var index = row.Index;
             var point = new TerminalPoint(columnCount, index);
-            if (row.IsEmpty == false)
+            if (row.Text != string.Empty)
             {
                 for (var i = columnCount - 1; i >= 0; i--)
                 {

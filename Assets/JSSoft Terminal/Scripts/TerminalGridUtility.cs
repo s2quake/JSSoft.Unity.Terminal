@@ -185,15 +185,25 @@ namespace JSSoft.UI
             var row = grid.Rows[point.Y];
             var text = row.Text;
 
-            
-            grid.Selections.Clear();
-            if (point.X >= text.Length)
+            var cell = grid.Rows[point.Y].Cells[point.X];
+            var ch = cell.Character;
+            if (ch == char.MinValue)
             {
 
             }
             else
             {
-                
+                var p1 = point;
+                var p2 = point;
+                // p1 = SkipBackward(grid, p1, true);
+                p1 = SkipBackward(grid, p1);
+                // p1.X++;
+                // p2 = SkipForward(grid, p2, true);
+                p2 = SkipForward(grid, p2);
+                // p2.X--;
+                var range = new TerminalRange(p1, p2);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
             }
         }
 
@@ -205,6 +215,57 @@ namespace JSSoft.UI
             var range = new TerminalRange(p1, p2);
             grid.Selections.Clear();
             grid.Selections.Add(range);
+        }
+
+        public static TerminalPoint SkipForward(ITerminalGrid grid, TerminalPoint point)
+        {
+            var columnCount = grid.ColumnCount;
+            var index = point.X;
+            var row = grid.Rows[point.Y];
+            var cell = row.Cells[index];
+            var ch = cell.Character;
+            var isLetter = char.IsLetterOrDigit(ch);
+            Debug.Log($"{char.GetUnicodeCategory(ch)}, {char.IsLetterOrDigit(ch)}");
+            do
+            {
+                cell = row.Cells[index];
+                ch = cell.Character;
+                if (ch != char.MinValue)
+                {
+                    if (char.IsLetterOrDigit(ch) != isLetter)
+                    {
+                        index--;
+                        break;
+                    }
+                }
+                index++;
+            } while (index < columnCount);
+            return new TerminalPoint(index, point.Y);
+        }
+
+        public static TerminalPoint SkipBackward(ITerminalGrid grid, TerminalPoint point)
+        {
+            var columnCount = grid.ColumnCount;
+            var index = point.X;
+            var row = grid.Rows[point.Y];
+            var cell = row.Cells[index];
+            var ch = cell.Character;
+            var isLetter = char.IsLetterOrDigit(ch);
+            do
+            {
+                cell = row.Cells[index];
+                ch = cell.Character;
+                if (ch != char.MinValue)
+                {
+                    if (char.IsLetterOrDigit(ch) != isLetter)
+                    {
+                        index++;
+                        break;
+                    }
+                }
+                index--;
+            } while (index >= 0);
+            return new TerminalPoint(index, point.Y);
         }
     }
 }
