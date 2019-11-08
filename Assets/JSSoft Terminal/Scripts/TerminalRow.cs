@@ -33,7 +33,7 @@ namespace JSSoft.UI
         private readonly List<TerminalCell> cells = new List<TerminalCell>();
         private readonly Stack<TerminalCell> pool = new Stack<TerminalCell>();
         private TerminalRowAttributes attributes;
-        private string text;
+        private string text = string.Empty;
 
         public TerminalRow(TerminalGrid grid, int index)
         {

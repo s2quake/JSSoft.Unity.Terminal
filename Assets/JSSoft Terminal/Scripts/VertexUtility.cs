@@ -181,5 +181,14 @@ namespace JSSoft.UI
                 return false;
             return true;
         }
+
+        public static bool Intersect(this Rect rect, Vector2 position)
+        {
+            if (position.x < rect.x || position.y < rect.y)
+                return false;
+            if (position.x >= rect.x + rect.width || position.y >= rect.y + rect.height)
+                return false;
+            return true;
+        }
     }
 }

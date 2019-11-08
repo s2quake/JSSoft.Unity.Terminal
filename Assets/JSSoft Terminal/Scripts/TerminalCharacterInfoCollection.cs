@@ -74,28 +74,14 @@ namespace JSSoft.UI
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
                     characterInfo.FontAsset = characterFontAsset;
-                    characterInfo.Index = index;
-                    if (character == '\n')
-                    {
-                        if (point.X != 0)
-                        {
-                            point.X = 0;
-                            point.Y++;
-                            characterInfo.FontAsset = null;
-                            characterInfo.Volume = 0;
-                        }
-                    }
-                    else
-                    {
-                        point.X += volume;
-                        if (point.X == columnCount)
-                        {
-                            point.X = 0;
-                            point.Y++;
-                        }
-                    }
+                    characterInfo.TextIndex = index;
                     this.items[index] = characterInfo;
-
+                    point.X += volume;
+                    if (point.X >= columnCount || character == '\n')
+                    {
+                        point.X = 0;
+                        point.Y++;
+                    }
                 } while (++index < text.Length);
                 this.lt.Y = 0;
                 this.rb.Y = point.Y + 1;

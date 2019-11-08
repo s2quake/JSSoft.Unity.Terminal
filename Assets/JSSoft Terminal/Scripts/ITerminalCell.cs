@@ -32,6 +32,8 @@ namespace JSSoft.UI
 
         int Index { get; }
 
+        int TextIndex { get; }
+
         ITerminalRow Row { get; }
 
         TMP_FontAsset FontAsset { get; }
@@ -44,7 +46,7 @@ namespace JSSoft.UI
 
         bool IsEnabled { get; }
 
-        GlyphRect BackgroundRect { get; }
+        Rect BackgroundRect { get; }
 
         Rect ForegroundRect { get; }
 

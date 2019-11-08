@@ -56,29 +56,15 @@ namespace JSSoft.UI
                 {
                     var characterInfo = characterInfos[i];
                     var point = characterInfo.Point;
-                    var character = characterInfo.Character;
-                    var characterFontAsset = characterInfo.FontAsset;
-                    var characterVolume = characterInfo.Volume;
                     var row = this.Prepare(point.Y);
                     var cell = row.Cells[point.X];
-                    if (characterFontAsset != null)
-                    {
-                        cell.SetCharacter(characterFontAsset, character, characterVolume);
-                        cell.BackgroundColor = characterInfo.BackgroundColor;
-                        cell.ForegroundColor = characterInfo.ForegroundColor;
-                    }
-                    else
-                    {
-                        cell.Reset();
-                    }
-                    var i2 = characterInfo.Index + 1;
-                    // 멀티라인 확인
+                    cell.SetCharacter(characterInfo);
                     dic[point.Y] = point.X;
                 }
                 foreach (var item in dic)
                 {
                     var row = this[item.Key];
-                    row.ResetAfter(item.Value);
+                    row.ResetAfter(item.Value + 1);
                 }
                 for (var i = this.Count; i < this.grid.RowCount; i++)
                 {

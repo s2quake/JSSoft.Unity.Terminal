@@ -31,7 +31,7 @@ namespace JSSoft.UI
         /// <summary>
         /// index of terminal text.
         /// </summary>
-        public int Index { get; set; }
+        public int TextIndex { get; set; }
 
         public char Character { get; set; }
 

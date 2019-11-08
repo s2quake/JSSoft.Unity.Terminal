@@ -209,7 +209,7 @@ namespace JSSoft.UI
             }
             return properties;
         }
-        
+
         public static int SkipForward(string command, int index, bool isLetter)
         {
             while (index < command.Length)
@@ -231,6 +231,44 @@ namespace JSSoft.UI
                     break;
                 index--;
             }
+            return index;
+        }
+
+        public static int SkipForward(string text, int index, Func<char, bool> predicate)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (text == string.Empty)
+                throw new ArgumentException("text length must be greater then zero.", nameof(text));
+            if (index < 0 || index > text.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+            do
+            {
+                var ch = text[index];
+                if (predicate(ch) == false)
+                    break;
+            } while (++index < text.Length);
+            return index;
+        }
+
+        public static int SkipBackward(string text, int index, Func<char, bool> predicate)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (text == string.Empty)
+                throw new ArgumentException("text length must be greater then zero.", nameof(text));
+            if (index < 0 || index > text.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+            do
+            {
+                var ch = text[index];
+                if (predicate(ch) == false)
+                    break;
+            } while (--index >= 0);
             return index;
         }
     }

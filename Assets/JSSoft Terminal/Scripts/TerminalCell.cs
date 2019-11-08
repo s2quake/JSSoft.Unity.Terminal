@@ -62,20 +62,34 @@ namespace JSSoft.UI
             return this.BackgroundRect.Intersect(position);
         }
 
-        public void SetCharacter(TMP_FontAsset fontAsset, char character, int volume)
+        public void SetCharacter(TerminalCharacterInfo characterInfo)
         {
-            if (fontAsset == null)
-                throw new ArgumentException(nameof(fontAsset));
-            var rect = GetCellRect(this.Grid, this);
-            this.IsEnabled = true;
-            this.Character = character;
-            this.Volume = volume;
-            this.BackgroundRect = new GlyphRect(rect.x, rect.y, rect.width * volume, rect.height);
-            this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, rect.x, rect.y);
-            this.BackgroundUV = (Vector2.zero, Vector2.zero);
-            this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
-            this.FontAsset = fontAsset;
-            this.Row.SetModified();
+            if (characterInfo.FontAsset != null)
+            {
+                var rect = GetCellRect(this.Grid, this);
+                var character = characterInfo.Character;
+                var volume = characterInfo.Volume;
+                var fontAsset = characterInfo.FontAsset;
+                var indexOfText = characterInfo.TextIndex;
+                var backgroundColor = characterInfo.BackgroundColor;
+                var foregroundColor = characterInfo.ForegroundColor;
+                this.IsEnabled = true;
+                this.Character = character;
+                this.Volume = volume;
+                this.FontAsset = fontAsset;
+                this.TextIndex = indexOfText;
+                this.BackgroundColor = backgroundColor;
+                this.ForegroundColor = foregroundColor;
+                this.BackgroundRect = new Rect(rect.x, rect.y, rect.width * volume, rect.height);
+                this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, (int)rect.x, (int)rect.y);
+                this.BackgroundUV = (Vector2.zero, Vector2.zero);
+                this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
+                this.Row.SetModified();
+            }
+            else
+            {
+                this.Reset();
+            }
         }
 
         public void Reset()
@@ -85,14 +99,14 @@ namespace JSSoft.UI
             this.IsEnabled = false;
             this.Character = char.MinValue;
             this.Volume = 0;
+            this.FontAsset = null;
+            this.TextIndex = -1;
+            this.BackgroundColor = null;
+            this.ForegroundColor = null;
             this.BackgroundRect = rect;
             this.ForegroundRect = new Rect(rect.x, rect.y, rect.width, rect.height);
             this.BackgroundUV = uv;
             this.ForegroundUV = uv;
-            this.FontAsset = null;
-            this.BackgroundColor = null;
-            this.ForegroundColor = null;
-            this.FontAsset = null;
             this.Row.SetModified();
         }
 
@@ -112,7 +126,7 @@ namespace JSSoft.UI
 
         public bool IsEnabled { get; private set; }
 
-        public GlyphRect BackgroundRect { get; private set; }
+        public Rect BackgroundRect { get; private set; }
 
         public Rect ForegroundRect { get; private set; }
 
@@ -124,15 +138,17 @@ namespace JSSoft.UI
 
         public Color32? ForegroundColor { get; set; }
 
+        public int TextIndex { get; private set; }
+
         public TerminalPoint Point => new TerminalPoint(this.Index, this.Row.Index);
 
-        private static GlyphRect GetCellRect(TerminalGrid grid, ITerminalCell cell)
+        private static Rect GetCellRect(TerminalGrid grid, ITerminalCell cell)
         {
             var itemWidth = TerminalGridUtility.GetItemWidth(grid);
             var itemHeight = TerminalGridUtility.GetItemHeight(grid);
             var x = cell.Index * itemWidth;
             var y = cell.Row.Index * itemHeight;
-            return new GlyphRect(x, y, itemWidth, itemHeight);
+            return new Rect(x, y, itemWidth, itemHeight);
         }
 
         #region ITerminalCell

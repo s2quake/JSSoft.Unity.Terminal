@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -104,51 +105,9 @@ namespace JSSoft.UI.InputHandlers
 
         public bool PointerDown(PointerEventData eventData)
         {
-            var grid = this.Grid;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                var position = grid.WorldToGrid(eventData.position);
-                var newPoint = grid.Intersect(position);
-                var newTime = Time.time;
-                var oldPoint = this.downPoint;
-                var oldTime = this.time;
-                var downCount = this.downCount;
-                var clickThreshold = this.clickThreshold;
-                var diffTime = newTime - oldTime;
-                if (diffTime > clickThreshold || newPoint != oldPoint)
-                {
-                    downCount = 1;
-                }
-                else
-                {
-                    downCount++;
-                }
-                if (newPoint != TerminalPoint.Invalid)
-                {
-                    var row = grid.Rows[newPoint.Y];
-                    Debug.Log(row.Attributes);
-                    if (downCount == 1)
-                    {
-                        
-                        grid.Selections.Clear();
-                    }
-                    else if (downCount == 2)
-                    {
-                        TerminalGridUtility.SelectWord(grid, newPoint);
-                    }
-                    else if (downCount == 3)
-                    {
-                        TerminalGridUtility.SelectLine(grid, newPoint.Y);
-                    }
-                }
-
-                eventData.useDragThreshold = false;
-                grid.Focus();
-
-                this.downPoint = newPoint;
-                this.downCount = downCount;
-                this.time = newTime;
-                return true;
+                return this.OnLeftPointerDown(eventData);
             }
             return false;
         }
@@ -170,12 +129,115 @@ namespace JSSoft.UI.InputHandlers
 
         private void SelectWord(TerminalPoint point)
         {
+            var grid = this.Grid;
+            var terminal = grid.Terminal;
+            var row = grid.Rows[point.Y];
+            if (row.Text == string.Empty)
+            {
+                var p1 = new TerminalPoint(0, point.Y);
+                var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
+                var range = new TerminalRange(p1, p2);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+            }
+            else
+            {
+                var text = row.Text;
 
+                var cell = grid.Rows[point.Y].Cells[point.X];
+                var ch = cell.Character;
+                if (ch == char.MinValue)
+                {
+
+                }
+                else
+                {
+                    // var p1 = point;
+                    // var p2 = point;
+                    // // p1 = SkipBackward(grid, p1, true);
+                    // p1 = SkipBackward(grid, p1);
+                    // // p1.X++;
+                    // // p2 = SkipForward(grid, p2, true);
+                    // p2 = SkipForward(grid, p2);
+                    // // p2.X--;
+                    // var range = new TerminalRange(p1, p2);
+                    // grid.Selections.Clear();
+                    // grid.Selections.Add(range);
+                }
+            }
         }
 
         private void SelectLine(TerminalPoint point)
         {
-            
+            var grid = this.Grid;
+            var row = grid.Rows[point.Y];
+            if (row.Text != string.Empty)
+            {
+                var cell = row.Cells.First();
+                var index = cell.TextIndex;
+                var text = grid.Text + char.MinValue;
+                var predicate = new Func<char, bool>((item => item != '\n'));
+                var s1 = CommandStringUtility.SkipBackward(text, index, predicate) + 1;
+                var s2 = CommandStringUtility.SkipForward(text, index, predicate) - 1;
+                var p1 = grid.CharacterInfos[s1].Point;
+                var p2 = grid.CharacterInfos[s2].Point;
+                var range = new TerminalRange(p1, new TerminalPoint(grid.ColumnCount, p2.Y));
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+            }
+            else
+            {
+                var p1 = new TerminalPoint(0, point.Y);
+                var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
+                var range = new TerminalRange(p1, p2);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+            }
+        }
+
+        private bool OnLeftPointerDown(PointerEventData eventData)
+        {
+            var grid = this.Grid;
+            var position = grid.WorldToGrid(eventData.position);
+            var newPoint = grid.Intersect(position);
+            var newTime = Time.time;
+            var oldPoint = this.downPoint;
+            var oldTime = this.time;
+            var downCount = this.downCount;
+            var clickThreshold = this.clickThreshold;
+            var diffTime = newTime - oldTime;
+            if (diffTime > clickThreshold || newPoint != oldPoint)
+            {
+                downCount = 1;
+            }
+            else
+            {
+                downCount++;
+            }
+            if (newPoint != TerminalPoint.Invalid)
+            {
+                var row = grid.Rows[newPoint.Y];
+                if (downCount == 1)
+                {
+                    grid.Selections.Clear();
+                }
+                else if (downCount == 2)
+                {
+                    this.SelectWord(newPoint);
+                }
+                else if (downCount == 3)
+                {
+                    this.SelectLine(newPoint);
+                }
+            }
+
+            eventData.useDragThreshold = false;
+            grid.Focus();
+
+            this.downPoint = newPoint;
+            this.downCount = downCount;
+            this.time = newTime;
+            return true;
         }
     }
 }
