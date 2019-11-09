@@ -36,19 +36,21 @@ namespace JSSoft.UI.InputHandlers
             var cell2 = grid.Rows[s2.Y].Cells[s2.X];
             var row1 = cell1.Row;
             var row2 = cell2.Row;
+            var isEnabled1 = IsEnabled(cell1);
+            var isEnabled2 = IsEnabled(cell2);
             var columnCount = grid.ColumnCount;
             var gap = 5;
-            if (cell1.IsEnabled == true && cell2.IsEnabled == true)
+            if (isEnabled1 == true && isEnabled2 == true)
             {
                 return new TerminalRange(s1, s2);
             }
-            else if (cell1.IsEnabled == true)
+            else if (isEnabled1 == true)
             {
                 var l2 = LastPoint(row2, false);
                 var distance = l2.DistanceOf(s2, columnCount);
                 s2.X = distance > gap ? columnCount : l2.X;
             }
-            else if (cell2.IsEnabled == true)
+            else if (isEnabled2 == true)
             {
                 var l1 = LastPoint(row1, true);
                 var distance = l1.DistanceOf(s1, columnCount);
@@ -91,7 +93,8 @@ namespace JSSoft.UI.InputHandlers
                 for (var i = columnCount - 1; i >= 0; i--)
                 {
                     var item = row.Cells[i];
-                    if (item.IsEnabled == true)
+                    var character = item.Character;
+                    if (character != char.MinValue && character != '\n')
                     {
                         point.X = i;
                         if (isCursor)
@@ -101,6 +104,12 @@ namespace JSSoft.UI.InputHandlers
                 }
             }
             return point;
+        }
+
+        public static bool IsEnabled(ITerminalCell cell)
+        {
+            var character = cell.Character;
+            return character != char.MinValue && character != '\n';
         }
     }
 }

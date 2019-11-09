@@ -45,7 +45,6 @@ namespace JSSoft.UI
                 this.cells.Add(new TerminalCell(this, i));
             }
             this.UpdateRect();
-            this.IsModified = false;
         }
 
         public static Color32 GetBackgroundColor(ITerminalRow row)
@@ -88,31 +87,38 @@ namespace JSSoft.UI
             return null;
         }
 
-        public void SetModified()
-        {
-            this.IsModified = true;
-        }
+        // public TerminalPoint LastPoint(bool isCursor)
+        // {
+        //     var columnCount = this.Grid.ColumnCount;
+        //     var index = this.Index;
+        //     var point = new TerminalPoint(columnCount, index);
+        //     if (this.Text != string.Empty)
+        //     {
+        //         for (var i = columnCount - 1; i >= 0; i--)
+        //         {
+        //             var item = this.Cells[i];
+        //             if (item.IsEnabled == true)
+        //             {
+        //                 point.X = i;
+        //                 if (isCursor)
+        //                     point.X++;
+        //                 break;
+        //             }
+        //         }
+        //     }
+        //     return point;
+        // }
 
-        public TerminalPoint LastPoint(bool isCursor)
+        public void Update()
         {
-            var columnCount = this.Grid.ColumnCount;
-            var index = this.Index;
-            var point = new TerminalPoint(columnCount, index);
-            if (this.Text != string.Empty)
+            this.text = string.Empty;
+            foreach (var item in this.cells)
             {
-                for (var i = columnCount - 1; i >= 0; i--)
+                if (item.Character != char.MinValue)
                 {
-                    var item = this.Cells[i];
-                    if (item.IsEnabled == true)
-                    {
-                        point.X = i;
-                        if (isCursor)
-                            point.X++;
-                        break;
-                    }
+                    this.text += item.Character;
                 }
             }
-            return point;
         }
 
         public void Reset()
@@ -177,26 +183,13 @@ namespace JSSoft.UI
             }
         }
 
-        public string Text
-        {
-            get => this.text;
-            private set
-            {
-                this.text = value ?? throw new ArgumentNullException(nameof(value));
-                if (this.text != string.Empty)
-                    this.attributes |= TerminalRowAttributes.HasText;
-                else
-                    this.attributes &= ~TerminalRowAttributes.HasText;
-            }
-        }
+        public string Text => this.text;
 
         public GlyphRect Rect { get; private set; }
 
         public Color32? BackgroundColor { get; set; }
 
         public Color32? ForegroundColor { get; set; }
-
-        public bool IsModified { get; private set; }
 
         private void UpdateRect()
         {
@@ -207,30 +200,6 @@ namespace JSSoft.UI
             var width = this.cells.Count * itemWidth;
             var height = itemHeight;
             this.Rect = new GlyphRect(x, y, width, height);
-        }
-
-        private void UpdateFlag()
-        {
-            if (this.IsModified == true)
-            {
-                this.attributes = TerminalRowAttributes.None;
-                if (this.cells.Any(item => item.IsSelected))
-                    this.attributes |= TerminalRowAttributes.IsSelected;
-                this.text = string.Empty;
-                foreach (var item in this.cells)
-                {
-                    if (item.Character != char.MinValue)
-                    {
-                        this.text += item.Character;
-                    }
-                }
-                if (this.text != string.Empty)
-                {
-                    this.attributes |= TerminalRowAttributes.HasText;
-                }
-
-                this.text = this.cells.Where(item => item.Character != char.MinValue).Aggregate(string.Empty, (t, n) => t += n.Character);
-            }
         }
 
         #region ITerminalRow

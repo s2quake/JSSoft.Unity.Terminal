@@ -73,7 +73,6 @@ namespace JSSoft.UI
                 var indexOfText = characterInfo.TextIndex;
                 var backgroundColor = characterInfo.BackgroundColor;
                 var foregroundColor = characterInfo.ForegroundColor;
-                this.IsEnabled = true;
                 this.Character = character;
                 this.Volume = volume;
                 this.FontAsset = fontAsset;
@@ -84,7 +83,6 @@ namespace JSSoft.UI
                 this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, (int)rect.x, (int)rect.y);
                 this.BackgroundUV = (Vector2.zero, Vector2.zero);
                 this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
-                this.Row.SetModified();
             }
             else
             {
@@ -96,7 +94,6 @@ namespace JSSoft.UI
         {
             var rect = GetCellRect(this.Grid, this);
             var uv = (Vector2.zero, Vector2.zero);
-            this.IsEnabled = false;
             this.Character = char.MinValue;
             this.Volume = 0;
             this.FontAsset = null;
@@ -107,7 +104,6 @@ namespace JSSoft.UI
             this.ForegroundRect = new Rect(rect.x, rect.y, rect.width, rect.height);
             this.BackgroundUV = uv;
             this.ForegroundUV = uv;
-            this.Row.SetModified();
         }
 
         public int Index { get; }
@@ -123,8 +119,6 @@ namespace JSSoft.UI
         public int Volume { get; private set; }
 
         public bool IsSelected => TerminalGridUtility.IsSelected(this.Grid, this.Point);
-
-        public bool IsEnabled { get; private set; }
 
         public Rect BackgroundRect { get; private set; }
 

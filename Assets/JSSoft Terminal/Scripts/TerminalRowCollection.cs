@@ -65,6 +65,7 @@ namespace JSSoft.UI
                 {
                     var row = this[item.Key];
                     row.ResetAfter(item.Value + 1);
+                    row.Update();
                 }
                 for (var i = this.Count; i < this.grid.RowCount; i++)
                 {

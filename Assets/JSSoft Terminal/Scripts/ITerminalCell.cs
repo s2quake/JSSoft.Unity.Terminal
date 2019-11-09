@@ -44,8 +44,6 @@ namespace JSSoft.UI
 
         bool IsSelected { get; }
 
-        bool IsEnabled { get; }
-
         Rect BackgroundRect { get; }
 
         Rect ForegroundRect { get; }

@@ -139,16 +139,16 @@ namespace JSSoft.UI.InputHandlers
                 var range = new TerminalRange(p1, p2);
                 grid.Selections.Clear();
                 grid.Selections.Add(range);
+                Debug.Log(1);
             }
             else
             {
                 var text = row.Text;
-
-                var cell = grid.Rows[point.Y].Cells[point.X];
-                var ch = cell.Character;
-                if (ch == char.MinValue)
+                var cell = row.Cells[point.X];
+                var character = cell.Character;
+                if (character == char.MinValue)
                 {
-
+                    
                 }
                 else
                 {

@@ -35,8 +35,6 @@ namespace JSSoft.UI
 
         IsSelected = 1,
 
-        HasText = 2,
-
         Multiline = 4,
     }
 }

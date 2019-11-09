@@ -669,57 +669,57 @@ namespace JSSoft.UI
             }
         }
 
-        private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint p1, TerminalPoint p2)
-        {
-            var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
-            var cell1 = this.rows[s1.Y].Cells[s1.X];
-            var cell2 = this.rows[s2.Y].Cells[s2.X];
-            var row1 = cell1.Row;
-            var row2 = cell2.Row;
-            var columnCount = this.ColumnCount;
-            var gap = 5;
-            if (cell1.IsEnabled == true && cell2.IsEnabled == true)
-            {
-                return (s1, s2);
-            }
-            else if (cell1.IsEnabled == true)
-            {
-                var l2 = row2.LastPoint(false);
-                var distance = l2.DistanceOf(s2, columnCount);
-                s2.X = distance > gap ? columnCount : l2.X;
-            }
-            else if (cell2.IsEnabled == true)
-            {
-                var l1 = row1.LastPoint(true);
-                var distance = l1.DistanceOf(s1, columnCount);
-                s1.X = distance > gap ? columnCount : l1.X;
-            }
-            else
-            {
-                if (row1.Text != string.Empty)
-                {
-                    var l1 = row1.LastPoint(false);
-                    var distance = l1.DistanceOf(s1, columnCount);
-                    s1.X = distance > gap ? columnCount : l1.X;
-                }
-                else
-                {
-                    s1.X = columnCount;
-                }
+        // private (TerminalPoint s1, TerminalPoint s2) UpdatePoint(TerminalPoint p1, TerminalPoint p2)
+        // {
+        //     var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
+        //     var cell1 = this.rows[s1.Y].Cells[s1.X];
+        //     var cell2 = this.rows[s2.Y].Cells[s2.X];
+        //     var row1 = cell1.Row;
+        //     var row2 = cell2.Row;
+        //     var columnCount = this.ColumnCount;
+        //     var gap = 5;
+        //     if (cell1.IsEnabled == true && cell2.IsEnabled == true)
+        //     {
+        //         return (s1, s2);
+        //     }
+        //     else if (cell1.IsEnabled == true)
+        //     {
+        //         var l2 = row2.LastPoint(false);
+        //         var distance = l2.DistanceOf(s2, columnCount);
+        //         s2.X = distance > gap ? columnCount : l2.X;
+        //     }
+        //     else if (cell2.IsEnabled == true)
+        //     {
+        //         var l1 = row1.LastPoint(true);
+        //         var distance = l1.DistanceOf(s1, columnCount);
+        //         s1.X = distance > gap ? columnCount : l1.X;
+        //     }
+        //     else
+        //     {
+        //         if (row1.Text != string.Empty)
+        //         {
+        //             var l1 = row1.LastPoint(false);
+        //             var distance = l1.DistanceOf(s1, columnCount);
+        //             s1.X = distance > gap ? columnCount : l1.X;
+        //         }
+        //         else
+        //         {
+        //             s1.X = columnCount;
+        //         }
 
-                if (row2.Text != string.Empty)
-                {
-                    var l2 = row2.LastPoint(false);
-                    var distance = l2.DistanceOf(s2, columnCount);
-                    s2.X = distance > gap ? columnCount : l2.X;
-                }
-                else
-                {
-                    s2.X = columnCount;
-                }
-            }
-            return (s1, s2);
-        }
+        //         if (row2.Text != string.Empty)
+        //         {
+        //             var l2 = row2.LastPoint(false);
+        //             var distance = l2.DistanceOf(s2, columnCount);
+        //             s2.X = distance > gap ? columnCount : l2.X;
+        //         }
+        //         else
+        //         {
+        //             s2.X = columnCount;
+        //         }
+        //     }
+        //     return (s1, s2);
+        // }
 
         private IEnumerable<TerminalCell> GetCells()
         {
