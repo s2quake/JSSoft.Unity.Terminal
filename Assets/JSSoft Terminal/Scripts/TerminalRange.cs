@@ -57,7 +57,7 @@ namespace JSSoft.UI
 
         public bool Intersect(TerminalPoint point)
         {
-            return point >= this.beginPoint && point <= this.endPoint;
+            return point >= this.beginPoint && point < this.endPoint;
         }
 
         public TerminalPoint BeginPoint

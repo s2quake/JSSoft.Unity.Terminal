@@ -29,6 +29,8 @@ namespace JSSoft.UI
 {
     class TerminalCell : ITerminalCell
     {
+        private int volume;
+
         public TerminalCell(TerminalRow row, int index)
         {
             if (index < 0)
@@ -95,7 +97,7 @@ namespace JSSoft.UI
             var rect = GetCellRect(this.Grid, this);
             var uv = (Vector2.zero, Vector2.zero);
             this.Character = char.MinValue;
-            this.Volume = 0;
+            this.Volume = 1;
             this.FontAsset = null;
             this.TextIndex = -1;
             this.BackgroundColor = null;
@@ -116,7 +118,21 @@ namespace JSSoft.UI
 
         public char Character { get; private set; }
 
-        public int Volume { get; private set; }
+        public int Volume
+        {
+            get => this.volume;
+            private set
+            {
+                var row = this.Row;
+                var cells = row.Cells;
+                for (var i = 1; i < this.volume; i++)
+                {
+                    var cell = cells[i];
+                    cell.volume = -i;
+                }
+                this.volume = value;
+            }
+        }
 
         public bool IsSelected => TerminalGridUtility.IsSelected(this.Grid, this.Point);
 

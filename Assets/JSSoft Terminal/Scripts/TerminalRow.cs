@@ -87,28 +87,6 @@ namespace JSSoft.UI
             return null;
         }
 
-        // public TerminalPoint LastPoint(bool isCursor)
-        // {
-        //     var columnCount = this.Grid.ColumnCount;
-        //     var index = this.Index;
-        //     var point = new TerminalPoint(columnCount, index);
-        //     if (this.Text != string.Empty)
-        //     {
-        //         for (var i = columnCount - 1; i >= 0; i--)
-        //         {
-        //             var item = this.Cells[i];
-        //             if (item.IsEnabled == true)
-        //             {
-        //                 point.X = i;
-        //                 if (isCursor)
-        //                     point.X++;
-        //                 break;
-        //             }
-        //         }
-        //     }
-        //     return point;
-        // }
-
         public void Update()
         {
             this.text = string.Empty;

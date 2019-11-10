@@ -107,7 +107,7 @@ namespace JSSoft.UI
                 {
                     var p1 = item.BeginPoint;
                     var p2 = item.EndPoint;
-                    if (point >= p1 && point <= p2)
+                    if (point >= p1 && point < p2)
                     {
                         return true;
                     }

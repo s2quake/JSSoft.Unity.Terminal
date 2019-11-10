@@ -25,6 +25,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using System.Text.RegularExpressions;
 
 namespace JSSoft.UI.InputHandlers
 {
@@ -89,7 +90,7 @@ namespace JSSoft.UI.InputHandlers
                 {
                     grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
                 }
-                grid.Selections.Clear();
+                // grid.Selections.Clear();
                 grid.Selections.Add(grid.SelectingRange);
                 grid.SelectingRange = TerminalRange.Empty;
                 this.downPoint = TerminalPoint.Invalid;
@@ -132,38 +133,19 @@ namespace JSSoft.UI.InputHandlers
             var grid = this.Grid;
             var terminal = grid.Terminal;
             var row = grid.Rows[point.Y];
+            var cell = row.Cells[point.X];
+            var character = cell.Character;
             if (row.Text == string.Empty)
             {
-                var p1 = new TerminalPoint(0, point.Y);
-                var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
-                var range = new TerminalRange(p1, p2);
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
-                Debug.Log(1);
+                this.SelectWordOfEmptyRow(row);
+            }
+            else if (character == char.MinValue)
+            {
+                this.SelectWordOfEmptyCell(cell);
             }
             else
             {
-                var text = row.Text;
-                var cell = row.Cells[point.X];
-                var character = cell.Character;
-                if (character == char.MinValue)
-                {
-                    
-                }
-                else
-                {
-                    // var p1 = point;
-                    // var p2 = point;
-                    // // p1 = SkipBackward(grid, p1, true);
-                    // p1 = SkipBackward(grid, p1);
-                    // // p1.X++;
-                    // // p2 = SkipForward(grid, p2, true);
-                    // p2 = SkipForward(grid, p2);
-                    // // p2.X--;
-                    // var range = new TerminalRange(p1, p2);
-                    // grid.Selections.Clear();
-                    // grid.Selections.Add(range);
-                }
+                this.SelectWordOfCell(cell);
             }
         }
 
@@ -189,6 +171,97 @@ namespace JSSoft.UI.InputHandlers
             {
                 var p1 = new TerminalPoint(0, point.Y);
                 var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
+                var range = new TerminalRange(p1, p2);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+            }
+        }
+
+        private void SelectWordOfEmptyRow(ITerminalRow row)
+        {
+            var grid = this.Grid;
+            var p1 = new TerminalPoint(0, row.Index);
+            var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
+            var range = new TerminalRange(p1, p2);
+            grid.Selections.Clear();
+            grid.Selections.Add(range);
+        }
+
+        private void SelectWordOfEmptyCell(ITerminalCell cell)
+        {
+            var grid = this.Grid;
+            var row = cell.Row;
+            var cells = row.Cells;
+            var c = cells.Reverse().SkipWhile(item => item.Character == char.MinValue).First();
+            var p1 = new TerminalPoint(c.Index, row.Index);
+            var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
+            var range = new TerminalRange(p1, p2);
+            grid.Selections.Clear();
+            grid.Selections.Add(range);
+        }
+
+        private void SelectWordOfCell(ITerminalCell cell)
+        {
+            var grid = this.Grid;
+            var text = grid.Text;
+            var row = cell.Row;
+            var cells = row.Cells;
+            var index = cell.TextIndex;
+            var character = cell.Character;
+            // Debug.Log($"{character}: {char.IsSymbol(character)}");
+            // return;
+            if (char.IsLetterOrDigit(character) == true)
+            {
+                var i1 = CommandStringUtility.SkipBackward(text, index, (c) =>
+                {
+                    return char.IsLetterOrDigit(c) || c == '.';
+                });
+                i1++;
+                var input = text.Substring(i1);
+                var pattern = @"(?:\w+\.(?=\w))*\w+";
+
+                var match = Regex.Match(input, pattern, RegexOptions.ECMAScript);
+                var i2 = i1 + match.Length;
+                Debug.Log(match.Value);
+                var c1 = grid.CharacterInfos[i1];
+                var c2 = grid.CharacterInfos[i2];
+
+                var p1 = c1.Point;
+                var p2 = c2.Point;
+                var range = new TerminalRange(p1, p2);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+            }
+            else if (char.IsWhiteSpace(character) == true)
+            {
+                var i1 = CommandStringUtility.SkipBackward(text, index, (c) =>
+                {
+                    return char.IsWhiteSpace(c);
+                });
+                i1++;
+                var input = text.Substring(i1);
+                var pattern = @"\s+";
+
+                var match = Regex.Match(input, pattern, RegexOptions.ECMAScript);
+                var i2 = i1 + match.Length;
+
+                var c1 = grid.CharacterInfos[i1];
+                var c2 = grid.CharacterInfos[i2];
+
+                var p1 = c1.Point;
+                var p2 = c2.Point;
+                var range = new TerminalRange(p1, p2);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+                Debug.Log($"white: {match.Length}");
+            }
+            else
+            {
+                var c1 = grid.CharacterInfos[index];
+                var c2 = grid.CharacterInfos[index + 1];
+
+                var p1 = c1.Point;
+                var p2 = c2.Point;
                 var range = new TerminalRange(p1, p2);
                 grid.Selections.Clear();
                 grid.Selections.Add(range);
@@ -238,6 +311,10 @@ namespace JSSoft.UI.InputHandlers
             this.downCount = downCount;
             this.time = newTime;
             return true;
+        }
+
+        private void Predicate(char character)
+        {
         }
     }
 }
