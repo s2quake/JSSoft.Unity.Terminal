@@ -40,27 +40,24 @@ namespace JSSoft.UI.InputHandlers
             var isEnabled2 = IsEnabled(cell2);
             var columnCount = grid.ColumnCount;
             var gap = 5;
-            if (isEnabled1 == true && isEnabled2 == true)
-            {
-                return new TerminalRange(s1, s2);
-            }
-            else if (isEnabled1 == true)
+            if (isEnabled1 == true && isEnabled2 == false)
             {
                 var l2 = LastPoint(row2, false);
                 var distance = l2.DistanceOf(s2, columnCount);
-                s2.X = distance > gap ? columnCount : l2.X;
+                s2.X = distance > gap ? columnCount : l2.X + 1;
             }
-            else if (isEnabled2 == true)
+            else if (isEnabled2 == true && isEnabled1 == false)
             {
                 var l1 = LastPoint(row1, true);
                 var distance = l1.DistanceOf(s1, columnCount);
                 s1.X = distance > gap ? columnCount : l1.X;
+                s2.X++;
             }
-            else
+            else if (isEnabled1 == false && isEnabled2 == false)
             {
                 if (row1.Text != string.Empty)
                 {
-                    var l1 = LastPoint(row1, false);
+                    var l1 = LastPoint(row1, true);
                     var distance = l1.DistanceOf(s1, columnCount);
                     s1.X = distance > gap ? columnCount : l1.X;
                 }
@@ -71,7 +68,7 @@ namespace JSSoft.UI.InputHandlers
 
                 if (row2.Text != string.Empty)
                 {
-                    var l2 = LastPoint(row2, false);
+                    var l2 = LastPoint(row2, true);
                     var distance = l2.DistanceOf(s2, columnCount);
                     s2.X = distance > gap ? columnCount : l2.X;
                 }
@@ -79,6 +76,10 @@ namespace JSSoft.UI.InputHandlers
                 {
                     s2.X = columnCount;
                 }
+            }
+            else
+            {
+                s2.X++;
             }
             return new TerminalRange(s1, s2);
         }

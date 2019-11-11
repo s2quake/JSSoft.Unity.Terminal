@@ -32,8 +32,8 @@ namespace JSSoft.UI.InputHandlers
     class MacOSInputHandlerContext : InputHandlerContext
     {
         private TerminalPoint downPoint;
-        private TerminalPoint beginPoint;
-        private TerminalPoint endPoint;
+        private TerminalRange dragRange;
+        private TerminalRange downRange;
         private float clickThreshold = 0.5f;
         private float time;
         private int downCount;
@@ -65,13 +65,23 @@ namespace JSSoft.UI.InputHandlers
         {
             var grid = this.Grid;
             var downPoint = this.downPoint;
+            var downRange = this.downRange;
+            var dragRange = this.dragRange;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
                 var position = grid.WorldToGrid(eventData.position);
                 var point = grid.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, this.downPoint, point);
+                    var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    // var p1 = downRange.BeginPoint < range.BeginPoint ? downRange.BeginPoint : range.BeginPoint;
+                    // var p2 = downRange.EndPoint > range.EndPoint ? downRange.EndPoint : range.EndPoint;
+                    // grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, p1, p2);
+                    
+                    this.dragRange = range;
+                    // Debug.Log(this.dragRange);
+                    // Debug.Log(this.downRange);
+                    this.UpdateSelecting();
                 }
                 return true;
             }
@@ -86,11 +96,16 @@ namespace JSSoft.UI.InputHandlers
             {
                 var position = grid.WorldToGrid(eventData.position);
                 var point = grid.Intersect(position);
-                if (point != TerminalPoint.Invalid)
-                {
-                    grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
-                }
-                // grid.Selections.Clear();
+                // if (point != TerminalPoint.Invalid)
+                // {
+                //     var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                //     var p1 = downRange.BeginPoint < range.BeginPoint ? downRange.BeginPoint : range.BeginPoint;
+                //     var p2 = downRange.EndPoint > range.EndPoint ? downRange.EndPoint : range.EndPoint;
+                //     grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, p1, p2);
+                //     this.dragRange = range;
+                //     this.UpdateSelecting();
+                // }
+                grid.Selections.Clear();
                 grid.Selections.Add(grid.SelectingRange);
                 grid.SelectingRange = TerminalRange.Empty;
                 this.downPoint = TerminalPoint.Invalid;
@@ -125,6 +140,10 @@ namespace JSSoft.UI.InputHandlers
 
         public bool PointerUp(PointerEventData eventData)
         {
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                return this.OnLeftPointerUp(eventData);
+            }
             return false;
         }
 
@@ -163,17 +182,17 @@ namespace JSSoft.UI.InputHandlers
                 var s2 = CommandStringUtility.SkipForward(text, index, predicate) - 1;
                 var p1 = grid.CharacterInfos[s1].Point;
                 var p2 = grid.CharacterInfos[s2].Point;
-                var range = new TerminalRange(p1, new TerminalPoint(grid.ColumnCount, p2.Y));
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
+                var p3 = new TerminalPoint(0, p1.Y);
+                var p4 = new TerminalPoint(grid.ColumnCount, p2.Y);
+                this.downRange = new TerminalRange(p3, p4);
+                this.UpdateSelecting();
             }
             else
             {
                 var p1 = new TerminalPoint(0, point.Y);
                 var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
-                var range = new TerminalRange(p1, p2);
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
+                this.downRange = new TerminalRange(p1, p2);
+                this.UpdateSelecting();
             }
         }
 
@@ -182,9 +201,8 @@ namespace JSSoft.UI.InputHandlers
             var grid = this.Grid;
             var p1 = new TerminalPoint(0, row.Index);
             var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
-            var range = new TerminalRange(p1, p2);
-            grid.Selections.Clear();
-            grid.Selections.Add(range);
+            this.downRange = new TerminalRange(p1, p2);
+            this.UpdateSelecting();
         }
 
         private void SelectWordOfEmptyCell(ITerminalCell cell)
@@ -195,9 +213,8 @@ namespace JSSoft.UI.InputHandlers
             var c = cells.Reverse().SkipWhile(item => item.Character == char.MinValue).First();
             var p1 = new TerminalPoint(c.Index, row.Index);
             var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
-            var range = new TerminalRange(p1, p2);
-            grid.Selections.Clear();
-            grid.Selections.Add(range);
+            this.downRange = new TerminalRange(p1, p2);
+            this.UpdateSelecting();
         }
 
         private void SelectWordOfCell(ITerminalCell cell)
@@ -208,63 +225,46 @@ namespace JSSoft.UI.InputHandlers
             var cells = row.Cells;
             var index = cell.TextIndex;
             var character = cell.Character;
-            // Debug.Log($"{character}: {char.IsSymbol(character)}");
-            // return;
             if (char.IsLetterOrDigit(character) == true)
             {
-                var i1 = CommandStringUtility.SkipBackward(text, index, (c) =>
-                {
-                    return char.IsLetterOrDigit(c) || c == '.';
-                });
+                var predicate = new Func<char, bool>((c) => char.IsLetterOrDigit(c) || c == '.');
+                var i1 = CommandStringUtility.SkipBackward(text, index, predicate);
                 i1++;
                 var input = text.Substring(i1);
                 var pattern = @"(?:\w+\.(?=\w))*\w+";
-
                 var match = Regex.Match(input, pattern, RegexOptions.ECMAScript);
                 var i2 = i1 + match.Length;
-                Debug.Log(match.Value);
                 var c1 = grid.CharacterInfos[i1];
                 var c2 = grid.CharacterInfos[i2];
-
                 var p1 = c1.Point;
                 var p2 = c2.Point;
-                var range = new TerminalRange(p1, p2);
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
+                this.downRange = new TerminalRange(p1, p2);
+                this.UpdateSelecting();
             }
             else if (char.IsWhiteSpace(character) == true)
             {
-                var i1 = CommandStringUtility.SkipBackward(text, index, (c) =>
-                {
-                    return char.IsWhiteSpace(c);
-                });
+                var predicate = new Func<char, bool>((c) => char.IsWhiteSpace(c));
+                var i1 = CommandStringUtility.SkipBackward(text, index, predicate);
                 i1++;
                 var input = text.Substring(i1);
                 var pattern = @"\s+";
-
                 var match = Regex.Match(input, pattern, RegexOptions.ECMAScript);
                 var i2 = i1 + match.Length;
-
                 var c1 = grid.CharacterInfos[i1];
                 var c2 = grid.CharacterInfos[i2];
-
                 var p1 = c1.Point;
                 var p2 = c2.Point;
-                var range = new TerminalRange(p1, p2);
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
-                Debug.Log($"white: {match.Length}");
+                this.downRange = new TerminalRange(p1, p2);
+                this.UpdateSelecting();
             }
             else
             {
                 var c1 = grid.CharacterInfos[index];
                 var c2 = grid.CharacterInfos[index + 1];
-
                 var p1 = c1.Point;
                 var p2 = c2.Point;
-                var range = new TerminalRange(p1, p2);
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
+                this.downRange = new TerminalRange(p1, p2);
+                this.UpdateSelecting();
             }
         }
 
@@ -292,7 +292,9 @@ namespace JSSoft.UI.InputHandlers
                 var row = grid.Rows[newPoint.Y];
                 if (downCount == 1)
                 {
+                    grid.SelectingRange = TerminalRange.Empty;
                     grid.Selections.Clear();
+                    this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
                 }
                 else if (downCount == 2)
                 {
@@ -309,12 +311,34 @@ namespace JSSoft.UI.InputHandlers
 
             this.downPoint = newPoint;
             this.downCount = downCount;
+            this.dragRange = new TerminalRange(newPoint, newPoint);
             this.time = newTime;
             return true;
         }
 
-        private void Predicate(char character)
+        private bool OnLeftPointerUp(PointerEventData eventData)
         {
+            var grid = this.Grid;
+            var position = grid.WorldToGrid(eventData.position);
+            var newPoint = grid.Intersect(position);
+            var oldPoint = this.downPoint;
+            if (oldPoint == newPoint)
+            {
+                grid.Selections.Clear();
+                grid.Selections.Add(grid.SelectingRange);
+                grid.SelectingRange = TerminalRange.Empty;
+                return true;
+            }
+            return false;
+        }
+
+        private void UpdateSelecting()
+        {
+            var grid = this.Grid;
+            var p1 = this.downRange.BeginPoint < this.dragRange.BeginPoint ? this.downRange.BeginPoint : this.dragRange.BeginPoint;
+            var p2 = this.downRange.EndPoint > this.dragRange.EndPoint ? this.downRange.EndPoint : this.dragRange.EndPoint;
+            grid.Selections.Clear();
+            grid.SelectingRange = new TerminalRange(p1, p2);
         }
     }
 }
