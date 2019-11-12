@@ -31,10 +31,10 @@ namespace JSSoft.UI.InputHandlers
 {
     class MacOSInputHandlerContext : InputHandlerContext
     {
+        private readonly float clickThreshold = 0.5f;
         private TerminalPoint downPoint;
         private TerminalRange dragRange;
         private TerminalRange downRange;
-        private float clickThreshold = 0.5f;
         private float time;
         private int downCount;
 
@@ -73,12 +73,12 @@ namespace JSSoft.UI.InputHandlers
                 var point = grid.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    // var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
                     // var p1 = downRange.BeginPoint < range.BeginPoint ? downRange.BeginPoint : range.BeginPoint;
                     // var p2 = downRange.EndPoint > range.EndPoint ? downRange.EndPoint : range.EndPoint;
                     // grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, p1, p2);
                     
-                    this.dragRange = range;
+                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);;
                     // Debug.Log(this.dragRange);
                     // Debug.Log(this.downRange);
                     this.UpdateSelecting();
@@ -91,11 +91,11 @@ namespace JSSoft.UI.InputHandlers
         public bool EndDrag(PointerEventData eventData)
         {
             var grid = this.Grid;
-            var downPoint = this.downPoint;
+            // var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = grid.WorldToGrid(eventData.position);
-                var point = grid.Intersect(position);
+                // var position = grid.WorldToGrid(eventData.position);
+                // var point = grid.Intersect(position);
                 // if (point != TerminalPoint.Invalid)
                 // {
                 //     var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
@@ -150,15 +150,13 @@ namespace JSSoft.UI.InputHandlers
         private void SelectWord(TerminalPoint point)
         {
             var grid = this.Grid;
-            var terminal = grid.Terminal;
             var row = grid.Rows[point.Y];
             var cell = row.Cells[point.X];
-            var character = cell.Character;
             if (row.Text == string.Empty)
             {
                 this.SelectWordOfEmptyRow(row);
             }
-            else if (character == char.MinValue)
+            else if (cell.Character == char.MinValue)
             {
                 this.SelectWordOfEmptyCell(cell);
             }
@@ -210,8 +208,7 @@ namespace JSSoft.UI.InputHandlers
             var grid = this.Grid;
             var row = cell.Row;
             var cells = row.Cells;
-            var c = cells.Reverse().SkipWhile(item => item.Character == char.MinValue).First();
-            var p1 = new TerminalPoint(c.Index, row.Index);
+            var p1 = InputHandlerUtility.LastPoint(row, true);
             var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
             this.downRange = new TerminalRange(p1, p2);
             this.UpdateSelecting();
