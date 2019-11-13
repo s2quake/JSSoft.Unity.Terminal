@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.ITerminal>;
 
@@ -83,22 +85,30 @@ namespace JSSoft.UI.KeyBindings
 
         private static int PrevWord(ITerminal terminal)
         {
-            var index = terminal.CursorPosition - 1;
-            var command = terminal.Command;
-            index = CommandStringUtility.SkipBackward(command, index, true);
-            index = CommandStringUtility.SkipBackward(command, index, false);
-            index++;
-            terminal.CursorPosition = index;
+            if (terminal.CursorPosition > 0)
+            {
+                var index = terminal.CursorPosition - 1;
+                var command = terminal.Command;
+                var pattern = @"^\w|(?=\b)\w|$";
+                var matches = Regex.Matches(command, pattern).Cast<Match>();
+                var match = matches.Where(item => item.Index <= index).Last();
+                terminal.CursorPosition = match.Index;
+            }
+
             return terminal.CursorPosition;
         }
 
         private static int NextWord(ITerminal terminal)
         {
-            var index = terminal.CursorPosition;
             var command = terminal.Command;
-            index = CommandStringUtility.SkipForward(command, index, true);
-            index = CommandStringUtility.SkipForward(command, index, false);
-            terminal.CursorPosition = index;
+            if (terminal.CursorPosition < command.Length)
+            {
+                var index = terminal.CursorPosition;
+                var pattern = @"\w(?<=\b)|$";
+                var matches = Regex.Matches(command, pattern).Cast<Match>();
+                var match = matches.Where(item => item.Index > index).First();
+                terminal.CursorPosition = match.Index + 1;
+            }
             return terminal.CursorPosition;
         }
 

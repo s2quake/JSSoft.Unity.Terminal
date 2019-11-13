@@ -32,6 +32,7 @@ namespace JSSoft.UI.InputHandlers
     class MacOSInputHandlerContext : InputHandlerContext
     {
         private readonly float clickThreshold = 0.5f;
+        private Vector2 downPosition;
         private TerminalPoint downPoint;
         private TerminalRange dragRange;
         private TerminalRange downRange;
@@ -50,11 +51,11 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = grid.WorldToGrid(eventData.position);
-                var point = grid.Intersect(position);
+                var position = this.WorldToGrid(eventData.position);
+                var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
                 }
                 return true;
             }
@@ -69,18 +70,11 @@ namespace JSSoft.UI.InputHandlers
             var dragRange = this.dragRange;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = grid.WorldToGrid(eventData.position);
-                var point = grid.Intersect(position);
+                var position = this.WorldToGrid(eventData.position);
+                var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    // var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
-                    // var p1 = downRange.BeginPoint < range.BeginPoint ? downRange.BeginPoint : range.BeginPoint;
-                    // var p2 = downRange.EndPoint > range.EndPoint ? downRange.EndPoint : range.EndPoint;
-                    // grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, p1, p2);
-                    
-                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);;
-                    // Debug.Log(this.dragRange);
-                    // Debug.Log(this.downRange);
+                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point); ;
                     this.UpdateSelecting();
                 }
                 return true;
@@ -90,24 +84,12 @@ namespace JSSoft.UI.InputHandlers
 
         public bool EndDrag(PointerEventData eventData)
         {
-            var grid = this.Grid;
-            // var downPoint = this.downPoint;
+            var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                // var position = grid.WorldToGrid(eventData.position);
-                // var point = grid.Intersect(position);
-                // if (point != TerminalPoint.Invalid)
-                // {
-                //     var range = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
-                //     var p1 = downRange.BeginPoint < range.BeginPoint ? downRange.BeginPoint : range.BeginPoint;
-                //     var p2 = downRange.EndPoint > range.EndPoint ? downRange.EndPoint : range.EndPoint;
-                //     grid.SelectingRange = InputHandlerUtility.UpdatePoint(grid, p1, p2);
-                //     this.dragRange = range;
-                //     this.UpdateSelecting();
-                // }
-                grid.Selections.Clear();
-                grid.Selections.Add(grid.SelectingRange);
-                grid.SelectingRange = TerminalRange.Empty;
+                this.Selections.Clear();
+                this.Selections.Add(this.SelectingRange);
+                this.SelectingRange = TerminalRange.Empty;
                 this.downPoint = TerminalPoint.Invalid;
                 return true;
             }
@@ -175,11 +157,11 @@ namespace JSSoft.UI.InputHandlers
                 var cell = row.Cells.First();
                 var index = cell.TextIndex;
                 var text = grid.Text + char.MinValue;
-                var predicate = new Func<char, bool>((item => item != '\n'));
-                var s1 = CommandStringUtility.SkipBackward(text, index, predicate) + 1;
-                var s2 = CommandStringUtility.SkipForward(text, index, predicate) - 1;
-                var p1 = grid.CharacterInfos[s1].Point;
-                var p2 = grid.CharacterInfos[s2].Point;
+                var matches = Regex.Matches(grid.Text, @"^|$", RegexOptions.Multiline).Cast<Match>();
+                var match1 = matches.Where(item => item.Index <= index).Last();
+                var match2 = matches.Where(item => item.Index > index).First();
+                var p1 = grid.CharacterInfos[match1.Index].Point;
+                var p2 = grid.CharacterInfos[match2.Index].Point;
                 var p3 = new TerminalPoint(0, p1.Y);
                 var p4 = new TerminalPoint(grid.ColumnCount, p2.Y);
                 this.downRange = new TerminalRange(p3, p4);
@@ -218,79 +200,59 @@ namespace JSSoft.UI.InputHandlers
         {
             var grid = this.Grid;
             var text = grid.Text;
-            var row = cell.Row;
-            var cells = row.Cells;
             var index = cell.TextIndex;
             var character = cell.Character;
-            if (char.IsLetterOrDigit(character) == true)
+            var pattern = GetPattern();
+            var matches = Regex.Matches(text, pattern).Cast<Match>();
+            var match = matches.First(item => index >= item.Index && index < item.Index + item.Length);
+            var i1 = match.Index;
+            var i2 = i1 + match.Length;
+            var c1 = grid.CharacterInfos[i1];
+            var c2 = grid.CharacterInfos[i2];
+            var p1 = c1.Point;
+            var p2 = c2.Point;
+            this.downRange = new TerminalRange(p1, p2);
+            this.UpdateSelecting();
+
+            string GetPattern()
             {
-                var predicate = new Func<char, bool>((c) => char.IsLetterOrDigit(c) || c == '.');
-                var i1 = CommandStringUtility.SkipBackward(text, index, predicate);
-                i1++;
-                var input = text.Substring(i1);
-                var pattern = @"(?:\w+\.(?=\w))*\w+";
-                var match = Regex.Match(input, pattern, RegexOptions.ECMAScript);
-                var i2 = i1 + match.Length;
-                var c1 = grid.CharacterInfos[i1];
-                var c2 = grid.CharacterInfos[i2];
-                var p1 = c1.Point;
-                var p2 = c2.Point;
-                this.downRange = new TerminalRange(p1, p2);
-                this.UpdateSelecting();
-            }
-            else if (char.IsWhiteSpace(character) == true)
-            {
-                var predicate = new Func<char, bool>((c) => char.IsWhiteSpace(c));
-                var i1 = CommandStringUtility.SkipBackward(text, index, predicate);
-                i1++;
-                var input = text.Substring(i1);
-                var pattern = @"\s+";
-                var match = Regex.Match(input, pattern, RegexOptions.ECMAScript);
-                var i2 = i1 + match.Length;
-                var c1 = grid.CharacterInfos[i1];
-                var c2 = grid.CharacterInfos[i2];
-                var p1 = c1.Point;
-                var p2 = c2.Point;
-                this.downRange = new TerminalRange(p1, p2);
-                this.UpdateSelecting();
-            }
-            else
-            {
-                var c1 = grid.CharacterInfos[index];
-                var c2 = grid.CharacterInfos[index + 1];
-                var p1 = c1.Point;
-                var p2 = c2.Point;
-                this.downRange = new TerminalRange(p1, p2);
-                this.UpdateSelecting();
+                if (char.IsLetterOrDigit(character) == true)
+                {
+                    return @"(?:\w+\.(?=\w))*\w+";
+                }
+                else if (char.IsWhiteSpace(character) == true)
+                {
+                    return @"\s+";
+                }
+                else
+                {
+                    return @"[^\w\s]";
+                }
             }
         }
 
         private bool OnLeftPointerDown(PointerEventData eventData)
         {
             var grid = this.Grid;
-            var position = grid.WorldToGrid(eventData.position);
-            var newPoint = grid.Intersect(position);
+            var newPosition = this.WorldToGrid(eventData.position);
+            var newPoint = this.Intersect(newPosition);
             var newTime = Time.time;
-            var oldPoint = this.downPoint;
-            var oldTime = this.time;
-            var downCount = this.downCount;
-            var clickThreshold = this.clickThreshold;
-            var diffTime = newTime - oldTime;
-            if (diffTime > clickThreshold || newPoint != oldPoint)
-            {
-                downCount = 1;
-            }
-            else
-            {
-                downCount++;
-            }
+            var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
+            eventData.useDragThreshold = false;
+            this.Focus();
+            this.downPosition = newPosition;
+            this.downPoint = newPoint;
+            this.downCount = downCount;
+            this.dragRange = new TerminalRange(newPoint, newPoint);
+            this.time = newTime;
+
             if (newPoint != TerminalPoint.Invalid)
             {
                 var row = grid.Rows[newPoint.Y];
                 if (downCount == 1)
                 {
-                    grid.SelectingRange = TerminalRange.Empty;
-                    grid.Selections.Clear();
+                    this.SelectingRange = TerminalRange.Empty;
+                    this.Selections.Clear();
                     this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
                 }
                 else if (downCount == 2)
@@ -302,28 +264,27 @@ namespace JSSoft.UI.InputHandlers
                     this.SelectLine(newPoint);
                 }
             }
-
-            eventData.useDragThreshold = false;
-            grid.Focus();
-
-            this.downPoint = newPoint;
-            this.downCount = downCount;
-            this.dragRange = new TerminalRange(newPoint, newPoint);
-            this.time = newTime;
             return true;
+
+            static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
+            {
+                var diffTime = newTime - oldTime;
+                if (diffTime > clickThreshold || oldPosition != newPosition)
+                    return 1;
+                return ++count;
+            }
         }
 
         private bool OnLeftPointerUp(PointerEventData eventData)
         {
-            var grid = this.Grid;
-            var position = grid.WorldToGrid(eventData.position);
-            var newPoint = grid.Intersect(position);
+            var position = this.WorldToGrid(eventData.position);
+            var newPoint = this.Intersect(position);
             var oldPoint = this.downPoint;
             if (oldPoint == newPoint)
             {
-                grid.Selections.Clear();
-                grid.Selections.Add(grid.SelectingRange);
-                grid.SelectingRange = TerminalRange.Empty;
+                this.Selections.Clear();
+                this.Selections.Add(this.SelectingRange);
+                this.SelectingRange = TerminalRange.Empty;
                 return true;
             }
             return false;
@@ -331,11 +292,24 @@ namespace JSSoft.UI.InputHandlers
 
         private void UpdateSelecting()
         {
-            var grid = this.Grid;
             var p1 = this.downRange.BeginPoint < this.dragRange.BeginPoint ? this.downRange.BeginPoint : this.dragRange.BeginPoint;
             var p2 = this.downRange.EndPoint > this.dragRange.EndPoint ? this.downRange.EndPoint : this.dragRange.EndPoint;
-            grid.Selections.Clear();
-            grid.SelectingRange = new TerminalRange(p1, p2);
+            this.Selections.Clear();
+            this.SelectingRange = new TerminalRange(p1, p2);
         }
+
+        private Vector2 WorldToGrid(Vector2 position) => this.Grid.WorldToGrid(position);
+
+        private TerminalPoint Intersect(Vector2 position) => this.Grid.Intersect(position);
+
+        private void Focus() => this.Grid.Focus();
+
+        private TerminalRange SelectingRange
+        {
+            get => this.Grid.SelectingRange;
+            set => this.Grid.SelectingRange = value;
+        }
+
+        private IList<TerminalRange> Selections => this.Grid.Selections;
     }
 }
