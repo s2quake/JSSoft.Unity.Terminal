@@ -75,8 +75,6 @@ namespace JSSoft.UI
         {
             if (fontAsset == null)
                 throw new ArgumentNullException(nameof(fontAsset));
-            // if (character == char.MinValue)
-            //     return 0;
             if (GetCharacter(fontAsset, character) is TMP_Character characterInfo)
             {
                 var defaultWidth = GetItemWidth(fontAsset);

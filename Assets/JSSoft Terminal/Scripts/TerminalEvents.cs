@@ -40,9 +40,5 @@ namespace JSSoft.UI
         {
 
         }
-
-// public delegate string[] OnCompletion(string[] items, string find);
-
-//     public delegate void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors);
     }
 }

@@ -135,17 +135,11 @@ namespace JSSoft.UI.InputHandlers
             var row = grid.Rows[point.Y];
             var cell = row.Cells[point.X];
             if (row.Text == string.Empty)
-            {
                 this.SelectWordOfEmptyRow(row);
-            }
             else if (cell.Character == char.MinValue)
-            {
                 this.SelectWordOfEmptyCell(cell);
-            }
             else
-            {
                 this.SelectWordOfCell(cell);
-            }
         }
 
         private void SelectLine(TerminalPoint point)
@@ -217,17 +211,11 @@ namespace JSSoft.UI.InputHandlers
             string GetPattern()
             {
                 if (char.IsLetterOrDigit(character) == true)
-                {
                     return @"(?:\w+\.(?=\w))*\w+";
-                }
                 else if (char.IsWhiteSpace(character) == true)
-                {
                     return @"\s+";
-                }
                 else
-                {
                     return @"[^\w\s]";
-                }
             }
         }
 
@@ -265,14 +253,6 @@ namespace JSSoft.UI.InputHandlers
                 }
             }
             return true;
-
-            static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
-            {
-                var diffTime = newTime - oldTime;
-                if (diffTime > clickThreshold || oldPosition != newPosition)
-                    return 1;
-                return ++count;
-            }
         }
 
         private bool OnLeftPointerUp(PointerEventData eventData)
@@ -303,6 +283,14 @@ namespace JSSoft.UI.InputHandlers
         private TerminalPoint Intersect(Vector2 position) => this.Grid.Intersect(position);
 
         private void Focus() => this.Grid.Focus();
+
+        static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
+        {
+            var diffTime = newTime - oldTime;
+            if (diffTime > clickThreshold || oldPosition != newPosition)
+                return 1;
+            return ++count;
+        }
 
         private TerminalRange SelectingRange
         {
