@@ -31,6 +31,7 @@ namespace JSSoft.UI.InputHandlers
 {
     class MacOSInputHandlerContext : InputHandlerContext
     {
+        private static Texture2D cursorTexture;
         private readonly float clickThreshold = 0.5f;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
@@ -38,6 +39,11 @@ namespace JSSoft.UI.InputHandlers
         private TerminalRange downRange;
         private float time;
         private int downCount;
+
+        static MacOSInputHandlerContext()
+        {
+
+        }
 
         public MacOSInputHandlerContext(ITerminalGrid grid)
             : base(grid)
@@ -129,6 +135,18 @@ namespace JSSoft.UI.InputHandlers
             return false;
         }
 
+        public static Texture2D CursorTexture
+        {
+            get
+            {
+                if (cursorTexture == null)
+                {
+                    cursorTexture = Resources.Load("ibeam-macos") as Texture2D;
+                }
+                return cursorTexture;
+            }
+        }
+
         private void SelectWord(TerminalPoint point)
         {
             var grid = this.Grid;
@@ -167,6 +185,27 @@ namespace JSSoft.UI.InputHandlers
                 var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
                 this.downRange = new TerminalRange(p1, p2);
                 this.UpdateSelecting();
+            }
+        }
+
+        private void SelectGroup(TerminalPoint point)
+        {
+            var grid = this.Grid;
+            var row = grid.Rows[point.Y];
+            var cell = row.Cells[point.X];
+            var index = cell.TextIndex;
+            var character = cell.Character;
+            var patterns = new string[] { @"\[[^\]]*\]", @"\{[^\}]*\}", @"\([^\)]*\)", @"\<[^\>]*\>" };
+            var pattern = string.Join("|", patterns);
+            var matches = Regex.Matches(grid.Text, pattern).Cast<Match>();
+            var match = matches.FirstOrDefault(item => item.Index == index);
+            if (match != null)
+            {
+                var p1 = grid.CharacterInfos[match.Index].Point;
+                var p2 = grid.CharacterInfos[match.Index + match.Length].Point;
+                var range = new TerminalRange(p1, p2);
+                this.Selections.Clear();
+                this.Selections.Add(range);
             }
         }
 
@@ -265,6 +304,10 @@ namespace JSSoft.UI.InputHandlers
                 this.Selections.Clear();
                 this.Selections.Add(this.SelectingRange);
                 this.SelectingRange = TerminalRange.Empty;
+                if (this.downCount == 2)
+                {
+                    this.SelectGroup(newPoint);
+                }
                 return true;
             }
             return false;
