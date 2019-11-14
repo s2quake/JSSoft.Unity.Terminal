@@ -84,18 +84,44 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            if (this.grid != null)
-            {
-                this.grid.TextChanged += TerminalGrid_TextChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-            }
             base.material = new Material(Shader.Find("UI/Default"));
-            this.SetVerticesDirty();
+
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+
+        }
+
+        protected override void Start()
+        {
+            if (this.grid != null)
+            {
+                this.grid.TextChanged += TerminalGrid_TextChanged;
+                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            }
+            if (this.fontAsset != null && Application.isPlaying == true)
+            {
+                foreach (var item in this.fontAsset.fallbackFontAssetTable)
+                {
+                    var gameObject = new GameObject($"{this.name}_{item.name}");
+                    var foreground = gameObject.AddComponent<TerminalForeground>();
+                    var transform = gameObject.GetComponent<RectTransform>();
+                    foreground.fontAsset = item;
+                    foreground.grid = this.grid;
+                    transform.anchorMin = Vector3.zero;
+                    transform.anchorMax = Vector3.one;
+                    transform.offsetMin = Vector3.zero;
+                    transform.offsetMax = Vector3.zero;
+                    transform.SetParent(this.transform);
+                }
+            }
+            this.SetVerticesDirty();
+        }
+
+        protected override void OnDestroy()
+        {
             if (this.grid != null)
             {
                 this.grid.TextChanged -= TerminalGrid_TextChanged;

@@ -30,11 +30,13 @@ namespace JSSoft.UI
     public abstract class InputHandler : IInputHandler
     {
         private static readonly IInputHandler macOSInputHandler;
+        private static readonly IInputHandler windowsInputHandler;
         private readonly Dictionary<ITerminalGrid, InputHandlerContext> contextByGrid = new Dictionary<ITerminalGrid, InputHandlerContext>();
 
         static InputHandler()
         {
             macOSInputHandler = new InputHandlers.MacOSInputHandler();
+            windowsInputHandler = new InputHandlers.WindowsInputHandler();
         }
 
         public static IInputHandler GetDefaultHandler()
@@ -42,7 +44,7 @@ namespace JSSoft.UI
             if (TerminalEnvironment.IsMac == true)
                 return macOSInputHandler;
             else if (TerminalEnvironment.IsWindows == true)
-                throw new NotImplementedException();
+                return windowsInputHandler;
             throw new NotImplementedException();
         }
 
