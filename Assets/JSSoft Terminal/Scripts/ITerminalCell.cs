@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using TMPro;
 using UnityEngine;
 using UnityEngine.TextCore;
 
@@ -36,7 +35,7 @@ namespace JSSoft.UI
 
         ITerminalRow Row { get; }
 
-        TMP_FontAsset FontAsset { get; }
+        TerminalFont Font { get; }
 
         char Character { get; }
 

@@ -22,7 +22,7 @@
 
 using System;
 using System.Linq;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -102,7 +102,7 @@ namespace JSSoft.UI
 
         public override Texture mainTexture => this.texture;
 
-        public TMP_FontAsset FontAsset => this.grid?.FontAsset;
+        public TerminalFont Font => this.grid?.Font;
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
@@ -165,16 +165,16 @@ namespace JSSoft.UI
             {
                 var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, false);
                 var character = this.text.First();
-                var fontAsset = FontUtility.GetFontAsset(this.FontAsset, character);
-                var characterInfo = fontAsset.characterLookupTable[character];
-                var texture = fontAsset.atlasTexture;
+                var page = FontUtility.GetFontAsset(this.Font, character);
+                var characterInfo = this.Font.CharInfos[character];
+                var texture = this.Font.Textures[page];
                 var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
                 var bx = this.columnIndex * itemWidth + (int)this.Offset.x;
                 var by = this.rowIndex * itemHeight + (int)this.Offset.y;
-                var foregroundRect = FontUtility.GetForegroundRect(fontAsset, character, bx, by);
+                var foregroundRect = FontUtility.GetForegroundRect(this.Font, character, bx, by);
                 var backgroundRect = new Rect(bx, by, itemWidth, itemHeight);
-                var uv = FontUtility.GetUV(fontAsset, character);
+                var uv = FontUtility.GetUV(this.Font, character);
 
                 this.vertices.SetVertex(0, backgroundRect);
                 this.vertices.Transform(0, rect);
@@ -197,7 +197,7 @@ namespace JSSoft.UI
                 this.canvasRenderer.materialCount = 2;
                 this.canvasRenderer.SetTexture(this.texture);
                 this.canvasRenderer.SetMaterial(this.material, 0);
-                this.canvasRenderer.SetMaterial(fontAsset.material, 1);
+                this.canvasRenderer.SetMaterial(this.material, 1);
                 this.canvasRenderer.SetMesh(this.mesh);
             }
             else

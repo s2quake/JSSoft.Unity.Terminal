@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.TextCore;
 
@@ -81,25 +81,25 @@ namespace JSSoft.UI.Fonts
 
         public bool Aa { get => this.aa; set => this.aa = value; }
 
-        public (int, int, int, int) Padding
+        public (int Top, int Right, int Bottom, int Left) Padding
         {
             get => (this.paddingLeft, this.paddingTop, this.paddingRight, this.paddingBottom);
             set
             {
-                this.paddingLeft = value.Item1;
-                this.paddingTop = value.Item2;
-                this.paddingRight = value.Item3;
-                this.paddingBottom = value.Item4;
+                this.paddingLeft = value.Left;
+                this.paddingTop = value.Top;
+                this.paddingRight = value.Right;
+                this.paddingBottom = value.Bottom;
             }
         }
 
-        public (int, int) Spacing
+        public (int Vertical, int Horizontal) Spacing
         {
             get => (this.verticalSpacing, this.horizontalSpacing);
             set
             {
-                this.verticalSpacing = value.Item1;
-                this.horizontalSpacing = value.Item2;
+                this.verticalSpacing = value.Vertical;
+                this.horizontalSpacing = value.Horizontal;
             }
         }
 

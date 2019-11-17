@@ -84,7 +84,7 @@ namespace JSSoft.UI.Fonts.Serializations
             };
         }
 
-        public (int, int, int, int) PaddingValue
+        public (int Top, int Right, int Bottom, int Left) PaddingValue
         {
             get
             {
@@ -93,11 +93,11 @@ namespace JSSoft.UI.Fonts.Serializations
             }
             set
             {
-                this.Padding = $"{value.Item1},{value.Item2},{value.Item3},{value.Item4}";
+                this.Padding = $"{value.Top},{value.Right},{value.Bottom},{value.Left}";
             }
         }
 
-        public (int, int) SpacingValue
+        public (int Vertical, int Horizontal) SpacingValue
         {
             get
             {
@@ -106,7 +106,7 @@ namespace JSSoft.UI.Fonts.Serializations
             }
             set
             {
-                this.Spacing = $"{value.Item1},{value.Item2}";
+                this.Spacing = $"{value.Vertical},{value.Horizontal}";
             }
         }
     }

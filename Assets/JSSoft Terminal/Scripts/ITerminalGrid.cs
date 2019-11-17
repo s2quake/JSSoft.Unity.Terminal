@@ -22,7 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -61,7 +60,7 @@ namespace JSSoft.UI
 
         string Text { get; set; }
 
-        TMP_FontAsset FontAsset { get; }
+        TerminalFont Font { get; }
 
         int ColumnCount { get; }
 

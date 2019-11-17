@@ -24,7 +24,7 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using JSSoft.Communication.Shells;
-using TMPro;
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -77,7 +77,7 @@ namespace JSSoft.UI.Editor
         //         canvas = GameObject.FindObjectOfType<Canvas>();
         //     }
 
-        //     var fontAsset = (TMP_FontAsset)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular.asset", typeof(TMP_FontAsset));
+        //     var fontAsset = (TerminalFont)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular.asset", typeof(TerminalFont));
         //     var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
 
         //     var terminalObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };

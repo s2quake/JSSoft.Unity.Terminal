@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 using System;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.TextCore;
 
@@ -31,25 +31,25 @@ namespace JSSoft.UI.Fonts
     public struct CharInfo
     {
         [SerializeField]
-        public int id;
+        private int id;
         [SerializeField]
-        public int x;
+        private int x;
         [SerializeField]
-        public int y;
+        private int y;
         [SerializeField]
-        public int width;
+        private int width;
         [SerializeField]
-        public int height;
+        private int height;
         [SerializeField]
-        public int xOffset;
+        private int xOffset;
         [SerializeField]
-        public int yOffset;
+        private int yOffset;
         [SerializeField]
-        public int xAdvance;
+        private int xAdvance;
         [SerializeField]
-        public int page;
+        private int page;
         [SerializeField]
-        public int channel;
+        private int channel;
 
         public int ID { get => this.id; set => this.id = value; }
 
@@ -70,5 +70,7 @@ namespace JSSoft.UI.Fonts
         public int Page { get => this.page; set => this.page = value; }
 
         public int Channel { get => this.channel; set => this.channel = value; }
+
+        public static readonly CharInfo Empty = new CharInfo();
     }
 }

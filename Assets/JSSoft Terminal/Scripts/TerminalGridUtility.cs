@@ -37,9 +37,9 @@ namespace JSSoft.UI
 
         public static Rect TransformRect(ITerminalGrid grid, Rect rect, bool scroll)
         {
-            if (grid != null && grid.FontAsset != null && grid.Rows.Count > 0)
+            if (grid != null && grid.Font != null && grid.Rows.Count > 0)
             {
-                var itemHeight = FontUtility.GetItemHeight(grid.FontAsset);
+                var itemHeight = FontUtility.GetItemHeight(grid.Font);
                 if (scroll == true)
                     rect.y += itemHeight * grid.VisibleIndex;
                 rect.x += grid.Rectangle.x;
@@ -119,18 +119,18 @@ namespace JSSoft.UI
 
         public static int GetItemWidth(ITerminalGrid grid)
         {
-            if (grid != null && grid.FontAsset != null)
+            if (grid != null && grid.Font != null)
             {
-                return FontUtility.GetItemWidth(grid.FontAsset);
+                return FontUtility.GetItemWidth(grid.Font);
             }
             return 0;
         }
 
         public static int GetItemHeight(ITerminalGrid grid)
         {
-            if (grid != null && grid.FontAsset != null)
+            if (grid != null && grid.Font != null)
             {
-                return FontUtility.GetItemHeight(grid.FontAsset);
+                return FontUtility.GetItemHeight(grid.Font);
             }
             return 0;
         }
@@ -148,9 +148,9 @@ namespace JSSoft.UI
 
         public static int GetItemWidth(ITerminalGrid grid, char character)
         {
-            if (grid != null && grid.FontAsset != null)
+            if (grid != null && grid.Font != null)
             {
-                return FontUtility.GetItemWidth(grid.FontAsset, character);
+                return FontUtility.GetItemWidth(grid.Font, character);
             }
             return 0;
         }

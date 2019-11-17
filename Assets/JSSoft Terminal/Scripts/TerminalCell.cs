@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using TMPro;
 using UnityEngine;
 using UnityEngine.TextCore;
 
@@ -66,25 +65,25 @@ namespace JSSoft.UI
 
         public void SetCharacter(TerminalCharacterInfo characterInfo)
         {
-            if (characterInfo.FontAsset != null)
+            if (characterInfo.Page >= 0)
             {
                 var rect = GetCellRect(this.Grid, this);
                 var character = characterInfo.Character;
                 var volume = characterInfo.Volume;
-                var fontAsset = characterInfo.FontAsset;
+                var page = characterInfo.Page;
                 var indexOfText = characterInfo.TextIndex;
                 var backgroundColor = characterInfo.BackgroundColor;
                 var foregroundColor = characterInfo.ForegroundColor;
                 this.Character = character;
                 this.Volume = volume;
-                this.FontAsset = fontAsset;
+                this.Page = page;
                 this.TextIndex = indexOfText;
                 this.BackgroundColor = backgroundColor;
                 this.ForegroundColor = foregroundColor;
                 this.BackgroundRect = new Rect(rect.x, rect.y, rect.width * volume, rect.height);
-                this.ForegroundRect = FontUtility.GetForegroundRect(fontAsset, character, (int)rect.x, (int)rect.y);
+                this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
                 this.BackgroundUV = (Vector2.zero, Vector2.zero);
-                this.ForegroundUV = FontUtility.GetUV(fontAsset, character);
+                this.ForegroundUV = FontUtility.GetUV(this.Font, character);
             }
             else
             {
@@ -98,7 +97,6 @@ namespace JSSoft.UI
             var uv = (Vector2.zero, Vector2.zero);
             this.Character = char.MinValue;
             this.Volume = 1;
-            this.FontAsset = null;
             this.TextIndex = -1;
             this.BackgroundColor = null;
             this.ForegroundColor = null;
@@ -114,7 +112,9 @@ namespace JSSoft.UI
 
         public TerminalGrid Grid => this.Row.Grid;
 
-        public TMP_FontAsset FontAsset { get; private set; }
+        public TerminalFont Font => this.Grid.Font;
+
+        public int Page { get; private set; }
 
         public char Character { get; private set; }
 

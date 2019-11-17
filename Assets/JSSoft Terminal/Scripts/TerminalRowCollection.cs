@@ -23,7 +23,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using TMPro;
 
 namespace JSSoft.UI
 {
@@ -31,7 +30,7 @@ namespace JSSoft.UI
     {
         private readonly TerminalGrid grid;
         private readonly Stack<TerminalRow> pool = new Stack<TerminalRow>();
-        private TMP_FontAsset fontAsset;
+        private TerminalFont fontAsset;
         private string text = string.Empty;
         private int columnCount;
 
@@ -42,7 +41,7 @@ namespace JSSoft.UI
 
         public void Udpate(TerminalCharacterInfoCollection characterInfos)
         {
-            var fontAsset = this.grid.FontAsset;
+            var fontAsset = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
 
@@ -110,7 +109,7 @@ namespace JSSoft.UI
             }
         }
 
-        private int FindUpdateIndex(TMP_FontAsset fontAsset, string text, int columnCount)
+        private int FindUpdateIndex(TerminalFont fontAsset, string text, int columnCount)
         {
             if (this.fontAsset != fontAsset || this.columnCount != columnCount)
                 return 0;

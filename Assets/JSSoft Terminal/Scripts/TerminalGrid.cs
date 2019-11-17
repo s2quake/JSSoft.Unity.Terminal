@@ -23,7 +23,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using TMPro;
+
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -55,7 +55,7 @@ namespace JSSoft.UI
         public static readonly Color32 DefaultCursorColor = new Color32(139, 139, 139, 255);
 
         [SerializeField]
-        private TMP_FontAsset fontAsset = null;
+        private TerminalFont font = null;
         [SerializeField]
         [TextArea(5, 10)]
         public string text = string.Empty;
@@ -315,7 +315,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TMP_FontAsset FontAsset => this.fontAsset;
+        public TerminalFont Font => this.font;
 
         public int ColumnCount { get; private set; }
 
@@ -564,9 +564,9 @@ namespace JSSoft.UI
         private void UpdateGrid()
         {
             var rect = this.GetComponent<RectTransform>().rect;
-            if (this.fontAsset != null)
+            if (this.font != null)
             {
-                var fontAsset = this.fontAsset;
+                var fontAsset = this.font;
                 var itemWidth = FontUtility.GetItemWidth(fontAsset);
                 var itemHeight = FontUtility.GetItemHeight(fontAsset);
                 var rectWidth = itemWidth * this.ColumnCount;

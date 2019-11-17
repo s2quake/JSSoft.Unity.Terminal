@@ -45,16 +45,37 @@ namespace JSSoft.UI
         private CharInfo[] charInfos;
         [SerializeField]
         private Texture2D[] textures;
-        private readonly Dictionary<int, CharInfo> charInfoByID = new Dictionary<int, CharInfo>();
+        private readonly Dictionary<char, CharInfo> charInfoByID = new Dictionary<char, CharInfo>();
         private readonly Dictionary<int, Texture2D> textureByID = new Dictionary<int, Texture2D>();
 
         public BaseInfo BaseInfo => this.baseInfo;
 
         public CommonInfo CommonInfo => this.commonInfo;
 
-        public IReadOnlyDictionary<int, CharInfo> CharInfos => this.charInfoByID;
+        public IReadOnlyDictionary<char, CharInfo> CharInfos => this.charInfoByID;
 
         public IReadOnlyDictionary<int, Texture2D> Textures => this.textureByID;
+
+        protected virtual void Awake()
+        {
+            this.textureByID.Clear();
+            if (this.textures != null)
+            {
+                for (var i = 0; i < this.textures.Length; i++)
+                {
+                    this.textureByID.Add(i, this.textures[i]);
+                }
+            }
+            this.charInfoByID.Clear();
+            if (this.charInfos != null)
+            {
+                foreach (var item in this.charInfos)
+                {
+                    this.charInfoByID.Add((char)item.ID, item);
+                }
+                Debug.Log(this.charInfoByID.Count);
+            }
+        }
 
 #if UNITY_EDITOR
         public static TerminalFont Create(TextAsset fntAsset)
@@ -79,7 +100,7 @@ namespace JSSoft.UI
                 foreach (var item in obj.CharInfo.Items)
                 {
                     var charInfo = (CharInfo)item;
-                    font.charInfoByID.Add(charInfo.ID, charInfo);
+                    font.charInfoByID.Add((char)charInfo.ID, charInfo);
                 }
                 font.charInfos = font.charInfoByID.Values.ToArray();
                 return font;

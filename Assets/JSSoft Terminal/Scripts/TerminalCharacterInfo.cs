@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using TMPro;
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -43,6 +42,6 @@ namespace JSSoft.UI
 
         public TerminalPoint Point { get; set; }
 
-        public TMP_FontAsset FontAsset { get; set; }
+        public int Page { get; set; }
     }
 }

@@ -23,7 +23,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using TMPro;
 using System.Collections;
 
 namespace JSSoft.UI
@@ -34,7 +33,7 @@ namespace JSSoft.UI
         private TerminalCharacterInfo[] items = new TerminalCharacterInfo[] { };
         private TerminalPoint lt;
         private TerminalPoint rb;
-        private TMP_FontAsset fontAsset;
+        private TerminalFont fontAsset;
         private string text = string.Empty;
         private int columnCount;
 
@@ -45,7 +44,7 @@ namespace JSSoft.UI
 
         public void Update()
         {
-            var fontAsset = this.grid.FontAsset;
+            var fontAsset = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
             if (fontAsset != null && this.text != text)
@@ -61,7 +60,7 @@ namespace JSSoft.UI
                 {
                     var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
-                    var characterFontAsset = FontUtility.GetFontAsset(fontAsset, character);
+                    var page = FontUtility.GetFontAsset(fontAsset, character);
                     var volume = FontUtility.GetCharacterVolume(fontAsset, character);
                     if (point.X + volume > columnCount)
                     {
@@ -73,7 +72,7 @@ namespace JSSoft.UI
                     characterInfo.Point = point;
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
-                    characterInfo.FontAsset = characterFontAsset;
+                    characterInfo.Page = page;
                     characterInfo.TextIndex = index;
                     point.X += volume;
                     if (point.X >= columnCount || character == '\n')
@@ -134,7 +133,7 @@ namespace JSSoft.UI
 
         public (int Left, int Top, int Right, int Bottom) Volume => (this.lt.X, this.lt.Y, this.rb.X, this.rb.Y);
 
-        private int FindUpdateIndex(TMP_FontAsset fontAsset, string text, int columnCount)
+        private int FindUpdateIndex(TerminalFont fontAsset, string text, int columnCount)
         {
             if (this.fontAsset != fontAsset || this.columnCount != columnCount)
                 return 0;

@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using TMPro;
+
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -32,122 +32,112 @@ namespace JSSoft.UI
         private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
 
-        public static TMP_FontAsset GetFontAsset(TMP_FontAsset fontAsset, char character)
+        public static int GetFontAsset(TerminalFont font, char character)
         {
-            if (fontAsset == null)
-                throw new ArgumentNullException(nameof(fontAsset));
-            var fontAssets = GetFontAssets(fontAsset);
-            foreach (var item in fontAssets)
-            {
-                if (item.characterLookupTable.ContainsKey(character) == true)
-                {
-                    return item;
-                }
-            }
-            return null;
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            if (font.CharInfos.ContainsKey(character) == true)
+                return font.CharInfos[character].Page;
+            return -1;
         }
 
-        public static IEnumerable<TMP_FontAsset> GetFontAssets(TMP_FontAsset fontAsset)
+        // public static IEnumerable<TerminalFont> GetFontAssets(TerminalFont font)
+        // {
+        //     if (font != null)
+        //     {
+        //         yield return font;
+        //         if (font.fallbackFontAssetTable != null)
+        //         {
+        //             foreach (var item in font.fallbackFontAssetTable)
+        //             {
+        //                 yield return item;
+        //             }
+        //         }
+        //     }
+        // }
+
+        public static Fonts.CharInfo GetCharacter(TerminalFont font, char character)
         {
-            if (fontAsset != null)
-            {
-                yield return fontAsset;
-                if (fontAsset.fallbackFontAssetTable != null)
-                {
-                    foreach (var item in fontAsset.fallbackFontAssetTable)
-                    {
-                        yield return item;
-                    }
-                }
-            }
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            if (font.CharInfos.ContainsKey(character) == true)
+                return font.CharInfos[character];
+            return Fonts.CharInfo.Empty;
         }
 
-        public static TMP_Character GetCharacter(TMP_FontAsset fontAsset, char character)
+        public static int GetCharacterVolume(TerminalFont font, char character)
         {
-            if (fontAsset == null)
-                throw new ArgumentNullException(nameof(fontAsset));
-            if (FontUtility.GetFontAsset(fontAsset, character) is TMP_FontAsset fontAsset1)
-                return fontAsset1.characterLookupTable[character];
-            return null;
-        }
-
-        public static int GetCharacterVolume(TMP_FontAsset fontAsset, char character)
-        {
-            if (fontAsset == null)
-                throw new ArgumentNullException(nameof(fontAsset));
-            if (GetCharacter(fontAsset, character) is TMP_Character characterInfo)
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
             {
-                var defaultWidth = GetItemWidth(fontAsset);
-                var horizontalAdvance = characterInfo.glyph.metrics.horizontalAdvance;
-                var volume = (int)Math.Ceiling(horizontalAdvance / defaultWidth);
+                var defaultWidth = GetItemWidth(font);
+                var horizontalAdvance = characterInfo.XAdvance;
+                var volume = (int)Math.Ceiling((float)horizontalAdvance / defaultWidth);
                 return Math.Max(volume, 1);
             }
             return 1;
         }
 
-        public static (Vector2, Vector2) GetUV(TMP_FontAsset fontAsset, char character)
+        public static (Vector2, Vector2) GetUV(TerminalFont font, char character)
         {
-            if (fontAsset == null)
-                throw new ArgumentNullException(nameof(fontAsset));
-            if (fontAsset.characterLookupTable.ContainsKey(character) == false)
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            if (font.CharInfos.ContainsKey(character) == false)
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-            var characterInfo = fontAsset.characterLookupTable[character];
-            var texture = fontAsset.atlasTexture;
-            var glyph = characterInfo.glyph;
-            var glyphRect = glyph.glyphRect;
+            var charInfo = font.CharInfos[character];
+            var texture = font.Textures[charInfo.Page];
             var textWidth = (float)texture.width;
             var textHeight = (float)texture.height;
-            var uv0 = new Vector2(glyphRect.x / textWidth, glyphRect.y / textHeight);
-            var uv1 = new Vector2((glyphRect.x + glyphRect.width) / textWidth, (glyphRect.y + glyphRect.height) / textHeight);
+            var uv0 = new Vector2(charInfo.X / textWidth, charInfo.Y / textHeight);
+            var uv1 = new Vector2((charInfo.X + charInfo.Width) / textWidth, (charInfo.Y + charInfo.Height) / textHeight);
             return (uv0, uv1);
         }
 
-        public static Rect GetForegroundRect(TMP_FontAsset fontAsset, char character)
+        public static Rect GetForegroundRect(TerminalFont font, char character)
         {
-            return GetForegroundRect(fontAsset, character, 0, 0);
+            return GetForegroundRect(font, character, 0, 0);
         }
 
-        public static Rect GetForegroundRect(TMP_FontAsset fontAsset, char character, int x, int y)
+        public static Rect GetForegroundRect(TerminalFont font, char character, int x, int y)
         {
-            if (fontAsset == null)
-                throw new ArgumentNullException(nameof(fontAsset));
-            if (fontAsset.characterLookupTable.ContainsKey(character) == false)
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            if (font.CharInfos.ContainsKey(character) == false)
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-            var characterInfo = fontAsset.characterLookupTable[character];
-            var glyph = characterInfo.glyph;
-            var topBorder = (float)Math.Ceiling(fontAsset.faceInfo.lineHeight) - fontAsset.faceInfo.lineHeight;
-            var glyphRect = glyph.glyphRect;
-            var fx = x + glyph.metrics.horizontalBearingX;
-            var fy = y + fontAsset.faceInfo.ascentLine - glyph.metrics.horizontalBearingY - topBorder;
-            return new Rect(fx, fy, glyph.metrics.width, glyph.metrics.height);
+            var charInfo = font.CharInfos[character];
+            // var topBorder = (float)Math.Ceiling(font.faceInfo.lineHeight) - font.faceInfo.lineHeight;
+            var fx = x + charInfo.YOffset;
+            var fy = y + charInfo.XOffset;
+            return new Rect(fx, fy, charInfo.Width, charInfo.Height);
         }
 
-        public static int GetItemWidth(TMP_FontAsset originAsset)
+        public static int GetItemWidth(TerminalFont originAsset)
         {
             if (originAsset == null)
                 throw new ArgumentNullException(nameof(originAsset));
-            if (GetCharacter(originAsset, defaultCharacter) is TMP_Character characterInfo)
-                return (int)characterInfo.glyph.metrics.horizontalAdvance;
+            if (GetCharacter(originAsset, defaultCharacter) is Fonts.CharInfo characterInfo)
+                return characterInfo.XAdvance;
             return defaultItemWidth;
         }
 
-        public static int GetItemWidth(TMP_FontAsset originAsset, char character)
+        public static int GetItemWidth(TerminalFont originAsset, char character)
         {
             var itemWidth = GetItemWidth(originAsset);
-            if (GetCharacter(originAsset, character) is TMP_Character characterInfo)
+            if (GetCharacter(originAsset, character) is Fonts.CharInfo characterInfo)
             {
-                var characterWidth = (int)characterInfo.glyph.metrics.horizontalAdvance;
+                var characterWidth = characterInfo.XAdvance;
                 var n = Math.Ceiling(characterWidth / (float)itemWidth);
                 return (int)(itemWidth * n);
             }
             return itemWidth;
         }
 
-        public static int GetItemHeight(TMP_FontAsset originAsset)
+        public static int GetItemHeight(TerminalFont font)
         {
-            if (originAsset == null)
-                throw new ArgumentNullException(nameof(originAsset));
-            return (int)Math.Ceiling(originAsset.faceInfo.lineHeight);
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            return font.CommonInfo.LineHeight;
         }
     }
 }
