@@ -33,6 +33,7 @@ namespace JSSoft.UI
         private TerminalGrid grid = null;
 
         private readonly TerminalRect terminalRect = new TerminalRect();
+        private Rect rect;
 
         public TerminalBackground()
         {
@@ -42,14 +43,17 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
+            var rect = TerminalGridUtility.TransformRect(this.grid, this.rect, true);
+            Debug.Log($"rect: {this.rect}");
 
-            var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
-            var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid); 
+            var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid);
             this.terminalRect.Count = visibleCells.Count();
+            Debug.Log($"visible cells: {visibleCells.Count()}");
             foreach (var item in visibleCells)
             {
+                Debug.Log($"123: {item.BackgroundRect}");
                 this.terminalRect.SetVertex(index, item.BackgroundRect, rect);
                 this.terminalRect.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
@@ -62,20 +66,31 @@ namespace JSSoft.UI
             this.terminalRect.Fill(vh);
         }
 
+
+        protected override void OnTransformParentChanged()
+        {
+            base.OnTransformParentChanged();
+            Debug.Log("OnTransformParentChanged()");
+        }
+
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
+            this.rect = this.rectTransform.rect;
+            this.SetVerticesDirty();
+            Debug.Log($"OnRectTransformDimensionsChange(): {this.rectTransform.rect}");
         }
 
         protected override void OnCanvasHierarchyChanged()
         {
             base.OnCanvasHierarchyChanged();
+            Debug.Log("OnCanvasHierarchyChanged()");
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.SetVerticesDirty();
+            // this.SetVerticesDirty();
             if (this.grid != null)
             {
                 this.grid.TextChanged += TerminalGrid_TextChanged;

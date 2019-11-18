@@ -218,12 +218,14 @@ namespace JSSoft.UI
         private void UpdateLayout()
         {
             var point = this.grid.CursorPoint;
-            var cell = this.grid.Rows[point.Y].Cells[point.X];
-            this.cursorLeft = this.grid.CursorPoint.X;
-            this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
-            this.volume = Math.Max(cell.Volume, 1);
-            this.isVisible = this.grid.IsCursorVisible;
-            this.SetVerticesDirty();
+            if (this.grid.GetCell(point) is TerminalCell cell)
+            {
+                this.cursorLeft = this.grid.CursorPoint.X;
+                this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
+                this.volume = Math.Max(cell.Volume, 1);
+                this.isVisible = this.grid.IsCursorVisible;
+                this.SetVerticesDirty();
+            }
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;

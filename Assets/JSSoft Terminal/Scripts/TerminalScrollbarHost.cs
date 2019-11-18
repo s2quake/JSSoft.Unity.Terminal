@@ -156,7 +156,7 @@ namespace JSSoft.UI
             {
                 var value1 = (float)this.verticalScrollbar.value;
                 var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.RowCount);
-                this.grid.VisibleIndex = (int)(value1 * value2);
+                // this.grid.VisibleIndex = (int)(value1 * value2);
             }
             this.BeginFade();
         }

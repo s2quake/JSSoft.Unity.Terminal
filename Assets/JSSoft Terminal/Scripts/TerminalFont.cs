@@ -42,38 +42,36 @@ namespace JSSoft.UI
         [SerializeField]
         private CommonInfo commonInfo;
         [SerializeField]
-        private CharInfo[] charInfos;
+        private CharInfo[] charInfos = new CharInfo[] { };
         [SerializeField]
-        private Texture2D[] textures;
+        private Texture2D[] textures = new Texture2D[] { };
         private readonly Dictionary<char, CharInfo> charInfoByID = new Dictionary<char, CharInfo>();
-        private readonly Dictionary<int, Texture2D> textureByID = new Dictionary<int, Texture2D>();
 
         public BaseInfo BaseInfo => this.baseInfo;
 
         public CommonInfo CommonInfo => this.commonInfo;
 
+        public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
+
         public IReadOnlyDictionary<char, CharInfo> CharInfos => this.charInfoByID;
 
-        public IReadOnlyDictionary<int, Texture2D> Textures => this.textureByID;
+        protected virtual void OnEnable()
+        {
+            Debug.Log("TerminalFont OnEnable");
+        }
 
         protected virtual void Awake()
         {
-            this.textureByID.Clear();
-            if (this.textures != null)
-            {
-                for (var i = 0; i < this.textures.Length; i++)
-                {
-                    this.textureByID.Add(i, this.textures[i]);
-                }
-            }
+            Debug.Log("TerminalFont Awake");
+        }
+
+        protected virtual void OnValidate()
+        {
+            Debug.Log("TerminalFont OnValidate");
             this.charInfoByID.Clear();
-            if (this.charInfos != null)
+            foreach (var item in this.charInfos)
             {
-                foreach (var item in this.charInfos)
-                {
-                    this.charInfoByID.Add((char)item.ID, item);
-                }
-                Debug.Log(this.charInfoByID.Count);
+                this.charInfoByID.Add((char)item.ID, item);
             }
         }
 
@@ -87,22 +85,23 @@ namespace JSSoft.UI
                 var assetDirectory = Path.GetDirectoryName(assetPath);
                 var serializer = new XmlSerializer(typeof(Fonts.Serializations.FontSerializationInfo));
                 var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
+                var charInfos = obj.CharInfo.Items;
+                var pages = obj.Pages;
                 var font = new TerminalFont();
                 font.baseInfo = (BaseInfo)obj.Info;
                 font.commonInfo = (CommonInfo)obj.Common;
-                foreach (var item in obj.Pages)
+                font.textures = new Texture2D[pages.Length];
+                for (var i = 0; i < pages.Length; i++)
                 {
+                    var item = pages[i];
                     var texturePath = Path.Combine(assetDirectory, item.File);
-                    var texture = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
-                    font.textureByID.Add(item.ID, texture);
+                    font.textures[i] = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
                 }
-                font.textures = font.textureByID.Values.ToArray();
-                foreach (var item in obj.CharInfo.Items)
+                font.charInfos = new CharInfo[charInfos.Length];
+                for (var i = 0; i < charInfos.Length; i++)
                 {
-                    var charInfo = (CharInfo)item;
-                    font.charInfoByID.Add((char)charInfo.ID, charInfo);
+                    font.charInfos[i] = (CharInfo)charInfos[i];
                 }
-                font.charInfos = font.charInfoByID.Values.ToArray();
                 return font;
             }
         }

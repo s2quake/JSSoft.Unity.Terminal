@@ -44,12 +44,12 @@ namespace JSSoft.UI
 
         public void Update()
         {
-            var fontAsset = this.grid.Font;
+            var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
-            if (fontAsset != null && this.text != text)
+            if (font != null && this.text != text)
             {
-                var index = this.FindUpdateIndex(fontAsset, text, columnCount);
+                var index = this.FindUpdateIndex(font, text, columnCount);
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
 
                 if (this.items.Length < text.Length)
@@ -60,8 +60,8 @@ namespace JSSoft.UI
                 {
                     var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
-                    var page = FontUtility.GetFontAsset(fontAsset, character);
-                    var volume = FontUtility.GetCharacterVolume(fontAsset, character);
+                    var page = FontUtility.GetFontAsset(font, character);
+                    var volume = FontUtility.GetCharacterVolume(font, character);
                     if (point.X + volume > columnCount)
                     {
                         point.X = 0;
@@ -85,7 +85,7 @@ namespace JSSoft.UI
                 this.lt.Y = 0;
                 this.rb.Y = point.Y + 1;
             }
-            this.fontAsset = fontAsset;
+            this.fontAsset = font;
             this.text = text;
             this.columnCount = columnCount;
         }

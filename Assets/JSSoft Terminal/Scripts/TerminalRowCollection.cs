@@ -41,14 +41,14 @@ namespace JSSoft.UI
 
         public void Udpate(TerminalCharacterInfoCollection characterInfos)
         {
-            var fontAsset = this.grid.Font;
+            var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
 
-            if (fontAsset != null && this.text != text)
+            if (font != null && this.text != text)
             {
                 var volume = characterInfos.Volume;
-                var index = this.FindUpdateIndex(fontAsset, text, columnCount);
+                var index = this.FindUpdateIndex(font, text, columnCount);
                 var dic = new Dictionary<int, int>(this.Count);
                 this.Resize(this.grid.ColumnCount, volume.Bottom);
                 for (var i = index; i < text.Length; i++)
@@ -73,7 +73,7 @@ namespace JSSoft.UI
                 }
             }
 
-            this.fontAsset = fontAsset;
+            this.fontAsset = font;
             this.text = text;
             this.columnCount = columnCount;
         }

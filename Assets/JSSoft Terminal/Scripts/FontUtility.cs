@@ -112,12 +112,12 @@ namespace JSSoft.UI
             return new Rect(fx, fy, charInfo.Width, charInfo.Height);
         }
 
-        public static int GetItemWidth(TerminalFont originAsset)
+        public static int GetItemWidth(TerminalFont font)
         {
-            if (originAsset == null)
-                throw new ArgumentNullException(nameof(originAsset));
-            if (GetCharacter(originAsset, defaultCharacter) is Fonts.CharInfo characterInfo)
-                return characterInfo.XAdvance;
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
+                return characterInfo.Width + characterInfo.XOffset;
             return defaultItemWidth;
         }
 
@@ -126,7 +126,7 @@ namespace JSSoft.UI
             var itemWidth = GetItemWidth(originAsset);
             if (GetCharacter(originAsset, character) is Fonts.CharInfo characterInfo)
             {
-                var characterWidth = characterInfo.XAdvance;
+                var characterWidth = characterInfo.Width + characterInfo.XOffset;
                 var n = Math.Ceiling(characterWidth / (float)itemWidth);
                 return (int)(itemWidth * n);
             }

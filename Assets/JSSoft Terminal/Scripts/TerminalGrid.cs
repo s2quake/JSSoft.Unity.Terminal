@@ -137,6 +137,16 @@ namespace JSSoft.UI
 
         public Color32? IndexToForegroundColor(int index) => this.Terminal.GetForegroundColor(index);
 
+        public TerminalCell GetCell(TerminalPoint point)
+        {
+            if (point.Y < 0 || point.Y >= this.rows.Count)
+                return null;
+            var row = this.rows[point.Y];
+            if (point.X < 0 || point.X >= row.Cells.Count)
+                return null;
+            return row.Cells[point.X];
+        }
+
         public void Append(string text)
         {
             this.Append(text, this.text.Length);
@@ -333,7 +343,7 @@ namespace JSSoft.UI
             set
             {
                 if (value < 0 || value > this.MaximumVisibleIndex)
-                    throw new ArgumentNullException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.visibleIndex != value)
                 {
                     this.visibleIndex = value;
@@ -436,6 +446,8 @@ namespace JSSoft.UI
 
         public event EventHandler LayoutChanged;
 
+        public event EventHandler FontChanged;
+
         public event EventHandler SelectionChanged;
 
         public event EventHandler CursorPointChanged;
@@ -454,6 +466,11 @@ namespace JSSoft.UI
         protected virtual void OnLayoutChanged(EventArgs e)
         {
             this.LayoutChanged?.Invoke(this, EventArgs.Empty);
+        }
+
+        protected virtual void OnFontChanged(EventArgs e)
+        {
+            this.FontChanged?.Invoke(this, e);
         }
 
         protected virtual void OnVisibleIndexChanged(EventArgs e)
@@ -494,16 +511,17 @@ namespace JSSoft.UI
             this.UpdateVisibleIndex();
             this.UpdateRows();
             this.UpdateCursorPosition();
-            this.OnTextChanged(EventArgs.Empty);
-            this.OnVisibleIndexChanged(EventArgs.Empty);
-            this.OnCursorPointChanged(EventArgs.Empty);
-            this.OnCompositionStringChanged(EventArgs.Empty);
+            // this.OnTextChanged(EventArgs.Empty);
+            // this.OnVisibleIndexChanged(EventArgs.Empty);
+            // this.OnCursorPointChanged(EventArgs.Empty);
+            // this.OnCompositionStringChanged(EventArgs.Empty);
         }
 #endif
 
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
+            Debug.Log($"grid: {this.rectTransform.rect}");
             this.UpdateGrid();
             this.UpdateVisibleIndex();
             this.UpdateRows();
@@ -511,6 +529,11 @@ namespace JSSoft.UI
             this.OnTextChanged(EventArgs.Empty);
             this.OnCursorPointChanged(EventArgs.Empty);
             this.OnCompositionStringChanged(EventArgs.Empty);
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
         }
 
         protected override void OnEnable()
@@ -566,9 +589,9 @@ namespace JSSoft.UI
             var rect = this.GetComponent<RectTransform>().rect;
             if (this.font != null)
             {
-                var fontAsset = this.font;
-                var itemWidth = FontUtility.GetItemWidth(fontAsset);
-                var itemHeight = FontUtility.GetItemHeight(fontAsset);
+                var font = this.font;
+                var itemWidth = FontUtility.GetItemWidth(font);
+                var itemHeight = FontUtility.GetItemHeight(font);
                 var rectWidth = itemWidth * this.ColumnCount;
                 var rectHeight = itemHeight * this.RowCount;
                 this.itemSize = new Vector2(itemWidth, itemHeight);
@@ -578,6 +601,7 @@ namespace JSSoft.UI
                 this.rectangle.y = (int)((rect.height - rectHeight) / 2);
                 this.rectangle.width = rectWidth;
                 this.rectangle.height = rectHeight;
+                Debug.Log("UpdateGrid");
             }
             else
             {
