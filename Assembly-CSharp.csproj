@@ -93,6 +93,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForegroundItem.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridEvents.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridSelection.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGridUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalPoint.cs" />

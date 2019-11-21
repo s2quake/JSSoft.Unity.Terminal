@@ -33,9 +33,9 @@ namespace JSSoft.UI
 
         int TextIndex { get; }
 
-        ITerminalRow Row { get; }
+        int Page { get; }
 
-        TerminalFont Font { get; }
+        ITerminalRow Row { get; }
 
         char Character { get; }
 

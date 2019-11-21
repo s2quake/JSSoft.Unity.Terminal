@@ -109,5 +109,7 @@ namespace JSSoft.UI
         event EventHandler GotFocus;
 
         event EventHandler LostFocus;
+
+        event EventHandler Validated;
     }
 }

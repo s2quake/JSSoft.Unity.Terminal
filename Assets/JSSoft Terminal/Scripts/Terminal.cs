@@ -571,8 +571,8 @@ namespace JSSoft.UI
 
         internal Color32? GetBackgroundColor(int index)
         {
-            if (index % 2 != 0)
-                return TerminalColors.Blue;
+            // if (index % 2 != 0)
+            //     return TerminalColors.Blue;
             if (index < this.backgroundColors.Length)
             {
                 return this.backgroundColors[index];

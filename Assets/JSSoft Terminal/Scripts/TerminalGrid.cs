@@ -23,7 +23,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -458,6 +457,8 @@ namespace JSSoft.UI
 
         public event EventHandler LostFocus;
 
+        public event EventHandler Validated;
+
         protected virtual void OnTextChanged(EventArgs e)
         {
             this.TextChanged?.Invoke(this, EventArgs.Empty);
@@ -503,6 +504,11 @@ namespace JSSoft.UI
             this.LostFocus?.Invoke(this, EventArgs.Empty);
         }
 
+        protected virtual void OnValidated(EventArgs e)
+        {
+            this.Validated?.Invoke(this, e);
+        }
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -511,10 +517,7 @@ namespace JSSoft.UI
             this.UpdateVisibleIndex();
             this.UpdateRows();
             this.UpdateCursorPosition();
-            // this.OnTextChanged(EventArgs.Empty);
-            // this.OnVisibleIndexChanged(EventArgs.Empty);
-            // this.OnCursorPointChanged(EventArgs.Empty);
-            // this.OnCompositionStringChanged(EventArgs.Empty);
+            this.OnValidated(EventArgs.Empty);
         }
 #endif
 
@@ -541,12 +544,15 @@ namespace JSSoft.UI
             base.OnEnable();
             this.AttachEvent();
             this.VisibleIndex = this.MaximumVisibleIndex;
+            TerminalGridEvents.Register(this);
+            Debug.Log("daslkfjlsdakfj alskjf ;alskjf al;sdkjf as;ldkjf as;ldkfj ");
         }
 
         protected override void OnDisable()
         {
-            base.OnDisable();
+            TerminalGridEvents.Unregister(this);
             this.DetachEvent();
+            base.OnDisable();
         }
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
@@ -601,7 +607,7 @@ namespace JSSoft.UI
                 this.rectangle.y = (int)((rect.height - rectHeight) / 2);
                 this.rectangle.width = rectWidth;
                 this.rectangle.height = rectHeight;
-                Debug.Log("UpdateGrid");
+                Debug.Log($"UpdateGrid: {this.RowCount} x {this.ColumnCount}");
             }
             else
             {

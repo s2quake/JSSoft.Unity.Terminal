@@ -29,26 +29,51 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalForegroundItem : MaskableGraphic
+    class TerminalForegroundItem : MaskableGraphic
     {
         [SerializeField]
         private TerminalGrid grid = null;
+        [SerializeField]
+        private int page;
 
         private TerminalRect terminalRect = new TerminalRect();
-        private int page;
 
         public TerminalForegroundItem()
         {
 
         }
 
-        // public override Texture mainTexture => this.font?.atlasTexture;
-
-        // public TerminalForeground Parent => this.GetComponentInParent<TerminalForeground>();
+        public override Texture mainTexture
+        {
+            get
+            {
+                if (this.Font != null)
+                {
+                    var textures = this.Font.Textures;
+                    if (this.page < textures.Length)
+                    {
+                        Debug.Log($"texture {textures[this.page]}, {this.page}");
+                        return textures[this.page];
+                    }
+                }
+                return null;
+            }
+        }
 
         public TerminalFont Font => this.grid?.Font;
 
-        public int Page => this.page;
+        public TerminalGrid Grid
+        {
+            get => this.grid;
+            internal set => this.grid = value;
+        }
+
+        public int Page
+        {
+            get => this.page;
+            internal set => this.page = value;
+        }
+
 
 #if UNITY_EDITOR
         protected override void OnValidate()
@@ -60,17 +85,20 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            var renderCount = 2;
+            var renderCount = 1;
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Font == this.Font);
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Page == this.page);
             var index = 0;
             this.terminalRect.Count = visibleCells.Count() * renderCount;
+            // Debug.Log(visibleCells.Count());
+            // Debug.Log(this.mainTexture);
             foreach (var item in visibleCells)
             {
-                for (var i = 0; i < renderCount; i++)
+                // for (var i = 0; i < renderCount; i++)
                 {
                     this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
                     this.terminalRect.SetUV(index, item.ForegroundUV);
+                    // Debug.Log(item.ForegroundUV);
                     this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
                     index++;
                 }
@@ -88,84 +116,39 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             base.material = new Material(Shader.Find("UI/Default"));
+            TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
+            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
         }
 
         protected override void OnDisable()
         {
+            TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
+            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
             base.OnDisable();
         }
 
         protected override void Start()
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged += TerminalGrid_TextChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-            }
-            if (this.Font != null && Application.isPlaying == true)
-            {
-                // foreach (var item in this.font.fallbackFontAssetTable)
-                // {
-                //     var gameObject = new GameObject($"{this.name}_{item.name}");
-                //     var foreground = gameObject.AddComponent<TerminalForeground>();
-                //     var transform = gameObject.GetComponent<RectTransform>();
-                //     foreground.font = item;
-                //     foreground.grid = this.grid;
-                //     transform.anchorMin = Vector3.zero;
-                //     transform.anchorMax = Vector3.one;
-                //     transform.offsetMin = Vector3.zero;
-                //     transform.offsetMax = Vector3.zero;
-                //     transform.SetParent(this.transform);
-                // }
-            }
             this.SetVerticesDirty();
         }
 
         protected override void OnDestroy()
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged -= TerminalGrid_TextChanged;
-                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-            }
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
         {
-            this.SetVerticesDirty();
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
         {
-            this.SetVerticesDirty();
-        }
-
-        // private IEnumerable<TerminalFont> FallbackFontAssets
-        // {
-        //     get
-        //     {
-        //         if (this.font != null && this.font.fallbackFontAssetTable != null)
-        //         {
-        //             foreach (var item in this.font.fallbackFontAssetTable)
-        //             {
-        //                 yield return item;
-        //             }
-        //         }
-        //     }
-        // }
-
-        private IEnumerable<TerminalForeground> FallbackComponents
-        {
-            get
+            if (sender is TerminalGrid grid == this.grid)
             {
-                for (var i = 0; i < this.rectTransform.childCount; i++)
-                {
-                    var childTransform = this.rectTransform.GetChild(i);
-                    if (childTransform.GetComponent<TerminalForeground>() is TerminalForeground component)
-                    {
-                        yield return component;
-                    }
-                }
+                this.SetVerticesDirty();
             }
         }
     }

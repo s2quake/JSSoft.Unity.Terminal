@@ -30,6 +30,8 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
+    [ExecuteAlways]
+    [RequireComponent(typeof(RectTransform))]
     public class TerminalForeground : UIBehaviour
     {
         [SerializeField]
@@ -48,35 +50,98 @@ namespace JSSoft.UI
 
         protected override void Awake()
         {
-            
+            Debug.Log("TerminalGridEvents.Awake");
         }
 
         protected override void Start()
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged += TerminalGrid_TextChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-            }
+            base.Start();
+            TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
+            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
         }
 
         protected override void OnDestroy()
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged -= TerminalGrid_TextChanged;
-                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-            }
+            base.OnDestroy();
+            TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
+            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            TerminalGridEvents.Validated += TerminalGrid_Validated;
+            Debug.Log("TerminalGridEvents.Validated");
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            TerminalGridEvents.Validated -= TerminalGrid_Validated;
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
         {
-            // this.SetVerticesDirty();
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                // this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
         {
-            // this.SetVerticesDirty();
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                // this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                Debug.Log(123);
+                var font = this.grid.Font;
+                var itemByPage = this.Items.ToDictionary(item => item.Page);
+                var textures = font != null ? font.Textures : new Texture2D[] { };
+                for (var i = 0; i < textures.Length; i++)
+                {
+                    if (itemByPage.ContainsKey(i) == true)
+                    {
+                        itemByPage.Remove(i);
+                    }
+                    else
+                    {
+                        var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
+                        var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
+                        var transform = foregroundItem.rectTransform;
+                        foregroundItem.Page = i;
+                        foregroundItem.Grid = this.grid;
+                        transform.SetParent(this.transform);
+                        transform.anchorMin = Vector3.zero;
+                        transform.anchorMax = Vector3.one;
+                        transform.offsetMin = Vector3.zero;
+                        transform.offsetMax = Vector3.zero;
+                    }
+                }
+
+                var items = itemByPage.Values.ToArray();
+                foreach (var item in items)
+                {
+                    var gameObject = item.gameObject;
+                    GameObject.DestroyImmediate(gameObject);
+                }
+
+
+                // this.SetVerticesDirty();
+            }
+        }
+
+        private void UpdateItems()
+        {
+            var itemByPage = this.Items.ToDictionary(item => item.Page);
+
+
         }
 
         // private IEnumerable<TerminalFont> FallbackFontAssets
@@ -93,19 +158,19 @@ namespace JSSoft.UI
         //     }
         // }
 
-        // private IEnumerable<TerminalForeground> FallbackComponents
-        // {
-        //     get
-        //     {
-        //         for (var i = 0; i < this.rectTransform.childCount; i++)
-        //         {
-        //             var childTransform = this.rectTransform.GetChild(i);
-        //             if (childTransform.GetComponent<TerminalForeground>() is TerminalForeground component)
-        //             {
-        //                 yield return component;
-        //             }
-        //         }
-        //     }
-        // }
+        private IEnumerable<TerminalForegroundItem> Items
+        {
+            get
+            {
+                for (var i = 0; i < this.transform.childCount; i++)
+                {
+                    var childTransform = this.transform.GetChild(i);
+                    if (childTransform.GetComponent<TerminalForegroundItem>() is TerminalForegroundItem component)
+                    {
+                        yield return component;
+                    }
+                }
+            }
+        }
     }
 }

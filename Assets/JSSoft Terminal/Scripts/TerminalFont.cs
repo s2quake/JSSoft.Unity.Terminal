@@ -45,7 +45,7 @@ namespace JSSoft.UI
         private CharInfo[] charInfos = new CharInfo[] { };
         [SerializeField]
         private Texture2D[] textures = new Texture2D[] { };
-        private readonly Dictionary<char, CharInfo> charInfoByID = new Dictionary<char, CharInfo>();
+        private Dictionary<char, CharInfo> charInfoByID;
 
         public BaseInfo BaseInfo => this.baseInfo;
 
@@ -53,25 +53,15 @@ namespace JSSoft.UI
 
         public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
 
-        public IReadOnlyDictionary<char, CharInfo> CharInfos => this.charInfoByID;
-
-        protected virtual void OnEnable()
+        public IReadOnlyDictionary<char, CharInfo> CharInfos
         {
-            Debug.Log("TerminalFont OnEnable");
-        }
-
-        protected virtual void Awake()
-        {
-            Debug.Log("TerminalFont Awake");
-        }
-
-        protected virtual void OnValidate()
-        {
-            Debug.Log("TerminalFont OnValidate");
-            this.charInfoByID.Clear();
-            foreach (var item in this.charInfos)
+            get
             {
-                this.charInfoByID.Add((char)item.ID, item);
+                if (this.charInfoByID == null)
+                {
+                    this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
+                }
+                return this.charInfoByID;
             }
         }
 

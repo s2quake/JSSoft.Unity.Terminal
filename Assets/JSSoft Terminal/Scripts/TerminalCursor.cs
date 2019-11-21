@@ -160,13 +160,14 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             this.SetVerticesDirty();
+            TerminalGridEvents.CursorPointChanged += TerminalGrid_CursorPointChanged;
+            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
+            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.GotFocus += TerminalGrid_GotFocus;
+            TerminalGridEvents.LostFocus += TerminalGrid_LostFocus;
+            TerminalGridEvents.Validated += TerminalGrid_Validated;
             if (this.grid != null)
             {
-                this.grid.CursorPointChanged += TerminalGrid_CursorPointChanged;
-                this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-                this.grid.GotFocus += TerminalGrid_GotFocus;
-                this.grid.LostFocus += TerminalGrid_LostFocus;
                 this.isVisible = this.grid.IsCursorVisible;
                 base.color = TerminalGridUtility.GetCursorColor(this.grid);
             }
@@ -175,13 +176,12 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (this.grid != null)
-            {
-                this.grid.CursorPointChanged -= TerminalGrid_CursorPointChanged;
-                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-                this.grid.GotFocus -= TerminalGrid_GotFocus;
-                this.grid.LostFocus -= TerminalGrid_LostFocus;
-            }
+            TerminalGridEvents.CursorPointChanged -= TerminalGrid_CursorPointChanged;
+            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
+            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.GotFocus -= TerminalGrid_GotFocus;
+            TerminalGridEvents.LostFocus -= TerminalGrid_LostFocus;
+            TerminalGridEvents.Validated -= TerminalGrid_Validated;
         }
 
         protected override void OnRectTransformDimensionsChange()
@@ -191,41 +191,65 @@ namespace JSSoft.UI
 
         private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
         {
-            this.UpdateLayout();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.UpdateLayout();
+            }
         }
 
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
-            this.color = this.grid.CursorColor;
-            this.UpdateLayout();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.color = this.grid.CursorColor;
+                this.UpdateLayout();
+            }
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
         {
-            this.UpdateLayout();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.UpdateLayout();
+            }
         }
 
         private void TerminalGrid_GotFocus(object sender, EventArgs e)
         {
-            this.IsFocused = this.grid.IsFocused;
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.IsFocused = this.grid.IsFocused;
+            }
         }
 
         private void TerminalGrid_LostFocus(object sender, EventArgs e)
         {
-            this.IsFocused = this.grid.IsFocused;
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.IsFocused = this.grid.IsFocused;
+            }
+        }
+
+        private void TerminalGrid_Validated(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.UpdateLayout();
+            }
         }
 
         private void UpdateLayout()
         {
             var point = this.grid.CursorPoint;
+            this.cursorLeft = this.grid.CursorPoint.X;
+            this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
             if (this.grid.GetCell(point) is TerminalCell cell)
             {
-                this.cursorLeft = this.grid.CursorPoint.X;
-                this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
                 this.volume = Math.Max(cell.Volume, 1);
-                this.isVisible = this.grid.IsCursorVisible;
-                this.SetVerticesDirty();
             }
+            this.isVisible = this.grid.IsCursorVisible;
+            base.color = TerminalGridUtility.GetCursorColor(this.grid);
+            this.SetVerticesDirty();
         }
 
         private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;

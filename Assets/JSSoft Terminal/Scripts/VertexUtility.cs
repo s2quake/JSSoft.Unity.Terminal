@@ -65,6 +65,7 @@ namespace JSSoft.UI
 
         public static void Transform(this Vector3[] vertices, int index, Rect rect)
         {
+            return;
             for (var i = 0; i < 4; i++)
             {
                 vertices[index + i].x += rect.x;
@@ -74,6 +75,7 @@ namespace JSSoft.UI
 
         public static void Transform(this UIVertex[] vertices, int index, Rect rect)
         {
+            return;
             for (var i = 0; i < 4; i++)
             {
                 var position = vertices[index + i].position;
@@ -116,7 +118,7 @@ namespace JSSoft.UI
             vertices[index + 0].uv0 = new Vector2(uv0.x, uv0.y);
             vertices[index + 1].uv0 = new Vector2(uv0.x, uv1.y);
             vertices[index + 2].uv0 = new Vector2(uv1.x, uv1.y);
-            vertices[index + 3].uv0 = new Vector2(uv1.x, uv0.y);
+            vertices[index + 2].uv0 = new Vector2(uv1.x, uv0.y);
         }
 
         public static void SetColor(this Color32[] colors, int index, Color32 color)

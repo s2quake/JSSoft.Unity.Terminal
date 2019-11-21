@@ -44,16 +44,16 @@ namespace JSSoft.UI
         {
             base.OnPopulateMesh(vh);
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rect, true);
-            Debug.Log($"rect: {this.rect}");
+            // Debug.Log($"rect: {this.rect}");
 
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
             var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid);
             this.terminalRect.Count = visibleCells.Count();
-            Debug.Log($"visible cells: {visibleCells.Count()}");
+            // Debug.Log($"visible cells: {visibleCells.Count()}");
             foreach (var item in visibleCells)
             {
-                Debug.Log($"123: {item.BackgroundRect}");
+                // Debug.Log($"123: {item.BackgroundRect}");
                 this.terminalRect.SetVertex(index, item.BackgroundRect, rect);
                 this.terminalRect.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
@@ -70,7 +70,7 @@ namespace JSSoft.UI
         protected override void OnTransformParentChanged()
         {
             base.OnTransformParentChanged();
-            Debug.Log("OnTransformParentChanged()");
+            // Debug.Log("OnTransformParentChanged()");
         }
 
         protected override void OnRectTransformDimensionsChange()
@@ -78,38 +78,31 @@ namespace JSSoft.UI
             base.OnRectTransformDimensionsChange();
             this.rect = this.rectTransform.rect;
             this.SetVerticesDirty();
-            Debug.Log($"OnRectTransformDimensionsChange(): {this.rectTransform.rect}");
+            // Debug.Log($"OnRectTransformDimensionsChange(): {this.rectTransform.rect}");
         }
 
         protected override void OnCanvasHierarchyChanged()
         {
             base.OnCanvasHierarchyChanged();
-            Debug.Log("OnCanvasHierarchyChanged()");
+            // Debug.Log("OnCanvasHierarchyChanged()");
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            // this.SetVerticesDirty();
-            if (this.grid != null)
-            {
-                this.grid.TextChanged += TerminalGrid_TextChanged;
-                this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-                this.grid.SelectionChanged += TerminalGrid_SelectionChanged;
-            }
+            TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
+            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
+            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.SelectionChanged += TerminalGrid_SelectionChanged;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            if (this.grid != null)
-            {
-                this.grid.TextChanged -= TerminalGrid_TextChanged;
-                this.grid.LayoutChanged -= TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-                this.grid.SelectionChanged -= TerminalGrid_SelectionChanged;
-            }
+            TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
+            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
+            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.SelectionChanged -= TerminalGrid_SelectionChanged;
         }
 
         private bool Predicate(ITerminalCell cell)
@@ -121,22 +114,34 @@ namespace JSSoft.UI
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
         {
-            this.SetVerticesDirty();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
-            this.SetVerticesDirty();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
         {
-            this.SetVerticesDirty();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_SelectionChanged(object sender, EventArgs e)
         {
-            this.SetVerticesDirty();
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
         }
     }
 }

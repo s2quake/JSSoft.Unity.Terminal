@@ -56,13 +56,13 @@ namespace JSSoft.UI
         //     }
         // }
 
-        public static Fonts.CharInfo GetCharacter(TerminalFont font, char character)
+        public static Fonts.CharInfo? GetCharacter(TerminalFont font, char character)
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
             if (font.CharInfos.ContainsKey(character) == true)
                 return font.CharInfos[character];
-            return Fonts.CharInfo.Empty;
+            return null;
         }
 
         public static int GetCharacterVolume(TerminalFont font, char character)
@@ -87,11 +87,19 @@ namespace JSSoft.UI
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var charInfo = font.CharInfos[character];
             var texture = font.Textures[charInfo.Page];
-            var textWidth = (float)texture.width;
-            var textHeight = (float)texture.height;
-            var uv0 = new Vector2(charInfo.X / textWidth, charInfo.Y / textHeight);
-            var uv1 = new Vector2((charInfo.X + charInfo.Width) / textWidth, (charInfo.Y + charInfo.Height) / textHeight);
-            return (uv0, uv1);
+            var textureWidth = (float)texture.width;
+            var textureHeight = (float)texture.height;
+            var uv0 = new Vector2((float)charInfo.X / textureWidth, (float)charInfo.Y / textureHeight);
+            // Debug.Log($"{character}: {charInfo.X}, {textureWidth}, {charInfo.Y}, {textureHeight}");
+            var uv1 = new Vector2((charInfo.X + charInfo.Width) / textureWidth, (charInfo.Y + charInfo.Height) / textureHeight);
+            // uv0.x = 1.0f - uv0.x;
+            // uv0.y = 1.0f - uv0.y;
+            // uv1.x = 1.0f - uv1.x;
+            // uv1.y = 1.0f - uv1.y;
+            // Debug.Log($"{character}: {uv0.x} {uv0.y}, {uv1.x} {uv1.y}");
+            // return (uv0, uv1);
+
+            return (new Vector2(0, 0), new Vector2(0.5f,0.5f));
         }
 
         public static Rect GetForegroundRect(TerminalFont font, char character)
