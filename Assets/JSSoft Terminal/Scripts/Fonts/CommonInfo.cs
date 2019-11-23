@@ -70,5 +70,7 @@ namespace JSSoft.UI.Fonts
         public bool GreenChannel { get => this.greenChannel; set => this.greenChannel = value; }
 
         public bool BlueChannel { get => this.blueChannel; set => this.blueChannel = value; }
+
+        public static readonly CommonInfo Empty = new CommonInfo();
     }
 }

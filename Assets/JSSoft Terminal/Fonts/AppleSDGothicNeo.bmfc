@@ -2,14 +2,14 @@
 fileVersion=1
 
 # font settings
-fontName=굴림체
+fontName=Apple SD 산돌고딕 Neo
 fontFile=
 charSet=0
-fontSize=14
+fontSize=15
 aa=1
 scaleH=100
 useSmoothing=1
-isBold=0
+isBold=1
 isItalic=0
 useUnicode=1
 disableBoxChars=1
@@ -54,6 +54,7 @@ invB=0
 outlineThickness=0
 
 # selected chars
-chars=0-127,160-255,4352-4601,12593-12686,44032-55203
+chars=32-127,161,164,167-171,176-180,182,184-191,196-198,203,207-208,214-216,220,222-223,228-230,235,240
+chars=246-248,252,254-255,4352-4370,4447-4469,4514,4520-4546,12593-12686,44032-55203
 
 # imported icon images

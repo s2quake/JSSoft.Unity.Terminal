@@ -35,66 +35,18 @@ using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
-    public class TerminalFont : ScriptableObject
+    public abstract class TerminalFont : ScriptableObject
     {
-        [SerializeField]
-        private BaseInfo baseInfo;
-        [SerializeField]
-        private CommonInfo commonInfo;
-        [SerializeField]
-        private CharInfo[] charInfos = new CharInfo[] { };
-        [SerializeField]
-        private Texture2D[] textures = new Texture2D[] { };
-        private Dictionary<char, CharInfo> charInfoByID;
+        public abstract bool Contains(char character);
 
-        public BaseInfo BaseInfo => this.baseInfo;
+        public abstract CharInfo this[char character] { get; }
 
-        public CommonInfo CommonInfo => this.commonInfo;
+        // public abstract BaseInfo BaseInfo { get; }
 
-        public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
+        // public abstract CommonInfo CommonInfo { get; }
 
-        public IReadOnlyDictionary<char, CharInfo> CharInfos
-        {
-            get
-            {
-                if (this.charInfoByID == null)
-                {
-                    this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
-                }
-                return this.charInfoByID;
-            }
-        }
+        public abstract int Height { get; }
 
-#if UNITY_EDITOR
-        public static TerminalFont Create(TextAsset fntAsset)
-        {
-            using (var sb = new StringReader(fntAsset.text))
-            using (var reader = XmlReader.Create(sb))
-            {
-                var assetPath = AssetDatabase.GetAssetPath(fntAsset);
-                var assetDirectory = Path.GetDirectoryName(assetPath);
-                var serializer = new XmlSerializer(typeof(Fonts.Serializations.FontSerializationInfo));
-                var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
-                var charInfos = obj.CharInfo.Items;
-                var pages = obj.Pages;
-                var font = new TerminalFont();
-                font.baseInfo = (BaseInfo)obj.Info;
-                font.commonInfo = (CommonInfo)obj.Common;
-                font.textures = new Texture2D[pages.Length];
-                for (var i = 0; i < pages.Length; i++)
-                {
-                    var item = pages[i];
-                    var texturePath = Path.Combine(assetDirectory, item.File);
-                    font.textures[i] = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
-                }
-                font.charInfos = new CharInfo[charInfos.Length];
-                for (var i = 0; i < charInfos.Length; i++)
-                {
-                    font.charInfos[i] = (CharInfo)charInfos[i];
-                }
-                return font;
-            }
-        }
-#endif
+        public abstract Texture2D[] Textures { get; }
     }
 }

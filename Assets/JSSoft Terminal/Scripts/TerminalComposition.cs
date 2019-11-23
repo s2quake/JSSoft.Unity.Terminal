@@ -163,7 +163,7 @@ namespace JSSoft.UI
                 var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, false);
                 var character = this.text.First();
                 // var page = FontUtility.GetFontPage(this.Font, character);
-                var characterInfo = this.Font.CharInfos[character];
+                var characterInfo = this.Font[character];
                 var texture = this.Font.Textures[characterInfo.Page];
                 var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);

@@ -32,14 +32,14 @@ namespace JSSoft.UI
         private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
 
-        public static int GetFontPage(TerminalFont font, char character)
-        {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            if (font.CharInfos.ContainsKey(character) == true)
-                return font.CharInfos[character].Page;
-            return -1;
-        }
+        // public static int GetFontPage(TerminalFont font, char character)
+        // {
+        //     if (font == null)
+        //         throw new ArgumentNullException(nameof(font));
+        //     if (font.Contains(character) == true)
+        //         return font[character].Page;
+        //     return -1;
+        // }
 
         // public static IEnumerable<TerminalFont> GetFontAssets(TerminalFont font)
         // {
@@ -60,8 +60,8 @@ namespace JSSoft.UI
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
-            if (font.CharInfos.ContainsKey(character) == true)
-                return font.CharInfos[character];
+            if (font.Contains(character) == true)
+                return font[character];
             return null;
         }
 
@@ -83,9 +83,9 @@ namespace JSSoft.UI
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
-            if (font.CharInfos.ContainsKey(character) == false)
+            if (font.Contains(character) == false)
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-            var charInfo = font.CharInfos[character];
+            var charInfo = font[character];
             var texture = font.Textures[charInfo.Page];
             var w = (float)texture.width;
             var h = (float)texture.height;
@@ -109,9 +109,9 @@ namespace JSSoft.UI
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
-            if (font.CharInfos.ContainsKey(character) == false)
+            if (font.Contains(character) == false)
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-            var charInfo = font.CharInfos[character];
+            var charInfo = font[character];
             // var topBorder = (float)Math.Ceiling(font.faceInfo.lineHeight) - font.faceInfo.lineHeight;
             var fx = x + charInfo.XOffset;
             var fy = y + charInfo.YOffset;

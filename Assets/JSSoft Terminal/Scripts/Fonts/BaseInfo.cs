@@ -104,5 +104,7 @@ namespace JSSoft.UI.Fonts
         }
 
         public bool Outline { get => this.outline; set => this.outline = value; }
+
+        public static readonly BaseInfo Empty = new BaseInfo();
     }
 }

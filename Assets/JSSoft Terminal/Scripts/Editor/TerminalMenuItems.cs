@@ -43,7 +43,7 @@ namespace JSSoft.UI.Editor
                 var assetName = Path.GetFileNameWithoutExtension(assetPath);
                 var assetDirectory = Path.GetDirectoryName(assetPath);
                 var fontPath = Path.Combine(assetDirectory, $"{assetName}.asset");
-                var font = TerminalFont.Create(fntAsset);
+                var font = TerminalFontDescriptor.Create(fntAsset);
                 AssetDatabase.CreateAsset(font, fontPath);
             }
         }
@@ -58,6 +58,20 @@ namespace JSSoft.UI.Editor
                 return Path.GetExtension(assetPath) == ".fnt";
             }
             return false;
+        }
+
+        [MenuItem("Terminal/Create Font Group")]
+        private static void CreateFontGroup()
+        {
+            var assetObject = Selection.activeObject;
+            if (assetObject != null)
+            {
+                var assetPath = AssetDatabase.GetAssetPath(assetObject);
+                var assetDirectory = Path.GetDirectoryName(assetPath);
+                var fontPath = Path.Combine(assetDirectory, $"FontGroup.asset");
+                var fontGroup = new TerminalFontGroup();
+                AssetDatabase.CreateAsset(fontGroup, fontPath);
+            }
         }
 
         // [MenuItem("GameObject/UI/Terminal")]

@@ -1,0 +1,2325 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa7e030c31d93c4496ce74661189342, type: 3}
+  m_Name: SF Mono
+  m_EditorClassIdentifier: 
+  baseInfo:
+    face: SF Mono
+    size: 15
+    bold: 1
+    italic: 0
+    charset: 
+    unicode: 1
+    stretchH: 100
+    smooth: 1
+    aa: 1
+    paddingLeft: 0
+    paddingTop: 0
+    paddingRight: 0
+    paddingBottom: 0
+    verticalSpacing: 0
+    horizontalSpacing: 0
+    outline: 0
+  commonInfo:
+    lineHeight: 16
+    baseLine: 13
+    scaleW: 1024
+    scaleH: 1024
+    pages: 1
+    packed: 0
+    alphaChannel: 0
+    redChannel: 1
+    greenChannel: 1
+    blueChannel: 1
+  charInfos:
+  - id: 32
+    x: 400
+    y: 12
+    width: 3
+    height: 1
+    xOffset: -1
+    yOffset: 15
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 33
+    x: 764
+    y: 0
+    width: 2
+    height: 10
+    xOffset: 3
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 34
+    x: 321
+    y: 12
+    width: 5
+    height: 5
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 35
+    x: 897
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 36
+    x: 319
+    y: 0
+    width: 8
+    height: 11
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 37
+    x: 464
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 38
+    x: 473
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 39
+    x: 333
+    y: 12
+    width: 2
+    height: 5
+    xOffset: 3
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 40
+    x: 299
+    y: 0
+    width: 4
+    height: 12
+    xOffset: 2
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 41
+    x: 304
+    y: 0
+    width: 4
+    height: 12
+    xOffset: 2
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 42
+    x: 61
+    y: 14
+    width: 8
+    height: 8
+    xOffset: 0
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 43
+    x: 52
+    y: 14
+    width: 8
+    height: 8
+    xOffset: 0
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 44
+    x: 1020
+    y: 0
+    width: 3
+    height: 5
+    xOffset: 2
+    yOffset: 11
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 45
+    x: 367
+    y: 12
+    width: 8
+    height: 2
+    xOffset: 0
+    yOffset: 8
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 46
+    x: 354
+    y: 12
+    width: 4
+    height: 3
+    xOffset: 2
+    yOffset: 10
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 47
+    x: 201
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 48
+    x: 561
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 49
+    x: 948
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 50
+    x: 956
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 51
+    x: 446
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 52
+    x: 789
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 53
+    x: 585
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 54
+    x: 536
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 55
+    x: 940
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 56
+    x: 491
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 57
+    x: 964
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 58
+    x: 165
+    y: 13
+    width: 4
+    height: 8
+    xOffset: 2
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 59
+    x: 759
+    y: 0
+    width: 4
+    height: 10
+    xOffset: 2
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 60
+    x: 109
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 61
+    x: 259
+    y: 13
+    width: 8
+    height: 6
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 62
+    x: 102
+    y: 14
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 63
+    x: 724
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 64
+    x: 328
+    y: 0
+    width: 8
+    height: 11
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 65
+    x: 825
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 66
+    x: 972
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 67
+    x: 500
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 68
+    x: 888
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 69
+    x: 29
+    y: 14
+    width: 6
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 70
+    x: 22
+    y: 14
+    width: 6
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 71
+    x: 527
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 72
+    x: 980
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 73
+    x: 15
+    y: 14
+    width: 6
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 74
+    x: 625
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 75
+    x: 988
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 76
+    x: 8
+    y: 15
+    width: 6
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 77
+    x: 816
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 78
+    x: 932
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 79
+    x: 455
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 80
+    x: 36
+    y: 14
+    width: 6
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 81
+    x: 518
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 82
+    x: 1012
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 83
+    x: 509
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 84
+    x: 879
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 85
+    x: 553
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 86
+    x: 861
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 87
+    x: 852
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 88
+    x: 798
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 89
+    x: 807
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 90
+    x: 0
+    y: 15
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 91
+    x: 309
+    y: 0
+    width: 4
+    height: 12
+    xOffset: 2
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 92
+    x: 271
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 93
+    x: 314
+    y: 0
+    width: 4
+    height: 12
+    xOffset: 2
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 94
+    x: 314
+    y: 13
+    width: 6
+    height: 5
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 95
+    x: 376
+    y: 12
+    width: 7
+    height: 2
+    xOffset: 0
+    yOffset: 13
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 96
+    x: 341
+    y: 12
+    width: 4
+    height: 4
+    xOffset: 2
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 97
+    x: 252
+    y: 13
+    width: 6
+    height: 7
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 98
+    x: 738
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 99
+    x: 151
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 100
+    x: 609
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 101
+    x: 158
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 102
+    x: 654
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 103
+    x: 601
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 104
+    x: 661
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 105
+    x: 376
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 106
+    x: 8
+    y: 0
+    width: 5
+    height: 14
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 107
+    x: 569
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 108
+    x: 633
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 109
+    x: 188
+    y: 13
+    width: 8
+    height: 7
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 110
+    x: 238
+    y: 13
+    width: 6
+    height: 7
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 111
+    x: 70
+    y: 14
+    width: 7
+    height: 8
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 112
+    x: 668
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 113
+    x: 617
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 114
+    x: 214
+    y: 13
+    width: 7
+    height: 7
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 115
+    x: 137
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 116
+    x: 924
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 117
+    x: 123
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 118
+    x: 222
+    y: 13
+    width: 7
+    height: 7
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 119
+    x: 197
+    y: 13
+    width: 8
+    height: 7
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 120
+    x: 230
+    y: 13
+    width: 7
+    height: 7
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 121
+    x: 593
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 122
+    x: 245
+    y: 13
+    width: 6
+    height: 7
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 123
+    x: 264
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 124
+    x: 99
+    y: 0
+    width: 2
+    height: 13
+    xOffset: 3
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 125
+    x: 243
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 126
+    x: 346
+    y: 12
+    width: 7
+    height: 3
+    xOffset: 0
+    yOffset: 7
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 160
+    x: 396
+    y: 12
+    width: 3
+    height: 1
+    xOffset: -1
+    yOffset: 15
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 161
+    x: 767
+    y: 0
+    width: 2
+    height: 10
+    xOffset: 3
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 162
+    x: 640
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 163
+    x: 915
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 164
+    x: 94
+    y: 14
+    width: 7
+    height: 8
+    xOffset: 0
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 165
+    x: 780
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 166
+    x: 102
+    y: 0
+    width: 2
+    height: 13
+    xOffset: 3
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 167
+    x: 439
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 168
+    x: 384
+    y: 12
+    width: 5
+    height: 2
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 169
+    x: 170
+    y: 13
+    width: 8
+    height: 7
+    xOffset: 0
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 170
+    x: 284
+    y: 13
+    width: 6
+    height: 6
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 171
+    x: 268
+    y: 13
+    width: 7
+    height: 6
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 172
+    x: 305
+    y: 13
+    width: 8
+    height: 5
+    xOffset: 0
+    yOffset: 8
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 174
+    x: 43
+    y: 14
+    width: 8
+    height: 8
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 175
+    x: 390
+    y: 12
+    width: 5
+    height: 2
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 176
+    x: 327
+    y: 12
+    width: 5
+    height: 5
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 177
+    x: 206
+    y: 13
+    width: 7
+    height: 7
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 178
+    x: 144
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 179
+    x: 116
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 180
+    x: 336
+    y: 12
+    width: 4
+    height: 4
+    xOffset: 2
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 181
+    x: 545
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 182
+    x: 337
+    y: 0
+    width: 7
+    height: 11
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 183
+    x: 359
+    y: 12
+    width: 3
+    height: 3
+    xOffset: 2
+    yOffset: 7
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 184
+    x: 363
+    y: 12
+    width: 3
+    height: 3
+    xOffset: 2
+    yOffset: 13
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 185
+    x: 130
+    y: 13
+    width: 6
+    height: 8
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 186
+    x: 291
+    y: 13
+    width: 6
+    height: 6
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 187
+    x: 276
+    y: 13
+    width: 7
+    height: 6
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 188
+    x: 843
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 189
+    x: 834
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 190
+    x: 770
+    y: 0
+    width: 9
+    height: 9
+    xOffset: -1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 191
+    x: 752
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 192
+    x: 123
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 193
+    x: 159
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 194
+    x: 168
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 195
+    x: 105
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 196
+    x: 114
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 197
+    x: 150
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 198
+    x: 870
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 199
+    x: 141
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 200
+    x: 250
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 201
+    x: 236
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 202
+    x: 229
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 203
+    x: 278
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 204
+    x: 215
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 205
+    x: 208
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 206
+    x: 292
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 207
+    x: 285
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 208
+    x: 906
+    y: 0
+    width: 8
+    height: 9
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 209
+    x: 193
+    y: 0
+    width: 7
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 210
+    x: 50
+    y: 0
+    width: 8
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 211
+    x: 41
+    y: 0
+    width: 8
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 212
+    x: 32
+    y: 0
+    width: 8
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 213
+    x: 23
+    y: 0
+    width: 8
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 214
+    x: 14
+    y: 0
+    width: 8
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 215
+    x: 298
+    y: 13
+    width: 6
+    height: 6
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 216
+    x: 482
+    y: 0
+    width: 8
+    height: 10
+    xOffset: 0
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 217
+    x: 67
+    y: 0
+    width: 7
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 218
+    x: 83
+    y: 0
+    width: 7
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 219
+    x: 91
+    y: 0
+    width: 7
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 220
+    x: 75
+    y: 0
+    width: 7
+    height: 13
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 221
+    x: 132
+    y: 0
+    width: 8
+    height: 12
+    xOffset: 0
+    yOffset: 1
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 222
+    x: 996
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 223
+    x: 1004
+    y: 0
+    width: 7
+    height: 9
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 224
+    x: 696
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 225
+    x: 383
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 226
+    x: 717
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 227
+    x: 745
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 228
+    x: 675
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 229
+    x: 390
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 230
+    x: 179
+    y: 13
+    width: 8
+    height: 7
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 231
+    x: 647
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 232
+    x: 369
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 233
+    x: 222
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 234
+    x: 397
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 235
+    x: 404
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 236
+    x: 682
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 237
+    x: 689
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 238
+    x: 731
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 239
+    x: 703
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 240
+    x: 577
+    y: 0
+    width: 7
+    height: 10
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 241
+    x: 710
+    y: 0
+    width: 6
+    height: 10
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 242
+    x: 185
+    y: 0
+    width: 7
+    height: 12
+    xOffset: 0
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 243
+    x: 177
+    y: 0
+    width: 7
+    height: 12
+    xOffset: 0
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 244
+    x: 353
+    y: 0
+    width: 7
+    height: 11
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 245
+    x: 345
+    y: 0
+    width: 7
+    height: 11
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 246
+    x: 361
+    y: 0
+    width: 7
+    height: 11
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 247
+    x: 86
+    y: 14
+    width: 7
+    height: 8
+    xOffset: 0
+    yOffset: 5
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 248
+    x: 78
+    y: 14
+    width: 7
+    height: 8
+    xOffset: 0
+    yOffset: 6
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 249
+    x: 411
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 250
+    x: 257
+    y: 0
+    width: 6
+    height: 12
+    xOffset: 1
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 251
+    x: 418
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 252
+    x: 425
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 253
+    x: 0
+    y: 0
+    width: 7
+    height: 14
+    xOffset: 0
+    yOffset: 2
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 254
+    x: 432
+    y: 0
+    width: 6
+    height: 11
+    xOffset: 1
+    yOffset: 4
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  - id: 255
+    x: 59
+    y: 0
+    width: 7
+    height: 13
+    xOffset: 0
+    yOffset: 3
+    xAdvance: 8
+    page: 0
+    channel: 15
+    font: {fileID: 11400000}
+    texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  textures:
+  - {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}

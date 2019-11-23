@@ -50,6 +50,10 @@ namespace JSSoft.UI.Fonts
         private int page;
         [SerializeField]
         private int channel;
+        [SerializeField]
+        private TerminalFont font;
+        [SerializeField]
+        private Texture2D texture;
 
         public int ID { get => this.id; set => this.id = value; }
 
@@ -70,6 +74,10 @@ namespace JSSoft.UI.Fonts
         public int Page { get => this.page; set => this.page = value; }
 
         public int Channel { get => this.channel; set => this.channel = value; }
+
+        public TerminalFont Font { get => this.font; set => this.font = value; }
+
+        public Texture2D Texture { get => this.texture; set => this.texture = value; }
 
         public static readonly CharInfo Empty = new CharInfo();
     }
