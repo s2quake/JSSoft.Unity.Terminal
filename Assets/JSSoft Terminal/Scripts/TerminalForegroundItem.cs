@@ -35,6 +35,14 @@ namespace JSSoft.UI
         private TerminalGrid grid = null;
         [SerializeField]
         private int page;
+        [SerializeField]
+        private float x1;
+        [SerializeField]
+        private float x2 = 1.0f;
+        [SerializeField]
+        private float y1;
+        [SerializeField]
+        private float y2 = 1.0f;
 
         private TerminalRect terminalRect = new TerminalRect();
 
@@ -52,7 +60,6 @@ namespace JSSoft.UI
                     var textures = this.Font.Textures;
                     if (this.page < textures.Length)
                     {
-                        Debug.Log($"texture {textures[this.page]}, {this.page}");
                         return textures[this.page];
                     }
                 }
@@ -97,6 +104,7 @@ namespace JSSoft.UI
                 // for (var i = 0; i < renderCount; i++)
                 {
                     this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
+                    // this.terminalRect.SetUV(index, (new Vector2(x1, x2), new Vector2(y1, y2)));
                     this.terminalRect.SetUV(index, item.ForegroundUV);
                     // Debug.Log(item.ForegroundUV);
                     this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));

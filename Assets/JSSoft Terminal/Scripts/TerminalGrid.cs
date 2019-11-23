@@ -524,7 +524,6 @@ namespace JSSoft.UI
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            Debug.Log($"grid: {this.rectTransform.rect}");
             this.UpdateGrid();
             this.UpdateVisibleIndex();
             this.UpdateRows();
@@ -545,7 +544,6 @@ namespace JSSoft.UI
             this.AttachEvent();
             this.VisibleIndex = this.MaximumVisibleIndex;
             TerminalGridEvents.Register(this);
-            Debug.Log("daslkfjlsdakfj alskjf ;alskjf al;sdkjf as;ldkjf as;ldkfj ");
         }
 
         protected override void OnDisable()
@@ -607,7 +605,6 @@ namespace JSSoft.UI
                 this.rectangle.y = (int)((rect.height - rectHeight) / 2);
                 this.rectangle.width = rectWidth;
                 this.rectangle.height = rectHeight;
-                Debug.Log($"UpdateGrid: {this.RowCount} x {this.ColumnCount}");
             }
             else
             {

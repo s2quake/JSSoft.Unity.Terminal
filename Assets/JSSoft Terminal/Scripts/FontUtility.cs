@@ -32,7 +32,7 @@ namespace JSSoft.UI
         private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
 
-        public static int GetFontAsset(TerminalFont font, char character)
+        public static int GetFontPage(TerminalFont font, char character)
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
@@ -87,19 +87,17 @@ namespace JSSoft.UI
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var charInfo = font.CharInfos[character];
             var texture = font.Textures[charInfo.Page];
-            var textureWidth = (float)texture.width;
-            var textureHeight = (float)texture.height;
-            var uv0 = new Vector2((float)charInfo.X / textureWidth, (float)charInfo.Y / textureHeight);
-            // Debug.Log($"{character}: {charInfo.X}, {textureWidth}, {charInfo.Y}, {textureHeight}");
-            var uv1 = new Vector2((charInfo.X + charInfo.Width) / textureWidth, (charInfo.Y + charInfo.Height) / textureHeight);
-            // uv0.x = 1.0f - uv0.x;
-            // uv0.y = 1.0f - uv0.y;
-            // uv1.x = 1.0f - uv1.x;
-            // uv1.y = 1.0f - uv1.y;
-            // Debug.Log($"{character}: {uv0.x} {uv0.y}, {uv1.x} {uv1.y}");
-            // return (uv0, uv1);
+            var w = (float)texture.width;
+            var h = (float)texture.height;
+            var l = (float)charInfo.X;
+            var t = (float)charInfo.Y;
+            var r = (float)charInfo.X + charInfo.Width;
+            var b = (float)charInfo.Y + charInfo.Height;
+            var uv0 = new Vector2(l / w, 1.0f - b / h);
+            var uv1 = new Vector2(r / w, 1.0f - t / h);
+            return (uv0, uv1);
 
-            return (new Vector2(0, 0), new Vector2(0.5f,0.5f));
+            // return (new Vector2(0, 0), new Vector2(0.5f,0.5f));
         }
 
         public static Rect GetForegroundRect(TerminalFont font, char character)
@@ -115,8 +113,8 @@ namespace JSSoft.UI
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var charInfo = font.CharInfos[character];
             // var topBorder = (float)Math.Ceiling(font.faceInfo.lineHeight) - font.faceInfo.lineHeight;
-            var fx = x + charInfo.YOffset;
-            var fy = y + charInfo.XOffset;
+            var fx = x + charInfo.XOffset;
+            var fy = y + charInfo.YOffset;
             return new Rect(fx, fy, charInfo.Width, charInfo.Height);
         }
 
@@ -125,7 +123,7 @@ namespace JSSoft.UI
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
             if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
-                return characterInfo.Width + characterInfo.XOffset;
+                return characterInfo.XAdvance;
             return defaultItemWidth;
         }
 
@@ -134,7 +132,7 @@ namespace JSSoft.UI
             var itemWidth = GetItemWidth(originAsset);
             if (GetCharacter(originAsset, character) is Fonts.CharInfo characterInfo)
             {
-                var characterWidth = characterInfo.Width + characterInfo.XOffset;
+                var characterWidth = characterInfo.XAdvance;
                 var n = Math.Ceiling(characterWidth / (float)itemWidth);
                 return (int)(itemWidth * n);
             }

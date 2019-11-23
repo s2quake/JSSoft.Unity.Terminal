@@ -44,6 +44,7 @@ namespace JSSoft.UI
         [SerializeField]
         private int rowIndex;
 
+        private new Material material;
         private Texture texture;
         private Vector3[] vertices = new Vector3[8];
         private Vector2[] uvs = new Vector2[8];
@@ -117,6 +118,7 @@ namespace JSSoft.UI
             this.columnIndex = Math.Max(0, this.columnIndex);
             this.rowIndex = Math.Min(this.RowCount - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
+            base.material.color = base.color;
         }
 #endif
 
@@ -124,24 +126,19 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             this.mesh = new Mesh();
-            this.material = new Material(Shader.Find("Unlit/Color"));
-            this.material.color = base.color;
-            if (this.grid != null)
-            {
-                this.grid.CursorPointChanged += TerminalGrid_CursorPointChanged;
-                this.grid.CompositionStringChanged += TerminalGrid_CompositionStringChanged;
-            }
+            base.material = new Material(Shader.Find("Unlit/Color"));
+            base.material.color = base.color;
+            this.material = new Material(Shader.Find("UI/Default"));
+            TerminalGridEvents.CursorPointChanged += TerminalGrid_CursorPointChanged;
+            TerminalGridEvents.CompositionStringChanged += TerminalGrid_CompositionStringChanged;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             this.mesh = null;
-            if (this.grid != null)
-            {
-                this.grid.CursorPointChanged -= TerminalGrid_CursorPointChanged;
-                this.grid.CompositionStringChanged -= TerminalGrid_CompositionStringChanged;
-            }
+            TerminalGridEvents.CursorPointChanged -= TerminalGrid_CursorPointChanged;
+            TerminalGridEvents.CompositionStringChanged -= TerminalGrid_CompositionStringChanged;
         }
 
         private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
@@ -165,9 +162,9 @@ namespace JSSoft.UI
             {
                 var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, false);
                 var character = this.text.First();
-                var page = FontUtility.GetFontAsset(this.Font, character);
+                // var page = FontUtility.GetFontPage(this.Font, character);
                 var characterInfo = this.Font.CharInfos[character];
-                var texture = this.Font.Textures[page];
+                var texture = this.Font.Textures[characterInfo.Page];
                 var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
                 var bx = this.columnIndex * itemWidth + (int)this.Offset.x;
@@ -196,7 +193,7 @@ namespace JSSoft.UI
 
                 this.canvasRenderer.materialCount = 2;
                 this.canvasRenderer.SetTexture(this.texture);
-                this.canvasRenderer.SetMaterial(this.material, 0);
+                this.canvasRenderer.SetMaterial(base.material, 0);
                 this.canvasRenderer.SetMaterial(this.material, 1);
                 this.canvasRenderer.SetMesh(this.mesh);
             }

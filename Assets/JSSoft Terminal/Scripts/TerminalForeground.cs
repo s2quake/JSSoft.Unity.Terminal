@@ -50,7 +50,6 @@ namespace JSSoft.UI
 
         protected override void Awake()
         {
-            Debug.Log("TerminalGridEvents.Awake");
         }
 
         protected override void Start()
@@ -71,7 +70,6 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             TerminalGridEvents.Validated += TerminalGrid_Validated;
-            Debug.Log("TerminalGridEvents.Validated");
         }
 
         protected override void OnDisable()
@@ -100,7 +98,6 @@ namespace JSSoft.UI
         {
             if (sender is TerminalGrid grid == this.grid)
             {
-                Debug.Log(123);
                 var font = this.grid.Font;
                 var itemByPage = this.Items.ToDictionary(item => item.Page);
                 var textures = font != null ? font.Textures : new Texture2D[] { };
