@@ -37,8 +37,9 @@ namespace JSSoft.UI
 {
     public class TerminalFont : ScriptableObject
     {
+        private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
         [SerializeField]
-        private TerminalFontDescriptor[] fonts;
+        private List<TerminalFontDescriptor> fontList = new List<TerminalFontDescriptor>();
         [SerializeField]
         [Range(0, 1000)]
         private int width;
@@ -73,10 +74,10 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalFontDescriptor[] Fonts
+        public List<TerminalFontDescriptor> FontList
         {
-            get => this.fonts ?? new TerminalFontDescriptor[] { };
-            set => this.fonts = value;
+            get => this.fontList;
+            set => this.fontList = value;
         }
 
         public Texture2D[] Textures
@@ -84,7 +85,7 @@ namespace JSSoft.UI
             get
             {
                 var textureList = new List<Texture2D>();
-                foreach (var item in this.Fonts)
+                foreach (var item in this.fontList)
                 {
                     textureList.AddRange(item.Textures);
                 }
@@ -98,7 +99,9 @@ namespace JSSoft.UI
 
         public void OnValidate()
         {
-            Debug.Log(Time.time);
+            // Debug.Log(Time.time);
         }
+
+        private IReadOnlyList<TerminalFontDescriptor> Fonts => this.fontList ?? emptyList;
     }
 }
