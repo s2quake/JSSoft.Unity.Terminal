@@ -35,17 +35,18 @@ using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
+    [CreateAssetMenu(menuName = "Terminal/Create Font")]
     public class TerminalFont : ScriptableObject
     {
         private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
         [SerializeField]
         private List<TerminalFontDescriptor> fontList = new List<TerminalFontDescriptor>();
         [SerializeField]
-        [Range(0, 1000)]
-        private int width;
+        [Range(1, 100)]
+        private int width = 14;
         [SerializeField]
-        [Range(0, 1000)]
-        private int height;
+        [Range(1, 100)]
+        private int height = 27;
 
         public bool Contains(char character)
         {

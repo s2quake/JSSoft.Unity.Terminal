@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7afc4c62bacc64e6993f398d16dc5d28, type: 3}
-  m_Name: FontGroup
+  m_Name: TerminalFont
   m_EditorClassIdentifier: 
-  fontList: []
-  width: 0
-  height: 0
+  fontList:
+  - {fileID: 11400000, guid: 70ce45fdb61218e4db473e55e05042dc, type: 2}
+  - {fileID: 11400000, guid: e49b6f3fa9ccb4deeb738088e3785b7e, type: 2}
+  width: 14
+  height: 27

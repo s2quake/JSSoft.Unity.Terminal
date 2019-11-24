@@ -35,47 +35,31 @@ namespace JSSoft.UI.Editor
         public void OnEnable()
         {
             this.fontProperty = this.serializedObject.FindProperty("fontList");
-            // Debug.Log(this.fontProperty);
-            this.fontList = new ReorderableList(this.serializedObject, this.fontProperty, true, true, true, true);
-            this.fontList.drawElementBackgroundCallback = drawElementCallback;
-            // this.fontList.drawHeaderCallback = item => EditorGUI.LabelField(item, "Fallback List");
+            this.fontList = new ReorderableList(this.serializedObject, this.fontProperty)
+            {
+                displayAdd = true,
+                displayRemove = true,
+                draggable = true,
+                drawHeaderCallback = item => EditorGUI.LabelField(item, "Font Descriptors"),
+                drawElementCallback = drawElementCallback,
+            };
+        }
+
+        public override void OnInspectorGUI()
+        {
+            this.serializedObject.Update();
+            this.fontList.DoLayoutList();
+            EditorGUILayout.PropertyField(this.serializedObject.FindProperty("width"));
+            EditorGUILayout.PropertyField(this.serializedObject.FindProperty("height"));
+            this.serializedObject.ApplyModifiedProperties();
         }
 
         private void drawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
         {
-            if (index >= 0 && index < this.fontProperty.arraySize)
-            {
-                var element = this.fontProperty.GetArrayElementAtIndex(index);
-                rect.y += 2;
-                EditorGUI.PropertyField(new Rect(rect.x, rect.y, rect.width, EditorGUIUtility.singleLineHeight), element, GUIContent.none);
-            }
-            // var element = this.fontProperty.GetArrayElementAtIndex(index);
-            // rect.y += 2;
-            // EditorGUI.PropertyField(
-            //     new Rect(rect.x+60, rect.y, rect.width -60, EditorGUIUtility.singleLineHeight),
-            //     element, GUIContent.none);
-            // EditorGUI.PropertyField(
-            //     new Rect(rect.x + 60, rect.y, rect.width - 60 - 30, EditorGUIUtility.singleLineHeight),
-            //     element.FindPropertyRelative("Prefab"), GUIContent.none);
-            // EditorGUI.PropertyField(
-            //     new Rect(rect.x + rect.width - 30, rect.y, 30, EditorGUIUtility.singleLineHeight),
-            //     element.FindPropertyRelative("Count"), GUIContent.none);
-        }
-
-
-
-        public override void OnInspectorGUI()
-        {
-
-            this.serializedObject.Update();
-
-            // EditorGUILayout.PropertyField(fontsProperty);
-            EditorGUILayout.PropertyField(this.serializedObject.FindProperty("width"));
-            EditorGUILayout.PropertyField(this.serializedObject.FindProperty("height"));
-            this.fontList.DoLayoutList();
-            this.serializedObject.ApplyModifiedProperties();
-            // EditorGUILayout.PropertyField(this.serializedObject.FindProperty("objects"));
-
+            var element = this.fontProperty.GetArrayElementAtIndex(index);
+            rect.height -= 4;
+            rect.y += 2;
+            EditorGUI.PropertyField(rect, element);
         }
     }
 }

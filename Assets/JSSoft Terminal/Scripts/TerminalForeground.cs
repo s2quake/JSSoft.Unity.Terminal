@@ -28,6 +28,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
+using System.Threading.Tasks;
 
 namespace JSSoft.UI
 {
@@ -89,12 +90,12 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_Validated(object sender, EventArgs e)
+        private async void TerminalGrid_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid == this.grid)
             {
-
-                this.StartCoroutine(this.RefreshChilds());
+                await Task.Delay(1);
+                this.RefreshChilds();
             }
         }
 
@@ -113,9 +114,9 @@ namespace JSSoft.UI
             }
         }
 
-        private IEnumerator RefreshChilds()
+        private void RefreshChilds()
         {
-            yield return new WaitForEndOfFrame();
+            // yield return new WaitForEndOfFrame();
             
             var font = this.grid.Font;
             var itemByTexture = this.Items.ToDictionary(item => item.Texture);
