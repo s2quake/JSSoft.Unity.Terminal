@@ -42,12 +42,6 @@ namespace JSSoft.UI
 
         }
 
-        // public override Texture mainTexture => this.font?.atlasTexture;
-
-        // public TerminalForeground Parent => this.GetComponentInParent<TerminalForeground>();
-
-        // public TerminalFont Font => this.grid?.Font;
-
         protected override void Awake()
         {
         }
@@ -99,20 +93,21 @@ namespace JSSoft.UI
             if (sender is TerminalGrid grid == this.grid)
             {
                 var font = this.grid.Font;
-                var itemByPage = this.Items.ToDictionary(item => item.Page);
+                var itemByTexture = this.Items.ToDictionary(item => item.Texture);
                 var textures = font != null ? font.Textures : new Texture2D[] { };
                 for (var i = 0; i < textures.Length; i++)
                 {
-                    if (itemByPage.ContainsKey(i) == true)
+                    var texture = textures[i];
+                    if (itemByTexture.ContainsKey(texture) == true)
                     {
-                        itemByPage.Remove(i);
+                        itemByTexture.Remove(texture);
                     }
                     else
                     {
                         var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
                         var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
                         var transform = foregroundItem.rectTransform;
-                        foregroundItem.Page = i;
+                        foregroundItem.Texture = texture;
                         foregroundItem.Grid = this.grid;
                         transform.SetParent(this.transform);
                         transform.anchorMin = Vector3.zero;
@@ -122,38 +117,16 @@ namespace JSSoft.UI
                     }
                 }
 
-                var items = itemByPage.Values.ToArray();
+                var items = itemByTexture.Values.ToArray();
                 foreach (var item in items)
                 {
-                    var gameObject = item.gameObject;
-                    GameObject.DestroyImmediate(gameObject);
+                    UnityEditor.EditorApplication.delayCall += () =>
+                    {
+                        DestroyImmediate(item);
+                    };
                 }
-
-
-                // this.SetVerticesDirty();
             }
         }
-
-        private void UpdateItems()
-        {
-            var itemByPage = this.Items.ToDictionary(item => item.Page);
-
-
-        }
-
-        // private IEnumerable<TerminalFont> FallbackFontAssets
-        // {
-        //     get
-        //     {
-        //         if (this.font != null && this.font.fallbackFontAssetTable != null)
-        //         {
-        //             foreach (var item in this.font.fallbackFontAssetTable)
-        //             {
-        //                 yield return item;
-        //             }
-        //         }
-        //     }
-        // }
 
         private IEnumerable<TerminalForegroundItem> Items
         {

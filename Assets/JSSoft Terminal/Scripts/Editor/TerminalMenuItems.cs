@@ -43,8 +43,18 @@ namespace JSSoft.UI.Editor
                 var assetName = Path.GetFileNameWithoutExtension(assetPath);
                 var assetDirectory = Path.GetDirectoryName(assetPath);
                 var fontPath = Path.Combine(assetDirectory, $"{assetName}.asset");
-                var font = TerminalFontDescriptor.Create(fntAsset);
-                AssetDatabase.CreateAsset(font, fontPath);
+                var fontAsset = AssetDatabase.LoadAssetAtPath(fontPath, typeof(TerminalFontDescriptor)) as TerminalFontDescriptor;
+                if (fontAsset == null)
+                {
+                    var font = TerminalFontDescriptor.Create(fntAsset);
+                    AssetDatabase.CreateAsset(font, fontPath);
+                }
+                else
+                {
+                    TerminalFontDescriptor.Update(fontAsset, fntAsset);
+                    // AssetDatabase.ImportAsset(fontPath);
+                    AssetDatabase.SaveAssets();
+                }
             }
         }
 
@@ -69,8 +79,8 @@ namespace JSSoft.UI.Editor
                 var assetPath = AssetDatabase.GetAssetPath(assetObject);
                 var assetDirectory = Path.GetDirectoryName(assetPath);
                 var fontPath = Path.Combine(assetDirectory, $"FontGroup.asset");
-                var fontGroup = new TerminalFontGroup();
-                AssetDatabase.CreateAsset(fontGroup, fontPath);
+                var font = new TerminalFont();
+                AssetDatabase.CreateAsset(font, fontPath);
             }
         }
 

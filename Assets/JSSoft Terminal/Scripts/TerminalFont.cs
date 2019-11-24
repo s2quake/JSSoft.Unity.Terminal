@@ -35,18 +35,63 @@ using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
-    public abstract class TerminalFont : ScriptableObject
+    public class TerminalFont : ScriptableObject
     {
-        public abstract bool Contains(char character);
+        [SerializeField]
+        private TerminalFontDescriptor[] fonts;
+        [SerializeField]
+        private int width;
+        [SerializeField]
+        private int height;
 
-        public abstract CharInfo this[char character] { get; }
+        public bool Contains(char character)
+        {
+            foreach (var item in this.Fonts)
+            {
+                if (item.Contains(character) == true)
+                    return true;
+            }
+            return false;
+        }
 
-        // public abstract BaseInfo BaseInfo { get; }
+        public CharInfo this[char character]
+        {
+            get
+            {
+                foreach (var item in this.Fonts)
+                {
+                    if (item.Contains(character) == true)
+                        return item[character];
+                }
+                return new CharInfo()
+                {
+                    XAdvance = this.width,
+                    ID = (int)character,
+                };
+            }
+        }
 
-        // public abstract CommonInfo CommonInfo { get; }
+        public TerminalFontDescriptor[] Fonts
+        {
+            get => this.fonts ?? new TerminalFontDescriptor[] { };
+            set => this.fonts = value;
+        }
 
-        public abstract int Height { get; }
+        public Texture2D[] Textures
+        {
+            get
+            {
+                var textureList = new List<Texture2D>();
+                foreach (var item in this.Fonts)
+                {
+                    textureList.AddRange(item.Textures);
+                }
+                return textureList.ToArray();
+            }
+        }
 
-        public abstract Texture2D[] Textures { get; }
+        public int Height => this.height;
+
+        public int Width => this.width;
     }
 }

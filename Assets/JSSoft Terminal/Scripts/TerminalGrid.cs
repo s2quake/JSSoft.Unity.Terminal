@@ -595,7 +595,7 @@ namespace JSSoft.UI
             {
                 var font = this.font;
                 var itemWidth = FontUtility.GetItemWidth(font);
-                var itemHeight = FontUtility.GetItemHeight(font);
+                var itemHeight = font.Height;
                 var rectWidth = itemWidth * this.ColumnCount;
                 var rectHeight = itemHeight * this.RowCount;
                 this.itemSize = new Vector2(itemWidth, itemHeight);
@@ -671,9 +671,12 @@ namespace JSSoft.UI
 
         private void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
-            var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
-            this.CursorPoint = this.IndexToPoint(index);
-            this.VisibleIndex = this.MaximumVisibleIndex;
+            if (this.font != null)
+            {
+                var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
+                this.CursorPoint = this.IndexToPoint(index);
+                this.VisibleIndex = this.MaximumVisibleIndex;
+            }
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)

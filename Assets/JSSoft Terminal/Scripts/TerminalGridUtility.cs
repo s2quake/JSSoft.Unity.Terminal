@@ -39,7 +39,8 @@ namespace JSSoft.UI
         {
             if (grid != null && grid.Font != null && grid.Rows.Count > 0)
             {
-                var itemHeight = FontUtility.GetItemHeight(grid.Font);
+                var font = grid.Font;
+                var itemHeight = font.Height;
                 if (scroll == true)
                     rect.y += itemHeight * grid.VisibleIndex;
                 rect.x += grid.Rectangle.x;
@@ -128,9 +129,9 @@ namespace JSSoft.UI
 
         public static int GetItemHeight(ITerminalGrid grid)
         {
-            if (grid != null && grid.Font != null)
+            if (grid != null && grid.Font is TerminalFont font)
             {
-                return FontUtility.GetItemHeight(grid.Font);
+                return font.Height;
             }
             return 0;
         }

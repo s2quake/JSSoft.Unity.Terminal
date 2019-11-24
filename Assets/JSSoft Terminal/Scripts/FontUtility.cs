@@ -86,7 +86,7 @@ namespace JSSoft.UI
             if (font.Contains(character) == false)
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var charInfo = font[character];
-            var texture = font.Textures[charInfo.Page];
+            var texture = charInfo.Texture;
             var w = (float)texture.width;
             var h = (float)texture.height;
             var l = (float)charInfo.X;
@@ -96,8 +96,6 @@ namespace JSSoft.UI
             var uv0 = new Vector2(l / w, 1.0f - b / h);
             var uv1 = new Vector2(r / w, 1.0f - t / h);
             return (uv0, uv1);
-
-            // return (new Vector2(0, 0), new Vector2(0.5f,0.5f));
         }
 
         public static Rect GetForegroundRect(TerminalFont font, char character)
@@ -112,7 +110,6 @@ namespace JSSoft.UI
             if (font.Contains(character) == false)
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var charInfo = font[character];
-            // var topBorder = (float)Math.Ceiling(font.faceInfo.lineHeight) - font.faceInfo.lineHeight;
             var fx = x + charInfo.XOffset;
             var fy = y + charInfo.YOffset;
             return new Rect(fx, fy, charInfo.Width, charInfo.Height);
@@ -137,13 +134,6 @@ namespace JSSoft.UI
                 return (int)(itemWidth * n);
             }
             return itemWidth;
-        }
-
-        public static int GetItemHeight(TerminalFont font)
-        {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            return font.CommonInfo.LineHeight;
         }
     }
 }

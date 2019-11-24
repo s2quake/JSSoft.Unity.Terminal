@@ -65,18 +65,18 @@ namespace JSSoft.UI
 
         public void SetCharacter(TerminalCharacterInfo characterInfo)
         {
-            if (characterInfo.Page >= 0)
+            if (characterInfo.Texture != null)
             {
                 var rect = GetCellRect(this.Grid, this);
                 var character = characterInfo.Character;
                 var volume = characterInfo.Volume;
-                var page = characterInfo.Page;
+                var texture = characterInfo.Texture;
                 var indexOfText = characterInfo.TextIndex;
                 var backgroundColor = characterInfo.BackgroundColor;
                 var foregroundColor = characterInfo.ForegroundColor;
                 this.Character = character;
                 this.Volume = volume;
-                this.Page = page;
+                this.Texture = texture;
                 this.TextIndex = indexOfText;
                 this.BackgroundColor = backgroundColor;
                 this.ForegroundColor = foregroundColor;
@@ -114,7 +114,7 @@ namespace JSSoft.UI
 
         public TerminalFont Font => this.Grid.Font;
 
-        public int Page { get; private set; }
+        public Texture2D Texture { get; private set; }
 
         public char Character { get; private set; }
 

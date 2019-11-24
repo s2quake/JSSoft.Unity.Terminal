@@ -42,6 +42,6 @@ namespace JSSoft.UI
 
         public TerminalPoint Point { get; set; }
 
-        public int Page { get; set; }
+        public Texture2D Texture { get; set; }
     }
 }

@@ -71,7 +71,6 @@ namespace JSSoft.UI.Fonts.Serializations
                 XOffset = info.XOffset,
                 YOffset = info.YOffset,
                 XAdvance = info.XAdvance,
-                Page = info.Page,
                 Channel = info.Chnl,
             };
         }

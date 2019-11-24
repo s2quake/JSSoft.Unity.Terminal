@@ -33,7 +33,7 @@ namespace JSSoft.UI
 
         int TextIndex { get; }
 
-        int Page { get; }
+        Texture2D Texture { get; }
 
         ITerminalRow Row { get; }
 

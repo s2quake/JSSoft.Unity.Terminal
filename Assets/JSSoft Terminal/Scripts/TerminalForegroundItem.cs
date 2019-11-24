@@ -22,8 +22,6 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -34,15 +32,7 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalGrid grid = null;
         [SerializeField]
-        private int page;
-        [SerializeField]
-        private float x1;
-        [SerializeField]
-        private float x2 = 1.0f;
-        [SerializeField]
-        private float y1;
-        [SerializeField]
-        private float y2 = 1.0f;
+        private Texture2D texture;
 
         private TerminalRect terminalRect = new TerminalRect();
 
@@ -51,21 +41,7 @@ namespace JSSoft.UI
 
         }
 
-        public override Texture mainTexture
-        {
-            get
-            {
-                if (this.Font != null)
-                {
-                    var textures = this.Font.Textures;
-                    if (this.page < textures.Length)
-                    {
-                        return textures[this.page];
-                    }
-                }
-                return null;
-            }
-        }
+        public override Texture mainTexture => this.texture;
 
         public TerminalFont Font => this.grid?.Font;
 
@@ -75,10 +51,10 @@ namespace JSSoft.UI
             internal set => this.grid = value;
         }
 
-        public int Page
+        public Texture2D Texture
         {
-            get => this.page;
-            internal set => this.page = value;
+            get => this.texture;
+            internal set => this.texture = value;
         }
 
 
@@ -92,24 +68,16 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            var renderCount = 1;
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Page == this.page);
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture == this.texture);
             var index = 0;
-            this.terminalRect.Count = visibleCells.Count() * renderCount;
-            // Debug.Log(visibleCells.Count());
-            // Debug.Log(this.mainTexture);
+            this.terminalRect.Count = visibleCells.Count();
             foreach (var item in visibleCells)
             {
-                // for (var i = 0; i < renderCount; i++)
-                {
-                    this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
-                    // this.terminalRect.SetUV(index, (new Vector2(x1, x2), new Vector2(y1, y2)));
-                    this.terminalRect.SetUV(index, item.ForegroundUV);
-                    // Debug.Log(item.ForegroundUV);
-                    this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
-                    index++;
-                }
+                this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
+                this.terminalRect.SetUV(index, item.ForegroundUV);
+                this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
+                index++;
             }
             this.material.color = base.color;
             this.terminalRect.Fill(vh);

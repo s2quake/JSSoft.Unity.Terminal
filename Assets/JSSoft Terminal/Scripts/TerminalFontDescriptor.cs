@@ -35,7 +35,7 @@ using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
-    public class TerminalFontDescriptor : TerminalFont
+    public class TerminalFontDescriptor : ScriptableObject
     {
         [SerializeField]
         private BaseInfo baseInfo;
@@ -47,18 +47,18 @@ namespace JSSoft.UI
         private Texture2D[] textures = new Texture2D[] { };
         private Dictionary<char, CharInfo> charInfoByID;
 
-        public override bool Contains(char character)
+        public bool Contains(char character)
         {
             return this.CharInfos.ContainsKey(character);
         }
 
-        public override CharInfo this[char character] => this.CharInfos[character];
+        public CharInfo this[char character] => this.CharInfos[character];
 
-        public override BaseInfo BaseInfo => this.baseInfo;
+        public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
 
-        public override CommonInfo CommonInfo => this.commonInfo;
+        public int Height => this.commonInfo.LineHeight;
 
-        public override Texture2D[] Textures => this.textures ?? new Texture2D[] { };
+        public int Width => this.CharInfos['a'].XAdvance;
 
         public IReadOnlyDictionary<char, CharInfo> CharInfos
         {
@@ -73,9 +73,16 @@ namespace JSSoft.UI
         }
 
 #if UNITY_EDITOR
-        public static TerminalFont Create(TextAsset fntAsset)
+        public static TerminalFontDescriptor Create(TextAsset fntAsset)
         {
-            using (var sb = new StringReader(fntAsset.text))
+            var font = new TerminalFontDescriptor();
+            Update(font, fntAsset);
+            return font;
+        }
+
+        public static void Update(TerminalFontDescriptor font, TextAsset fntAsset)
+        {
+using (var sb = new StringReader(fntAsset.text))
             using (var reader = XmlReader.Create(sb))
             {
                 var assetPath = AssetDatabase.GetAssetPath(fntAsset);
@@ -84,7 +91,6 @@ namespace JSSoft.UI
                 var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
                 var charInfos = obj.CharInfo.Items;
                 var pages = obj.Pages;
-                var font = new TerminalFontDescriptor();
                 font.baseInfo = (BaseInfo)obj.Info;
                 font.commonInfo = (CommonInfo)obj.Common;
                 font.textures = new Texture2D[pages.Length];
@@ -97,12 +103,11 @@ namespace JSSoft.UI
                 font.charInfos = new CharInfo[charInfos.Length];
                 for (var i = 0; i < charInfos.Length; i++)
                 {
-                    var charInfo = (CharInfo)charInfos[i];
-                    charInfo.Font = font;
-                    charInfo.Texture = font.textures[charInfo.Page];
+                    var item = charInfos[i];
+                    var charInfo = (CharInfo)item;
+                    charInfo.Texture = font.textures[item.Page];
                     font.charInfos[i] = charInfo;
                 }
-                return font;
             }
         }
 #endif

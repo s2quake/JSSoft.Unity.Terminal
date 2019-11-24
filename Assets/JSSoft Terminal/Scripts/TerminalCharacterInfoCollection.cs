@@ -33,7 +33,7 @@ namespace JSSoft.UI
         private TerminalCharacterInfo[] items = new TerminalCharacterInfo[] { };
         private TerminalPoint lt;
         private TerminalPoint rb;
-        private TerminalFont fontAsset;
+        private TerminalFont font;
         private string text = string.Empty;
         private int columnCount;
 
@@ -60,7 +60,7 @@ namespace JSSoft.UI
                 {
                     var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
-                    var page = FontUtility.GetFontPage(font, character);
+                    var charInfo = font[character];
                     var volume = FontUtility.GetCharacterVolume(font, character);
                     if (point.X + volume > columnCount)
                     {
@@ -72,7 +72,7 @@ namespace JSSoft.UI
                     characterInfo.Point = point;
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
-                    characterInfo.Page = page;
+                    characterInfo.Texture = charInfo.Texture;
                     characterInfo.TextIndex = index;
                     point.X += volume;
                     if (point.X >= columnCount || character == '\n')
@@ -85,7 +85,7 @@ namespace JSSoft.UI
                 this.lt.Y = 0;
                 this.rb.Y = point.Y + 1;
             }
-            this.fontAsset = font;
+            this.font = font;
             this.text = text;
             this.columnCount = columnCount;
         }
@@ -119,7 +119,7 @@ namespace JSSoft.UI
             return index;
         }
 
-        public int Count => this.fontAsset != null ? this.text.Length : 0;
+        public int Count => this.font != null ? this.text.Length : 0;
 
         public TerminalCharacterInfo this[int index]
         {
@@ -135,7 +135,7 @@ namespace JSSoft.UI
 
         private int FindUpdateIndex(TerminalFont fontAsset, string text, int columnCount)
         {
-            if (this.fontAsset != fontAsset || this.columnCount != columnCount)
+            if (this.font != fontAsset || this.columnCount != columnCount)
                 return 0;
             var index = GetIndex(this.text, text);
             if (index >= this.items.Length)
@@ -147,7 +147,7 @@ namespace JSSoft.UI
 
         IEnumerator<TerminalCharacterInfo> IEnumerable<TerminalCharacterInfo>.GetEnumerator()
         {
-            if (this.fontAsset != null)
+            if (this.font != null)
             {
                 for (var i = 0; i < this.text.Length; i++)
                 {
@@ -158,7 +158,7 @@ namespace JSSoft.UI
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            if (this.fontAsset != null)
+            if (this.font != null)
             {
                 for (var i = 0; i < this.text.Length; i++)
                 {
