@@ -40,8 +40,10 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalFontDescriptor[] fonts;
         [SerializeField]
+        [Range(0, 1000)]
         private int width;
         [SerializeField]
+        [Range(0, 1000)]
         private int height;
 
         public bool Contains(char character)
@@ -93,5 +95,10 @@ namespace JSSoft.UI
         public int Height => this.height;
 
         public int Width => this.width;
+
+        public void OnValidate()
+        {
+            Debug.Log(Time.time);
+        }
     }
 }

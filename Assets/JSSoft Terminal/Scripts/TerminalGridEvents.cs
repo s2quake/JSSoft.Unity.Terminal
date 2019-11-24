@@ -128,5 +128,18 @@ namespace JSSoft.UI
         {
             Validated?.Invoke(sender, e);
         }
+
+        internal static void InvokeFontValidated(TerminalFont font)
+        {
+            if (font == null)
+                throw new ArgumentNullException(nameof(font));
+            foreach (var item in grids)
+            {
+                if (item.Font == font)
+                {
+                    Validated?.Invoke(item, EventArgs.Empty);
+                }
+            }
+        }
     }
 }
