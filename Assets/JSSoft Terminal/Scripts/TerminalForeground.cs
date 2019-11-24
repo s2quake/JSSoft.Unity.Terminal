@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 namespace JSSoft.UI
 {
@@ -92,39 +93,8 @@ namespace JSSoft.UI
         {
             if (sender is TerminalGrid grid == this.grid)
             {
-                var font = this.grid.Font;
-                var itemByTexture = this.Items.ToDictionary(item => item.Texture);
-                var textures = font != null ? font.Textures : new Texture2D[] { };
-                for (var i = 0; i < textures.Length; i++)
-                {
-                    var texture = textures[i];
-                    if (itemByTexture.ContainsKey(texture) == true)
-                    {
-                        itemByTexture.Remove(texture);
-                    }
-                    else
-                    {
-                        var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
-                        var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
-                        var transform = foregroundItem.rectTransform;
-                        foregroundItem.Texture = texture;
-                        foregroundItem.Grid = this.grid;
-                        transform.SetParent(this.transform);
-                        transform.anchorMin = Vector3.zero;
-                        transform.anchorMax = Vector3.one;
-                        transform.offsetMin = Vector3.zero;
-                        transform.offsetMax = Vector3.zero;
-                    }
-                }
 
-                var items = itemByTexture.Values.ToArray();
-                foreach (var item in items)
-                {
-                    UnityEditor.EditorApplication.delayCall += () =>
-                    {
-                        DestroyImmediate(item);
-                    };
-                }
+                this.StartCoroutine(this.RefreshChilds());
             }
         }
 
@@ -140,6 +110,42 @@ namespace JSSoft.UI
                         yield return component;
                     }
                 }
+            }
+        }
+
+        private IEnumerator RefreshChilds()
+        {
+            yield return new WaitForEndOfFrame();
+            
+            var font = this.grid.Font;
+            var itemByTexture = this.Items.ToDictionary(item => item.Texture);
+            var textures = font != null ? font.Textures : new Texture2D[] { };
+            for (var i = 0; i < textures.Length; i++)
+            {
+                var texture = textures[i];
+                if (itemByTexture.ContainsKey(texture) == true)
+                {
+                    itemByTexture.Remove(texture);
+                }
+                else
+                {
+                    var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
+                    var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
+                    var transform = foregroundItem.rectTransform;
+                    foregroundItem.Texture = texture;
+                    foregroundItem.Grid = this.grid;
+                    transform.SetParent(this.transform);
+                    transform.anchorMin = Vector3.zero;
+                    transform.anchorMax = Vector3.one;
+                    transform.offsetMin = Vector3.zero;
+                    transform.offsetMax = Vector3.zero;
+                }
+            }
+
+            var items = itemByTexture.Values.ToArray();
+            foreach (var item in items)
+            {
+                GameObject.DestroyImmediate(item.gameObject);
             }
         }
     }
