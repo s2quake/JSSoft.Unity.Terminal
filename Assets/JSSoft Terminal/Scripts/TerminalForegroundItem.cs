@@ -57,7 +57,6 @@ namespace JSSoft.UI
             internal set => this.texture = value;
         }
 
-
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -94,10 +93,12 @@ namespace JSSoft.UI
             base.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
             TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.Validated += TerminalGrid_Validated;
         }
 
         protected override void OnDisable()
         {
+            TerminalGridEvents.Validated -= TerminalGrid_Validated;
             TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
             TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
             base.OnDisable();
@@ -121,6 +122,14 @@ namespace JSSoft.UI
         }
 
         private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid == this.grid)
             {

@@ -43,15 +43,15 @@ namespace JSSoft.UI.Editor
                 var assetName = Path.GetFileNameWithoutExtension(assetPath);
                 var assetDirectory = Path.GetDirectoryName(assetPath);
                 var fontPath = Path.Combine(assetDirectory, $"{assetName}.asset");
-                var fontAsset = AssetDatabase.LoadAssetAtPath(fontPath, typeof(TerminalFontDescriptor)) as TerminalFontDescriptor;
-                if (fontAsset == null)
+                var fontDescriptor = AssetDatabase.LoadAssetAtPath(fontPath, typeof(TerminalFontDescriptor)) as TerminalFontDescriptor;
+                if (fontDescriptor == null)
                 {
                     var font = TerminalFontDescriptor.Create(fntAsset);
                     AssetDatabase.CreateAsset(font, fontPath);
                 }
                 else
                 {
-                    TerminalFontDescriptor.Update(fontAsset, fntAsset);
+                    TerminalFontDescriptor.Update(fontDescriptor, fntAsset);
                     // AssetDatabase.ImportAsset(fontPath);
                     AssetDatabase.SaveAssets();
                 }

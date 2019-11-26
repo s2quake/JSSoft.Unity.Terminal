@@ -23,6 +23,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace JSSoft.UI
 {
@@ -35,7 +36,7 @@ namespace JSSoft.UI
             if (grid == null)
                 throw new ArgumentNullException(nameof(grid));
             if (grids.Contains(grid) == true)
-                throw new ArgumentException("grid is already exists.");
+                throw new ArgumentException($"{nameof(grid)} is already exists.");
             grids.Add(grid);
             grid.TextChanged += Grid_TextChanged;
             grid.VisibleIndexChanged += Grid_VisibleIndexChanged;
@@ -53,7 +54,7 @@ namespace JSSoft.UI
             if (grid == null)
                 throw new ArgumentNullException(nameof(grid));
             if (grids.Contains(grid) == false)
-                throw new ArgumentException("grid does not exists.");
+                throw new ArgumentException($"{nameof(grid)} does not exists.");
             grid.Validated -= Grid_Validated;
             grid.TextChanged -= Grid_TextChanged;
             grid.VisibleIndexChanged -= Grid_VisibleIndexChanged;
@@ -140,6 +141,27 @@ namespace JSSoft.UI
                     Validated?.Invoke(item, EventArgs.Empty);
                 }
             }
+        }
+
+        internal static void InvokeFontDescriptorValidated(TerminalFontDescriptor fontDescriptor)
+        {
+            if (fontDescriptor == null)
+                throw new ArgumentNullException(nameof(fontDescriptor));
+            foreach (var item in grids)
+            {
+                if (IsFontDescriptorUsed(item.Font, fontDescriptor) == true)
+                {
+                    Validated?.Invoke(item, EventArgs.Empty);
+                }
+            }
+        }
+
+        private static bool IsFontDescriptorUsed(TerminalFont font, TerminalFontDescriptor fontDescriptor)
+        {
+            if (font == null)
+                return false;
+            var textures = font.Textures ?? new Texture2D[] { };
+            return textures.Union(fontDescriptor.Textures).Any();
         }
     }
 }

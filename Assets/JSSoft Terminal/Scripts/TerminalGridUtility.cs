@@ -117,14 +117,13 @@ namespace JSSoft.UI
             return false;
         }
 
-
         public static int GetItemWidth(ITerminalGrid grid)
         {
-            if (grid != null && grid.Font != null)
+            if (grid != null && grid.Font is TerminalFont font)
             {
-                return FontUtility.GetItemWidth(grid.Font);
+                return font.Width;
             }
-            return 0;
+            return FontUtility.DefaultItemWidth;
         }
 
         public static int GetItemHeight(ITerminalGrid grid)
@@ -133,7 +132,7 @@ namespace JSSoft.UI
             {
                 return font.Height;
             }
-            return 0;
+            return FontUtility.DefaultItemHeight;
         }
 
         public static GlyphRect GetCellRect(ITerminalGrid grid, ITerminalCell cell)

@@ -91,7 +91,8 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalExecuteEventArgs.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalFont.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalFontDescriptor.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalFontGroup.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalFontDescriptorEvents.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalFontEvents.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForeground.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalForegroundItem.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalGrid.cs" />

@@ -31,30 +31,11 @@ namespace JSSoft.UI
     {
         private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
+        private static readonly int defaultItemHeight = 27;
 
-        // public static int GetFontPage(TerminalFont font, char character)
-        // {
-        //     if (font == null)
-        //         throw new ArgumentNullException(nameof(font));
-        //     if (font.Contains(character) == true)
-        //         return font[character].Page;
-        //     return -1;
-        // }
+        public static int DefaultItemWidth => defaultItemWidth;
 
-        // public static IEnumerable<TerminalFont> GetFontAssets(TerminalFont font)
-        // {
-        //     if (font != null)
-        //     {
-        //         yield return font;
-        //         if (font.fallbackFontAssetTable != null)
-        //         {
-        //             foreach (var item in font.fallbackFontAssetTable)
-        //             {
-        //                 yield return item;
-        //             }
-        //         }
-        //     }
-        // }
+        public static int DefaultItemHeight => defaultItemHeight;
 
         public static Fonts.CharInfo? GetCharacter(TerminalFont font, char character)
         {
@@ -71,7 +52,7 @@ namespace JSSoft.UI
                 throw new ArgumentNullException(nameof(font));
             if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
             {
-                var defaultWidth = GetItemWidth(font);
+                var defaultWidth = font.Width;
                 var horizontalAdvance = characterInfo.XAdvance;
                 var volume = (int)Math.Ceiling((float)horizontalAdvance / defaultWidth);
                 return Math.Max(volume, 1);
@@ -115,19 +96,28 @@ namespace JSSoft.UI
             return new Rect(fx, fy, charInfo.Width, charInfo.Height);
         }
 
-        public static int GetItemWidth(TerminalFont font)
+        // public static int GetItemWidth(TerminalFont font)
+        // {
+        //     if (font == null)
+        //         throw new ArgumentNullException(nameof(font));
+        //     if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
+        //         return characterInfo.XAdvance;
+        //     return defaultItemWidth;
+        // }
+
+        public static int GetItemHeight(TerminalFont font)
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
             if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
-                return characterInfo.XAdvance;
-            return defaultItemWidth;
+                return font.Height;
+            return defaultItemHeight;
         }
 
-        public static int GetItemWidth(TerminalFont originAsset, char character)
+        public static int GetItemWidth(TerminalFont font, char character)
         {
-            var itemWidth = GetItemWidth(originAsset);
-            if (GetCharacter(originAsset, character) is Fonts.CharInfo characterInfo)
+            var itemWidth = font.Width;
+            if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
             {
                 var characterWidth = characterInfo.XAdvance;
                 var n = Math.Ceiling(characterWidth / (float)itemWidth);

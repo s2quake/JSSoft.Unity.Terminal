@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7afc4c62bacc64e6993f398d16dc5d28, type: 3}
   m_Name: PowerShellFont
   m_EditorClassIdentifier: 
-  fonts:
+  fontList:
   - {fileID: 11400000, guid: a439f9958a1d5124e8fcd0ddeef78c50, type: 2}
-  width: 7
-  height: -17
+  width: 18
+  height: 20

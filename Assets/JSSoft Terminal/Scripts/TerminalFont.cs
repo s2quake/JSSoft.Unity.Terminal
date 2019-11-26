@@ -75,11 +75,7 @@ namespace JSSoft.UI
             }
         }
 
-        public List<TerminalFontDescriptor> FontList
-        {
-            get => this.fontList;
-            set => this.fontList = value;
-        }
+        public IList<TerminalFontDescriptor> FontList => this.fontList;
 
         public Texture2D[] Textures
         {
@@ -98,9 +94,36 @@ namespace JSSoft.UI
 
         public int Width => this.width;
 
-        public void OnValidate()
+        public event EventHandler Validated;
+
+        protected virtual void OnValidate()
         {
-            // Debug.Log(Time.time);
+            this.OnValidated(EventArgs.Empty);
+        }
+
+        protected virtual void Awake()
+        {
+
+        }
+
+        protected virtual void OnDestroy()
+        {
+
+        }
+
+        protected virtual void OnEnable()
+        {
+            TerminalFontEvents.Register(this);
+        }
+
+        protected virtual void OnDisable()
+        {
+            TerminalFontEvents.Unregister(this);
+        }
+
+        protected virtual void OnValidated(EventArgs e)
+        {
+            this.Validated?.Invoke(this, e);
         }
 
         private IReadOnlyList<TerminalFontDescriptor> Fonts => this.fontList ?? emptyList;

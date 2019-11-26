@@ -47,7 +47,7 @@ namespace JSSoft.UI
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
-            if (font != null && this.text != text)
+            if (font != null && (this.text != text || this.columnCount != columnCount))
             {
                 var index = this.FindUpdateIndex(font, text, columnCount);
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
@@ -133,9 +133,9 @@ namespace JSSoft.UI
 
         public (int Left, int Top, int Right, int Bottom) Volume => (this.lt.X, this.lt.Y, this.rb.X, this.rb.Y);
 
-        private int FindUpdateIndex(TerminalFont fontAsset, string text, int columnCount)
+        private int FindUpdateIndex(TerminalFont font, string text, int columnCount)
         {
-            if (this.font != fontAsset || this.columnCount != columnCount)
+            if (this.font != font || this.columnCount != columnCount)
                 return 0;
             var index = GetIndex(this.text, text);
             if (index >= this.items.Length)

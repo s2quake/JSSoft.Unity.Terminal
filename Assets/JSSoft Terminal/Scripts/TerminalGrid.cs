@@ -544,13 +544,22 @@ namespace JSSoft.UI
             this.AttachEvent();
             this.VisibleIndex = this.MaximumVisibleIndex;
             TerminalGridEvents.Register(this);
+            TerminalFontEvents.Validated += Font_Validated;
+            TerminalFontDescriptorEvents.Validated += FontDescriptor_Validated;
         }
 
         protected override void OnDisable()
         {
+            TerminalFontEvents.Validated -= Font_Validated;
+            TerminalFontDescriptorEvents.Validated -= FontDescriptor_Validated;
             TerminalGridEvents.Unregister(this);
             this.DetachEvent();
             base.OnDisable();
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
         }
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
@@ -594,7 +603,7 @@ namespace JSSoft.UI
             if (this.font != null)
             {
                 var font = this.font;
-                var itemWidth = FontUtility.GetItemWidth(font);
+                var itemWidth = font.Width;
                 var itemHeight = font.Height;
                 var rectWidth = itemWidth * this.ColumnCount;
                 var rectHeight = itemHeight * this.RowCount;
@@ -676,6 +685,31 @@ namespace JSSoft.UI
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
                 this.VisibleIndex = this.MaximumVisibleIndex;
+            }
+        }
+
+        private void Font_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalFont font && this.font == font)
+            {
+                this.UpdateGrid();
+                this.UpdateVisibleIndex();
+                this.UpdateRows();
+                this.UpdateCursorPosition();
+                this.OnValidated(EventArgs.Empty);
+            }
+        }
+
+        private void FontDescriptor_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalFontDescriptor descriptor &&
+                this.font is TerminalFont font && font.FontList.Contains(descriptor) == true)
+            {
+                this.UpdateGrid();
+                this.UpdateVisibleIndex();
+                this.UpdateRows();
+                this.UpdateCursorPosition();
+                this.OnValidated(EventArgs.Empty);
             }
         }
 

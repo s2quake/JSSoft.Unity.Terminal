@@ -30,7 +30,7 @@ namespace JSSoft.UI
     {
         private readonly TerminalGrid grid;
         private readonly Stack<TerminalRow> pool = new Stack<TerminalRow>();
-        private TerminalFont fontAsset;
+        private TerminalFont font;
         private string text = string.Empty;
         private int columnCount;
 
@@ -44,8 +44,7 @@ namespace JSSoft.UI
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
-
-            if (font != null && this.text != text)
+            if (font != null && (this.text != text || this.columnCount != columnCount))
             {
                 var volume = characterInfos.Volume;
                 var index = this.FindUpdateIndex(font, text, columnCount);
@@ -73,7 +72,7 @@ namespace JSSoft.UI
                 }
             }
 
-            this.fontAsset = font;
+            this.font = font;
             this.text = text;
             this.columnCount = columnCount;
         }
@@ -109,9 +108,9 @@ namespace JSSoft.UI
             }
         }
 
-        private int FindUpdateIndex(TerminalFont fontAsset, string text, int columnCount)
+        private int FindUpdateIndex(TerminalFont font, string text, int columnCount)
         {
-            if (this.fontAsset != fontAsset || this.columnCount != columnCount)
+            if (this.font != font || this.columnCount != columnCount)
                 return 0;
             return GetIndex(this.text, text);
         }

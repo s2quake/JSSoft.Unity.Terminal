@@ -72,6 +72,28 @@ namespace JSSoft.UI
             }
         }
 
+        public event EventHandler Validated;
+
+        protected virtual void OnValidate()
+        {
+            this.OnValidated(EventArgs.Empty);
+        }
+
+        protected virtual void Awake()
+        {
+            TerminalFontDescriptorEvents.Register(this);
+        }
+
+        protected virtual void OnDestroy()
+        {
+            TerminalFontDescriptorEvents.Unregister(this);
+        }
+
+        protected virtual void OnValidated(EventArgs e)
+        {
+            this.Validated?.Invoke(this, e);
+        }
+
 #if UNITY_EDITOR
         public static TerminalFontDescriptor Create(TextAsset fntAsset)
         {
@@ -82,7 +104,7 @@ namespace JSSoft.UI
 
         public static void Update(TerminalFontDescriptor font, TextAsset fntAsset)
         {
-using (var sb = new StringReader(fntAsset.text))
+            using (var sb = new StringReader(fntAsset.text))
             using (var reader = XmlReader.Create(sb))
             {
                 var assetPath = AssetDatabase.GetAssetPath(fntAsset);

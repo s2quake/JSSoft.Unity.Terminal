@@ -71,11 +71,7 @@ namespace JSSoft.UI.Fonts
 
         public int XAdvance { get => this.xAdvance; set => this.xAdvance = value; }
 
-        // public int Page { get => this.page; set => this.page = value; }
-
         public int Channel { get => this.channel; set => this.channel = value; }
-
-        // public TerminalFontDescriptor Font { get => this.font; set => this.font = value; }
 
         public Texture2D Texture { get => this.texture; set => this.texture = value; }
 
