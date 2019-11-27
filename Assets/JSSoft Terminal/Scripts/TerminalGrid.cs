@@ -600,31 +600,19 @@ namespace JSSoft.UI
         private void UpdateGrid()
         {
             var rect = this.GetComponent<RectTransform>().rect;
-            if (this.font != null)
-            {
-                var font = this.font;
-                var itemWidth = font.Width;
-                var itemHeight = font.Height;
-                var rectWidth = itemWidth * this.ColumnCount;
-                var rectHeight = itemHeight * this.RowCount;
-                this.itemSize = new Vector2(itemWidth, itemHeight);
-                this.ColumnCount = (int)(rect.width / itemWidth);
-                this.RowCount = (int)(rect.height / itemHeight);
-                this.rectangle.x = (int)((rect.width - rectWidth) / 2);
-                this.rectangle.y = (int)((rect.height - rectHeight) / 2);
-                this.rectangle.width = rectWidth;
-                this.rectangle.height = rectHeight;
-            }
-            else
-            {
-                this.itemSize = new Vector2(0, 0);
-                this.ColumnCount = 0;
-                this.RowCount = 0;
-                this.rectangle.x = (int)(rect.width / 2);
-                this.rectangle.y = (int)(rect.height / 2);
-                this.rectangle.width = 0 * this.ColumnCount;
-                this.rectangle.height = 0 * this.RowCount;
-            }
+            var itemWidth = TerminalGridUtility.GetItemWidth(this);
+            var itemHeight = TerminalGridUtility.GetItemHeight(this);
+            var columnCount = (int)(rect.width / itemWidth);
+            var rowCount = (int)(rect.height / itemHeight);
+            var rectWidth = itemWidth * columnCount;
+            var rectHeight = itemHeight * rowCount;
+            this.ColumnCount = columnCount;
+            this.RowCount = rowCount;
+            this.itemSize = new Vector2(itemWidth, itemHeight);
+            this.rectangle.x = (int)((rect.width - rectWidth) / 2);
+            this.rectangle.y = (int)((rect.height - rectHeight) / 2);
+            this.rectangle.width = rectWidth;
+            this.rectangle.height = rectHeight;
         }
 
         private void UpdateVisibleIndex()

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: PowerShellFont
   m_EditorClassIdentifier: 
   fontList:
-  - {fileID: 11400000, guid: a439f9958a1d5124e8fcd0ddeef78c50, type: 2}
-  width: 18
-  height: 20
+  - {fileID: 0}
+  width: 38
+  height: 30

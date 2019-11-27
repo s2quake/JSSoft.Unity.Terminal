@@ -33,7 +33,6 @@ namespace JSSoft.UI
         private TerminalGrid grid = null;
 
         private readonly TerminalRect terminalRect = new TerminalRect();
-        private Rect rect;
 
         public TerminalBackground()
         {
@@ -43,17 +42,18 @@ namespace JSSoft.UI
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            var rect = TerminalGridUtility.TransformRect(this.grid, this.rect, true);
-            // Debug.Log($"rect: {this.rect}");
-
+            var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
             var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid);
             this.terminalRect.Count = visibleCells.Count();
-            // Debug.Log($"visible cells: {visibleCells.Count()}");
             foreach (var item in visibleCells)
             {
-                // Debug.Log($"123: {item.BackgroundRect}");
+                if (index == 0)
+                {
+                    Debug.Log(item.BackgroundRect);
+                    Debug.Log(this.rectTransform.rect);
+                }
                 this.terminalRect.SetVertex(index, item.BackgroundRect, rect);
                 this.terminalRect.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
@@ -70,26 +70,23 @@ namespace JSSoft.UI
         protected override void OnTransformParentChanged()
         {
             base.OnTransformParentChanged();
-            // Debug.Log("OnTransformParentChanged()");
         }
 
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            this.rect = this.rectTransform.rect;
             this.SetVerticesDirty();
-            // Debug.Log($"OnRectTransformDimensionsChange(): {this.rectTransform.rect}");
         }
 
         protected override void OnCanvasHierarchyChanged()
         {
             base.OnCanvasHierarchyChanged();
-            // Debug.Log("OnCanvasHierarchyChanged()");
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
+            TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
             TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
@@ -99,6 +96,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
+            TerminalGridEvents.Validated -= TerminalGrid_Validated;
             TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
             TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
@@ -110,6 +108,14 @@ namespace JSSoft.UI
             if (cell.BackgroundColor is Color32)
                 return true;
             return TerminalGridUtility.IsSelecting(this.grid, cell);
+        }
+
+        private void TerminalGrid_Validated(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                this.SetAllDirty();
+            }
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)

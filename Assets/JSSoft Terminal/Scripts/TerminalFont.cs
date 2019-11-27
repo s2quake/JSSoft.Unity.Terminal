@@ -52,7 +52,7 @@ namespace JSSoft.UI
         {
             foreach (var item in this.Fonts)
             {
-                if (item.Contains(character) == true)
+                if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
                     return true;
             }
             return false;
@@ -64,8 +64,8 @@ namespace JSSoft.UI
             {
                 foreach (var item in this.Fonts)
                 {
-                    if (item.Contains(character) == true)
-                        return item[character];
+                    if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
+                        return descriptor[character];
                 }
                 return new CharInfo()
                 {
@@ -84,7 +84,10 @@ namespace JSSoft.UI
                 var textureList = new List<Texture2D>();
                 foreach (var item in this.fontList)
                 {
-                    textureList.AddRange(item.Textures);
+                    if (item is TerminalFontDescriptor descriptor)
+                    {
+                        textureList.AddRange(descriptor.Textures);
+                    }
                 }
                 return textureList.ToArray();
             }

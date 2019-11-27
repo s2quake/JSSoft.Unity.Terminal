@@ -36,6 +36,7 @@ namespace JSSoft.UI
         private TerminalFont font;
         private string text = string.Empty;
         private int columnCount;
+        private int rowCount;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
         {
@@ -47,9 +48,10 @@ namespace JSSoft.UI
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
-            if (font != null && (this.text != text || this.columnCount != columnCount))
+            var rowCount = this.grid.RowCount;
+            if (this.text != text || this.columnCount != columnCount || this.rowCount != rowCount)
             {
-                var index = this.FindUpdateIndex(font, text, columnCount);
+                var index = this.FindUpdateIndex(font, text, columnCount, rowCount);
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
 
                 if (this.items.Length < text.Length)
@@ -133,9 +135,9 @@ namespace JSSoft.UI
 
         public (int Left, int Top, int Right, int Bottom) Volume => (this.lt.X, this.lt.Y, this.rb.X, this.rb.Y);
 
-        private int FindUpdateIndex(TerminalFont font, string text, int columnCount)
+        private int FindUpdateIndex(TerminalFont font, string text, int columnCount, int rowCount)
         {
-            if (this.font != font || this.columnCount != columnCount)
+            if (this.font != font || this.columnCount != columnCount || this.rowCount != rowCount)
                 return 0;
             var index = GetIndex(this.text, text);
             if (index >= this.items.Length)

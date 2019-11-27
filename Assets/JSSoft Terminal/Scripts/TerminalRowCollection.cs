@@ -33,6 +33,7 @@ namespace JSSoft.UI
         private TerminalFont font;
         private string text = string.Empty;
         private int columnCount;
+        private int rowCount;
 
         public TerminalRowCollection(TerminalGrid grid)
         {
@@ -44,10 +45,11 @@ namespace JSSoft.UI
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var columnCount = this.grid.ColumnCount;
-            if (font != null && (this.text != text || this.columnCount != columnCount))
+            var rowCount = this.grid.RowCount;
+            if (this.text != text || this.columnCount != columnCount || this.rowCount != rowCount)
             {
                 var volume = characterInfos.Volume;
-                var index = this.FindUpdateIndex(font, text, columnCount);
+                var index = this.FindUpdateIndex(font, text, columnCount, rowCount);
                 var dic = new Dictionary<int, int>(this.Count);
                 this.Resize(this.grid.ColumnCount, volume.Bottom);
                 for (var i = index; i < text.Length; i++)
@@ -75,6 +77,7 @@ namespace JSSoft.UI
             this.font = font;
             this.text = text;
             this.columnCount = columnCount;
+            this.rowCount = rowCount;
         }
 
         public TerminalRow Prepare(int index)
@@ -108,9 +111,9 @@ namespace JSSoft.UI
             }
         }
 
-        private int FindUpdateIndex(TerminalFont font, string text, int columnCount)
+        private int FindUpdateIndex(TerminalFont font, string text, int columnCount, int rowCount)
         {
-            if (this.font != font || this.columnCount != columnCount)
+            if (this.font != font || this.columnCount != columnCount || this.rowCount != rowCount)
                 return 0;
             return GetIndex(this.text, text);
         }

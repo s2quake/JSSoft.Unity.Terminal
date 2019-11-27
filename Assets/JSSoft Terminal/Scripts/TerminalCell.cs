@@ -65,7 +65,7 @@ namespace JSSoft.UI
 
         public void SetCharacter(TerminalCharacterInfo characterInfo)
         {
-            if (characterInfo.Texture != null)
+            // if (characterInfo.Texture != null)
             {
                 var rect = GetCellRect(this.Grid, this);
                 var character = characterInfo.Character;
@@ -79,16 +79,19 @@ namespace JSSoft.UI
                 this.Texture = texture;
                 this.TextIndex = indexOfText;
                 this.BackgroundColor = backgroundColor;
-                this.ForegroundColor = foregroundColor;
                 this.BackgroundRect = new Rect(rect.x, rect.y, rect.width * volume, rect.height);
-                this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
                 this.BackgroundUV = (Vector2.zero, Vector2.zero);
-                this.ForegroundUV = FontUtility.GetUV(this.Font, character);
+                if (characterInfo.Texture != null)
+                {
+                    this.ForegroundColor = foregroundColor;
+                    this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
+                    this.ForegroundUV = FontUtility.GetUV(this.Font, character);
+                }
             }
-            else
-            {
-                this.Reset();
-            }
+            // else
+            // {
+            //     this.Reset();
+            // }
         }
 
         public void Reset()
