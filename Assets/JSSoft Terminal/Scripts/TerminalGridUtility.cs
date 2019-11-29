@@ -54,7 +54,7 @@ namespace JSSoft.UI
             if (grid != null)
             {
                 var topIndex = grid.VisibleIndex;
-                var bottomIndex = topIndex + grid.RowCount;
+                var bottomIndex = topIndex + grid.BufferHeight;
                 var query = from row in grid.Rows
                             where row.Index >= topIndex && row.Index < bottomIndex
                             from cell in row.Cells
@@ -71,7 +71,7 @@ namespace JSSoft.UI
             {
                 if (cursorTop >= grid.Rows.Count)
                     throw new ArgumentOutOfRangeException(nameof(cursorTop));
-                if (cursorLeft >= grid.ColumnCount)
+                if (cursorLeft >= grid.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(cursorLeft));
                 return grid.Rows[cursorTop].Cells[cursorLeft];
             }
@@ -209,9 +209,9 @@ namespace JSSoft.UI
 
         public static void SelectLine(ITerminalGrid grid, int index)
         {
-            var columnCount = grid.ColumnCount;
+            var bufferWidth = grid.BufferWidth;
             var p1 = new TerminalPoint(0, index);
-            var p2 = new TerminalPoint(columnCount, index);
+            var p2 = new TerminalPoint(bufferWidth, index);
             var range = new TerminalRange(p1, p2);
             grid.Selections.Clear();
             grid.Selections.Add(range);
@@ -219,7 +219,7 @@ namespace JSSoft.UI
 
         public static TerminalPoint SkipForward(ITerminalGrid grid, TerminalPoint point)
         {
-            var columnCount = grid.ColumnCount;
+            var bufferWidth = grid.BufferWidth;
             var index = point.X;
             var row = grid.Rows[point.Y];
             var cell = row.Cells[index];
@@ -239,13 +239,13 @@ namespace JSSoft.UI
                     }
                 }
                 index++;
-            } while (index < columnCount);
+            } while (index < bufferWidth);
             return new TerminalPoint(index, point.Y);
         }
 
         public static TerminalPoint SkipBackward(ITerminalGrid grid, TerminalPoint point)
         {
-            var columnCount = grid.ColumnCount;
+            var bufferWidth = grid.BufferWidth;
             var index = point.X;
             var row = grid.Rows[point.Y];
             var cell = row.Cells[index];

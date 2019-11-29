@@ -54,7 +54,7 @@ namespace JSSoft.UI
             get => this.cursorLeft;
             set
             {
-                if (value < 0 || value >= this.ColumnCount)
+                if (value < 0 || value >= this.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.cursorLeft = value;
                 this.SetVerticesDirty();
@@ -66,7 +66,7 @@ namespace JSSoft.UI
             get => this.cursorTop;
             set
             {
-                if (value < 0 || value >= this.RowCount)
+                if (value < 0 || value >= this.BufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.cursorTop = value;
                 this.SetVerticesDirty();
@@ -149,9 +149,9 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.cursorLeft = Math.Min(this.ColumnCount - 1, this.cursorLeft);
+            this.cursorLeft = Math.Min(this.BufferWidth - 1, this.cursorLeft);
             this.cursorLeft = Math.Max(0, this.cursorLeft);
-            this.cursorTop = Math.Min(this.RowCount - 1, this.cursorTop);
+            this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
         }
 #endif
@@ -252,8 +252,8 @@ namespace JSSoft.UI
             this.SetVerticesDirty();
         }
 
-        private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
+        private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
-        private int RowCount => this.grid != null ? this.grid.RowCount : 0;
+        private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
     }
 }

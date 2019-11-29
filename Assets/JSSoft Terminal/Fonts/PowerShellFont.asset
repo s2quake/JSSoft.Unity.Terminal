@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fontList:
   - {fileID: 0}
-  width: 38
-  height: 30
+  width: 14
+  height: 27

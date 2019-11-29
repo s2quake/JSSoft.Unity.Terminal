@@ -71,7 +71,7 @@ namespace JSSoft.UI
             get => this.columnIndex;
             set
             {
-                if (value < 0 || value >= this.ColumnCount)
+                if (value < 0 || value >= this.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.columnIndex = value;
                 this.SetVerticesDirty();
@@ -83,7 +83,7 @@ namespace JSSoft.UI
             get => this.rowIndex;
             set
             {
-                if (value < 0 || value >= this.RowCount)
+                if (value < 0 || value >= this.BufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.rowIndex = value;
                 this.SetVerticesDirty();
@@ -114,9 +114,9 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.columnIndex = Math.Min(this.ColumnCount - 1, this.columnIndex);
+            this.columnIndex = Math.Min(this.BufferWidth - 1, this.columnIndex);
             this.columnIndex = Math.Max(0, this.columnIndex);
-            this.rowIndex = Math.Min(this.RowCount - 1, this.rowIndex);
+            this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
             base.material.color = base.color;
         }
@@ -158,7 +158,7 @@ namespace JSSoft.UI
         {
             base.UpdateGeometry();
 
-            if (this.columnIndex < this.ColumnCount && this.rowIndex < this.RowCount && this.text != string.Empty)
+            if (this.columnIndex < this.BufferWidth && this.rowIndex < this.BufferHeight && this.text != string.Empty)
             {
                 var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, false);
                 var character = this.text.First();
@@ -204,8 +204,8 @@ namespace JSSoft.UI
             }
         }
 
-        private int ColumnCount => this.grid != null ? this.grid.ColumnCount : 0;
+        private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
-        private int RowCount => this.grid != null ? this.grid.RowCount : 0;
+        private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
     }
 }

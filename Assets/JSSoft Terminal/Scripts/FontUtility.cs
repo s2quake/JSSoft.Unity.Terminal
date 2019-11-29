@@ -39,18 +39,14 @@ namespace JSSoft.UI
 
         public static Fonts.CharInfo? GetCharacter(TerminalFont font, char character)
         {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            if (font.Contains(character) == true)
+            if (font?.Contains(character) == true)
                 return font[character];
             return null;
         }
 
         public static int GetCharacterVolume(TerminalFont font, char character)
         {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
+            if (font != null && GetCharacter(font, character) is Fonts.CharInfo characterInfo)
             {
                 var defaultWidth = font.Width;
                 var horizontalAdvance = characterInfo.XAdvance;

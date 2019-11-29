@@ -38,19 +38,19 @@ namespace JSSoft.UI.InputHandlers
             var row2 = cell2.Row;
             var isEnabled1 = IsEnabled(cell1);
             var isEnabled2 = IsEnabled(cell2);
-            var columnCount = grid.ColumnCount;
+            var bufferWidth = grid.BufferWidth;
             var gap = 5;
             if (isEnabled1 == true && isEnabled2 == false)
             {
                 var l2 = LastPoint(row2, false);
-                var distance = l2.DistanceOf(s2, columnCount);
-                s2.X = distance > gap ? columnCount : l2.X + 1;
+                var distance = l2.DistanceOf(s2, bufferWidth);
+                s2.X = distance > gap ? bufferWidth : l2.X + 1;
             }
             else if (isEnabled2 == true && isEnabled1 == false)
             {
                 var l1 = LastPoint(row1, true);
-                var distance = l1.DistanceOf(s1, columnCount);
-                s1.X = distance > gap ? columnCount : l1.X;
+                var distance = l1.DistanceOf(s1, bufferWidth);
+                s1.X = distance > gap ? bufferWidth : l1.X;
                 s2.X++;
             }
             else if (isEnabled1 == false && isEnabled2 == false)
@@ -58,23 +58,23 @@ namespace JSSoft.UI.InputHandlers
                 if (row1.Text != string.Empty)
                 {
                     var l1 = LastPoint(row1, true);
-                    var distance = l1.DistanceOf(s1, columnCount);
-                    s1.X = distance > gap ? columnCount : l1.X;
+                    var distance = l1.DistanceOf(s1, bufferWidth);
+                    s1.X = distance > gap ? bufferWidth : l1.X;
                 }
                 else
                 {
-                    s1.X = columnCount;
+                    s1.X = bufferWidth;
                 }
 
                 if (row2.Text != string.Empty)
                 {
                     var l2 = LastPoint(row2, true);
-                    var distance = l2.DistanceOf(s2, columnCount);
-                    s2.X = distance > gap ? columnCount : l2.X;
+                    var distance = l2.DistanceOf(s2, bufferWidth);
+                    s2.X = distance > gap ? bufferWidth : l2.X;
                 }
                 else
                 {
-                    s2.X = columnCount;
+                    s2.X = bufferWidth;
                 }
             }
             else
@@ -86,12 +86,12 @@ namespace JSSoft.UI.InputHandlers
 
         public static TerminalPoint LastPoint(ITerminalRow row, bool isCursor)
         {
-            var columnCount = row.Grid.ColumnCount;
+            var bufferWidth = row.Grid.BufferWidth;
             var index = row.Index;
-            var point = new TerminalPoint(columnCount, index);
+            var point = new TerminalPoint(bufferWidth, index);
             if (row.Text != string.Empty)
             {
-                for (var i = columnCount - 1; i >= 0; i--)
+                for (var i = bufferWidth - 1; i >= 0; i--)
                 {
                     var item = row.Cells[i];
                     var character = item.Character;

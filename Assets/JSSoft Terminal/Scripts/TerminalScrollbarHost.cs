@@ -90,7 +90,7 @@ namespace JSSoft.UI
         {
             var gameObject = this.gameObject;
             var grid = this.grid;
-            var isActive = grid.Rows.Count >= grid.RowCount;
+            var isActive = grid.Rows.Count >= grid.BufferHeight;
             if (this.verticalScrollbar.enabled != isActive)
             {
                 this.verticalScrollbar.enabled = isActive;
@@ -110,7 +110,7 @@ namespace JSSoft.UI
 
         private async void UpdateScrollbarSize()
         {
-            var size1 = (float)Math.Max(1, grid.RowCount);
+            var size1 = (float)Math.Max(1, grid.BufferHeight);
             var size2 = (float)Math.Max(1, grid.Rows.Count);
             var size = size1 / size2;
             if (Application.isPlaying == false)
@@ -122,7 +122,7 @@ namespace JSSoft.UI
         {
             var grid = this.grid;
             var value1 = grid.VisibleIndex;
-            var value2 = (float)Math.Max(1, grid.Rows.Count - grid.RowCount);
+            var value2 = (float)Math.Max(1, grid.Rows.Count - grid.BufferHeight);
             var value = value1 / value2;
             if (Application.isPlaying == false)
                 await Task.Delay(1);
@@ -155,7 +155,7 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 var value1 = (float)this.verticalScrollbar.value;
-                var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.RowCount);
+                var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.BufferHeight);
                 // this.grid.VisibleIndex = (int)(value1 * value2);
             }
             this.BeginFade();

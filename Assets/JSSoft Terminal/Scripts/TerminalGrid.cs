@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using System.Threading.Tasks;
 
 namespace JSSoft.UI
 {
@@ -67,11 +68,19 @@ namespace JSSoft.UI
         [SerializeField]
         private int visibleIndex;
         [SerializeField]
+        [Range(20, 1000)]
+        private int bufferWidth = 80;
+        [SerializeField]
+        [Range(5, 1000)]
+        private int bufferHeight = 25;
+        [SerializeField]
         private TerminalPoint cursorPosition;
         [SerializeField]
         private bool isCursorVisible = true;
         [SerializeField]
         private string compositionString = string.Empty;
+        [SerializeField]
+        private RectOffset padding;
 
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
@@ -83,7 +92,6 @@ namespace JSSoft.UI
         private TerminalRange selectingRange = TerminalRange.Empty;
         private float scrollPos;
         private Rect rectangle;
-        private Vector2 itemSize;
         private IKeyBindingCollection keyBindings;
 
         public TerminalGrid()
@@ -195,12 +203,12 @@ namespace JSSoft.UI
 
         public void PageUp()
         {
-            this.Scroll(-this.RowCount);
+            this.Scroll(-this.BufferHeight);
         }
 
         public void PageDown()
         {
-            this.Scroll(this.RowCount);
+            this.Scroll(this.BufferHeight);
         }
 
         public void LineUp()
@@ -231,7 +239,7 @@ namespace JSSoft.UI
                 var range = this.Selections.First();
                 var p1 = range.BeginPoint;
                 var p2 = range.EndPoint;
-                var capacity = p1.DistanceOf(p2, this.ColumnCount);
+                var capacity = p1.DistanceOf(p2, this.BufferWidth);
                 var list = new List<char>(capacity);
                 var i1 = this.characterInfos.PointToIndex(p1);
                 var i2 = this.characterInfos.PointToIndex(p2);
@@ -254,7 +262,7 @@ namespace JSSoft.UI
         public void SelectAll()
         {
             var p1 = new TerminalPoint(0, 0);
-            var p2 = new TerminalPoint(this.ColumnCount, this.rows.Count);
+            var p2 = new TerminalPoint(this.BufferWidth, this.rows.Count);
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
@@ -326,9 +334,27 @@ namespace JSSoft.UI
 
         public TerminalFont Font => this.font;
 
-        public int ColumnCount { get; private set; }
+        public int BufferWidth
+        {
+            get => this.bufferWidth;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.bufferWidth = value;
+            }
+        }
 
-        public int RowCount { get; private set; }
+        public int BufferHeight
+        {
+            get => this.bufferHeight;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.bufferHeight = value;
+            }
+        }
 
         public IReadOnlyList<ITerminalRow> Rows => this.rows;
 
@@ -357,9 +383,9 @@ namespace JSSoft.UI
         {
             get
             {
-                if (this.visibleIndex < 0 || this.Rows.Count < this.RowCount)
+                if (this.visibleIndex < 0 || this.Rows.Count < this.BufferHeight)
                     return 0;
-                return this.Rows.Count - this.RowCount;
+                return this.Rows.Count - this.BufferHeight;
             }
         }
 
@@ -597,40 +623,39 @@ namespace JSSoft.UI
             }
         }
 
-        private void UpdateGrid()
+        private async void UpdateGrid()
         {
             var rect = this.GetComponent<RectTransform>().rect;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
-            var columnCount = (int)(rect.width / itemWidth);
-            var rowCount = (int)(rect.height / itemHeight);
-            var rectWidth = itemWidth * columnCount;
-            var rectHeight = itemHeight * rowCount;
-            this.ColumnCount = columnCount;
-            this.RowCount = rowCount;
-            this.itemSize = new Vector2(itemWidth, itemHeight);
-            this.rectangle.x = (int)((rect.width - rectWidth) / 2);
-            this.rectangle.y = (int)((rect.height - rectHeight) / 2);
+            var bufferWidth = (int)(rect.width / itemWidth);
+            var bufferHeight = (int)(rect.height / itemHeight);
+            var rectWidth = this.BufferWidth * itemWidth + this.padding.left + this.padding.right;
+            var rectHeight = this.BufferHeight * itemHeight + this.padding.top + this.padding.bottom;
+            this.rectangle.x = 0;
+            this.rectangle.y = 0;
             this.rectangle.width = rectWidth;
             this.rectangle.height = rectHeight;
+            await Task.Delay(1);
+            this.rectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
         }
 
         private void UpdateVisibleIndex()
         {
-            if (this.visibleIndex < 0 || this.Rows.Count < this.RowCount)
+            if (this.visibleIndex < 0 || this.Rows.Count < this.BufferHeight)
                 this.visibleIndex = 0;
             else
-                this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count - this.RowCount);
+                this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count - this.BufferHeight);
         }
 
         private void UpdateCursorPosition()
         {
             var x = this.cursorPosition.X;
             var y = this.cursorPosition.Y;
-            var maxRowCount = Math.Max(this.RowCount, this.rows.Count);
-            x = Math.Min(x, this.ColumnCount - 1);
+            var maxBufferHeight = Math.Max(this.BufferHeight, this.rows.Count);
+            x = Math.Min(x, this.BufferWidth - 1);
             x = Math.Max(x, 0);
-            y = Math.Min(y, maxRowCount - 1);
+            y = Math.Min(y, maxBufferHeight - 1);
             y = Math.Max(y, 0);
             this.cursorPosition = new TerminalPoint(x, y);
         }
@@ -681,8 +706,8 @@ namespace JSSoft.UI
             if (sender is TerminalFont font && this.font == font)
             {
                 this.UpdateGrid();
-                this.UpdateVisibleIndex();
                 this.UpdateRows();
+                this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
             }
@@ -694,8 +719,8 @@ namespace JSSoft.UI
                 this.font is TerminalFont font && font.FontList.Contains(descriptor) == true)
             {
                 this.UpdateGrid();
-                this.UpdateVisibleIndex();
                 this.UpdateRows();
+                this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
             }
@@ -708,12 +733,12 @@ namespace JSSoft.UI
             var y = s1.Y;
             for (; y <= s2.Y; y++)
             {
-                var columnCount = y == s2.Y ? s2.X : this.ColumnCount;
-                if (columnCount >= this.ColumnCount)
+                var bufferWidth = y == s2.Y ? s2.X : this.BufferWidth;
+                if (bufferWidth >= this.BufferWidth)
                 {
-                    columnCount = this.ColumnCount - 1;
+                    bufferWidth = this.BufferWidth - 1;
                 }
-                for (; x <= columnCount; x++)
+                for (; x <= bufferWidth; x++)
                 {
                     yield return this.rows[y].Cells[x];
                 }

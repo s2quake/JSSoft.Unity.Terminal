@@ -39,8 +39,8 @@ namespace JSSoft.UI
         {
             this.Grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.Index = index;
-            this.cells.Capacity = grid.ColumnCount;
-            for (var i = 0; i < grid.ColumnCount; i++)
+            this.cells.Capacity = grid.BufferWidth;
+            for (var i = 0; i < grid.BufferWidth; i++)
             {
                 this.cells.Add(new TerminalCell(this, i));
             }
@@ -70,7 +70,7 @@ namespace JSSoft.UI
                     if (item.Intersect(position) == true)
                         return item.Point;
                 }
-                return new TerminalPoint(this.Grid.ColumnCount, this.Index);
+                return new TerminalPoint(this.Grid.BufferWidth, this.Index);
             }
             return TerminalPoint.Invalid;
         }
@@ -113,14 +113,14 @@ namespace JSSoft.UI
             }
         }
 
-        public void Resize(int columnCount)
+        public void Resize(int bufferWidth)
         {
-            for (var i = this.cells.Count - 1; i >= columnCount; i--)
+            for (var i = this.cells.Count - 1; i >= bufferWidth; i--)
             {
                 this.pool.Push(this.cells[i]);
                 this.cells.RemoveAt(i);
             }
-            for (var i = this.cells.Count; i < columnCount; i++)
+            for (var i = this.cells.Count; i < bufferWidth; i++)
             {
                 var item = this.pool.Any() ? this.pool.Pop() : new TerminalCell(this, i);
                 item.Reset();

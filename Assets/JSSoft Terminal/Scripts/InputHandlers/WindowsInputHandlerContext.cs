@@ -175,14 +175,14 @@ namespace JSSoft.UI.InputHandlers
                 var p1 = grid.CharacterInfos[match1.Index].Point;
                 var p2 = grid.CharacterInfos[match2.Index].Point;
                 var p3 = new TerminalPoint(0, p1.Y);
-                var p4 = new TerminalPoint(grid.ColumnCount, p2.Y);
+                var p4 = new TerminalPoint(grid.BufferWidth, p2.Y);
                 this.downRange = new TerminalRange(p3, p4);
                 this.UpdateSelecting();
             }
             else
             {
                 var p1 = new TerminalPoint(0, point.Y);
-                var p2 = new TerminalPoint(grid.ColumnCount, point.Y);
+                var p2 = new TerminalPoint(grid.BufferWidth, point.Y);
                 this.downRange = new TerminalRange(p1, p2);
                 this.UpdateSelecting();
             }
@@ -213,7 +213,7 @@ namespace JSSoft.UI.InputHandlers
         {
             var grid = this.Grid;
             var p1 = new TerminalPoint(0, row.Index);
-            var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
+            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
             this.downRange = new TerminalRange(p1, p2);
             this.UpdateSelecting();
         }
@@ -224,7 +224,7 @@ namespace JSSoft.UI.InputHandlers
             var row = cell.Row;
             var cells = row.Cells;
             var p1 = InputHandlerUtility.LastPoint(row, true);
-            var p2 = new TerminalPoint(grid.ColumnCount, row.Index);
+            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
             this.downRange = new TerminalRange(p1, p2);
             this.UpdateSelecting();
         }

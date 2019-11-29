@@ -35,8 +35,8 @@ namespace JSSoft.UI
         private TerminalPoint rb;
         private TerminalFont font;
         private string text = string.Empty;
-        private int columnCount;
-        private int rowCount;
+        private int bufferWidth;
+        private int bufferHeight;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
         {
@@ -47,11 +47,11 @@ namespace JSSoft.UI
         {
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
-            var columnCount = this.grid.ColumnCount;
-            var rowCount = this.grid.RowCount;
-            if (this.text != text || this.columnCount != columnCount || this.rowCount != rowCount)
+            var bufferWidth = this.grid.BufferWidth;
+            var bufferHeight = this.grid.BufferHeight;
+            if (this.text != text || this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
             {
-                var index = this.FindUpdateIndex(font, text, columnCount, rowCount);
+                var index = this.FindUpdateIndex(font, text, bufferWidth, bufferHeight);
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
 
                 if (this.items.Length < text.Length)
@@ -62,9 +62,9 @@ namespace JSSoft.UI
                 {
                     var characterInfo = new TerminalCharacterInfo();
                     var character = text[index];
-                    var charInfo = font[character];
+                    var charInfo = FontUtility.GetCharacter(font, character);
                     var volume = FontUtility.GetCharacterVolume(font, character);
-                    if (point.X + volume > columnCount)
+                    if (point.X + volume > bufferWidth)
                     {
                         point.X = 0;
                         point.Y++;
@@ -74,10 +74,10 @@ namespace JSSoft.UI
                     characterInfo.Point = point;
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
-                    characterInfo.Texture = charInfo.Texture;
+                    characterInfo.Texture = charInfo != null ? charInfo.Value.  Texture : null;
                     characterInfo.TextIndex = index;
                     point.X += volume;
-                    if (point.X >= columnCount || character == '\n')
+                    if (point.X >= bufferWidth || character == '\n')
                     {
                         point.X = 0;
                         point.Y++;
@@ -89,7 +89,7 @@ namespace JSSoft.UI
             }
             this.font = font;
             this.text = text;
-            this.columnCount = columnCount;
+            this.bufferWidth = bufferWidth;
         }
 
         public int PointToIndex(TerminalPoint point)
@@ -135,9 +135,9 @@ namespace JSSoft.UI
 
         public (int Left, int Top, int Right, int Bottom) Volume => (this.lt.X, this.lt.Y, this.rb.X, this.rb.Y);
 
-        private int FindUpdateIndex(TerminalFont font, string text, int columnCount, int rowCount)
+        private int FindUpdateIndex(TerminalFont font, string text, int bufferWidth, int bufferHeight)
         {
-            if (this.font != font || this.columnCount != columnCount || this.rowCount != rowCount)
+            if (this.font != font || this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
                 return 0;
             var index = GetIndex(this.text, text);
             if (index >= this.items.Length)

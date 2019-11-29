@@ -62,9 +62,9 @@ namespace JSSoft.UI
 
         TerminalFont Font { get; }
 
-        int ColumnCount { get; }
+        int BufferWidth { get; }
 
-        int RowCount { get; }
+        int BufferHeight { get; }
 
         IReadOnlyList<ITerminalRow> Rows { get; }
 

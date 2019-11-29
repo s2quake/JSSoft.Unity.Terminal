@@ -48,7 +48,7 @@ namespace JSSoft.UI
             return base.Equals(obj);
         }
 
-        public int DistanceOf(TerminalPoint point, int columnCount)
+        public int DistanceOf(TerminalPoint point, int bufferWidth)
         {
             var (s1, s2, op) = this < point ? (this, point, 1) : (point, this, -1);
             var x = s1.X;
@@ -56,10 +56,10 @@ namespace JSSoft.UI
             var c = 0;
             for (; y <= s2.Y; y++)
             {
-                var count = y == s2.Y ? s2.X : columnCount;
-                if (count >= columnCount)
+                var count = y == s2.Y ? s2.X : bufferWidth;
+                if (count >= bufferWidth)
                 {
-                    count = columnCount - 1;
+                    count = bufferWidth - 1;
                 }
                 for (; x <= count; x++)
                 {
