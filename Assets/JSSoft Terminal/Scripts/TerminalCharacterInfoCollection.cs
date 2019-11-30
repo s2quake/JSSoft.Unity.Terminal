@@ -73,7 +73,7 @@ namespace JSSoft.UI
                     characterInfo.Point = point;
                     characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
                     characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
-                    characterInfo.Texture = charInfo != null ? charInfo.Value.  Texture : null;
+                    characterInfo.Texture = charInfo.Texture;
                     characterInfo.TextIndex = index;
                     point.X += volume;
                     if (point.X >= bufferWidth || character == '\n')

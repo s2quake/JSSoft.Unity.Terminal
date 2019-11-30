@@ -62,9 +62,9 @@ namespace JSSoft.UI
 
         TerminalFont Font { get; }
 
-        int BufferWidth { get; }
+        int BufferWidth { get; set; }
 
-        int BufferHeight { get; }
+        int BufferHeight { get; set; }
 
         IReadOnlyList<ITerminalRow> Rows { get; }
 
@@ -93,6 +93,8 @@ namespace JSSoft.UI
         TerminalRange SelectingRange { get; set; }
 
         string CompositionString { get; set; }
+
+        event EventHandler FontChanged;
 
         event EventHandler TextChanged;
 

@@ -38,6 +38,7 @@ namespace JSSoft.UI
             if (grids.Contains(grid) == true)
                 throw new ArgumentException($"{nameof(grid)} is already exists.");
             grids.Add(grid);
+            grid.FontChanged += Grid_FontChanged;
             grid.TextChanged += Grid_TextChanged;
             grid.VisibleIndexChanged += Grid_VisibleIndexChanged;
             grid.LayoutChanged += Grid_LayoutChanged;
@@ -55,7 +56,7 @@ namespace JSSoft.UI
                 throw new ArgumentNullException(nameof(grid));
             if (grids.Contains(grid) == false)
                 throw new ArgumentException($"{nameof(grid)} does not exists.");
-            grid.Validated -= Grid_Validated;
+            grid.FontChanged -= Grid_FontChanged;
             grid.TextChanged -= Grid_TextChanged;
             grid.VisibleIndexChanged -= Grid_VisibleIndexChanged;
             grid.LayoutChanged -= Grid_LayoutChanged;
@@ -64,8 +65,11 @@ namespace JSSoft.UI
             grid.CompositionStringChanged -= Grid_CompositionStringChanged;
             grid.GotFocus -= Grid_GotFocus;
             grid.LostFocus -= Grid_LostFocus;
+            grid.Validated -= Grid_Validated;
             grids.Remove(grid);
         }
+
+        public static event EventHandler FontChanged;
 
         public static event EventHandler TextChanged;
 
@@ -84,6 +88,11 @@ namespace JSSoft.UI
         public static event EventHandler LostFocus;
 
         public static event EventHandler Validated;
+
+        private static void Grid_FontChanged(object sender, EventArgs e)
+        {
+            FontChanged?.Invoke(sender, e);
+        }
 
         private static void Grid_TextChanged(object sender, EventArgs e)
         {

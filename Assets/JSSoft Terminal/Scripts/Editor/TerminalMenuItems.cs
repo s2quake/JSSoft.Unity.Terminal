@@ -21,10 +21,6 @@
 // SOFTWARE.
 
 using System.IO;
-using System.Xml;
-using System.Xml.Serialization;
-using JSSoft.Communication.Shells;
-
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,7 +48,6 @@ namespace JSSoft.UI.Editor
                 else
                 {
                     TerminalFontDescriptor.Update(fontDescriptor, fntAsset);
-                    // AssetDatabase.ImportAsset(fontPath);
                     AssetDatabase.SaveAssets();
                 }
             }
@@ -92,8 +87,6 @@ namespace JSSoft.UI.Editor
 
         private static void CreateTerminal()
         {
-            // var width = 800.0f;
-            // var height = 600.0f;
             var canvas = GameObject.FindObjectOfType<Canvas>();
             if (canvas == null)
             {
@@ -102,10 +95,15 @@ namespace JSSoft.UI.Editor
             }
             var canvasTransform = canvas.transform;
 
+            var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
+            var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
+            var font = AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/TerminalFont.asset", typeof(TerminalFont)) as TerminalFont;
+
             var terminalGridObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
+            terminalGrid.color = TerminalColors.Black;
             terminalGridRect.SetParent(canvasTransform);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
             terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
@@ -156,9 +154,6 @@ namespace JSSoft.UI.Editor
             compositionRect.offsetMin = Vector2.zero;
             compositionRect.offsetMax = Vector2.zero;
 
-            var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
-            var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-
             var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image)) { layer = canvas.gameObject.layer };
             var scrollbarHost = scrollbarObj.AddComponent<TerminalScrollbarHost>();
             var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();
@@ -201,6 +196,7 @@ namespace JSSoft.UI.Editor
             handleRect.pivot = new Vector2(0.5f, 0.5f);
 
             scrollbar.handleRect = handleRect;
+            terminalGrid.Font = font;
         }
     }
 }

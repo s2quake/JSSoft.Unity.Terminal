@@ -146,14 +146,14 @@ namespace JSSoft.UI
             return new GlyphRect(x, y, itemWidth, itemHeight);
         }
 
-        public static int GetItemWidth(ITerminalGrid grid, char character)
-        {
-            if (grid != null && grid.Font != null)
-            {
-                return FontUtility.GetItemWidth(grid.Font, character);
-            }
-            return 0;
-        }
+        // public static int GetItemWidth(ITerminalGrid grid, char character)
+        // {
+        //     if (grid != null && grid.Font != null)
+        //     {
+        //         return FontUtility.GetItemWidth(grid.Font, character);
+        //     }
+        //     return 0;
+        // }
 
         public static Color32 GetSelectionColor(ITerminalGrid grid)
         {

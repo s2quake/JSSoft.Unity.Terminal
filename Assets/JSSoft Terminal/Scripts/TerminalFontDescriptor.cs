@@ -31,7 +31,6 @@ using JSSoft.UI.Fonts;
 using UnityEditor;
 #endif
 using UnityEngine;
-using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
@@ -45,6 +44,8 @@ namespace JSSoft.UI
         private CharInfo[] charInfos = new CharInfo[] { };
         [SerializeField]
         private Texture2D[] textures = new Texture2D[] { };
+        [SerializeField]
+        private int width;
         private Dictionary<char, CharInfo> charInfoByID;
 
         public bool Contains(char character)
@@ -58,7 +59,7 @@ namespace JSSoft.UI
 
         public int Height => this.commonInfo.LineHeight;
 
-        public int Width => this.CharInfos['a'].XAdvance;
+        public int Width => this.width;
 
         public IReadOnlyDictionary<char, CharInfo> CharInfos
         {
@@ -92,6 +93,26 @@ namespace JSSoft.UI
         protected virtual void OnValidated(EventArgs e)
         {
             this.Validated?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// 프린트 가능한 문자들의 폭만을 계산
+        /// https://theasciicode.com.ar
+        /// </summary>
+        private void UpdateWidth()
+        {
+            var width = 0;
+            for (var i = 0; i < this.charInfos.Length; i++)
+            {
+                var item = this.charInfos[i];
+                if (item.ID >= 32 && item.ID < 126)
+                {
+                    width = Math.Max(width, item.XAdvance);
+                }
+            }
+            if (width == 0)
+                throw new InvalidOperationException("invalid font");
+            this.width = width;
         }
 
 #if UNITY_EDITOR
@@ -130,6 +151,8 @@ namespace JSSoft.UI
                     charInfo.Texture = font.textures[item.Page];
                     font.charInfos[i] = charInfo;
                 }
+                font.UpdateWidth();
+
             }
         }
 #endif

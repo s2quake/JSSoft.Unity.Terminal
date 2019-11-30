@@ -68,16 +68,7 @@ namespace JSSoft.UI
             if (index < 0 || index >= this.count)
                 throw new ArgumentOutOfRangeException(nameof(index));
             this.vertices.SetVertex(index * 4, value);
-            if (index == 0)
-            {
-                Debug.Log(this.vertices[0].x);
-            }
             this.vertices.Transform(index * 4, transform);
-            if (index == 0)
-            {
-                Debug.Log(transform.x);
-                Debug.Log(this.vertices[0].x);
-            }
         }
 
         public void SetVertex(int index, Vector2 lt, Vector2 rt, Vector2 lb, Vector2 rb, Rect transform)

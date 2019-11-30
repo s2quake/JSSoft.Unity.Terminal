@@ -21,17 +21,10 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
+using System.Collections.Generic;
 using JSSoft.UI.Fonts;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 using UnityEngine;
-using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
@@ -42,11 +35,9 @@ namespace JSSoft.UI
         [SerializeField]
         private List<TerminalFontDescriptor> fontList = new List<TerminalFontDescriptor>();
         [SerializeField]
-        [Range(1, 100)]
-        private int width = 14;
+        private int width = FontUtility.DefaultItemWidth;
         [SerializeField]
-        [Range(1, 100)]
-        private int height = 27;
+        private int height = FontUtility.DefaultItemHeight;
 
         public bool Contains(char character)
         {
@@ -101,17 +92,18 @@ namespace JSSoft.UI
 
         protected virtual void OnValidate()
         {
+            this.UpdateSize();
             this.OnValidated(EventArgs.Empty);
         }
 
         protected virtual void Awake()
         {
-
+            TerminalFontDescriptorEvents.Validated += TerminalFontDescriptor_Validated;
         }
 
         protected virtual void OnDestroy()
         {
-
+            TerminalFontDescriptorEvents.Validated -= TerminalFontDescriptor_Validated;
         }
 
         protected virtual void OnEnable()
@@ -127,6 +119,30 @@ namespace JSSoft.UI
         protected virtual void OnValidated(EventArgs e)
         {
             this.Validated?.Invoke(this, e);
+        }
+
+        private void UpdateSize()
+        {
+            var width = 0;
+            var height = 0;
+            foreach (var item in this.Fonts)
+            {
+                if (item is TerminalFontDescriptor descriptor)
+                {
+                    width = Math.Max(descriptor.Width, width);
+                    height = Math.Max(descriptor.Height, height);
+                }
+            }
+            this.width = width != 0 ? width : FontUtility.DefaultItemWidth;
+            this.height = height != 0 ? height : FontUtility.DefaultItemHeight;
+        }
+
+        private void TerminalFontDescriptor_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalFontDescriptor descriptor && this.Fonts.Contains(descriptor))
+            {
+                this.UpdateSize();
+            }
         }
 
         private IReadOnlyList<TerminalFontDescriptor> Fonts => this.fontList ?? emptyList;

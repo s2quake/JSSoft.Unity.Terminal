@@ -37,11 +37,11 @@ namespace JSSoft.UI
 
         public static int DefaultItemHeight => defaultItemHeight;
 
-        public static Fonts.CharInfo? GetCharacter(TerminalFont font, char character)
+        public static Fonts.CharInfo GetCharacter(TerminalFont font, char character)
         {
             if (font?.Contains(character) == true)
                 return font[character];
-            return null;
+            return new Fonts.CharInfo() { ID = character };
         }
 
         public static int GetCharacterVolume(TerminalFont font, char character)
@@ -101,25 +101,25 @@ namespace JSSoft.UI
         //     return defaultItemWidth;
         // }
 
-        public static int GetItemHeight(TerminalFont font)
-        {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
-                return font.Height;
-            return defaultItemHeight;
-        }
+        // public static int GetItemHeight(TerminalFont font)
+        // {
+        //     if (font == null)
+        //         throw new ArgumentNullException(nameof(font));
+        //     if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
+        //         return font.Height;
+        //     return defaultItemHeight;
+        // }
 
-        public static int GetItemWidth(TerminalFont font, char character)
-        {
-            var itemWidth = font.Width;
-            if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
-            {
-                var characterWidth = characterInfo.XAdvance;
-                var n = Math.Ceiling(characterWidth / (float)itemWidth);
-                return (int)(itemWidth * n);
-            }
-            return itemWidth;
-        }
+        // public static int GetItemWidth(TerminalFont font, char character)
+        // {
+        //     var itemWidth = font.Width;
+        //     if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
+        //     {
+        //         var characterWidth = characterInfo.XAdvance;
+        //         var n = Math.Ceiling(characterWidth / (float)itemWidth);
+        //         return (int)(itemWidth * n);
+        //     }
+        //     return itemWidth;
+        // }
     }
 }

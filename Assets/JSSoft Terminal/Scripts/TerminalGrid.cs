@@ -335,7 +335,15 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalFont Font => this.font;
+        public TerminalFont Font
+        {
+            get => this.font;
+            set
+            {
+                this.font = value;
+                this.OnFontChanged(EventArgs.Empty);
+            }
+        }
 
         public int BufferWidth
         {

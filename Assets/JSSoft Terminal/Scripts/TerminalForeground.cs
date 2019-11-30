@@ -71,13 +71,23 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
+            TerminalGridEvents.FontChanged += TerminalGrid_FontChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            TerminalGridEvents.FontChanged -= TerminalGrid_FontChanged;
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
+        }
+
+        private void TerminalGrid_FontChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                this.RefreshChilds();
+            }
         }
 
         private void TerminalGrid_TextChanged(object sender, EventArgs e)
