@@ -31,7 +31,7 @@ namespace JSSoft.UI
 {
     [RequireComponent(typeof(TerminalScrollbar))]
     [ExecuteAlways]
-    public class TerminalScrollbarHost : UIBehaviour
+    class TerminalScrollbarHost : UIBehaviour
     {
         [SerializeField]
         private TerminalGrid grid = null;
@@ -48,6 +48,12 @@ namespace JSSoft.UI
         private TerminalScrollbar verticalScrollbar;
         private IEnumerator fader;
         private float time = 0.0f;
+
+        public TerminalGrid Grid
+        {
+            get => this.grid;
+            set => this.grid = value;
+        }
 
         protected override void OnEnable()
         {

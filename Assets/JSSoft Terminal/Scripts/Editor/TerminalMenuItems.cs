@@ -84,111 +84,123 @@ namespace JSSoft.UI.Editor
             }
         }
 
-        // [MenuItem("GameObject/UI/Terminal")]
-        // private static void CreateTerminalUI()
-        // {
-        //     CreateTerminal();
-        // }
+        [MenuItem("GameObject/UI/Terminal")]
+        private static void CreateTerminalUI()
+        {
+            CreateTerminal();
+        }
 
-        // private static void CreateTerminal()
-        // {
-        //     // var width = 800.0f;
-        //     // var height = 600.0f;
-        //     var canvas = GameObject.FindObjectOfType<Canvas>();
-        //     if (canvas == null)
-        //     {
-        //         EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
-        //         canvas = GameObject.FindObjectOfType<Canvas>();
-        //     }
+        private static void CreateTerminal()
+        {
+            // var width = 800.0f;
+            // var height = 600.0f;
+            var canvas = GameObject.FindObjectOfType<Canvas>();
+            if (canvas == null)
+            {
+                EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
+                canvas = GameObject.FindObjectOfType<Canvas>();
+            }
+            var canvasTransform = canvas.transform;
 
-        //     var fontAsset = (TerminalFont)AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/SFMono-Regular.asset", typeof(TerminalFont));
-        //     var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/InputFieldBackground.psd");
+            var terminalGridObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
+            var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
+            var terminalGridRect = terminalGrid.rectTransform;
+            var terminalPadding = terminalGrid.Padding;
+            terminalGridRect.SetParent(canvasTransform);
+            terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
+            terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
+            terminalGridRect.pivot = new Vector2(0.5f, 0.5f);
+            terminalGridRect.localPosition = Vector3.zero;
 
-        //     var terminalObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
-        //     var terminalRect = terminalObj.AddComponent<RectTransform>();
-        //     terminalObj.AddComponent<CanvasRenderer>();
-        //     var terminalImage = terminalObj.AddComponent<Image>();
-        //     // terminalImage.sprite = backgroundSprite;
-        //     terminalImage.type = Image.Type.Sliced;
+            var backgroundObj = new GameObject("TerminalBackground") { layer = canvas.gameObject.layer };
+            var background = backgroundObj.AddComponent<TerminalBackground>();
+            var backgroundRect = background.rectTransform;
+            background.Grid = terminalGrid;
+            backgroundRect.SetParent(terminalGridRect);
+            backgroundRect.anchorMin = Vector3.zero;
+            backgroundRect.anchorMax = Vector3.one;
+            backgroundRect.pivot = new Vector2(0.5f, 0.5f);
+            backgroundRect.offsetMin = Vector2.zero;
+            backgroundRect.offsetMax = Vector2.zero;
 
-        //     var terminal = terminalObj.AddComponent<Terminal>();
-        //     terminal.targetGraphic = terminalImage;
-        //     terminal.lineType = TMP_InputField.LineType.MultiLineSubmit;
-        //     terminal.onFocusSelectAll = false;
-        //     terminal.resetOnDeActivation = false;
-        //     terminal.restoreOriginalTextOnEscape = false;
-        //     terminal.richText = false;
+            var cursorObj = new GameObject("TerminalCursor") { layer = canvas.gameObject.layer };
+            var cursor = cursorObj.AddComponent<TerminalCursor>();
+            var cursorRect = cursor.rectTransform;
+            cursor.Grid = terminalGrid;
+            cursorRect.SetParent(terminalGridRect);
+            cursorRect.anchorMin = Vector3.zero;
+            cursorRect.anchorMax = Vector3.one;
+            cursorRect.pivot = new Vector2(0.5f, 0.5f);
+            cursorRect.offsetMin = Vector2.zero;
+            cursorRect.offsetMax = Vector2.zero;
 
-        //     var textAreaObj = new GameObject("Text Area") { layer = canvas.gameObject.layer };
-        //     var textAreaRect = textAreaObj.AddComponent<RectTransform>();
-        //     textAreaObj.AddComponent<RectMask2D>();
+            var foregroundObj = new GameObject("TerminalForeground") { layer = canvas.gameObject.layer };
+            var foreground = foregroundObj.AddComponent<TerminalForeground>();
+            var foregroundRect = foregroundObj.GetComponent<RectTransform>();
+            foreground.Grid = terminalGrid;
+            foregroundRect.SetParent(terminalGridRect);
+            foregroundRect.anchorMin = Vector3.zero;
+            foregroundRect.anchorMax = Vector3.one;
+            foregroundRect.pivot = new Vector2(0.5f, 0.5f);
+            foregroundRect.offsetMin = Vector2.zero;
+            foregroundRect.offsetMax = Vector2.zero;
 
-        //     var textObj = new GameObject("Text") { layer = canvas.gameObject.layer };
-        //     var textRect = textObj.AddComponent<RectTransform>();
-        //     var textMesh = textObj.AddComponent<TerminalText>();
-        //     textMesh.terminal = terminal;
-        //     textMesh.richText = false;
-        //     textMesh.geometrySortingOrder = VertexSortingOrder.Reverse;
-        //     textMesh.overflowMode = TextOverflowModes.ScrollRect;
+            var compositionObj = new GameObject("TerminalComposition") { layer = canvas.gameObject.layer };
+            var composition = compositionObj.AddComponent<TerminalComposition>();
+            var compositionRect = composition.rectTransform;
+            composition.Grid = terminalGrid;
+            compositionRect.SetParent(terminalGridRect);
+            compositionRect.anchorMin = Vector3.zero;
+            compositionRect.anchorMax = Vector3.one;
+            compositionRect.pivot = new Vector2(0.5f, 0.5f);
+            compositionRect.offsetMin = Vector2.zero;
+            compositionRect.offsetMax = Vector2.zero;
 
-        //     terminal.textViewport = textAreaRect;
-        //     terminal.textComponent = textMesh;
-        //     terminal.fontAsset = fontAsset;
-        //     terminal.pointSize = 24;
-        //     var colorBlock = ColorBlock.defaultColorBlock;
-        //     var color = new Color(30.0f / 255.0f, 30.0f / 255.0f, 30.0f / 255.0f);
-        //     colorBlock.normalColor = color;
-        //     colorBlock.highlightedColor = color;
-        //     colorBlock.selectedColor = color;
-        //     colorBlock.pressedColor = color;
-        //     terminal.colors = colorBlock;
-        //     terminal.caretBlinkRate = 0;
-        //     terminal.customCaretColor = true;
-        //     terminal.caretColor = new Color(139.0f / 255.0f, 139.0f / 255.0f, 139.0f / 255.0f);
-        //     // terminal.caretWidth = (int)(terminal.pointSize * 0.7f) - 1;
-        //     terminal.selectionColor = new Color(49.0f / 255.0f, 79.0f / 255.0f, 120.0f / 255.0f);
+            var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
+            var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
 
-        //     terminalRect.SetParent(canvas.GetComponent<RectTransform>());
-        //     terminalRect.anchorMin = Vector3.zero;
-        //     terminalRect.anchorMax = Vector3.one;
-        //     terminalRect.offsetMin = Vector3.zero;
-        //     terminalRect.offsetMax = Vector3.zero;
-        //     // terminalRect.position = Vector3.zero;
-        //     terminalRect.pivot = new Vector2(0.5f, 0.5f);
+            var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image)) { layer = canvas.gameObject.layer };
+            var scrollbarHost = scrollbarObj.AddComponent<TerminalScrollbarHost>();
+            var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();
+            var scrollbarImage = scrollbarObj.GetComponent<Image>();
+            var scrollbarRect = scrollbarImage.rectTransform;
+            scrollbarHost.Grid = terminalGrid;
+            scrollbar.targetGraphic = scrollbarImage;
+            scrollbar.direction = Scrollbar.Direction.TopToBottom;
+            scrollbarImage.sprite = backgroundSprite;
+            scrollbarImage.type = Image.Type.Sliced;
+            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+            scrollbarRect.SetParent(terminalGridRect);
+            scrollbarRect.anchorMin = new Vector2(1, 0);
+            scrollbarRect.anchorMax = Vector3.one;
+            scrollbarRect.pivot = new Vector2(0.5f, 0.5f);
+            scrollbarRect.sizeDelta = new Vector2(40, 0);
+            scrollbarRect.localPosition = new Vector3(0, 0);
+            scrollbarRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, terminalPadding.Right, 20);
 
-        //     textAreaRect.SetParent(terminalRect);
-        //     textAreaRect.anchorMin = Vector3.zero;
-        //     textAreaRect.anchorMax = Vector3.one;
-        //     textAreaRect.offsetMin = new Vector2(10, 6);
-        //     textAreaRect.offsetMax = new Vector2(-10, -7);
+            var slidingAreaObj = new GameObject("Sliding Area", typeof(RectTransform)) { layer = canvas.gameObject.layer };
+            var slidingAreaRect = slidingAreaObj.GetComponent<RectTransform>();
+            slidingAreaRect.SetParent(scrollbarRect);
+            slidingAreaRect.offsetMin = new Vector2(10.0f, 10.0f);
+            slidingAreaRect.offsetMax = new Vector2(-10.0f, -10.0f);
+            slidingAreaRect.anchorMin = Vector3.zero;
+            slidingAreaRect.anchorMax = Vector3.one;
+            slidingAreaRect.pivot = new Vector2(0.5f, 0.5f);
 
-        //     textRect.SetParent(textAreaRect);
-        //     textRect.anchorMin = Vector3.zero;
-        //     textRect.anchorMax = Vector3.one;
-        //     textRect.offsetMin = Vector2.zero;
-        //     textRect.offsetMax = Vector2.zero;
+            var handleObj = new GameObject("Handle", typeof(RectTransform), typeof(Image)) { layer = canvas.gameObject.layer };
+            var handleRect = handleObj.GetComponent<RectTransform>();
+            var handleImage = handleObj.GetComponent<Image>();
+            handleImage.sprite = uiSprite;
+            handleImage.type = Image.Type.Sliced;
+            handleImage.pixelsPerUnitMultiplier = 0.5f;
+            handleRect.SetParent(slidingAreaRect);
+            handleRect.offsetMin = new Vector2(-10.0f, -10.0f);
+            handleRect.offsetMax = new Vector2(10.0f, 10.0f);
+            handleRect.anchorMin = Vector3.zero;
+            handleRect.anchorMax = Vector3.one;
+            handleRect.pivot = new Vector2(0.5f, 0.5f);
 
-        //     Selection.activeObject = terminalObj;
-
-        //     EditorApplication.ExecuteMenuItem("GameObject/UI/Scrollbar");
-
-        //     var scrollbarObj = Selection.activeGameObject;
-        //     var scrollbarRect = scrollbarObj.GetComponent<RectTransform>();
-        //     var scrollbar = scrollbarObj.GetComponent<Scrollbar>();
-        //     var navigation = scrollbar.navigation;
-        //     navigation.mode = Navigation.Mode.Vertical;
-        //     scrollbar.direction = Scrollbar.Direction.TopToBottom;
-        //     scrollbar.size = 1.0f;
-        //     scrollbar.navigation = navigation;
-
-        //     scrollbarRect.SetParent(terminalRect);
-        //     scrollbarRect.anchorMin = new Vector2(1, 0);
-        //     scrollbarRect.anchorMax = new Vector2(1, 1);
-        //     scrollbarRect.offsetMin = new Vector2(-20, 0);
-        //     scrollbarRect.offsetMax = new Vector2(0, 0);
-
-        //     terminal.verticalScrollbar = scrollbar;
-        //     Selection.activeGameObject = terminalObj;
-        // }
+            scrollbar.handleRect = handleRect;
+        }
     }
 }

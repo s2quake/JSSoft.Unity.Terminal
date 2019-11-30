@@ -34,7 +34,7 @@ namespace JSSoft.UI
         [SerializeField]
         private Texture2D texture;
 
-        private TerminalRect terminalRect = new TerminalRect();
+        private TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalForegroundItem()
         {
@@ -70,16 +70,16 @@ namespace JSSoft.UI
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture == this.texture);
             var index = 0;
-            this.terminalRect.Count = visibleCells.Count();
+            this.terminalMesh.Count = visibleCells.Count();
             foreach (var item in visibleCells)
             {
-                this.terminalRect.SetVertex(index, item.ForegroundRect, rect);
-                this.terminalRect.SetUV(index, item.ForegroundUV);
-                this.terminalRect.SetColor(index, TerminalCell.GetForegroundColor(item));
+                this.terminalMesh.SetVertex(index, item.ForegroundRect, rect);
+                this.terminalMesh.SetUV(index, item.ForegroundUV);
+                this.terminalMesh.SetColor(index, TerminalCell.GetForegroundColor(item));
                 index++;
             }
             this.material.color = base.color;
-            this.terminalRect.Fill(vh);
+            this.terminalMesh.Fill(vh);
         }
 
         protected override void OnRectTransformDimensionsChange()

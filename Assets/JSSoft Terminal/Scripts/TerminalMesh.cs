@@ -27,7 +27,7 @@ using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {
-    public class TerminalRect
+    public class TerminalMesh
     {
         private int count;
         private int capacity;
@@ -35,7 +35,7 @@ namespace JSSoft.UI
         private Vector2[] uvs = new Vector2[] { };
         private Color32[] colors = new Color32[] { };
 
-        public TerminalRect()
+        public TerminalMesh()
         {
 
         }

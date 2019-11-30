@@ -34,7 +34,7 @@ namespace JSSoft.UI
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    public class TerminalForeground : UIBehaviour
+    class TerminalForeground : UIBehaviour
     {
         [SerializeField]
         private TerminalGrid grid = null;
@@ -42,6 +42,12 @@ namespace JSSoft.UI
         public TerminalForeground()
         {
 
+        }
+
+        public TerminalGrid Grid
+        {
+            get => this.grid;
+            set => this.grid = value;
         }
 
         protected override void Awake()

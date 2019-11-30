@@ -27,6 +27,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
+#if UNITY_EDITOR
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
+#endif
 
 namespace JSSoft.UI
 {
@@ -80,7 +83,7 @@ namespace JSSoft.UI
         [SerializeField]
         private string compositionString = string.Empty;
         [SerializeField]
-        private RectOffset padding;
+        private TerminalThickness padding = new TerminalThickness(2);
 
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
@@ -430,6 +433,12 @@ namespace JSSoft.UI
 
         public Rect Rectangle => this.rectangle;
 
+        public TerminalThickness Padding
+        {
+            get => this.padding;
+            set => this.padding = value;
+        }
+
         public bool IsCursorVisible
         {
             get => this.isCursorVisible;
@@ -623,21 +632,27 @@ namespace JSSoft.UI
             }
         }
 
-        private async void UpdateGrid()
+        private void UpdateGrid()
         {
             var rect = this.GetComponent<RectTransform>().rect;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
             var bufferWidth = (int)(rect.width / itemWidth);
             var bufferHeight = (int)(rect.height / itemHeight);
-            var rectWidth = this.BufferWidth * itemWidth + this.padding.left + this.padding.right;
-            var rectHeight = this.BufferHeight * itemHeight + this.padding.top + this.padding.bottom;
+            var rectWidth = this.BufferWidth * itemWidth + this.padding.Left + this.padding.Right;
+            var rectHeight = this.BufferHeight * itemHeight + this.padding.Top + this.padding.Bottom;
             this.rectangle.x = 0;
             this.rectangle.y = 0;
             this.rectangle.width = rectWidth;
             this.rectangle.height = rectHeight;
-            await Task.Delay(1);
-            this.rectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
+            this.Invoke(nameof(UpdateRectTransform), Time.deltaTime);
+
+            //this.rectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
+        }
+
+        private void UpdateRectTransform()
+        {
+            this.rectTransform.sizeDelta = this.rectangle.size;
         }
 
         private void UpdateVisibleIndex()

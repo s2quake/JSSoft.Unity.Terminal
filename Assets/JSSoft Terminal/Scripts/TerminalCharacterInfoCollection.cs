@@ -53,7 +53,6 @@ namespace JSSoft.UI
             {
                 var index = this.FindUpdateIndex(font, text, bufferWidth, bufferHeight);
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
-
                 if (this.items.Length < text.Length)
                 {
                     Array.Resize(ref this.items, text.Length);
@@ -90,6 +89,7 @@ namespace JSSoft.UI
             this.font = font;
             this.text = text;
             this.bufferWidth = bufferWidth;
+            this.bufferHeight = bufferHeight;
         }
 
         public int PointToIndex(TerminalPoint point)
@@ -121,7 +121,7 @@ namespace JSSoft.UI
             return index;
         }
 
-        public int Count => this.font != null ? this.text.Length : 0;
+        public int Count => this.text.Length;
 
         public TerminalCharacterInfo this[int index]
         {

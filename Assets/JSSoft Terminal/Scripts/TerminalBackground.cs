@@ -27,16 +27,22 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalBackground : MaskableGraphic
+    class TerminalBackground : MaskableGraphic
     {
         [SerializeField]
         private TerminalGrid grid = null;
 
-        private readonly TerminalRect terminalRect = new TerminalRect();
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalBackground()
         {
 
+        }
+
+        public TerminalGrid Grid
+        {
+            get => this.grid;
+            set => this.grid = value;
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -46,7 +52,7 @@ namespace JSSoft.UI
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
             var index = 0;
             var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid);
-            this.terminalRect.Count = visibleCells.Count();
+            this.terminalMesh.Count = visibleCells.Count();
             foreach (var item in visibleCells)
             {
                 if (index == 0)
@@ -54,16 +60,16 @@ namespace JSSoft.UI
                     Debug.Log(item.BackgroundRect);
                     Debug.Log(this.rectTransform.rect);
                 }
-                this.terminalRect.SetVertex(index, item.BackgroundRect, rect);
-                this.terminalRect.SetUV(index, item.BackgroundUV);
+                this.terminalMesh.SetVertex(index, item.BackgroundRect, rect);
+                this.terminalMesh.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
-                    this.terminalRect.SetColor(index, color);
+                    this.terminalMesh.SetColor(index, color);
                 else
-                    this.terminalRect.SetColor(index, selectionColor);
+                    this.terminalMesh.SetColor(index, selectionColor);
                 index++;
             }
             this.material.color = base.color;
-            this.terminalRect.Fill(vh);
+            this.terminalMesh.Fill(vh);
         }
 
 

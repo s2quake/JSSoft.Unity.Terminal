@@ -28,7 +28,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalComposition : MaskableGraphic
+    class TerminalComposition : MaskableGraphic
     {
         private static readonly int[] backgroundTriangles = new int[6] { 0, 1, 2, 2, 3, 0 };
         private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
@@ -54,6 +54,12 @@ namespace JSSoft.UI
         public TerminalComposition()
         {
 
+        }
+
+        public TerminalGrid Grid
+        {
+            get => this.grid;
+            set => this.grid = value;
         }
 
         public string Text
@@ -143,15 +149,21 @@ namespace JSSoft.UI
 
         private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
         {
-            this.columnIndex = this.grid.CursorPoint.X;
-            this.rowIndex = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
-            this.SetVerticesDirty();
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.columnIndex = grid.CursorPoint.X;
+                this.rowIndex = grid.CursorPoint.Y - grid.VisibleIndex;
+                this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_CompositionStringChanged(object sender, EventArgs e)
         {
-            this.text = this.grid.CompositionString;
-            this.SetVerticesDirty();
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.text = grid.CompositionString;
+                this.SetVerticesDirty();
+            }
         }
 
         protected override void UpdateGeometry()

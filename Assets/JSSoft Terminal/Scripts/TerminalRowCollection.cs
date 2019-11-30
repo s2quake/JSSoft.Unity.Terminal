@@ -51,7 +51,7 @@ namespace JSSoft.UI
                 var volume = characterInfos.Volume;
                 var index = this.FindUpdateIndex(font, text, bufferWidth, bufferHeight);
                 var dic = new Dictionary<int, int>(this.Count);
-                this.Resize(this.grid.BufferWidth, volume.Bottom);
+                this.Resize(bufferWidth, volume.Bottom);
                 for (var i = index; i < text.Length; i++)
                 {
                     var characterInfo = characterInfos[i];

@@ -27,7 +27,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    public class TerminalCursor : MaskableGraphic
+    class TerminalCursor : MaskableGraphic
     {
         private static readonly int lineWidth = 2;
         [SerializeField]
@@ -42,11 +42,17 @@ namespace JSSoft.UI
         private bool isFocused = false;
 
         private int volume = 1;
-        private readonly TerminalRect terminalRect = new TerminalRect();
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalCursor()
         {
 
+        }
+
+        public TerminalGrid Grid
+        {
+            get => this.grid;
+            set => this.grid = value;
         }
 
         public int CursorLeft
@@ -107,14 +113,14 @@ namespace JSSoft.UI
             var itemRect = new GlyphRect(x, y, itemWidth * this.volume, itemHeight);
             if (this.isVisible == false)
             {
-                this.terminalRect.Count = 0;
+                this.terminalMesh.Count = 0;
             }
             else if (this.isFocused == true)
             {
-                this.terminalRect.Count = 1;
-                this.terminalRect.SetVertex(0, itemRect, rect);
-                this.terminalRect.SetUV(0, (Vector2.zero, Vector2.one));
-                this.terminalRect.SetColor(0, base.color);
+                this.terminalMesh.Count = 1;
+                this.terminalMesh.SetVertex(0, itemRect, rect);
+                this.terminalMesh.SetUV(0, (Vector2.zero, Vector2.one));
+                this.terminalMesh.SetColor(0, base.color);
             }
             else
             {
@@ -129,20 +135,20 @@ namespace JSSoft.UI
                 var rt2 = new Vector2(right - size, y + size);
                 var lb2 = new Vector2(x + size, bottom - size);
                 var rb2 = new Vector2(right - size, bottom - size);
-                this.terminalRect.Count = 4;
-                this.terminalRect.SetVertex(0, lt1, rt1, lt2, rt2, rect);
-                this.terminalRect.SetVertex(1, lt1, lt2, lb1, lb2, rect);
-                this.terminalRect.SetVertex(2, lb2, rb2, lb1, rb1, rect);
-                this.terminalRect.SetVertex(3, rt2, rt1, rb2, rb1, rect);
+                this.terminalMesh.Count = 4;
+                this.terminalMesh.SetVertex(0, lt1, rt1, lt2, rt2, rect);
+                this.terminalMesh.SetVertex(1, lt1, lt2, lb1, lb2, rect);
+                this.terminalMesh.SetVertex(2, lb2, rb2, lb1, rb1, rect);
+                this.terminalMesh.SetVertex(3, rt2, rt1, rb2, rb1, rect);
 
-                for (var i = 0; i < this.terminalRect.Count; i++)
+                for (var i = 0; i < this.terminalMesh.Count; i++)
                 {
-                    this.terminalRect.SetUV(i, (Vector2.zero, Vector2.one));
-                    this.terminalRect.SetColor(i, TerminalColors.Gray);
+                    this.terminalMesh.SetUV(i, (Vector2.zero, Vector2.one));
+                    this.terminalMesh.SetColor(i, TerminalColors.Gray);
                 }
             }
             this.material.color = base.color;
-            this.terminalRect.Fill(vh);
+            this.terminalMesh.Fill(vh);
         }
 
 #if UNITY_EDITOR
