@@ -52,11 +52,11 @@ namespace JSSoft.UI
         ISelectHandler,
         IDeselectHandler
     {
-        public static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);
-        public static readonly Color32 DefaultForegroundColor = new Color32(255, 255, 255, 255);
-        public static readonly Color32 DefaultSelectionColor = new Color32(49, 79, 129, 255);
-        public static readonly Color32 DefaultCursorColor = new Color32(139, 139, 139, 255);
-        public static readonly Color32 DefaultCompositionColor = new Color32(0, 0, 0, 255);
+        public static readonly Color DefaultBackgroundColor = new Color32(23, 23, 23, 255);
+        public static readonly Color DefaultForegroundColor = new Color32(255, 255, 255, 255);
+        public static readonly Color DefaultSelectionColor = new Color32(49, 79, 129, 255);
+        public static readonly Color DefaultCursorColor = new Color32(139, 139, 139, 255);
+        public static readonly Color DefaultCompositionColor = new Color32(0, 0, 0, 255);
 
         [SerializeField]
         private TerminalFont font = null;
@@ -64,13 +64,15 @@ namespace JSSoft.UI
         [TextArea(5, 10)]
         public string text = string.Empty;
         [SerializeField]
-        private Color32 fontColor = DefaultForegroundColor;
+        private Color backgroundColor = DefaultBackgroundColor;
         [SerializeField]
-        private Color32 selectionColor = DefaultSelectionColor;
+        private Color foregroundColor = DefaultForegroundColor;
         [SerializeField]
-        private Color32 cursorColor = DefaultCursorColor;
+        private Color selectionColor = DefaultSelectionColor;
         [SerializeField]
-        private Color32 compositionColor = DefaultCompositionColor;
+        private Color cursorColor = DefaultCursorColor;
+        [SerializeField]
+        private Color compositionColor = DefaultCompositionColor;
         [SerializeField]
         private int visibleIndex;
         [SerializeField]
@@ -342,7 +344,7 @@ namespace JSSoft.UI
 
         public TerminalFont Font
         {
-            get => this.font;
+            get => this.style != null ? this.style.Font : this.font;
             set
             {
                 this.font = value;
@@ -405,29 +407,29 @@ namespace JSSoft.UI
             }
         }
 
-        public Color32? BackgroundColor
+        public Color BackgroundColor
         {
-            get => base.color;
+            get => this.style != null ? this.style.BackgroundColor : this.backgroundColor;
             set
             {
-                base.color = value != null ? value.Value : TerminalGrid.DefaultBackgroundColor;
+                this.backgroundColor = value;
                 this.OnLayoutChanged(EventArgs.Empty);
             }
         }
 
-        public Color32? ForegroundColor
+        public Color ForegroundColor
         {
-            get => this.fontColor;
+            get => this.style != null ? this.style.ForegroundColor : this.foregroundColor;
             set
             {
-                this.fontColor = value != null ? value.Value : TerminalGrid.DefaultForegroundColor;
+                this.foregroundColor = value;
                 this.OnLayoutChanged(EventArgs.Empty);
             }
         }
 
-        public Color32 SelectionColor
+        public Color SelectionColor
         {
-            get => this.selectionColor;
+            get => this.style != null ? this.style.SelectionColor : this.selectionColor;
             set
             {
                 this.selectionColor = value;
@@ -435,9 +437,9 @@ namespace JSSoft.UI
             }
         }
 
-        public Color32 CursorColor
+        public Color CursorColor
         {
-            get => this.cursorColor;
+            get => this.style != null ? this.style.CursorColor : this.cursorColor;
             set
             {
                 this.cursorColor = value;
@@ -445,9 +447,9 @@ namespace JSSoft.UI
             }
         }
 
-        public Color32 CompositionColor
+        public Color CompositionColor
         {
-            get => this.compositionColor;
+            get => this.style != null ? this.style.CompositionColor : this.compositionColor;
             set
             {
                 this.compositionColor = value;
@@ -474,7 +476,7 @@ namespace JSSoft.UI
 
         public TerminalThickness Padding
         {
-            get => this.padding;
+            get => this.style != null ? this.style.Padding : this.padding;
             set
             {
                 this.padding = value;
@@ -604,7 +606,7 @@ namespace JSSoft.UI
         {
             base.OnValidate();
             this.UpdateStyle();
-            this.UpdateGrid();
+            this.UpdateLayout();
             this.UpdateVisibleIndex();
             this.UpdateRows();
             this.UpdateCursorPosition();
@@ -615,7 +617,7 @@ namespace JSSoft.UI
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-            this.UpdateGrid();
+            this.UpdateLayout();
             this.UpdateVisibleIndex();
             this.UpdateRows();
             this.UpdateCursorPosition();
@@ -694,32 +696,28 @@ namespace JSSoft.UI
         {
             if (this.style != null)
             {
-                this.font = this.style.Font;
-                this.color = this.style.BackgroundColor;
-                this.fontColor = this.style.ForegroundColor;
-                this.selectionColor = this.style.SelectionColor;
-                this.cursorColor = this.style.CursorColor;
-                this.compositionColor = this.style.CompositionColor;
-                this.padding = this.style.Padding;
+                base.color = this.style.BackgroundColor;
+            }
+            else
+            {
+                base.color = this.backgroundColor;
             }
         }
 
-        private void UpdateGrid()
+        private void UpdateLayout()
         {
             var rect = this.GetComponent<RectTransform>().rect;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
             var bufferWidth = (int)(rect.width / itemWidth);
             var bufferHeight = (int)(rect.height / itemHeight);
-            var rectWidth = this.BufferWidth * itemWidth + this.padding.Left + this.padding.Right;
-            var rectHeight = this.BufferHeight * itemHeight + this.padding.Top + this.padding.Bottom;
+            var rectWidth = this.BufferWidth * itemWidth + this.Padding.Left + this.Padding.Right;
+            var rectHeight = this.BufferHeight * itemHeight + this.Padding.Top + this.Padding.Bottom;
             this.rectangle.x = 0;
             this.rectangle.y = 0;
             this.rectangle.width = rectWidth;
             this.rectangle.height = rectHeight;
             this.Invoke(nameof(UpdateRectTransform), Time.deltaTime);
-
-            //this.rectTransform.sizeDelta = new Vector2(rectWidth, rectHeight);
         }
 
         private void UpdateRectTransform()
@@ -792,7 +790,7 @@ namespace JSSoft.UI
         {
             if (sender is TerminalFont font && this.font == font)
             {
-                this.UpdateGrid();
+                this.UpdateLayout();
                 this.UpdateRows();
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
@@ -805,7 +803,7 @@ namespace JSSoft.UI
             if (sender is TerminalFontDescriptor descriptor &&
                 this.font is TerminalFont font && font.FontList.Contains(descriptor) == true)
             {
-                this.UpdateGrid();
+                this.UpdateLayout();
                 this.UpdateRows();
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
@@ -817,7 +815,13 @@ namespace JSSoft.UI
         {
             if (sender is TerminalStyle style && this.style == style)
             {
+                this.rows.SetDirty();
+                this.characterInfos.SetDirty();
                 this.UpdateStyle();
+                this.UpdateLayout();
+                this.UpdateRows();
+                this.UpdateVisibleIndex();
+                this.UpdateCursorPosition();
             }
         }
 

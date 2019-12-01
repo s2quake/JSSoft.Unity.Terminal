@@ -155,12 +155,12 @@ namespace JSSoft.UI
         //     return 0;
         // }
 
-        public static Color32 GetSelectionColor(ITerminalGrid grid)
+        public static Color GetSelectionColor(ITerminalGrid grid)
         {
             return grid != null ? grid.SelectionColor : TerminalGrid.DefaultSelectionColor;
         }
 
-        public static Color32 GetCursorColor(ITerminalGrid grid)
+        public static Color GetCursorColor(ITerminalGrid grid)
         {
             return grid != null ? grid.CursorColor : TerminalGrid.DefaultCursorColor;
         }
@@ -169,14 +169,14 @@ namespace JSSoft.UI
         {
             if (grid == null)
                 return TerminalGrid.DefaultBackgroundColor;
-            return grid.BackgroundColor ?? TerminalGrid.DefaultBackgroundColor;
+            return grid.BackgroundColor;
         }
 
         public static Color32 GetForegroundColor(ITerminalGrid grid)
         {
             if (grid == null)
                 return TerminalGrid.DefaultForegroundColor;
-            return grid.ForegroundColor ?? TerminalGrid.DefaultForegroundColor;
+            return grid.ForegroundColor;
         }
 
         public static void SelectWord(ITerminalGrid grid, TerminalPoint point)

@@ -91,6 +91,11 @@ namespace JSSoft.UI
             return this[index];
         }
 
+        public void SetDirty()
+        {
+            this.font = null;
+        }
+
         private void Resize(int bufferWidth, int bufferHeight)
         {
             for (var i = this.Count - 1; i >= bufferHeight; i--)

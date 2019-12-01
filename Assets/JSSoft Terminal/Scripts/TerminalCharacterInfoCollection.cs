@@ -103,6 +103,11 @@ namespace JSSoft.UI
             return -1;
         }
 
+        public void SetDirty()
+        {
+            this.font = null;
+        }
+
         public static int GetIndex(string text1, string text2)
         {
             var oldValue = text1 ?? throw new ArgumentNullException(nameof(text1));

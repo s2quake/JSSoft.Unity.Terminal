@@ -101,6 +101,7 @@ namespace JSSoft.UI.Editor
 
             var terminalGridObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
+            var terminal = terminalGrid.Terminal;
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
             terminalGrid.color = TerminalColors.Black;
@@ -199,6 +200,8 @@ namespace JSSoft.UI.Editor
 
             scrollbar.handleRect = handleRect;
             terminalGrid.Font = font;
+            terminal.AppendLine("hello world!");
+            terminal.Prompt = "Prompt";
         }
     }
 }

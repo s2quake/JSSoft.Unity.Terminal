@@ -65,33 +65,26 @@ namespace JSSoft.UI
 
         public void SetCharacter(TerminalCharacterInfo characterInfo)
         {
-            // if (characterInfo.Texture != null)
+            var rect = GetCellRect(this.Grid, this);
+            var character = characterInfo.Character;
+            var volume = characterInfo.Volume;
+            var texture = characterInfo.Texture;
+            var indexOfText = characterInfo.TextIndex;
+            var backgroundColor = characterInfo.BackgroundColor;
+            var foregroundColor = characterInfo.ForegroundColor;
+            this.Character = character;
+            this.Volume = volume;
+            this.Texture = texture;
+            this.TextIndex = indexOfText;
+            this.BackgroundColor = backgroundColor;
+            this.BackgroundRect = new Rect(rect.x, rect.y, rect.width * volume, rect.height);
+            this.BackgroundUV = (Vector2.zero, Vector2.zero);
+            if (characterInfo.Texture != null)
             {
-                var rect = GetCellRect(this.Grid, this);
-                var character = characterInfo.Character;
-                var volume = characterInfo.Volume;
-                var texture = characterInfo.Texture;
-                var indexOfText = characterInfo.TextIndex;
-                var backgroundColor = characterInfo.BackgroundColor;
-                var foregroundColor = characterInfo.ForegroundColor;
-                this.Character = character;
-                this.Volume = volume;
-                this.Texture = texture;
-                this.TextIndex = indexOfText;
-                this.BackgroundColor = backgroundColor;
-                this.BackgroundRect = new Rect(rect.x, rect.y, rect.width * volume, rect.height);
-                this.BackgroundUV = (Vector2.zero, Vector2.zero);
-                if (characterInfo.Texture != null)
-                {
-                    this.ForegroundColor = foregroundColor;
-                    this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
-                    this.ForegroundUV = FontUtility.GetUV(this.Font, character);
-                }
+                this.ForegroundColor = foregroundColor;
+                this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
+                this.ForegroundUV = FontUtility.GetUV(this.Font, character);
             }
-            // else
-            // {
-            //     this.Reset();
-            // }
         }
 
         public void Reset()
@@ -159,8 +152,8 @@ namespace JSSoft.UI
         {
             var itemWidth = TerminalGridUtility.GetItemWidth(grid);
             var itemHeight = TerminalGridUtility.GetItemHeight(grid);
-            var x = cell.Index * itemWidth;
-            var y = cell.Row.Index * itemHeight;
+            var x = cell.Index * itemWidth + grid.Padding.Left;
+            var y = cell.Row.Index * itemHeight + grid.Padding.Top;
             return new Rect(x, y, itemWidth, itemHeight);
         }
 

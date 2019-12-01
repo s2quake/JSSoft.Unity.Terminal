@@ -72,15 +72,15 @@ namespace JSSoft.UI
 
         int VisibleIndex { get; set; }
 
-        Color32? BackgroundColor { get; set; }
+        Color BackgroundColor { get; set; }
 
-        Color32? ForegroundColor { get; set; }
+        Color ForegroundColor { get; set; }
 
-        Color32 SelectionColor { get; set; }
+        Color SelectionColor { get; set; }
 
-        Color32 CursorColor { get; set; }
+        Color CursorColor { get; set; }
 
-        Color32 CompositionColor { get; set; }
+        Color CompositionColor { get; set; }
 
         TerminalThickness Padding { get; set; }
 
