@@ -108,6 +108,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalScrollbar.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalScrollbarHost.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalStyle.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalStyleEvents.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalThickness.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />

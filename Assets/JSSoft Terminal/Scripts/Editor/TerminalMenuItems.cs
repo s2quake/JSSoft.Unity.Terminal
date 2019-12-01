@@ -163,6 +163,7 @@ namespace JSSoft.UI.Editor
             scrollbar.targetGraphic = scrollbarImage;
             scrollbar.direction = Scrollbar.Direction.TopToBottom;
             scrollbarImage.sprite = backgroundSprite;
+            scrollbarImage.color = new Color32(139, 139, 139, 0);
             scrollbarImage.type = Image.Type.Sliced;
             scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
             scrollbarRect.SetParent(terminalGridRect);
@@ -186,6 +187,7 @@ namespace JSSoft.UI.Editor
             var handleRect = handleObj.GetComponent<RectTransform>();
             var handleImage = handleObj.GetComponent<Image>();
             handleImage.sprite = uiSprite;
+            handleImage.color = new Color32(139, 139, 139, 0);
             handleImage.type = Image.Type.Sliced;
             handleImage.pixelsPerUnitMultiplier = 0.5f;
             handleRect.SetParent(slidingAreaRect);

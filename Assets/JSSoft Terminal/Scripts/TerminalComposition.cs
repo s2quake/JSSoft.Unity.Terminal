@@ -137,6 +137,7 @@ namespace JSSoft.UI
             this.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.CursorPointChanged += TerminalGrid_CursorPointChanged;
             TerminalGridEvents.CompositionStringChanged += TerminalGrid_CompositionStringChanged;
+            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
         }
 
         protected override void OnDisable()
@@ -145,6 +146,7 @@ namespace JSSoft.UI
             this.mesh = null;
             TerminalGridEvents.CursorPointChanged -= TerminalGrid_CursorPointChanged;
             TerminalGridEvents.CompositionStringChanged -= TerminalGrid_CompositionStringChanged;
+            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
         }
 
         private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
@@ -162,6 +164,15 @@ namespace JSSoft.UI
             if (sender is TerminalGrid grid && this.grid == grid)
             {
                 this.text = grid.CompositionString;
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.color = grid.CompositionColor;
                 this.SetVerticesDirty();
             }
         }

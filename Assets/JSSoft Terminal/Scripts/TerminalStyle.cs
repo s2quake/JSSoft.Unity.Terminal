@@ -1,4 +1,4 @@
-// MIT License
+﻿// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using JSSoft.UI.Fonts;
+using UnityEditor;
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -31,13 +32,68 @@ namespace JSSoft.UI
     public class TerminalStyle : ScriptableObject
     {
         [SerializeField]
-        private List<TerminalFontDescriptor> fontList = new List<TerminalFontDescriptor>();
+        private TerminalFont font;
         [SerializeField]
-        [Range(1, 100)]
-        private int width = 14;
+        private Color backgroundColor = TerminalGrid.DefaultBackgroundColor;
         [SerializeField]
-        [Range(1, 100)]
-        private int height = 27;
+        private Color foregroundColor = TerminalGrid.DefaultForegroundColor;
+        [SerializeField]
+        private Color selectionColor = TerminalGrid.DefaultSelectionColor;
+        [SerializeField]
+        private Color cursorColor = TerminalGrid.DefaultCursorColor;
+        [SerializeField]
+        private Color compositionColor = TerminalGrid.DefaultCompositionColor;
+        [SerializeField]
+        private TerminalThickness padding = new TerminalThickness(2);
+
+        public TerminalFont Font
+        {
+            get => this.font;
+            set => this.font = value;
+        }
+
+        public Color BackgroundColor
+        {
+            get => this.backgroundColor;
+            set => this.backgroundColor = value;
+        }
+
+        public Color ForegroundColor
+        {
+            get => this.foregroundColor;
+            set => this.foregroundColor = value;
+        }
+
+        public Color SelectionColor
+        {
+            get => this.selectionColor;
+            set => this.selectionColor = value;
+        }
+
+        public Color CursorColor
+        {
+            get => this.cursorColor;
+            set => this.cursorColor = value;
+        }
+
+        public Color CompositionColor
+        {
+            get => this.compositionColor;
+            set => this.compositionColor = value;
+        }
+
+        public TerminalThickness Padding
+        {
+            get => this.padding;
+            set => this.padding = value;
+        }
+
+        public event EventHandler Validated;
+
+        protected virtual void OnValidate()
+        {
+            this.OnValidated(EventArgs.Empty);
+        }
 
         protected virtual void Awake()
         {
@@ -51,17 +107,17 @@ namespace JSSoft.UI
 
         protected virtual void OnEnable()
         {
-
+            TerminalStyleEvents.Register(this);
         }
 
         protected virtual void OnDisable()
         {
-
+            TerminalStyleEvents.Unregister(this);
         }
 
         protected virtual void OnValidated(EventArgs e)
         {
-            
+            this.Validated?.Invoke(this, EventArgs.Empty);
         }
     }
 }

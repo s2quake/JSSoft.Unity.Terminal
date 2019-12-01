@@ -52,10 +52,11 @@ namespace JSSoft.UI
         ISelectHandler,
         IDeselectHandler
     {
-        public static readonly Color32 DefaultSelectionColor = new Color32(49, 79, 129, 255);
         public static readonly Color32 DefaultBackgroundColor = new Color32(23, 23, 23, 255);
         public static readonly Color32 DefaultForegroundColor = new Color32(255, 255, 255, 255);
+        public static readonly Color32 DefaultSelectionColor = new Color32(49, 79, 129, 255);
         public static readonly Color32 DefaultCursorColor = new Color32(139, 139, 139, 255);
+        public static readonly Color32 DefaultCompositionColor = new Color32(0, 0, 0, 255);
 
         [SerializeField]
         private TerminalFont font = null;
@@ -68,6 +69,8 @@ namespace JSSoft.UI
         private Color32 selectionColor = DefaultSelectionColor;
         [SerializeField]
         private Color32 cursorColor = DefaultCursorColor;
+        [SerializeField]
+        private Color32 compositionColor = DefaultCompositionColor;
         [SerializeField]
         private int visibleIndex;
         [SerializeField]
@@ -84,6 +87,8 @@ namespace JSSoft.UI
         private string compositionString = string.Empty;
         [SerializeField]
         private TerminalThickness padding = new TerminalThickness(2);
+        [SerializeField]
+        private TerminalStyle style;
 
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
@@ -400,9 +405,25 @@ namespace JSSoft.UI
             }
         }
 
-        public Color32? BackgroundColor { get; set; }
+        public Color32? BackgroundColor
+        {
+            get => base.color;
+            set
+            {
+                base.color = value != null ? value.Value : TerminalGrid.DefaultBackgroundColor;
+                this.OnLayoutChanged(EventArgs.Empty);
+            }
+        }
 
-        public Color32? ForegroundColor { get; set; }
+        public Color32? ForegroundColor
+        {
+            get => this.fontColor;
+            set
+            {
+                this.fontColor = value != null ? value.Value : TerminalGrid.DefaultForegroundColor;
+                this.OnLayoutChanged(EventArgs.Empty);
+            }
+        }
 
         public Color32 SelectionColor
         {
@@ -420,6 +441,16 @@ namespace JSSoft.UI
             set
             {
                 this.cursorColor = value;
+                this.OnLayoutChanged(EventArgs.Empty);
+            }
+        }
+
+        public Color32 CompositionColor
+        {
+            get => this.compositionColor;
+            set
+            {
+                this.compositionColor = value;
                 this.OnLayoutChanged(EventArgs.Empty);
             }
         }
@@ -444,7 +475,23 @@ namespace JSSoft.UI
         public TerminalThickness Padding
         {
             get => this.padding;
-            set => this.padding = value;
+            set
+            {
+                this.padding = value;
+                this.OnLayoutChanged(EventArgs.Empty);
+            }
+        }
+
+        public TerminalStyle Style
+        {
+            get => this.style;
+            set
+            {
+                this.style = value;
+                this.UpdateStyle();
+                this.OnLayoutChanged(EventArgs.Empty);
+                this.OnFontChanged(EventArgs.Empty);
+            }
         }
 
         public bool IsCursorVisible
@@ -556,6 +603,7 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
+            this.UpdateStyle();
             this.UpdateGrid();
             this.UpdateVisibleIndex();
             this.UpdateRows();
@@ -589,12 +637,14 @@ namespace JSSoft.UI
             TerminalGridEvents.Register(this);
             TerminalFontEvents.Validated += Font_Validated;
             TerminalFontDescriptorEvents.Validated += FontDescriptor_Validated;
+            TerminalStyleEvents.Validated += Style_Validated;
         }
 
         protected override void OnDisable()
         {
             TerminalFontEvents.Validated -= Font_Validated;
             TerminalFontDescriptorEvents.Validated -= FontDescriptor_Validated;
+            TerminalStyleEvents.Validated -= Style_Validated;
             TerminalGridEvents.Unregister(this);
             this.DetachEvent();
             base.OnDisable();
@@ -637,6 +687,20 @@ namespace JSSoft.UI
                         eventList[i] = null;
                     }
                 }
+            }
+        }
+
+        private void UpdateStyle()
+        {
+            if (this.style != null)
+            {
+                this.font = this.style.Font;
+                this.color = this.style.BackgroundColor;
+                this.fontColor = this.style.ForegroundColor;
+                this.selectionColor = this.style.SelectionColor;
+                this.cursorColor = this.style.CursorColor;
+                this.compositionColor = this.style.CompositionColor;
+                this.padding = this.style.Padding;
             }
         }
 
@@ -746,6 +810,14 @@ namespace JSSoft.UI
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
+            }
+        }
+
+        private void Style_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalStyle style && this.style == style)
+            {
+                this.UpdateStyle();
             }
         }
 
@@ -897,6 +969,8 @@ namespace JSSoft.UI
         ITerminal ITerminalGrid.Terminal => this.terminal;
 
         IList<TerminalRange> ITerminalGrid.Selections => this.Selections;
+
+        GameObject ITerminalGrid.GameObject => this.gameObject;
 
         #endregion
     }

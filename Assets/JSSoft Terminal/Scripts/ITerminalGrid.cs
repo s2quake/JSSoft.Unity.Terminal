@@ -60,7 +60,7 @@ namespace JSSoft.UI
 
         string Text { get; set; }
 
-        TerminalFont Font { get; }
+        TerminalFont Font { get; set; }
 
         int BufferWidth { get; set; }
 
@@ -80,6 +80,10 @@ namespace JSSoft.UI
 
         Color32 CursorColor { get; set; }
 
+        Color32 CompositionColor { get; set; }
+
+        TerminalThickness Padding { get; set; }
+
         TerminalPoint CursorPoint { get; set; }
 
         IList<TerminalRange> Selections { get; }
@@ -93,6 +97,10 @@ namespace JSSoft.UI
         TerminalRange SelectingRange { get; set; }
 
         string CompositionString { get; set; }
+
+        GameObject GameObject { get; }
+
+        TerminalStyle Style { get; set; }
 
         event EventHandler FontChanged;
 

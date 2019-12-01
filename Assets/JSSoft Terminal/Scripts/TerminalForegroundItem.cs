@@ -94,6 +94,7 @@ namespace JSSoft.UI
             TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
             TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
+            TerminalStyleEvents.Validated += TerminalStyle_Validated;
         }
 
         protected override void OnDisable()
@@ -101,6 +102,7 @@ namespace JSSoft.UI
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
             TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
             TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+            TerminalStyleEvents.Validated -= TerminalStyle_Validated;
             base.OnDisable();
         }
 
@@ -133,6 +135,16 @@ namespace JSSoft.UI
         {
             if (sender is TerminalGrid grid == this.grid)
             {
+                this.color = TerminalGridUtility.GetForegroundColor(this.grid);
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalStyle_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalStyle style && this.grid?.Style == style)
+            {
+                this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                 this.SetVerticesDirty();
             }
         }

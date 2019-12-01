@@ -22,18 +22,38 @@
 
 using System;
 using System.Collections.Generic;
-using System.Xml.Serialization;
-using UnityEngine;
-using UnityEngine.TextCore;
 
-namespace JSSoft.UI.Fonts.Serializations
+namespace JSSoft.UI
 {
-    public class CharsSerializationInfo
+    public static class TerminalStyleEvents
     {
-        [XmlAttribute("count")]
-        public int Count { get; set; }
+        private static readonly HashSet<TerminalStyle> styles = new HashSet<TerminalStyle>();
 
-        [XmlElement("char")]
-        public CharSerializationInfo[] Items { get; set; }
+        public static void Register(TerminalStyle style)
+        {
+            if (style == null)
+                throw new ArgumentNullException(nameof(style));
+            if (styles.Contains(style) == true)
+                throw new ArgumentException($"{nameof(style)} is already exists.");
+            styles.Add(style);
+            style.Validated += Style_Validated;
+        }
+
+        public static void Unregister(TerminalStyle style)
+        {
+            if (style == null)
+                throw new ArgumentNullException(nameof(style));
+            if (styles.Contains(style) == false)
+                throw new ArgumentException($"{nameof(style)} does not exists.");
+            style.Validated -= Style_Validated;
+            styles.Remove(style);
+        }
+
+        public static event EventHandler Validated;
+
+        private static void Style_Validated(object sender, EventArgs e)
+        {
+            Validated?.Invoke(sender, e);
+        }
     }
 }
