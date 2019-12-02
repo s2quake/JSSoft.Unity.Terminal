@@ -149,34 +149,6 @@ namespace JSSoft.UI
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
         }
 
-        private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && this.grid == grid)
-            {
-                this.columnIndex = grid.CursorPoint.X;
-                this.rowIndex = grid.CursorPoint.Y - grid.VisibleIndex;
-                this.SetVerticesDirty();
-            }
-        }
-
-        private void TerminalGrid_CompositionStringChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && this.grid == grid)
-            {
-                this.text = grid.CompositionString;
-                this.SetVerticesDirty();
-            }
-        }
-
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && this.grid == grid)
-            {
-                this.color = grid.CompositionColor;
-                this.SetVerticesDirty();
-            }
-        }
-
         protected override void UpdateGeometry()
         {
             base.UpdateGeometry();
@@ -189,8 +161,9 @@ namespace JSSoft.UI
                 var texture = characterInfo.Texture;
                 var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
-                var bx = this.columnIndex * itemWidth + (int)this.Offset.x;
-                var by = this.rowIndex * itemHeight + (int)this.Offset.y;
+                var padding = TerminalGridUtility.GetPadding(this.grid);
+                var bx = this.columnIndex * itemWidth + padding.Left + (int)this.Offset.x;
+                var by = this.rowIndex * itemHeight + padding.Top + (int)this.Offset.y;
                 var foregroundRect = FontUtility.GetForegroundRect(this.Font, character, bx, by);
                 var backgroundRect = new Rect(bx, by, itemWidth, itemHeight);
                 var uv = FontUtility.GetUV(this.Font, character);
@@ -224,6 +197,34 @@ namespace JSSoft.UI
                 this.mesh.Clear();
                 this.canvasRenderer.SetMesh(this.mesh);
                 this.texture = null;
+            }
+        }
+
+        private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.columnIndex = grid.CursorPoint.X;
+                this.rowIndex = grid.CursorPoint.Y - grid.VisibleIndex;
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_CompositionStringChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.text = grid.CompositionString;
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && this.grid == grid)
+            {
+                this.color = grid.CompositionColor;
+                this.SetVerticesDirty();
             }
         }
 

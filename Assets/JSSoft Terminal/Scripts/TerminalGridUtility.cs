@@ -30,6 +30,8 @@ namespace JSSoft.UI
 {
     public static class TerminalGridUtility
     {
+        public static readonly TerminalThickness DefaultPadding = new TerminalThickness(2);
+
         public static Rect TransformRect(ITerminalGrid grid, Rect rect)
         {
             return TransformRect(grid, rect, false);
@@ -135,6 +137,15 @@ namespace JSSoft.UI
             return FontUtility.DefaultItemHeight;
         }
 
+        public static TerminalThickness GetPadding(ITerminalGrid grid)
+        {
+            if (grid != null)
+            {
+                return grid.Padding;
+            }
+            return DefaultPadding;
+        }
+
         public static GlyphRect GetCellRect(ITerminalGrid grid, ITerminalCell cell)
         {
             if (cell == null)
@@ -144,6 +155,21 @@ namespace JSSoft.UI
             var x = cell.Index * itemWidth;
             var y = cell.Row.Index * itemHeight;
             return new GlyphRect(x, y, itemWidth, itemHeight);
+        }
+
+        public static GlyphRect GetRect(ITerminalGrid grid, TerminalPoint point)
+        {
+            return GetRect(grid, point.X, point.Y);
+        }
+
+        public static GlyphRect GetRect(ITerminalGrid grid, int x, int y)
+        {
+            var itemWidth = TerminalGridUtility.GetItemWidth(grid);
+            var itemHeight = TerminalGridUtility.GetItemHeight(grid);
+            var padding = TerminalGridUtility.GetPadding(grid);
+            var x1 = x * itemWidth + padding.Left;
+            var y1 = y * itemHeight + padding.Top;
+            return new GlyphRect(x1, y1, itemWidth, itemHeight);
         }
 
         // public static int GetItemWidth(ITerminalGrid grid, char character)

@@ -113,12 +113,14 @@ namespace JSSoft.UI
 
         public Vector2 WorldToGrid(Vector2 position)
         {
-            var rect = this.GetComponent<RectTransform>().rect;
-            position.y = rect.height - position.y;
-            position.y += TerminalGridUtility.GetItemHeight(this) * this.visibleIndex;
-            position.x -= this.Rectangle.x;
-            position.y -= this.Rectangle.y;
-            return position;
+            var rect = this.rectTransform.rect;
+            var camera = this.GetComponentInParent<Canvas>().worldCamera;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(this.rectTransform, position, camera, out var localPosition);
+            localPosition.y = rect.height - localPosition.y;
+            localPosition.y += TerminalGridUtility.GetItemHeight(this) * this.visibleIndex;
+            localPosition.x += (int)this.Rectangle.width / 2;
+            localPosition.y -= (int)this.Rectangle.height / 2;
+            return localPosition;
         }
 
         public TerminalPoint Intersect(Vector2 position)
@@ -337,8 +339,8 @@ namespace JSSoft.UI
                     }
                 }
                 this.text = newValue;
-                this.UpdateRows();
                 this.OnTextChanged(EventArgs.Empty);
+                this.UpdateRows();
             }
         }
 
@@ -490,7 +492,7 @@ namespace JSSoft.UI
             set
             {
                 this.style = value;
-                this.UpdateStyle();
+                this.UpdateColor();
                 this.OnLayoutChanged(EventArgs.Empty);
                 this.OnFontChanged(EventArgs.Empty);
             }
@@ -551,6 +553,10 @@ namespace JSSoft.UI
 
         public event EventHandler Validated;
 
+        public event EventHandler Enabled;
+
+        public event EventHandler Disabled;
+
         protected virtual void OnTextChanged(EventArgs e)
         {
             this.TextChanged?.Invoke(this, EventArgs.Empty);
@@ -601,14 +607,24 @@ namespace JSSoft.UI
             this.Validated?.Invoke(this, e);
         }
 
+        protected virtual void OnEnabled(EventArgs e)
+        {
+            this.Enabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnDisabled(EventArgs e)
+        {
+            this.Disabled?.Invoke(this, e);
+        }
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.UpdateStyle();
+            this.UpdateColor();
             this.UpdateLayout();
-            this.UpdateVisibleIndex();
             this.UpdateRows();
+            this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
             this.OnValidated(EventArgs.Empty);
         }
@@ -618,8 +634,8 @@ namespace JSSoft.UI
         {
             base.OnRectTransformDimensionsChange();
             this.UpdateLayout();
-            this.UpdateVisibleIndex();
             this.UpdateRows();
+            this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
             this.OnTextChanged(EventArgs.Empty);
             this.OnCursorPointChanged(EventArgs.Empty);
@@ -640,6 +656,7 @@ namespace JSSoft.UI
             TerminalFontEvents.Validated += Font_Validated;
             TerminalFontDescriptorEvents.Validated += FontDescriptor_Validated;
             TerminalStyleEvents.Validated += Style_Validated;
+            this.OnEnabled(EventArgs.Empty);
         }
 
         protected override void OnDisable()
@@ -650,6 +667,7 @@ namespace JSSoft.UI
             TerminalGridEvents.Unregister(this);
             this.DetachEvent();
             base.OnDisable();
+            this.OnDisabled(EventArgs.Empty);
         }
 
         protected override void OnDestroy()
@@ -692,7 +710,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void UpdateStyle()
+        private void UpdateColor()
         {
             if (this.style != null)
             {
@@ -723,6 +741,7 @@ namespace JSSoft.UI
         private void UpdateRectTransform()
         {
             this.rectTransform.sizeDelta = this.rectangle.size;
+            // Debug.Log(this.rectangle.size);
         }
 
         private void UpdateVisibleIndex()
@@ -815,9 +834,7 @@ namespace JSSoft.UI
         {
             if (sender is TerminalStyle style && this.style == style)
             {
-                this.rows.SetDirty();
-                this.characterInfos.SetDirty();
-                this.UpdateStyle();
+                this.UpdateColor();
                 this.UpdateLayout();
                 this.UpdateRows();
                 this.UpdateVisibleIndex();

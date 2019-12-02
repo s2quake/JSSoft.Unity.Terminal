@@ -104,6 +104,7 @@ namespace JSSoft.UI.Editor
             var terminal = terminalGrid.Terminal;
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
+            terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.color = TerminalColors.Black;
             terminalGridRect.SetParent(canvasTransform);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
@@ -114,6 +115,7 @@ namespace JSSoft.UI.Editor
             var backgroundObj = new GameObject("TerminalBackground") { layer = canvas.gameObject.layer };
             var background = backgroundObj.AddComponent<TerminalBackground>();
             var backgroundRect = background.rectTransform;
+            background.material = new Material(Graphic.defaultGraphicMaterial);
             background.Grid = terminalGrid;
             backgroundRect.SetParent(terminalGridRect);
             backgroundRect.anchorMin = Vector3.zero;

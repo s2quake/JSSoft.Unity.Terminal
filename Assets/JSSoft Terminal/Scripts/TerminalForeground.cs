@@ -147,6 +147,7 @@ namespace JSSoft.UI
                     var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
                     var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
                     var transform = foregroundItem.rectTransform;
+                    foregroundItem.material = new Material(Graphic.defaultGraphicMaterial);
                     foregroundItem.Texture = texture;
                     foregroundItem.Grid = this.grid;
                     transform.SetParent(this.transform);

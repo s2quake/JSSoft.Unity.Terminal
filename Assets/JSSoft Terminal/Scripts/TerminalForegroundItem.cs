@@ -90,7 +90,6 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            base.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
             TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;

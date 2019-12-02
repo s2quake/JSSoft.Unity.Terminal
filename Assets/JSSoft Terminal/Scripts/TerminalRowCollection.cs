@@ -29,15 +29,23 @@ namespace JSSoft.UI
     class TerminalRowCollection : List<TerminalRow>
     {
         private readonly TerminalGrid grid;
+        private readonly Terminal terminal;
         private readonly Stack<TerminalRow> pool = new Stack<TerminalRow>();
         private TerminalFont font;
         private string text = string.Empty;
         private int bufferWidth;
         private int bufferHeight;
+        private int updateIndex;
 
         public TerminalRowCollection(TerminalGrid grid)
         {
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
+            this.grid.Enabled += Grid_Enabled;
+            this.grid.Disabled += Grid_Disabled;
+            this.grid.FontChanged += Grid_FontChanged;
+            this.grid.LayoutChanged += Grid_LayoutChanged;
+            this.grid.TextChanged += Grid_TextChanged;
+            this.grid.Validated += Grid_Validated;
         }
 
         public void Udpate(TerminalCharacterInfoCollection characterInfos)
@@ -46,10 +54,10 @@ namespace JSSoft.UI
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            if (this.text != text || this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
+            if (this.updateIndex < text.Length)
             {
                 var volume = characterInfos.Volume;
-                var index = this.FindUpdateIndex(font, text, bufferWidth, bufferHeight);
+                var index = this.updateIndex;
                 var dic = new Dictionary<int, int>(this.Count);
                 this.Resize(bufferWidth, volume.Bottom);
                 for (var i = index; i < text.Length; i++)
@@ -78,6 +86,7 @@ namespace JSSoft.UI
             this.text = text;
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
+            this.updateIndex = text.Length;
         }
 
         public TerminalRow Prepare(int index)
@@ -89,11 +98,6 @@ namespace JSSoft.UI
             }
 
             return this[index];
-        }
-
-        public void SetDirty()
-        {
-            this.font = null;
         }
 
         private void Resize(int bufferWidth, int bufferHeight)
@@ -116,13 +120,6 @@ namespace JSSoft.UI
             }
         }
 
-        private int FindUpdateIndex(TerminalFont font, string text, int bufferWidth, int bufferHeight)
-        {
-            if (this.font != font || this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
-                return 0;
-            return GetIndex(this.text, text);
-        }
-
         public static int GetIndex(string text1, string text2)
         {
             var oldValue = text1 ?? throw new ArgumentNullException(nameof(text1));
@@ -139,6 +136,50 @@ namespace JSSoft.UI
                 }
             }
             return index;
+        }
+
+        private void Grid_Enabled(object sender, EventArgs e)
+        {
+            TerminalStyleEvents.Validated += Style_Validated;
+        }
+
+        private void Grid_Disabled(object sender, EventArgs e)
+        {
+            TerminalStyleEvents.Validated -= Style_Validated;
+        }
+
+        private void Grid_FontChanged(object sender, EventArgs e)
+        {
+            this.updateIndex = 0;
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            var bufferWidth = this.grid.BufferWidth;
+            var bufferHeight = this.grid.BufferHeight;
+            if (this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
+            {
+                this.updateIndex = 0;
+            }
+            // this.bufferWidth = bufferWidth;
+            // this.bufferHeight = bufferHeight;
+        }
+
+        private void Grid_TextChanged(object sender, EventArgs e)
+        {
+            var text = this.grid.Text + char.MinValue;
+            this.updateIndex = GetIndex(this.text, text);
+            // this.text = text;
+        }
+
+        private void Grid_Validated(object sender, EventArgs e)
+        {
+            this.updateIndex = 0;
+        }
+
+        private void Style_Validated(object sender, EventArgs e)
+        {
+            this.updateIndex = 0;
         }
     }
 }

@@ -37,10 +37,17 @@ namespace JSSoft.UI
         private string text = string.Empty;
         private int bufferWidth;
         private int bufferHeight;
+        private int updateIndex;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
         {
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
+            this.grid.Enabled += Grid_Enabled;
+            this.grid.Disabled += Grid_Disabled;
+            this.grid.FontChanged += Grid_FontChanged;
+            this.grid.LayoutChanged += Grid_LayoutChanged;
+            this.grid.TextChanged += Grid_TextChanged;
+            this.grid.Validated += Grid_Validated;
         }
 
         public void Update()
@@ -49,7 +56,7 @@ namespace JSSoft.UI
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            if (this.text != text || this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
+            if (this.updateIndex < text.Length)
             {
                 var index = this.FindUpdateIndex(font, text, bufferWidth, bufferHeight);
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
@@ -90,6 +97,7 @@ namespace JSSoft.UI
             this.text = text;
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
+            this.updateIndex = text.Length;
         }
 
         public int PointToIndex(TerminalPoint point)
@@ -148,6 +156,47 @@ namespace JSSoft.UI
             if (index >= this.items.Length)
                 return 0;
             return index;
+        }
+
+        private void Grid_Enabled(object sender, EventArgs e)
+        {
+            TerminalStyleEvents.Validated += Style_Validated;
+        }
+
+        private void Grid_Disabled(object sender, EventArgs e)
+        {
+            TerminalStyleEvents.Validated -= Style_Validated;
+        }
+
+        private void Grid_FontChanged(object sender, EventArgs e)
+        {
+            this.updateIndex = 0;
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            var bufferWidth = this.grid.BufferWidth;
+            var bufferHeight = this.grid.BufferHeight;
+            if (this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
+            {
+                this.updateIndex = 0;
+            }
+        }
+
+        private void Grid_TextChanged(object sender, EventArgs e)
+        {
+            var text = this.grid.Text + char.MinValue;
+            this.updateIndex = GetIndex(this.text, text);
+        }
+
+        private void Grid_Validated(object sender, EventArgs e)
+        {
+            this.updateIndex = 0;
+        }
+
+        private void Style_Validated(object sender, EventArgs e)
+        {
+            this.updateIndex = 0;
         }
 
         #region IEnumerable

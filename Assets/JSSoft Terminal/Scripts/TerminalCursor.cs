@@ -108,8 +108,9 @@ namespace JSSoft.UI
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect);
             var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
             var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
-            var x = this.cursorLeft * itemWidth;
-            var y = this.cursorTop * itemHeight;
+            var padding = TerminalGridUtility.GetPadding(this.grid);
+            var x = this.cursorLeft * itemWidth + padding.Left;
+            var y = this.cursorTop * itemHeight + padding.Top;
             var itemRect = new GlyphRect(x, y, itemWidth * this.volume, itemHeight);
             if (this.isVisible == false)
             {
