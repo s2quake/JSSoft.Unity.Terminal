@@ -120,7 +120,7 @@ namespace JSSoft.UI
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
-                Debug.Log("TerminalGrid_Validated");
+                // Debug.Log("TerminalGrid_Validated");
                 this.SetAllDirty();
             }
         }

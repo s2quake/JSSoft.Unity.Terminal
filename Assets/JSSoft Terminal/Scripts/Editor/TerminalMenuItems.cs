@@ -203,7 +203,7 @@ namespace JSSoft.UI.Editor
             scrollbar.handleRect = handleRect;
             terminalGrid.Font = font;
             terminal.AppendLine("hello world!");
-            terminal.Prompt = "Prompt";
+            terminal.Prompt = "Prompt>";
         }
     }
 }
