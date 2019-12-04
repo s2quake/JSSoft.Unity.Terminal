@@ -27,6 +27,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
+using System.ComponentModel;
 #if UNITY_EDITOR
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
 #endif
@@ -38,7 +39,7 @@ namespace JSSoft.UI
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    class TerminalGrid : MaskableGraphic, ITerminalGrid,
+    class TerminalGrid : MaskableGraphic, ITerminalGrid, INotifyPropertyChanged,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
@@ -81,10 +82,24 @@ namespace JSSoft.UI
         [SerializeField]
         [Range(5, 1000)]
         private int bufferHeight = 25;
+
+        [Header("Cursor settings")]
+        [SerializeField]
+        private TerminalCursorStyle cursorStyle;
+        [SerializeField]
+        [Range(0, 100)]
+        private int cursorThickness = 2;
+        [SerializeField]
+        private bool isCursorBlinkable;
+        [SerializeField]
+        [Range(0, 3)]
+        private float cursorBlinkDelay = 0.5f;
         [SerializeField]
         private TerminalPoint cursorPosition;
         [SerializeField]
         private bool isCursorVisible = true;
+
+        [Header("Etc settings")]
         [SerializeField]
         private string compositionString = string.Empty;
         [SerializeField]
@@ -533,6 +548,50 @@ namespace JSSoft.UI
             }
         }
 
+        public TerminalCursorStyle CursorStyle
+        {
+            get => this.style != null ? this.style.CursorStyle : this.cursorStyle;
+            set
+            {
+                this.cursorStyle = value;
+                this.InvokePropertyChangedEvent(nameof(CursorStyle));
+            }
+        }
+
+        public int CursorThickness
+        {
+            get => this.style != null ? this.style.CursorThickness : this.cursorThickness;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.cursorThickness = value;
+                this.InvokePropertyChangedEvent(nameof(CursorThickness));
+            }
+        }
+
+        public bool IsCursorBlinkable
+        {
+            get => this.style != null ? this.style.IsCursorBlinkable : this.isCursorBlinkable;
+            set
+            {
+                this.isCursorBlinkable = value;
+                this.InvokePropertyChangedEvent(nameof(IsCursorBlinkable));
+            }
+        }
+
+        public float CursorBlinkDelay
+        {
+            get => this.style != null ? this.style.CursorBlinkDelay : this.cursorBlinkDelay;
+            set
+            {
+                if (value < 0.0f)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.cursorBlinkDelay = value;
+                this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
+            }
+        }
+
         public event EventHandler TextChanged;
 
         public event EventHandler VisibleIndexChanged;
@@ -556,6 +615,8 @@ namespace JSSoft.UI
         public event EventHandler Enabled;
 
         public event EventHandler Disabled;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnTextChanged(EventArgs e)
         {
@@ -615,6 +676,11 @@ namespace JSSoft.UI
         protected virtual void OnDisabled(EventArgs e)
         {
             this.Disabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
         }
 
 #if UNITY_EDITOR
@@ -868,6 +934,11 @@ namespace JSSoft.UI
                         from cell in row.Cells
                         select cell;
             return query;
+        }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private BaseInput InputSystem

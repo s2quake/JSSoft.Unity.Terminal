@@ -45,6 +45,16 @@ namespace JSSoft.UI
         private Color compositionColor = TerminalGrid.DefaultCompositionColor;
         [SerializeField]
         private TerminalThickness padding = new TerminalThickness(2);
+        [SerializeField]
+        private TerminalCursorStyle cursorStyle;
+        [SerializeField]
+        [Range(0, 100)]
+        private int cursorThickness = 2;
+        [SerializeField]
+        private bool isCursorBlinkable;
+        [SerializeField]
+        [Range(0, 3)]
+        private float cursorBlinkDelay = 0.5f;
 
         public TerminalFont Font
         {
@@ -86,6 +96,46 @@ namespace JSSoft.UI
         {
             get => this.padding;
             set => this.padding = value;
+        }
+
+        public TerminalCursorStyle CursorStyle
+        {
+            get => this.cursorStyle;
+            set
+            {
+                this.cursorStyle = value;
+            }
+        }
+
+        public int CursorThickness
+        {
+            get => this.cursorThickness;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.cursorThickness = value;
+            }
+        }
+
+        public bool IsCursorBlinkable
+        {
+            get => this.isCursorBlinkable;
+            set
+            {
+                this.isCursorBlinkable = value;
+            }
+        }
+
+        public float CursorBlinkDelay
+        {
+            get => this.cursorBlinkDelay;
+            set
+            {
+                if (value < 0.0f)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.cursorBlinkDelay = value;
+            }
         }
 
         public event EventHandler Validated;

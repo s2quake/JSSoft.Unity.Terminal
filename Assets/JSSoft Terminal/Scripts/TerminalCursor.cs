@@ -21,6 +21,8 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.TextCore;
 using UnityEngine.UI;
@@ -29,7 +31,6 @@ namespace JSSoft.UI
 {
     class TerminalCursor : MaskableGraphic
     {
-        private static readonly int lineWidth = 2;
         [SerializeField]
         private TerminalGrid grid = null;
         [SerializeField]
@@ -40,9 +41,21 @@ namespace JSSoft.UI
         private bool isVisible = true;
         [SerializeField]
         private bool isFocused = false;
+        [SerializeField]
+        private TerminalCursorStyle style;
+        [SerializeField]
+        [Range(0, 100)]
+        private int thickness = 2;
+        [SerializeField]
+        private bool isBlinkable;
+        [SerializeField]
+        [Range(0, 3)]
+        private float blinkDelay = 0.6f;
 
-        private int volume = 1;
         private readonly TerminalMesh terminalMesh = new TerminalMesh();
+        private int volume = 1;
+        private float delay;
+        private bool blinkToggle;
 
         public TerminalCursor()
         {
@@ -99,6 +112,50 @@ namespace JSSoft.UI
             }
         }
 
+        public TerminalCursorStyle Style
+        {
+            get => this.style;
+            set
+            {
+                this.style = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        public int Thickness
+        {
+            get => this.thickness;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.thickness = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        public bool IsBlinkable
+        {
+            get => this.isBlinkable;
+            set
+            {
+                this.isBlinkable = value;
+                this.SetVerticesDirty();
+            }
+        }
+
+        public float BlinkDelay
+        {
+            get => this.blinkDelay;
+            set
+            {
+                if (value < 0.0f)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.blinkDelay = value;
+                this.SetVerticesDirty();
+            }
+        }
+
         public Terminal Terminal => this.grid?.Terminal;
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -106,13 +163,8 @@ namespace JSSoft.UI
             base.OnPopulateMesh(vh);
 
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect);
-            var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
-            var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
-            var padding = TerminalGridUtility.GetPadding(this.grid);
-            var x = this.cursorLeft * itemWidth + padding.Left;
-            var y = this.cursorTop * itemHeight + padding.Top;
-            var itemRect = new GlyphRect(x, y, itemWidth * this.volume, itemHeight);
-            if (this.isVisible == false)
+            var itemRect = this.GetItemRect();
+            if (this.isVisible == false || this.blinkToggle == true)
             {
                 this.terminalMesh.Count = 0;
             }
@@ -125,17 +177,19 @@ namespace JSSoft.UI
             }
             else
             {
-                var right = x + itemWidth * this.volume;
-                var bottom = y + itemHeight;
-                var size = lineWidth;
+                var thickness = this.thickness;
+                var x = itemRect.x;
+                var y = itemRect.y;
+                var right = x + itemRect.width;
+                var bottom = y + itemRect.height;
                 var lt1 = new Vector2(x, y);
                 var rt1 = new Vector2(right, y);
                 var lb1 = new Vector2(x, bottom);
                 var rb1 = new Vector2(right, bottom);
-                var lt2 = new Vector2(x + size, y + size);
-                var rt2 = new Vector2(right - size, y + size);
-                var lb2 = new Vector2(x + size, bottom - size);
-                var rb2 = new Vector2(right - size, bottom - size);
+                var lt2 = new Vector2(x + thickness, y + thickness);
+                var rt2 = new Vector2(right - thickness, y + thickness);
+                var lb2 = new Vector2(x + thickness, bottom - thickness);
+                var rb2 = new Vector2(right - thickness, bottom - thickness);
                 this.terminalMesh.Count = 4;
                 this.terminalMesh.SetVertex(0, lt1, rt1, lt2, rt2, rect);
                 this.terminalMesh.SetVertex(1, lt1, lt2, lb1, lb2, rect);
@@ -160,6 +214,7 @@ namespace JSSoft.UI
             this.cursorLeft = Math.Max(0, this.cursorLeft);
             this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
+            this.SetVerticesDirty();
         }
 #endif
 
@@ -173,6 +228,8 @@ namespace JSSoft.UI
             TerminalGridEvents.GotFocus += TerminalGrid_GotFocus;
             TerminalGridEvents.LostFocus += TerminalGrid_LostFocus;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
+            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
+            TerminalStyleEvents.Validated += Style_Validated;
             if (this.grid != null)
             {
                 this.isVisible = this.grid.IsCursorVisible;
@@ -189,6 +246,33 @@ namespace JSSoft.UI
             TerminalGridEvents.GotFocus -= TerminalGrid_GotFocus;
             TerminalGridEvents.LostFocus -= TerminalGrid_LostFocus;
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
+            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
+            TerminalStyleEvents.Validated += Style_Validated;
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            this.delay = this.blinkDelay;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+        }
+
+        protected virtual void Update()
+        {
+            if (Application.isPlaying == true && this.blinkDelay > 0 && this.isBlinkable == true)
+            {
+                this.delay -= Time.deltaTime;
+                if (this.delay < 0)
+                {
+                    this.delay += this.blinkDelay;
+                    this.blinkToggle = !this.blinkToggle;
+                    this.SetVerticesDirty();
+                }
+            }
         }
 
         protected override void OnRectTransformDimensionsChange()
@@ -245,7 +329,40 @@ namespace JSSoft.UI
             }
         }
 
-        private void UpdateLayout()
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is ITerminalGrid grid == this.grid)
+            {
+                var propertyName = e.PropertyName;
+                if (propertyName == nameof(ITerminalGrid.CursorStyle))
+                {
+                    this.style = this.grid.CursorStyle;
+                }
+                else if (propertyName == nameof(ITerminalGrid.CursorThickness))
+                {
+                    this.thickness = this.grid.CursorThickness;
+                }
+                else if (propertyName == nameof(ITerminalGrid.IsCursorBlinkable))
+                {
+                    this.isBlinkable = this.grid.IsCursorBlinkable;
+                }
+                else if (propertyName == nameof(ITerminalGrid.CursorBlinkDelay))
+                {
+                    this.blinkDelay = this.grid.CursorBlinkDelay;
+                }
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void Style_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalStyle style == this.grid?.Style)
+            {
+                this.UpdateLayout();
+            }
+        }
+
+        private async void UpdateLayout()
         {
             var point = this.grid.CursorPoint;
             this.cursorLeft = this.grid.CursorPoint.X;
@@ -256,7 +373,34 @@ namespace JSSoft.UI
             }
             this.isVisible = this.grid.IsCursorVisible;
             base.color = TerminalGridUtility.GetCursorColor(this.grid);
+            this.style = this.grid.CursorStyle;
+            this.thickness = this.grid.CursorThickness;
+            this.isBlinkable = this.grid.IsCursorBlinkable;
+            this.blinkDelay = this.grid.CursorBlinkDelay;
+            this.delay = this.grid.CursorBlinkDelay;
+            await Task.Delay(1);
             this.SetVerticesDirty();
+        }
+
+        private GlyphRect GetItemRect()
+        {
+            var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
+            var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
+            var padding = TerminalGridUtility.GetPadding(this.grid);
+            var x = this.cursorLeft * itemWidth + padding.Left;
+            var y = this.cursorTop * itemHeight + padding.Top;
+            var volumn = this.volume;
+            var thickness = this.thickness;
+            switch (this.style)
+            {
+                case TerminalCursorStyle.Block:
+                    return new GlyphRect(x, y, itemWidth * volume, itemHeight);
+                case TerminalCursorStyle.Underline:
+                    return new GlyphRect(x, y + itemHeight - thickness, itemWidth * volume, thickness);
+                case TerminalCursorStyle.VerticalBar:
+                    return new GlyphRect(x, y, thickness, itemHeight);
+            }
+            throw new NotImplementedException();
         }
 
         private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;

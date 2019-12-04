@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -102,6 +103,14 @@ namespace JSSoft.UI
 
         TerminalStyle Style { get; set; }
 
+        TerminalCursorStyle CursorStyle { get; set; }
+
+        int CursorThickness { get; set; }
+
+        bool IsCursorBlinkable { get; set; }
+
+        float CursorBlinkDelay { get; set; }
+
         event EventHandler FontChanged;
 
         event EventHandler TextChanged;
@@ -121,5 +130,7 @@ namespace JSSoft.UI
         event EventHandler LostFocus;
 
         event EventHandler Validated;
+
+        event PropertyChangedEventHandler PropertyChanged;
     }
 }

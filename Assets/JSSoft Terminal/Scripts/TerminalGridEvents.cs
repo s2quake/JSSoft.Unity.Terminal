@@ -24,6 +24,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using System.ComponentModel;
 
 namespace JSSoft.UI
 {
@@ -48,6 +49,7 @@ namespace JSSoft.UI
             grid.GotFocus += Grid_GotFocus;
             grid.LostFocus += Grid_LostFocus;
             grid.Validated += Grid_Validated;
+            grid.PropertyChanged += Grid_PropertyChanged;
         }
 
         public static void Unregister(ITerminalGrid grid)
@@ -66,6 +68,7 @@ namespace JSSoft.UI
             grid.GotFocus -= Grid_GotFocus;
             grid.LostFocus -= Grid_LostFocus;
             grid.Validated -= Grid_Validated;
+            grid.PropertyChanged -= Grid_PropertyChanged;
             grids.Remove(grid);
         }
 
@@ -88,6 +91,8 @@ namespace JSSoft.UI
         public static event EventHandler LostFocus;
 
         public static event EventHandler Validated;
+
+        public static event PropertyChangedEventHandler PropertyChanged;
 
         private static void Grid_FontChanged(object sender, EventArgs e)
         {
@@ -137,6 +142,11 @@ namespace JSSoft.UI
         private static void Grid_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
+        }
+
+        private static void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(sender, e);
         }
 
         internal static void InvokeFontValidated(TerminalFont font)

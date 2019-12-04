@@ -23,3 +23,7 @@ MonoBehaviour:
     top: 2
     right: 2
     bottom: 2
+  cursorStyle: 0
+  cursorThickness: 2
+  isCursorBlinkable: 0
+  cursorBlinkDelay: 0.5
