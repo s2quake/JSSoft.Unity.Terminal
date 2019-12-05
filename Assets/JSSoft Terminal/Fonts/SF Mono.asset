@@ -2133,3 +2133,4 @@ MonoBehaviour:
     texture: {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
   textures:
   - {fileID: 2800000, guid: 5ca1613e9c28cd347a2ae6b5229f51d9, type: 3}
+  width: 14

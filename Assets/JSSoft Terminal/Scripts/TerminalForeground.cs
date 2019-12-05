@@ -29,6 +29,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace JSSoft.UI
 {
@@ -52,57 +53,42 @@ namespace JSSoft.UI
 
         protected override void Awake()
         {
+
         }
 
         protected override void Start()
         {
             base.Start();
-            TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
-            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
-            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalGridEvents.FontChanged += TerminalGrid_FontChanged;
+            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalGridEvents.FontChanged -= TerminalGrid_FontChanged;
+            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
         }
 
-        private void TerminalGrid_FontChanged(object sender, EventArgs e)
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (object.Equals(sender, this.grid) == false)
+                return;
+
+            var propertyName = e.PropertyName;
+            if (propertyName == nameof(ITerminalGrid.Font))
             {
                 this.RefreshChilds();
-            }
-        }
-
-        private void TerminalGrid_TextChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid == this.grid)
-            {
-                // this.SetVerticesDirty();
-            }
-        }
-
-        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid == this.grid)
-            {
-                // this.SetVerticesDirty();
             }
         }
 

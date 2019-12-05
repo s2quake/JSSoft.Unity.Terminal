@@ -26,6 +26,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using System.Collections;
+using System.ComponentModel;
 
 namespace JSSoft.UI
 {
@@ -74,22 +75,14 @@ namespace JSSoft.UI
 
         private void AttachEvent()
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged += TerminalGrid_TextChanged;
-                this.grid.LayoutChanged += TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
-            }
+            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
         }
 
         private void DetachEvent()
         {
-            if (this.grid != null)
-            {
-                this.grid.TextChanged -= TerminalGrid_TextChanged;
-                this.grid.LayoutChanged -= TerminalGrid_LayoutChanged;
-                this.grid.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
-            }
+            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
         }
 
         private void UpdateScrollbarVisible()
@@ -135,24 +128,33 @@ namespace JSSoft.UI
             this.verticalScrollbar.SetValueWithoutNotify(value);
         }
 
-        private void TerminalGrid_TextChanged(object sender, EventArgs e)
-        {
-            this.UpdateScrollbarVisible();
-            this.UpdateScrollbarSize();
-        }
-
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
-            this.UpdateScrollbarVisible();
-            this.UpdateScrollbarSize();
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                this.UpdateScrollbarVisible();
+                this.UpdateScrollbarSize();
+            }
         }
 
-        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            this.UpdateScrollbarValue();
-            if (this.grid != null && this.grid.IsScrolling == true)
+            if (sender is TerminalGrid grid != this.grid)
+                return;
+
+            var propertyName = e.PropertyName;
+            if (propertyName == nameof(ITerminalGrid.VisibleIndex))
             {
-                this.BeginFade();
+                this.UpdateScrollbarValue();
+                if (this.grid.IsScrolling == true)
+                {
+                    this.BeginFade();
+                }
+            }
+            else if (propertyName == nameof(ITerminalGrid.Text))
+            {
+                this.UpdateScrollbarVisible();
+                this.UpdateScrollbarSize();
             }
         }
 

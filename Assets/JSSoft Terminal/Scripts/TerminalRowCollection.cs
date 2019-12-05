@@ -23,6 +23,8 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using UnityEngine;
 
 namespace JSSoft.UI
 {
@@ -42,9 +44,8 @@ namespace JSSoft.UI
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.grid.Enabled += Grid_Enabled;
             this.grid.Disabled += Grid_Disabled;
-            this.grid.FontChanged += Grid_FontChanged;
+            this.grid.PropertyChanged += Grid_PropertyChanged;
             this.grid.LayoutChanged += Grid_LayoutChanged;
-            this.grid.TextChanged += Grid_TextChanged;
             this.grid.Validated += Grid_Validated;
         }
 
@@ -148,9 +149,18 @@ namespace JSSoft.UI
             TerminalStyleEvents.Validated -= Style_Validated;
         }
 
-        private void Grid_FontChanged(object sender, EventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            this.updateIndex = 0;
+            var propertyName = e.PropertyName;
+            if (propertyName == nameof(ITerminalGrid.Font))
+            {
+                this.updateIndex = 0;
+            }
+            else if (propertyName == nameof(ITerminalGrid.Text))
+            {
+                var text = this.grid.Text + char.MinValue;
+                this.updateIndex = GetIndex(this.text, text);
+            }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
@@ -163,13 +173,6 @@ namespace JSSoft.UI
             }
             // this.bufferWidth = bufferWidth;
             // this.bufferHeight = bufferHeight;
-        }
-
-        private void Grid_TextChanged(object sender, EventArgs e)
-        {
-            var text = this.grid.Text + char.MinValue;
-            this.updateIndex = GetIndex(this.text, text);
-            // this.text = text;
         }
 
         private void Grid_Validated(object sender, EventArgs e)

@@ -107,6 +107,7 @@ namespace JSSoft.UI
                 var item = this.charInfos[i];
                 if (item.ID >= 32 && item.ID < 126)
                 {
+                    Debug.Log($"{(char)item.ID}: {item.XAdvance}");
                     width = Math.Max(width, item.XAdvance);
                 }
             }
@@ -152,7 +153,6 @@ namespace JSSoft.UI
                     font.charInfos[i] = charInfo;
                 }
                 font.UpdateWidth();
-
             }
         }
 #endif

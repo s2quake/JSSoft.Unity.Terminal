@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 using UnityEngine;
@@ -135,8 +136,7 @@ namespace JSSoft.UI
             base.material = new Material(Shader.Find("Unlit/Color"));
             base.material.color = base.color;
             this.material = new Material(Shader.Find("UI/Default"));
-            TerminalGridEvents.CursorPointChanged += TerminalGrid_CursorPointChanged;
-            TerminalGridEvents.CompositionStringChanged += TerminalGrid_CompositionStringChanged;
+            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
         }
 
@@ -144,8 +144,7 @@ namespace JSSoft.UI
         {
             base.OnDisable();
             this.mesh = null;
-            TerminalGridEvents.CursorPointChanged -= TerminalGrid_CursorPointChanged;
-            TerminalGridEvents.CompositionStringChanged -= TerminalGrid_CompositionStringChanged;
+            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
         }
 
@@ -200,22 +199,28 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
-            {
-                this.columnIndex = grid.CursorPoint.X;
-                this.rowIndex = grid.CursorPoint.Y - grid.VisibleIndex;
-                this.SetVerticesDirty();
-            }
-        }
+            if (object.Equals(sender, this.grid) == false)
+                return;
 
-        private void TerminalGrid_CompositionStringChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && this.grid == grid)
+            switch (e.PropertyName)
             {
-                this.text = grid.CompositionString;
-                this.SetVerticesDirty();
+                case nameof(ITerminalGrid.CursorPoint):
+                    {
+                        var cursorPoint = this.grid.CursorPoint;
+                        var visibleIndex = this.grid.VisibleIndex;
+                        this.columnIndex = cursorPoint.X;
+                        this.rowIndex = cursorPoint.Y - visibleIndex;
+                        this.SetVerticesDirty();
+                    }
+                    break;
+                case nameof(ITerminalGrid.CompositionString):
+                    {
+                        this.text = this.grid.CompositionString;
+                        this.SetVerticesDirty();
+                    }
+                    break;
             }
         }
 

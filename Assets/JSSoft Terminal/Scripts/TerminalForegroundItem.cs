@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -90,8 +91,7 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
-            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalStyleEvents.Validated += TerminalStyle_Validated;
         }
@@ -99,8 +99,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
-            TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
-            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             TerminalStyleEvents.Validated -= TerminalStyle_Validated;
             base.OnDisable();
         }
@@ -112,19 +111,20 @@ namespace JSSoft.UI
 
         protected override void OnDestroy()
         {
+
         }
 
-        private void TerminalGrid_TextChanged(object sender, EventArgs e)
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (object.Equals(sender, this.grid) == false)
+                return;
+
+            var propertyName = e.PropertyName;
+            if (propertyName == nameof(ITerminalGrid.VisibleIndex))
             {
                 this.SetVerticesDirty();
             }
-        }
-
-        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid == this.grid)
+            else if (propertyName == nameof(ITerminalGrid.Text))
             {
                 this.SetVerticesDirty();
             }

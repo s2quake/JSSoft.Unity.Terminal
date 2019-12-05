@@ -59,7 +59,13 @@ namespace JSSoft.UI.Editor
             var element = this.fontProperty.GetArrayElementAtIndex(index);
             rect.height -= 4;
             rect.y += 2;
-            EditorGUI.PropertyField(rect, element);
+            if (index == 0)
+                EditorGUI.LabelField(rect, "Main Font", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
+            else
+                EditorGUI.LabelField(rect, $"Sub Font {index - 1}");
+            rect.x += 70;
+            rect.width -= 70;
+            EditorGUI.ObjectField(rect, element.objectReferenceValue, typeof(TerminalFontDescriptor), false);
         }
     }
 }

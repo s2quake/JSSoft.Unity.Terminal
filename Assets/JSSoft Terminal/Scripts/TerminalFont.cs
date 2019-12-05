@@ -25,6 +25,9 @@ using System.Linq;
 using System.Collections.Generic;
 using JSSoft.UI.Fonts;
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace JSSoft.UI
 {
@@ -92,7 +95,6 @@ namespace JSSoft.UI
 
         protected virtual void OnValidate()
         {
-            this.UpdateSize();
             this.OnValidated(EventArgs.Empty);
         }
 
@@ -123,18 +125,9 @@ namespace JSSoft.UI
 
         private void UpdateSize()
         {
-            var width = 0;
-            var height = 0;
-            foreach (var item in this.Fonts)
-            {
-                if (item is TerminalFontDescriptor descriptor)
-                {
-                    width = Math.Max(descriptor.Width, width);
-                    height = Math.Max(descriptor.Height, height);
-                }
-            }
-            this.width = width != 0 ? width : FontUtility.DefaultItemWidth;
-            this.height = height != 0 ? height : FontUtility.DefaultItemHeight;
+            var mainFont = this.Fonts.FirstOrDefault();
+            this.width = mainFont != null ? mainFont.Width : FontUtility.DefaultItemWidth;
+            this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
         }
 
         private void TerminalFontDescriptor_Validated(object sender, EventArgs e)
@@ -142,6 +135,9 @@ namespace JSSoft.UI
             if (sender is TerminalFontDescriptor descriptor && this.Fonts.Contains(descriptor))
             {
                 this.UpdateSize();
+#if UNITY_EDITOR
+                EditorUtility.SetDirty(this);
+#endif
             }
         }
 

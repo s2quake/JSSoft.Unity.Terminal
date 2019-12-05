@@ -111,19 +111,9 @@ namespace JSSoft.UI
 
         float CursorBlinkDelay { get; set; }
 
-        event EventHandler FontChanged;
-
-        event EventHandler TextChanged;
-
-        event EventHandler VisibleIndexChanged;
-
         event EventHandler LayoutChanged;
 
         event EventHandler SelectionChanged;
-
-        event EventHandler CursorPointChanged;
-
-        event EventHandler CompositionStringChanged;
 
         event EventHandler GotFocus;
 

@@ -42,12 +42,13 @@ namespace JSSoft.UI.Editor
                 var fontDescriptor = AssetDatabase.LoadAssetAtPath(fontPath, typeof(TerminalFontDescriptor)) as TerminalFontDescriptor;
                 if (fontDescriptor == null)
                 {
-                    var font = TerminalFontDescriptor.Create(fntAsset);
-                    AssetDatabase.CreateAsset(font, fontPath);
+                    fontDescriptor = TerminalFontDescriptor.Create(fntAsset);
+                    AssetDatabase.CreateAsset(fontDescriptor, fontPath);
                 }
                 else
                 {
                     TerminalFontDescriptor.Update(fontDescriptor, fntAsset);
+                    EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
             }

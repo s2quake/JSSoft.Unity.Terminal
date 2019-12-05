@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -93,9 +94,8 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             TerminalGridEvents.Validated += TerminalGrid_Validated;
-            TerminalGridEvents.TextChanged += TerminalGrid_TextChanged;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
-            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.SelectionChanged += TerminalGrid_SelectionChanged;
         }
 
@@ -103,9 +103,8 @@ namespace JSSoft.UI
         {
             base.OnDisable();
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
-            TerminalGridEvents.TextChanged -= TerminalGrid_TextChanged;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
-            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
+            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             TerminalGridEvents.SelectionChanged -= TerminalGrid_SelectionChanged;
         }
 
@@ -125,14 +124,6 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_TextChanged(object sender, EventArgs e)
-        {
-            if (sender is ITerminalGrid grid == this.grid)
-            {
-                this.SetVerticesDirty();
-            }
-        }
-
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
@@ -141,9 +132,17 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (object.Equals(sender, this.grid) == false)
+                return;
+
+            var propertyName = e.PropertyName;
+            if (propertyName == nameof(ITerminalGrid.VisibleIndex))
+            {
+                this.SetVerticesDirty();
+            }
+            else if (propertyName == nameof(ITerminalGrid.Text))
             {
                 this.SetVerticesDirty();
             }

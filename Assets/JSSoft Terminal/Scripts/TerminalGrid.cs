@@ -189,15 +189,15 @@ namespace JSSoft.UI
         public void Append(string text, int index)
         {
             this.text = this.text.Insert(index, text);
+            this.InvokePropertyChangedEvent(nameof(Text));
             this.UpdateRows();
-            this.OnTextChanged(EventArgs.Empty);
         }
 
         public void Remove(int startIndex, int length)
         {
             this.text.Remove(startIndex, length);
+            this.InvokePropertyChangedEvent(nameof(Text));
             this.UpdateRows();
-            this.OnTextChanged(EventArgs.Empty);
         }
 
         public void Focus()
@@ -340,21 +340,12 @@ namespace JSSoft.UI
             get => this.text;
             set
             {
-                var newValue = value ?? throw new ArgumentNullException(nameof(value));
-                var oldValue = this.text;
-                var minLength = Math.Min(newValue.Length, oldValue.Length);
-                var index = minLength;
-
-                for (var i = 0; i < minLength; i++)
-                {
-                    if (newValue[i] != oldValue[i])
-                    {
-                        index = i;
-                        break;
-                    }
-                }
-                this.text = newValue;
-                this.OnTextChanged(EventArgs.Empty);
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                if (this.text == value)
+                    return;
+                this.text = value;
+                this.InvokePropertyChangedEvent(nameof(Text));
                 this.UpdateRows();
             }
         }
@@ -365,7 +356,8 @@ namespace JSSoft.UI
             set
             {
                 this.font = value;
-                this.OnFontChanged(EventArgs.Empty);
+                this.InvokePropertyChangedEvent(nameof(Font));
+                // this.OnFontChanged(EventArgs.Empty);
             }
         }
 
@@ -409,7 +401,7 @@ namespace JSSoft.UI
                     this.visibleIndex = value;
                     this.UpdateVisibleIndex();
                     this.scrollPos = this.visibleIndex;
-                    this.OnVisibleIndexChanged(EventArgs.Empty);
+                    this.InvokePropertyChangedEvent(nameof(VisibleIndex));
                 }
             }
         }
@@ -483,7 +475,7 @@ namespace JSSoft.UI
                 {
                     this.cursorPosition = value;
                     this.UpdateCursorPosition();
-                    this.OnCursorPointChanged(EventArgs.Empty);
+                    this.InvokePropertyChangedEvent(nameof(CursorPoint));
                 }
                 this.Selections.Clear();
             }
@@ -508,8 +500,7 @@ namespace JSSoft.UI
             {
                 this.style = value;
                 this.UpdateColor();
-                this.OnLayoutChanged(EventArgs.Empty);
-                this.OnFontChanged(EventArgs.Empty);
+                this.InvokePropertyChangedEvent(nameof(Style));
             }
         }
 
@@ -519,7 +510,7 @@ namespace JSSoft.UI
             set
             {
                 this.isCursorVisible = value;
-                this.OnCursorPointChanged(EventArgs.Empty);
+                this.InvokePropertyChangedEvent(nameof(IsCursorVisible));
             }
         }
 
@@ -544,7 +535,7 @@ namespace JSSoft.UI
             set
             {
                 this.compositionString = value ?? throw new ArgumentNullException(nameof(value));
-                this.OnCompositionStringChanged(EventArgs.Empty);
+                this.InvokePropertyChangedEvent(nameof(CompositionString));
             }
         }
 
@@ -592,19 +583,19 @@ namespace JSSoft.UI
             }
         }
 
-        public event EventHandler TextChanged;
+        // public event EventHandler TextChanged;
 
-        public event EventHandler VisibleIndexChanged;
+        // public event EventHandler VisibleIndexChanged;
 
         public event EventHandler LayoutChanged;
 
-        public event EventHandler FontChanged;
+        // public event EventHandler FontChanged;
 
         public event EventHandler SelectionChanged;
 
-        public event EventHandler CursorPointChanged;
+        // public event EventHandler CursorPointChanged;
 
-        public event EventHandler CompositionStringChanged;
+        // public event EventHandler CompositionStringChanged;
 
         public event EventHandler GotFocus;
 
@@ -618,39 +609,14 @@ namespace JSSoft.UI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnTextChanged(EventArgs e)
-        {
-            this.TextChanged?.Invoke(this, EventArgs.Empty);
-        }
-
         protected virtual void OnLayoutChanged(EventArgs e)
         {
             this.LayoutChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnFontChanged(EventArgs e)
-        {
-            this.FontChanged?.Invoke(this, e);
-        }
-
-        protected virtual void OnVisibleIndexChanged(EventArgs e)
-        {
-            this.VisibleIndexChanged?.Invoke(this, EventArgs.Empty);
-        }
-
         protected virtual void OnSelectionChanged(EventArgs e)
         {
             this.SelectionChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnCursorPointChanged(EventArgs e)
-        {
-            this.CursorPointChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnCompositionStringChanged(EventArgs e)
-        {
-            this.CompositionStringChanged?.Invoke(this, EventArgs.Empty);
         }
 
         protected virtual void OnGotFocus(EventArgs e)
@@ -703,9 +669,7 @@ namespace JSSoft.UI
             this.UpdateRows();
             this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
-            this.OnTextChanged(EventArgs.Empty);
-            this.OnCursorPointChanged(EventArgs.Empty);
-            this.OnCompositionStringChanged(EventArgs.Empty);
+            this.OnLayoutChanged(EventArgs.Empty);
         }
 
         protected override void Awake()
@@ -1022,7 +986,7 @@ namespace JSSoft.UI
                 this.visibleIndex = (int)this.scrollPos;
                 this.IsScrolling = true;
                 this.UpdateVisibleIndex();
-                this.OnVisibleIndexChanged(EventArgs.Empty);
+                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
                 this.IsScrolling = false;
             }
         }

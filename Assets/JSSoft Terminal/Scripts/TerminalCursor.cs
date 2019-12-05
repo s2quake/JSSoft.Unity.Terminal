@@ -222,9 +222,7 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             this.SetVerticesDirty();
-            TerminalGridEvents.CursorPointChanged += TerminalGrid_CursorPointChanged;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
-            TerminalGridEvents.VisibleIndexChanged += TerminalGrid_VisibleIndexChanged;
             TerminalGridEvents.GotFocus += TerminalGrid_GotFocus;
             TerminalGridEvents.LostFocus += TerminalGrid_LostFocus;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
@@ -240,9 +238,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalGridEvents.CursorPointChanged -= TerminalGrid_CursorPointChanged;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
-            TerminalGridEvents.VisibleIndexChanged -= TerminalGrid_VisibleIndexChanged;
             TerminalGridEvents.GotFocus -= TerminalGrid_GotFocus;
             TerminalGridEvents.LostFocus -= TerminalGrid_LostFocus;
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
@@ -280,12 +276,37 @@ namespace JSSoft.UI
             base.OnRectTransformDimensionsChange();
         }
 
-        private void TerminalGrid_CursorPointChanged(object sender, EventArgs e)
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (object.Equals(sender, this.grid) == false)
+                return;
+
+            var propertyName = e.PropertyName;
+            if (propertyName == nameof(ITerminalGrid.CursorStyle))
+            {
+                this.style = this.grid.CursorStyle;
+            }
+            else if (propertyName == nameof(ITerminalGrid.CursorThickness))
+            {
+                this.thickness = this.grid.CursorThickness;
+            }
+            else if (propertyName == nameof(ITerminalGrid.IsCursorBlinkable))
+            {
+                this.isBlinkable = this.grid.IsCursorBlinkable;
+            }
+            else if (propertyName == nameof(ITerminalGrid.CursorBlinkDelay))
+            {
+                this.blinkDelay = this.grid.CursorBlinkDelay;
+            }
+            else if (propertyName == nameof(ITerminalGrid.CursorPoint))
             {
                 this.UpdateLayout();
             }
+            else if (propertyName == nameof(ITerminalGrid.VisibleIndex))
+            {
+                this.UpdateLayout();
+            }
+            this.SetVerticesDirty();
         }
 
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
@@ -293,14 +314,6 @@ namespace JSSoft.UI
             if (sender is ITerminalGrid grid == this.grid)
             {
                 this.color = this.grid.CursorColor;
-                this.UpdateLayout();
-            }
-        }
-
-        private void TerminalGrid_VisibleIndexChanged(object sender, EventArgs e)
-        {
-            if (sender is ITerminalGrid grid == this.grid)
-            {
                 this.UpdateLayout();
             }
         }
@@ -326,31 +339,6 @@ namespace JSSoft.UI
             if (sender is ITerminalGrid grid == this.grid)
             {
                 this.UpdateLayout();
-            }
-        }
-
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is ITerminalGrid grid == this.grid)
-            {
-                var propertyName = e.PropertyName;
-                if (propertyName == nameof(ITerminalGrid.CursorStyle))
-                {
-                    this.style = this.grid.CursorStyle;
-                }
-                else if (propertyName == nameof(ITerminalGrid.CursorThickness))
-                {
-                    this.thickness = this.grid.CursorThickness;
-                }
-                else if (propertyName == nameof(ITerminalGrid.IsCursorBlinkable))
-                {
-                    this.isBlinkable = this.grid.IsCursorBlinkable;
-                }
-                else if (propertyName == nameof(ITerminalGrid.CursorBlinkDelay))
-                {
-                    this.blinkDelay = this.grid.CursorBlinkDelay;
-                }
-                this.SetVerticesDirty();
             }
         }
 
