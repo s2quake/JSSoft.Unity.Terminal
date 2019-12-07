@@ -46,6 +46,8 @@
   </PropertyGroup>
   <ItemGroup>     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalFontInspector.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalMenuItems.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalStyleBehaviourEndNameEditAction.cs" />
+     <None Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalStyleBehaviour.txt" />
  <Reference Include="UnityEditor.TestRunner">
  <HintPath>C:/Users/s2quake/source/repos/JSSoft.Unity.Terminal/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>

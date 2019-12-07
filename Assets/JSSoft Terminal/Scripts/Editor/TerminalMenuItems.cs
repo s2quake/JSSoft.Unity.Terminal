@@ -68,6 +68,21 @@ namespace JSSoft.UI.Editor
             return false;
         }
 
+        [MenuItem("Assets/Create/Terminal/Style Behaviour")]
+        public static void CreateStyleBehaviour()
+        {
+            var action = ScriptableObject.CreateInstance<TerminalStyleBehaviourEndNameEditAction>();
+            var icon = AssetPreview.GetMiniTypeThumbnail(typeof(MonoBehaviour));
+            ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, action, "TerminalStyleBehaviour.cs", icon, string.Empty);
+        }
+
+        [MenuItem("Terminal/Test")]
+        public static void Test()
+        {
+            var obj = Selection.activeObject;
+            Debug.Log(obj.GetType());
+        }
+
         // [MenuItem("Terminal/Create Font Group")]
         // private static void CreateFontGroup()
         // {

@@ -45,6 +45,8 @@ namespace JSSoft.UI
             grid.LostFocus += Grid_LostFocus;
             grid.Validated += Grid_Validated;
             grid.PropertyChanged += Grid_PropertyChanged;
+            grid.Enabled += Grid_Enabled;
+            grid.Disabled += Grid_Disabled;
         }
 
         public static void Unregister(ITerminalGrid grid)
@@ -59,6 +61,8 @@ namespace JSSoft.UI
             grid.LostFocus -= Grid_LostFocus;
             grid.Validated -= Grid_Validated;
             grid.PropertyChanged -= Grid_PropertyChanged;
+            grid.Enabled += Grid_Enabled;
+            grid.Disabled += Grid_Disabled;
             grids.Remove(grid);
         }
 
@@ -73,7 +77,11 @@ namespace JSSoft.UI
         public static event EventHandler Validated;
 
         public static event PropertyChangedEventHandler PropertyChanged;
-        
+
+        public static event EventHandler Enabled;
+
+        public static event EventHandler Disabled;
+
         private static void Grid_LayoutChanged(object sender, EventArgs e)
         {
             LayoutChanged?.Invoke(sender, e);
@@ -104,38 +112,14 @@ namespace JSSoft.UI
             PropertyChanged?.Invoke(sender, e);
         }
 
-        // internal static void InvokeFontValidated(TerminalFont font)
-        // {
-        //     if (font == null)
-        //         throw new ArgumentNullException(nameof(font));
-        //     foreach (var item in grids)
-        //     {
-        //         if (item.Font == font)
-        //         {
-        //             Validated?.Invoke(item, EventArgs.Empty);
-        //         }
-        //     }
-        // }
+        private static void Grid_Enabled(object sender, EventArgs e)
+        {
+            Enabled?.Invoke(sender, e);
+        }
 
-        // internal static void InvokeFontDescriptorValidated(TerminalFontDescriptor fontDescriptor)
-        // {
-        //     if (fontDescriptor == null)
-        //         throw new ArgumentNullException(nameof(fontDescriptor));
-        //     foreach (var item in grids)
-        //     {
-        //         if (IsFontDescriptorUsed(item.Font, fontDescriptor) == true)
-        //         {
-        //             Validated?.Invoke(item, EventArgs.Empty);
-        //         }
-        //     }
-        // }
-
-        // private static bool IsFontDescriptorUsed(TerminalFont font, TerminalFontDescriptor fontDescriptor)
-        // {
-        //     if (font == null)
-        //         return false;
-        //     var textures = font.Textures ?? new Texture2D[] { };
-        //     return textures.Union(fontDescriptor.Textures).Any();
-        // }
+        private static void Grid_Disabled(object sender, EventArgs e)
+        {
+            Disabled?.Invoke(sender, e);
+        }
     }
 }

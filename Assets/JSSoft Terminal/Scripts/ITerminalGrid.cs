@@ -122,5 +122,9 @@ namespace JSSoft.UI
         event EventHandler Validated;
 
         event PropertyChangedEventHandler PropertyChanged;
+
+        event EventHandler Enabled;
+
+        event EventHandler Disabled;
     }
 }

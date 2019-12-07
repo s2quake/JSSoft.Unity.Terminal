@@ -31,6 +31,7 @@ namespace JSSoft.UI.InputHandlers
     {
         public MacOSInputHandler()
         {
+            
         }
 
         protected override bool OnBeginDrag(InputHandlerContext context, PointerEventData eventData)
