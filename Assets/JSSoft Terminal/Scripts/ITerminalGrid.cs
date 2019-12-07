@@ -111,6 +111,10 @@ namespace JSSoft.UI
 
         float CursorBlinkDelay { get; set; }
 
+        IKeyBindingCollection KeyBindings { get; set; }
+
+        IInputHandler InputHandler { get; set; }
+
         event EventHandler LayoutChanged;
 
         event EventHandler SelectionChanged;

@@ -683,10 +683,10 @@ namespace JSSoft.UI
             TerminalFontEvents.Validated -= Font_Validated;
             TerminalFontDescriptorEvents.Validated -= FontDescriptor_Validated;
             TerminalStyleEvents.Validated -= Style_Validated;
-            TerminalGridEvents.Unregister(this);
             this.DetachEvent();
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
+            TerminalGridEvents.Unregister(this);
         }
 
         protected override void OnDestroy()

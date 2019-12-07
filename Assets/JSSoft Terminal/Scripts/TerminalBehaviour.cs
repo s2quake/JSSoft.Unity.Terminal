@@ -29,7 +29,7 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public abstract class TerminalStyleBehaviour : ScriptableObject
+    public abstract class TerminalBehaviour : ScriptableObject
     {
         protected virtual void OnEnable()
         {

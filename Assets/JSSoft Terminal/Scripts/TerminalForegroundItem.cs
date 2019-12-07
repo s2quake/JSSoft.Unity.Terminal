@@ -91,6 +91,7 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
+            // base.material = new Material(Graphic.defaultGraphicMaterial);
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalStyleEvents.Validated += TerminalStyle_Validated;

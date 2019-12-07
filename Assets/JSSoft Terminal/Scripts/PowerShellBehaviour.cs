@@ -28,16 +28,35 @@ using System.Collections;
 
 namespace JSSoft.UI
 {
-    public class PowerShellBehaviour : TerminalStyleBehaviour
+    [CreateAssetMenu(menuName = "Terminal/PowerShell Behaviour")]
+    public class PowerShellBehaviour : TerminalBehaviour
     {
         protected override void OnAttach(ITerminalGrid grid)
         {
-            Debug.Log("onenable");
+            grid.GotFocus += Grid_GotFocus;
+            grid.LostFocus += Grid_LostFocus;
         }
 
         protected override void OnDetach(ITerminalGrid grid)
         {
-            Debug.Log("ondisable");
+            grid.GotFocus -= Grid_GotFocus;
+            grid.LostFocus -= Grid_LostFocus;
+        }
+
+        private void Grid_GotFocus(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid)
+            {
+                grid.IsCursorVisible = true;
+            }
+        }
+
+        private void Grid_LostFocus(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid)
+            {
+                grid.IsCursorVisible = false;
+            }
         }
     }
 }

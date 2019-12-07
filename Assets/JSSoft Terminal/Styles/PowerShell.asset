@@ -27,4 +27,4 @@ MonoBehaviour:
   cursorThickness: 4
   isCursorBlinkable: 1
   cursorBlinkDelay: 0.6
-  behaviour: {fileID: 11400000, guid: bb09a8721fdb2854183f97e61022f5c9, type: 2}
+  behaviour: {fileID: 11400000, guid: 09867d25376a54053a70d90869f905af, type: 2}

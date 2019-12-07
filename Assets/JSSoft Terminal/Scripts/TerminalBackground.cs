@@ -56,11 +56,6 @@ namespace JSSoft.UI
             this.terminalMesh.Count = visibleCells.Count();
             foreach (var item in visibleCells)
             {
-                // if (index == 0)
-                // {
-                //     Debug.Log(item.BackgroundRect);
-                //     Debug.Log(this.rectTransform.rect);
-                // }
                 this.terminalMesh.SetVertex(index, item.BackgroundRect, rect);
                 this.terminalMesh.SetUV(index, item.BackgroundUV);
                 if (item.BackgroundColor is Color32 color)
@@ -119,7 +114,6 @@ namespace JSSoft.UI
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
-                // Debug.Log("TerminalGrid_Validated");
                 this.SetAllDirty();
             }
         }

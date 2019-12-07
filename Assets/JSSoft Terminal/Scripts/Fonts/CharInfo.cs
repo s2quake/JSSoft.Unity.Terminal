@@ -46,12 +46,8 @@ namespace JSSoft.UI.Fonts
         private int yOffset;
         [SerializeField]
         private int xAdvance;
-        // [SerializeField]
-        // private int page;
         [SerializeField]
         private int channel;
-        [SerializeField]
-        private TerminalFont font;
         [SerializeField]
         private Texture2D texture;
 

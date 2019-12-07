@@ -61,8 +61,8 @@ namespace JSSoft.UI
             grid.LostFocus -= Grid_LostFocus;
             grid.Validated -= Grid_Validated;
             grid.PropertyChanged -= Grid_PropertyChanged;
-            grid.Enabled += Grid_Enabled;
-            grid.Disabled += Grid_Disabled;
+            grid.Enabled -= Grid_Enabled;
+            grid.Disabled -= Grid_Disabled;
             grids.Remove(grid);
         }
 
