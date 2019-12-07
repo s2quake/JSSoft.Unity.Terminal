@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -34,7 +35,7 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public class TerminalFontDescriptor : ScriptableObject
+    public class TerminalFontDescriptor : ScriptableObject, INotifyPropertyChanged
     {
         [SerializeField]
         private BaseInfo baseInfo;
@@ -75,6 +76,8 @@ namespace JSSoft.UI
 
         public event EventHandler Validated;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         protected virtual void OnValidate()
         {
             this.OnValidated(EventArgs.Empty);
@@ -95,6 +98,11 @@ namespace JSSoft.UI
             this.Validated?.Invoke(this, e);
         }
 
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
+        }
+
         /// <summary>
         /// 프린트 가능한 문자들의 폭만을 계산
         /// https://theasciicode.com.ar
@@ -113,6 +121,11 @@ namespace JSSoft.UI
             if (width == 0)
                 throw new InvalidOperationException("invalid font");
             this.width = width;
+        }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
 #if UNITY_EDITOR

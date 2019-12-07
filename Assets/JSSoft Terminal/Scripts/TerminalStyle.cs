@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using JSSoft.UI.Fonts;
 using UnityEditor;
 using UnityEngine;
@@ -29,7 +30,7 @@ using UnityEngine;
 namespace JSSoft.UI
 {
     [CreateAssetMenu(menuName = "Terminal/Create Style")]
-    public class TerminalStyle : ScriptableObject
+    public class TerminalStyle : ScriptableObject, INotifyPropertyChanged
     {
         [SerializeField]
         private TerminalFont font;
@@ -59,43 +60,71 @@ namespace JSSoft.UI
         public TerminalFont Font
         {
             get => this.font;
-            set => this.font = value;
+            set
+            {
+                this.font = value;
+                this.InvokePropertyChangedEvent(nameof(Font));
+            }
         }
 
         public Color BackgroundColor
         {
             get => this.backgroundColor;
-            set => this.backgroundColor = value;
+            set
+            {
+                this.backgroundColor = value;
+                this.InvokePropertyChangedEvent(nameof(BackgroundColor));
+            }
         }
 
         public Color ForegroundColor
         {
             get => this.foregroundColor;
-            set => this.foregroundColor = value;
+            set
+            {
+                this.foregroundColor = value;
+                this.InvokePropertyChangedEvent(nameof(ForegroundColor));
+            }
         }
 
         public Color SelectionColor
         {
             get => this.selectionColor;
-            set => this.selectionColor = value;
+            set
+            {
+                this.selectionColor = value;
+                this.InvokePropertyChangedEvent(nameof(SelectionColor));
+            }
         }
 
         public Color CursorColor
         {
             get => this.cursorColor;
-            set => this.cursorColor = value;
+            set
+            {
+                this.cursorColor = value;
+                this.InvokePropertyChangedEvent(nameof(CursorColor));
+            }
         }
 
         public Color CompositionColor
         {
             get => this.compositionColor;
-            set => this.compositionColor = value;
+            set
+            {
+                this.compositionColor = value;
+                this.InvokePropertyChangedEvent(nameof(CompositionColor));
+            }
         }
 
         public TerminalThickness Padding
         {
             get => this.padding;
-            set => this.padding = value;
+            set
+            {
+                this.padding = value;
+                this.InvokePropertyChangedEvent(nameof(Padding));
+            }
         }
 
         public TerminalCursorStyle CursorStyle
@@ -104,6 +133,7 @@ namespace JSSoft.UI
             set
             {
                 this.cursorStyle = value;
+                this.InvokePropertyChangedEvent(nameof(CursorStyle));
             }
         }
 
@@ -115,6 +145,7 @@ namespace JSSoft.UI
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.cursorThickness = value;
+                this.InvokePropertyChangedEvent(nameof(CursorThickness));
             }
         }
 
@@ -124,6 +155,7 @@ namespace JSSoft.UI
             set
             {
                 this.isCursorBlinkable = value;
+                this.InvokePropertyChangedEvent(nameof(IsCursorBlinkable));
             }
         }
 
@@ -135,10 +167,13 @@ namespace JSSoft.UI
                 if (value < 0.0f)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.cursorBlinkDelay = value;
+                this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
             }
         }
 
         public event EventHandler Validated;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnValidate()
         {
@@ -167,7 +202,17 @@ namespace JSSoft.UI
 
         protected virtual void OnValidated(EventArgs e)
         {
-            this.Validated?.Invoke(this, EventArgs.Empty);
+            this.Validated?.Invoke(this, e);
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
+        }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
     }
 }

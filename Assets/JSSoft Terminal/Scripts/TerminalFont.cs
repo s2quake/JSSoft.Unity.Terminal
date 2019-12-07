@@ -25,6 +25,9 @@ using System.Linq;
 using System.Collections.Generic;
 using JSSoft.UI.Fonts;
 using UnityEngine;
+using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -32,7 +35,7 @@ using UnityEditor;
 namespace JSSoft.UI
 {
     [CreateAssetMenu(menuName = "Terminal/Create Font")]
-    public class TerminalFont : ScriptableObject
+    public class TerminalFont : ScriptableObject, INotifyPropertyChanged
     {
         private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
         [SerializeField]
@@ -41,6 +44,13 @@ namespace JSSoft.UI
         private int width = FontUtility.DefaultItemWidth;
         [SerializeField]
         private int height = FontUtility.DefaultItemHeight;
+
+        private ObservableCollection<TerminalFontDescriptor> fonts = new ObservableCollection<TerminalFontDescriptor>();
+
+        public TerminalFont()
+        {
+            this.fonts.CollectionChanged += Fonts_CollectionChanged;
+        }
 
         public bool Contains(char character)
         {
@@ -69,7 +79,7 @@ namespace JSSoft.UI
             }
         }
 
-        public IList<TerminalFontDescriptor> FontList => this.fontList;
+        public IList<TerminalFontDescriptor> Fonts => this.fonts;
 
         public Texture2D[] Textures
         {
@@ -87,11 +97,29 @@ namespace JSSoft.UI
             }
         }
 
-        public int Height => this.height;
+        public int Height
+        {
+            get => this.height;
+            set
+            {
+                this.height = value;
+                this.InvokePropertyChangedEvent(nameof(Height));
+            }
+        }
 
-        public int Width => this.width;
+        public int Width
+        {
+            get => this.width;
+            set
+            {
+                this.width = value;
+                this.InvokePropertyChangedEvent(nameof(Width));
+            }
+        }
 
         public event EventHandler Validated;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnValidate()
         {
@@ -121,6 +149,18 @@ namespace JSSoft.UI
         protected virtual void OnValidated(EventArgs e)
         {
             this.Validated?.Invoke(this, e);
+            this.fonts.CollectionChanged -= Fonts_CollectionChanged;
+            this.fonts.Clear();
+            foreach (var item in this.fontList)
+            {
+                this.fonts.Add(item);
+            }
+            this.fonts.CollectionChanged += Fonts_CollectionChanged;
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
         }
 
         private void UpdateSize()
@@ -141,6 +181,15 @@ namespace JSSoft.UI
             }
         }
 
-        private IReadOnlyList<TerminalFontDescriptor> Fonts => this.fontList ?? emptyList;
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void Fonts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.fontList.Clear();
+            this.fontList.AddRange(this.fonts);
+        }
     }
 }

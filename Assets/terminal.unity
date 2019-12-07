@@ -407,7 +407,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!1 &279916371
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +548,7 @@ MonoBehaviour:
       m_Calls: []
   grid: {fileID: 1537649556}
   cursorLeft: 21
-  cursorTop: 6
+  cursorTop: 5
   isVisible: 1
   isFocused: 0
   style: 1
@@ -595,7 +595,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!21 &497372759
 Material:
   serializedVersion: 6
@@ -628,7 +628,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!21 &682205189
 Material:
   serializedVersion: 6
@@ -1022,7 +1022,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!1 &1201549689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,7 +1072,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1806391076}
+  m_Material: {fileID: 1899845599}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1082,7 +1082,7 @@ MonoBehaviour:
   fontColor: {r: 0, g: 0, b: 0, a: 1}
   grid: {fileID: 1537649556}
   columnIndex: 21
-  rowIndex: 6
+  rowIndex: 5
 --- !u!222 &1201549692
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1123,7 +1123,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!1 &1269570820
 GameObject:
   m_ObjectHideFlags: 0
@@ -1222,7 +1222,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!1 &1361024815
 GameObject:
   m_ObjectHideFlags: 0
@@ -1385,7 +1385,7 @@ MonoBehaviour:
       m_Calls: []
   font: {fileID: 11400000, guid: 9741a67b6ace542859c96b83ff879c44, type: 2}
   text: "Windows PowerShell\nCopyright (C) Microsoft Corporation. All rights reserved.\n\n\uC0C8\uB85C\uC6B4
-    \uD06C\uB85C\uC2A4 \uD50C\uB7AB\uD3FC PowerShell \uC0AC\uC6A9 https://aka.ms/pscore6\n\n\r\nPS
+    \uD06C\uB85C\uC2A4 \uD50C\uB7AB\uD3FC PowerShell \uC0AC\uC6A9 https://aka.ms/pscore6\n\r\nPS
     C:\\Users\\s2quake> "
   backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   foregroundColor: {r: 1, g: 1, b: 1, a: 1}
@@ -1401,7 +1401,7 @@ MonoBehaviour:
   cursorBlinkDelay: 0.5
   cursorPosition:
     x: 21
-    y: 6
+    y: 5
   isCursorVisible: 1
   compositionString: 
   padding:
@@ -1432,7 +1432,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outputText: "Windows PowerShell\nCopyright (C) Microsoft Corporation. All rights
     reserved.\n\n\uC0C8\uB85C\uC6B4 \uD06C\uB85C\uC2A4 \uD50C\uB7AB\uD3FC PowerShell
-    \uC0AC\uC6A9 https://aka.ms/pscore6\n\n\r\n"
+    \uC0AC\uC6A9 https://aka.ms/pscore6\n\r\n"
   prompt: 'PS C:\Users\s2quake> '
   command: 
 --- !u!1 &1605743785
@@ -1553,7 +1553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grid: {fileID: 1537649556}
-  useFade: 1
+  isFadable: 1
   watingTime: 1
   fadingTime: 0.25
 --- !u!114 &1696667074
@@ -1640,28 +1640,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1696667071}
   m_CullTransparentMesh: 0
---- !u!21 &1806391076
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1833023757
 GameObject:
   m_ObjectHideFlags: 0
@@ -1727,6 +1705,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1833023757}
   m_CullTransparentMesh: 0
+--- !u!21 &1899845599
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0, g: 0, b: 0, a: 1}
 --- !u!1 &1936782074
 GameObject:
   m_ObjectHideFlags: 0
@@ -1824,7 +1824,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
 --- !u!1 &2062621203
 GameObject:
   m_ObjectHideFlags: 0

@@ -172,15 +172,6 @@ namespace JSSoft.UI
             return new GlyphRect(x1, y1, itemWidth, itemHeight);
         }
 
-        // public static int GetItemWidth(ITerminalGrid grid, char character)
-        // {
-        //     if (grid != null && grid.Font != null)
-        //     {
-        //         return FontUtility.GetItemWidth(grid.Font, character);
-        //     }
-        //     return 0;
-        // }
-
         public static Color GetSelectionColor(ITerminalGrid grid)
         {
             return grid != null ? grid.SelectionColor : TerminalGrid.DefaultSelectionColor;
@@ -205,93 +196,93 @@ namespace JSSoft.UI
             return grid.ForegroundColor;
         }
 
-        public static void SelectWord(ITerminalGrid grid, TerminalPoint point)
-        {
-            var terminal = grid.Terminal;
-            var row = grid.Rows[point.Y];
-            var text = row.Text;
+        // public static void SelectWord(ITerminalGrid grid, TerminalPoint point)
+        // {
+        //     var terminal = grid.Terminal;
+        //     var row = grid.Rows[point.Y];
+        //     var text = row.Text;
 
-            var cell = grid.Rows[point.Y].Cells[point.X];
-            var ch = cell.Character;
-            if (ch == char.MinValue)
-            {
+        //     var cell = grid.Rows[point.Y].Cells[point.X];
+        //     var ch = cell.Character;
+        //     if (ch == char.MinValue)
+        //     {
 
-            }
-            else
-            {
-                var p1 = point;
-                var p2 = point;
-                // p1 = SkipBackward(grid, p1, true);
-                p1 = SkipBackward(grid, p1);
-                // p1.X++;
-                // p2 = SkipForward(grid, p2, true);
-                p2 = SkipForward(grid, p2);
-                // p2.X--;
-                var range = new TerminalRange(p1, p2);
-                grid.Selections.Clear();
-                grid.Selections.Add(range);
-            }
-        }
+        //     }
+        //     else
+        //     {
+        //         var p1 = point;
+        //         var p2 = point;
+        //         // p1 = SkipBackward(grid, p1, true);
+        //         p1 = SkipBackward(grid, p1);
+        //         // p1.X++;
+        //         // p2 = SkipForward(grid, p2, true);
+        //         p2 = SkipForward(grid, p2);
+        //         // p2.X--;
+        //         var range = new TerminalRange(p1, p2);
+        //         grid.Selections.Clear();
+        //         grid.Selections.Add(range);
+        //     }
+        // }
 
-        public static void SelectLine(ITerminalGrid grid, int index)
-        {
-            var bufferWidth = grid.BufferWidth;
-            var p1 = new TerminalPoint(0, index);
-            var p2 = new TerminalPoint(bufferWidth, index);
-            var range = new TerminalRange(p1, p2);
-            grid.Selections.Clear();
-            grid.Selections.Add(range);
-        }
+        // // public static void SelectLine(ITerminalGrid grid, int index)
+        // // {
+        // //     var bufferWidth = grid.BufferWidth;
+        // //     var p1 = new TerminalPoint(0, index);
+        // //     var p2 = new TerminalPoint(bufferWidth, index);
+        // //     var range = new TerminalRange(p1, p2);
+        // //     grid.Selections.Clear();
+        // //     grid.Selections.Add(range);
+        // // }
 
-        public static TerminalPoint SkipForward(ITerminalGrid grid, TerminalPoint point)
-        {
-            var bufferWidth = grid.BufferWidth;
-            var index = point.X;
-            var row = grid.Rows[point.Y];
-            var cell = row.Cells[index];
-            var ch = cell.Character;
-            var isLetter = char.IsLetterOrDigit(ch);
-            Debug.Log($"{char.GetUnicodeCategory(ch)}, {char.IsLetterOrDigit(ch)}");
-            do
-            {
-                cell = row.Cells[index];
-                ch = cell.Character;
-                if (ch != char.MinValue)
-                {
-                    if (char.IsLetterOrDigit(ch) != isLetter)
-                    {
-                        index--;
-                        break;
-                    }
-                }
-                index++;
-            } while (index < bufferWidth);
-            return new TerminalPoint(index, point.Y);
-        }
+        // public static TerminalPoint SkipForward(ITerminalGrid grid, TerminalPoint point)
+        // {
+        //     var bufferWidth = grid.BufferWidth;
+        //     var index = point.X;
+        //     var row = grid.Rows[point.Y];
+        //     var cell = row.Cells[index];
+        //     var ch = cell.Character;
+        //     var isLetter = char.IsLetterOrDigit(ch);
+        //     Debug.Log($"{char.GetUnicodeCategory(ch)}, {char.IsLetterOrDigit(ch)}");
+        //     do
+        //     {
+        //         cell = row.Cells[index];
+        //         ch = cell.Character;
+        //         if (ch != char.MinValue)
+        //         {
+        //             if (char.IsLetterOrDigit(ch) != isLetter)
+        //             {
+        //                 index--;
+        //                 break;
+        //             }
+        //         }
+        //         index++;
+        //     } while (index < bufferWidth);
+        //     return new TerminalPoint(index, point.Y);
+        // }
 
-        public static TerminalPoint SkipBackward(ITerminalGrid grid, TerminalPoint point)
-        {
-            var bufferWidth = grid.BufferWidth;
-            var index = point.X;
-            var row = grid.Rows[point.Y];
-            var cell = row.Cells[index];
-            var ch = cell.Character;
-            var isLetter = char.IsLetterOrDigit(ch);
-            do
-            {
-                cell = row.Cells[index];
-                ch = cell.Character;
-                if (ch != char.MinValue)
-                {
-                    if (char.IsLetterOrDigit(ch) != isLetter)
-                    {
-                        index++;
-                        break;
-                    }
-                }
-                index--;
-            } while (index >= 0);
-            return new TerminalPoint(index, point.Y);
-        }
+        // public static TerminalPoint SkipBackward(ITerminalGrid grid, TerminalPoint point)
+        // {
+        //     var bufferWidth = grid.BufferWidth;
+        //     var index = point.X;
+        //     var row = grid.Rows[point.Y];
+        //     var cell = row.Cells[index];
+        //     var ch = cell.Character;
+        //     var isLetter = char.IsLetterOrDigit(ch);
+        //     do
+        //     {
+        //         cell = row.Cells[index];
+        //         ch = cell.Character;
+        //         if (ch != char.MinValue)
+        //         {
+        //             if (char.IsLetterOrDigit(ch) != isLetter)
+        //             {
+        //                 index++;
+        //                 break;
+        //             }
+        //         }
+        //         index--;
+        //     } while (index >= 0);
+        //     return new TerminalPoint(index, point.Y);
+        // }
     }
 }

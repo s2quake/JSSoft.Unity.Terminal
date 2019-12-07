@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -46,7 +47,8 @@ namespace JSSoft.UI
             if (descriptors.Contains(descriptor) == true)
                 throw new ArgumentException($"{nameof(descriptor)} is already exists.");
             descriptors.Add(descriptor);
-            descriptor.Validated += Font_Validated;
+            descriptor.Validated += Descriptor_Validated;
+            descriptor.PropertyChanged += Descriptor_PropertyChanged;
         }
 
         public static void Unregister(TerminalFontDescriptor descriptor)
@@ -55,18 +57,26 @@ namespace JSSoft.UI
                 throw new ArgumentNullException(nameof(descriptor));
             if (descriptors.Contains(descriptor) == false)
                 throw new ArgumentException($"{nameof(descriptor)} does not exists.");
-            descriptor.Validated -= Font_Validated;
+            descriptor.Validated -= Descriptor_Validated;
+            descriptor.PropertyChanged -= Descriptor_PropertyChanged;
             descriptors.Remove(descriptor);
         }
 
         public static event EventHandler Validated;
 
-        private static void Font_Validated(object sender, EventArgs e)
+        public static event PropertyChangedEventHandler PropertyChanged;
+
+        private static void Descriptor_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
         }
 
-#if UNITY_EDITOR          
+        private static void Descriptor_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(sender, e);
+        }
+
+#if UNITY_EDITOR
         internal static void InvokeValidatedEvent(TerminalFontDescriptor fontDescriptor, EventArgs e)
         {
             Validated?.Invoke(fontDescriptor, e);

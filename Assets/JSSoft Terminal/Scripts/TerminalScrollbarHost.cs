@@ -38,7 +38,7 @@ namespace JSSoft.UI
         private TerminalGrid grid = null;
         [Header("Fade Settings")]
         [SerializeField]
-        private bool useFade = true;
+        private bool isFadable = true;
         [SerializeField]
         [Range(0, 10)]
         private float watingTime = 1.0f;
@@ -54,6 +54,15 @@ namespace JSSoft.UI
         {
             get => this.grid;
             set => this.grid = value;
+        }
+
+        public bool IsFadable
+        {
+            get => this.isFadable;
+            set
+            {
+                this.isFadable = value;
+            }
         }
 
         protected override void OnEnable()
@@ -146,7 +155,7 @@ namespace JSSoft.UI
             if (propertyName == nameof(ITerminalGrid.VisibleIndex))
             {
                 this.UpdateScrollbarValue();
-                if (this.grid.IsScrolling == true)
+                if (this.grid.IsScrolling == true && this.isFadable == true)
                 {
                     this.BeginFade();
                 }
@@ -164,9 +173,11 @@ namespace JSSoft.UI
             {
                 var value1 = (float)this.verticalScrollbar.value;
                 var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.BufferHeight);
-                // this.grid.VisibleIndex = (int)(value1 * value2);
             }
-            this.BeginFade();
+            if (this.isFadable == true)
+            {
+                this.BeginFade();
+            }
         }
 
         private void VerticalScrollbar_PointerUp(object sender, EventArgs e)

@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace JSSoft.UI
 {
@@ -37,6 +38,7 @@ namespace JSSoft.UI
                 throw new ArgumentException($"{nameof(style)} is already exists.");
             styles.Add(style);
             style.Validated += Style_Validated;
+            style.PropertyChanged += Style_PropertyChanged;
         }
 
         public static void Unregister(TerminalStyle style)
@@ -46,14 +48,22 @@ namespace JSSoft.UI
             if (styles.Contains(style) == false)
                 throw new ArgumentException($"{nameof(style)} does not exists.");
             style.Validated -= Style_Validated;
+            style.PropertyChanged -= Style_PropertyChanged;
             styles.Remove(style);
         }
 
         public static event EventHandler Validated;
 
+        public static event PropertyChangedEventHandler PropertyChanged;
+
         private static void Style_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
+        }
+
+        private static void Style_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(sender, e);
         }
     }
 }

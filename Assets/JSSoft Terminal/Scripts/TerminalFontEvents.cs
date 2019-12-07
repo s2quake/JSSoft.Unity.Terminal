@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace JSSoft.UI
 {
@@ -37,6 +38,7 @@ namespace JSSoft.UI
                 throw new ArgumentException($"{nameof(font)} is already exists.");
             fonts.Add(font);
             font.Validated += Font_Validated;
+            font.PropertyChanged += Font_PropertyChanged;
         }
 
         public static void Unregister(TerminalFont font)
@@ -46,14 +48,22 @@ namespace JSSoft.UI
             if (fonts.Contains(font) == false)
                 throw new ArgumentException($"{nameof(font)} does not exists.");
             font.Validated -= Font_Validated;
+            font.PropertyChanged -= Font_PropertyChanged;
             fonts.Remove(font);
         }
 
         public static event EventHandler Validated;
 
+        public static event PropertyChangedEventHandler PropertyChanged;
+
         private static void Font_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
+        }
+        
+        private static void Font_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(sender, e);
         }
     }
 }
