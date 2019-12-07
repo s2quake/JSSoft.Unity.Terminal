@@ -52,6 +52,7 @@ namespace JSSoft.Communication.Shells
 
         public void Awake()
         {
+            // Screen.SetResolution(1124, 704, false);
             this.scheduler = DispatcherScheduler.Current;
             this.shell = Container.GetService<IShell>();
             this.commandContext = Container.GetService<CommandContext>();

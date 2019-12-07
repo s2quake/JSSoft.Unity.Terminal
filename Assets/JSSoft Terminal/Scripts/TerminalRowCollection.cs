@@ -49,16 +49,16 @@ namespace JSSoft.UI
             this.grid.Validated += Grid_Validated;
         }
 
-        public void Udpate(TerminalCharacterInfoCollection characterInfos)
+        public void Udpate(TerminalCharacterInfoCollection characterInfos, bool force)
         {
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            if (this.updateIndex < text.Length)
+            if (this.updateIndex < text.Length || force == true)
             {
                 var volume = characterInfos.Volume;
-                var index = this.updateIndex;
+                var index = force == true ? 0 : this.updateIndex;
                 var dic = new Dictionary<int, int>(this.Count);
                 this.Resize(bufferWidth, volume.Bottom);
                 for (var i = index; i < text.Length; i++)

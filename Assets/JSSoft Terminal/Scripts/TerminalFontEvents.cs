@@ -22,16 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Xml;
-using System.Xml.Serialization;
-using JSSoft.UI.Fonts;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
-using UnityEngine;
-using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {

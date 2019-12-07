@@ -65,5 +65,12 @@ namespace JSSoft.UI
         {
             Validated?.Invoke(sender, e);
         }
+
+#if UNITY_EDITOR          
+        internal static void InvokeValidatedEvent(TerminalFontDescriptor fontDescriptor, EventArgs e)
+        {
+            Validated?.Invoke(fontDescriptor, e);
+        }
+#endif
     }
 }

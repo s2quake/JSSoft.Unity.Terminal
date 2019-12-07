@@ -118,6 +118,8 @@ namespace JSSoft.UI
 
         private void RefreshChilds()
         {
+            if (this.IsDestroyed() == true)
+                return;
             var font = this.grid.Font;
             var itemByTexture = this.Items.ToDictionary(item => item.Texture);
             var textures = font != null ? font.Textures : new Texture2D[] { };

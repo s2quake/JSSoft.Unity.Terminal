@@ -334,24 +334,28 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_Validated(object sender, EventArgs e)
+        private async void TerminalGrid_Validated(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
+                await Task.Delay(1);
                 this.UpdateLayout();
             }
         }
 
-        private void Style_Validated(object sender, EventArgs e)
+        private async void Style_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalStyle style == this.grid?.Style)
             {
+                await Task.Delay(1);
                 this.UpdateLayout();
             }
         }
 
-        private async void UpdateLayout()
+        private void UpdateLayout()
         {
+            if (this.IsDestroyed() == true)
+                return;
             var point = this.grid.CursorPoint;
             this.cursorLeft = this.grid.CursorPoint.X;
             this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
@@ -366,7 +370,6 @@ namespace JSSoft.UI
             this.isBlinkable = this.grid.IsCursorBlinkable;
             this.blinkDelay = this.grid.CursorBlinkDelay;
             this.delay = this.grid.CursorBlinkDelay;
-            await Task.Delay(1);
             this.SetVerticesDirty();
         }
 

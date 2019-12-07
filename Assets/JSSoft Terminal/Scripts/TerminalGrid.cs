@@ -190,14 +190,14 @@ namespace JSSoft.UI
         {
             this.text = this.text.Insert(index, text);
             this.InvokePropertyChangedEvent(nameof(Text));
-            this.UpdateRows();
+            this.UpdateRows(false);
         }
 
         public void Remove(int startIndex, int length)
         {
             this.text.Remove(startIndex, length);
             this.InvokePropertyChangedEvent(nameof(Text));
-            this.UpdateRows();
+            this.UpdateRows(false);
         }
 
         public void Focus()
@@ -346,7 +346,7 @@ namespace JSSoft.UI
                     return;
                 this.text = value;
                 this.InvokePropertyChangedEvent(nameof(Text));
-                this.UpdateRows();
+                this.UpdateRows(false);
             }
         }
 
@@ -357,7 +357,6 @@ namespace JSSoft.UI
             {
                 this.font = value;
                 this.InvokePropertyChangedEvent(nameof(Font));
-                // this.OnFontChanged(EventArgs.Empty);
             }
         }
 
@@ -583,19 +582,9 @@ namespace JSSoft.UI
             }
         }
 
-        // public event EventHandler TextChanged;
-
-        // public event EventHandler VisibleIndexChanged;
-
         public event EventHandler LayoutChanged;
 
-        // public event EventHandler FontChanged;
-
         public event EventHandler SelectionChanged;
-
-        // public event EventHandler CursorPointChanged;
-
-        // public event EventHandler CompositionStringChanged;
 
         public event EventHandler GotFocus;
 
@@ -655,7 +644,7 @@ namespace JSSoft.UI
             base.OnValidate();
             this.UpdateColor();
             this.UpdateLayout();
-            this.UpdateRows();
+            this.UpdateRows(false);
             this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
             this.OnValidated(EventArgs.Empty);
@@ -666,7 +655,7 @@ namespace JSSoft.UI
         {
             base.OnRectTransformDimensionsChange();
             this.UpdateLayout();
-            this.UpdateRows();
+            this.UpdateRows(false);
             this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
             this.OnLayoutChanged(EventArgs.Empty);
@@ -771,7 +760,6 @@ namespace JSSoft.UI
         private void UpdateRectTransform()
         {
             this.rectTransform.sizeDelta = this.rectangle.size;
-            // Debug.Log(this.rectangle.size);
         }
 
         private void UpdateVisibleIndex()
@@ -794,10 +782,10 @@ namespace JSSoft.UI
             this.cursorPosition = new TerminalPoint(x, y);
         }
 
-        private void UpdateRows()
+        private void UpdateRows(bool force)
         {
-            this.characterInfos.Update();
-            this.rows.Udpate(this.characterInfos);
+            this.characterInfos.Update(force);
+            this.rows.Udpate(this.characterInfos, force);
         }
 
         private void AttachEvent()
@@ -840,7 +828,7 @@ namespace JSSoft.UI
             if (sender is TerminalFont font && this.font == font)
             {
                 this.UpdateLayout();
-                this.UpdateRows();
+                this.UpdateRows(true);
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
@@ -850,10 +838,10 @@ namespace JSSoft.UI
         private void FontDescriptor_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalFontDescriptor descriptor &&
-                this.font is TerminalFont font && font.FontList.Contains(descriptor) == true)
+                this.Font is TerminalFont font && font.FontList.Contains(descriptor) == true)
             {
                 this.UpdateLayout();
-                this.UpdateRows();
+                this.UpdateRows(true);
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
@@ -866,7 +854,7 @@ namespace JSSoft.UI
             {
                 this.UpdateColor();
                 this.UpdateLayout();
-                this.UpdateRows();
+                this.UpdateRows(true);
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
             }

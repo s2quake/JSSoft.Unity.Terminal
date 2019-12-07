@@ -29,7 +29,7 @@ namespace JSSoft.UI
 {
     public static class FontUtility
     {
-        private static readonly char defaultCharacter = 'a';
+        // private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
         private static readonly int defaultItemHeight = 27;
 

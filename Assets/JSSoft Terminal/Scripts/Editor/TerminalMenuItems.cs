@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -29,8 +30,8 @@ namespace JSSoft.UI.Editor
 {
     static class TerminalMeniItems
     {
-        [MenuItem("Terminal/Create Font")]
-        private static void CreateFont()
+        [MenuItem("Terminal/Create Font Descriptor")]
+        private static void CreateFontDescriptor()
         {
             var obj = Selection.activeObject;
             if (obj is TextAsset fntAsset)
@@ -51,11 +52,12 @@ namespace JSSoft.UI.Editor
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
+                TerminalFontDescriptorEvents.InvokeValidatedEvent(fontDescriptor, EventArgs.Empty);
             }
         }
 
-        [MenuItem("Terminal/Create Font", true)]
-        private static bool ValidateCreateFont()
+        [MenuItem("Terminal/Create Font Descriptor", true)]
+        private static bool ValidateCreateFontDescriptor()
         {
             var obj = Selection.activeObject;
             if (obj is TextAsset textAsset)
@@ -66,19 +68,19 @@ namespace JSSoft.UI.Editor
             return false;
         }
 
-        [MenuItem("Terminal/Create Font Group")]
-        private static void CreateFontGroup()
-        {
-            var assetObject = Selection.activeObject;
-            if (assetObject != null)
-            {
-                var assetPath = AssetDatabase.GetAssetPath(assetObject);
-                var assetDirectory = Path.GetDirectoryName(assetPath);
-                var fontPath = Path.Combine(assetDirectory, $"FontGroup.asset");
-                var font = new TerminalFont();
-                AssetDatabase.CreateAsset(font, fontPath);
-            }
-        }
+        // [MenuItem("Terminal/Create Font Group")]
+        // private static void CreateFontGroup()
+        // {
+        //     var assetObject = Selection.activeObject;
+        //     if (assetObject != null)
+        //     {
+        //         var assetPath = AssetDatabase.GetAssetPath(assetObject);
+        //         var assetDirectory = Path.GetDirectoryName(assetPath);
+        //         var fontPath = Path.Combine(assetDirectory, $"FontGroup.asset");
+        //         var font = new TerminalFont();
+        //         AssetDatabase.CreateAsset(font, fontPath);
+        //     }
+        // }
 
         [MenuItem("GameObject/UI/Terminal")]
         private static void CreateTerminalUI()

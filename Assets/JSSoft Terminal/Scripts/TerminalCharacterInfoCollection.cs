@@ -51,15 +51,15 @@ namespace JSSoft.UI
             this.grid.Validated += Grid_Validated;
         }
 
-        public void Update()
+        public void Update(bool force)
         {
             var font = this.grid.Font;
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            if (this.updateIndex < text.Length)
+            if (this.updateIndex < text.Length || force == true)
             {
-                var index = this.updateIndex;
+                var index = force == true ? 0 : this.updateIndex;
                 var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
                 if (this.items.Length < text.Length)
                 {

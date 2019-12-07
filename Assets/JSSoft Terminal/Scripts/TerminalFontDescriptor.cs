@@ -57,7 +57,7 @@ namespace JSSoft.UI
 
         public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
 
-        public int Height => this.commonInfo.LineHeight;
+        public int Height => this.baseInfo.Size;
 
         public int Width => this.width;
 
@@ -107,7 +107,6 @@ namespace JSSoft.UI
                 var item = this.charInfos[i];
                 if (item.ID >= 32 && item.ID < 126)
                 {
-                    Debug.Log($"{(char)item.ID}: {item.XAdvance}");
                     width = Math.Max(width, item.XAdvance);
                 }
             }
@@ -152,6 +151,7 @@ namespace JSSoft.UI
                     charInfo.Texture = font.textures[item.Page];
                     font.charInfos[i] = charInfo;
                 }
+                font.charInfoByID = null;
                 font.UpdateWidth();
             }
         }
