@@ -182,6 +182,7 @@ namespace JSSoft.UI
         private void Grid_Disabled(object sender, EventArgs e)
         {
             TerminalStyleEvents.Validated -= Style_Validated;
+            this.text = null;
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)

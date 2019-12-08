@@ -42,10 +42,12 @@ namespace JSSoft.Communication.Shells
         private static ClientContext serviceContext;
         private static IServiceHost[] serviceHosts;
         private static Terminal terminal;
+        private static TerminalGrid terminalGrid;
 
         static Container()
         {
             var lazyTerminal = new Lazy<ITerminal>(GetTerminal);
+            var lazyTerminalGrid = new Lazy<ITerminalGrid>(GetTerminalGrid);
             var lazyIShell = new Lazy<IShell>(GetShell);
             var lazyShell = new Lazy<Shell>(GetShell);
             var userService = new UserService();
@@ -65,10 +67,12 @@ namespace JSSoft.Communication.Shells
             commandList.Add(new OpenCommand(serviceContext, lazyShell));
             commandList.Add(new UserCommand(lazyShell, lazyUserService));
             commandList.Add(new DataCommand(lazyShell, lazyDataService));
+            commandList.Add(new StyleCommand(lazyTerminalGrid));
             commandContext = new CommandContext(commandList, Enumerable.Empty<ICommandProvider>());
             commandContext.Name = "UnityCommand";
             commandContext.VerifyName = false;
             terminal = UnityEngine.GameObject.FindObjectOfType<Terminal>();
+            terminalGrid = UnityEngine.GameObject.FindObjectOfType<TerminalGrid>();
             shell = new Shell(commandContext, serviceContext, userService, terminal);
         }
 
@@ -100,6 +104,8 @@ namespace JSSoft.Communication.Shells
         }
 
         public static ITerminal GetTerminal() => terminal;
+
+        public static ITerminalGrid GetTerminalGrid() => terminalGrid;
 
         private static Shell GetShell() => shell;
     }

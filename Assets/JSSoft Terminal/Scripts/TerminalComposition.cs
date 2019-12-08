@@ -23,7 +23,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -37,7 +37,9 @@ namespace JSSoft.UI
         [SerializeField]
         private string text = string.Empty;
         [SerializeField]
-        private Color fontColor = Color.black;
+        private Color foregroundColor = Color.white;
+        [SerializeField]
+        private Color backgroundColor = new Color(0, 0, 0, 0);
         [SerializeField]
         private TerminalGrid grid = null;
         [SerializeField]
@@ -55,6 +57,15 @@ namespace JSSoft.UI
         public TerminalComposition()
         {
 
+        }
+
+        public override void Rebuild(CanvasUpdate update)
+        {
+            base.Rebuild(update);
+            if (update == CanvasUpdate.LatePreRender)
+            {
+                this.UpdateGeometry();
+            }
         }
 
         public TerminalGrid Grid
@@ -97,12 +108,22 @@ namespace JSSoft.UI
             }
         }
 
-        public override void Rebuild(CanvasUpdate update)
+        public Color ForegroundColor
         {
-            base.Rebuild(update);
-            if (update == CanvasUpdate.LatePreRender)
+            get => this.foregroundColor;
+            set
             {
-                this.UpdateGeometry();
+                this.foregroundColor = value;
+            }
+        }
+
+        public Color BackgroundColor
+        {
+            get => this.backgroundColor;
+            set
+            {
+                this.backgroundColor = value;
+                base.color = value;
             }
         }
 
@@ -125,6 +146,7 @@ namespace JSSoft.UI
             this.columnIndex = Math.Max(0, this.columnIndex);
             this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
+            base.color = this.backgroundColor;
             base.material.color = base.color;
         }
 #endif
@@ -138,6 +160,7 @@ namespace JSSoft.UI
             this.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
+            TerminalStyleEvents.Validated += Style_Validated;
         }
 
         protected override void OnDisable()
@@ -146,6 +169,7 @@ namespace JSSoft.UI
             this.mesh = null;
             TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
+            TerminalStyleEvents.Validated -= Style_Validated;
         }
 
         protected override void UpdateGeometry()
@@ -173,8 +197,8 @@ namespace JSSoft.UI
                 this.vertices.Transform(4, rect);
                 this.uvs.SetUV(0, Vector2.zero, Vector2.zero);
                 this.uvs.SetUV(4, uv);
-                this.colors.SetColor(0, base.color);
-                this.colors.SetColor(4, this.fontColor);
+                this.colors.SetColor(0, this.backgroundColor);
+                this.colors.SetColor(4, this.foregroundColor);
                 this.texture = texture;
 
                 this.mesh.Clear();
@@ -221,6 +245,11 @@ namespace JSSoft.UI
                         this.SetVerticesDirty();
                     }
                     break;
+                case nameof(ITerminalGrid.CompositionColor):
+                    {
+                        this.UpdateColor();
+                    }
+                    break;
             }
         }
 
@@ -228,9 +257,25 @@ namespace JSSoft.UI
         {
             if (sender is TerminalGrid grid && this.grid == grid)
             {
-                this.color = grid.CompositionColor;
-                this.SetVerticesDirty();
+                this.UpdateColor();
             }
+        }
+
+        private async void Style_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalStyle style == this.grid?.Style)
+            {
+                await Task.Delay(1);
+                this.UpdateColor();
+            }
+        }
+
+        private void UpdateColor()
+        {
+            if (this.IsDestroyed() == true)
+                return;
+            this.foregroundColor = this.grid.CompositionColor;
+            this.SetVerticesDirty();
         }
 
         private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;

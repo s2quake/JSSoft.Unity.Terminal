@@ -228,11 +228,8 @@ namespace JSSoft.UI
             TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalStyleEvents.Validated += Style_Validated;
-            if (this.grid != null)
-            {
-                this.isVisible = this.grid.IsCursorVisible;
-                base.color = TerminalGridUtility.GetCursorColor(this.grid);
-            }
+            this.isVisible = this.grid != null ? true : this.grid.IsCursorVisible;
+            base.color = TerminalGridUtility.GetCursorColor(this.grid);
         }
 
         protected override void OnDisable()
