@@ -36,10 +36,10 @@ namespace JSSoft.UI
         private TerminalPoint lt;
         private TerminalPoint rb;
         private TerminalFont font;
+        private TerminalStyle style;
         private string text = string.Empty;
         private int bufferWidth;
         private int bufferHeight;
-        private int updateIndex;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
         {
@@ -51,54 +51,78 @@ namespace JSSoft.UI
             this.grid.Validated += Grid_Validated;
         }
 
-        public void Update(bool force)
+        public void UpdateAll()
+        {
+            this.Update(0);
+        }
+
+        public void Update()
+        {
+            this.Update(FindIndex());
+
+            int FindIndex()
+            {
+                if (this.font != this.grid.Font)
+                    return 0;
+                if (this.style != this.grid.Style)
+                    return 0;
+                if (this.bufferWidth != grid.BufferWidth)
+                    return 0;
+                if (this.bufferHeight != grid.BufferHeight)
+                    return 0;
+                var text = this.grid.Text + char.MinValue;
+                var index = GetIndex(this.text, text);
+                if (index >= this.items.Length)
+                    return 0;
+                return index;
+            }
+        }
+
+        public void Update(int index)
         {
             var font = this.grid.Font;
+            var style = this.grid.Style;
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            if (this.updateIndex < text.Length || force == true)
+            var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
+            if (this.items.Length < text.Length)
             {
-                var index = force == true ? 0 : this.updateIndex;
-                var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
-                if (this.items.Length < text.Length)
-                {
-                    Array.Resize(ref this.items, text.Length);
-                }
-                do
-                {
-                    var characterInfo = new TerminalCharacterInfo();
-                    var character = text[index];
-                    var charInfo = FontUtility.GetCharacter(font, character);
-                    var volume = FontUtility.GetCharacterVolume(font, character);
-                    if (point.X + volume > bufferWidth)
-                    {
-                        point.X = 0;
-                        point.Y++;
-                    }
-                    characterInfo.Character = character;
-                    characterInfo.Volume = volume;
-                    characterInfo.Point = point;
-                    characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
-                    characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
-                    characterInfo.Texture = charInfo.Texture;
-                    characterInfo.TextIndex = index;
-                    point.X += volume;
-                    if (point.X >= bufferWidth || character == '\n')
-                    {
-                        point.X = 0;
-                        point.Y++;
-                    }
-                    this.items[index] = characterInfo;
-                } while (++index < text.Length);
-                this.lt.Y = 0;
-                this.rb.Y = point.Y + 1;
+                Array.Resize(ref this.items, text.Length);
             }
+            do
+            {
+                var characterInfo = new TerminalCharacterInfo();
+                var character = text[index];
+                var charInfo = FontUtility.GetCharacter(font, character);
+                var volume = FontUtility.GetCharacterVolume(font, character);
+                if (point.X + volume > bufferWidth)
+                {
+                    point.X = 0;
+                    point.Y++;
+                }
+                characterInfo.Character = character;
+                characterInfo.Volume = volume;
+                characterInfo.Point = point;
+                characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
+                characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
+                characterInfo.Texture = charInfo.Texture;
+                characterInfo.TextIndex = index;
+                point.X += volume;
+                if (point.X >= bufferWidth || character == '\n')
+                {
+                    point.X = 0;
+                    point.Y++;
+                }
+                this.items[index] = characterInfo;
+            } while (++index < text.Length);
+            this.lt.Y = 0;
+            this.rb.Y = point.Y + 1;
             this.font = font;
+            this.style = style;
             this.text = text;
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
-            this.updateIndex = text.Length;
         }
 
         public int PointToIndex(TerminalPoint point)
@@ -149,19 +173,10 @@ namespace JSSoft.UI
 
         public (int Left, int Top, int Right, int Bottom) Volume => (this.lt.X, this.lt.Y, this.rb.X, this.rb.Y);
 
-        private int FindUpdateIndex(TerminalFont font, string text, int bufferWidth, int bufferHeight)
-        {
-            if (this.font != font || this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
-                return 0;
-            var index = GetIndex(this.text, text);
-            if (index >= this.items.Length)
-                return 0;
-            return index;
-        }
-
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalStyleEvents.Validated += Style_Validated;
+            this.UpdateAll();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
@@ -172,35 +187,37 @@ namespace JSSoft.UI
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var propertyName = e.PropertyName;
-            if (propertyName == nameof(ITerminalGrid.Font))
+            switch (propertyName)
             {
-                this.updateIndex = 0;
-            }
-            else if (propertyName == nameof(ITerminalGrid.Text))
-            {
-                var text = this.grid.Text + char.MinValue;
-                this.updateIndex = GetIndex(this.text, text);
+                case nameof(ITerminalGrid.Font):
+                case nameof(ITerminalGrid.Style):
+                case nameof(ITerminalGrid.BufferWidth):
+                case nameof(ITerminalGrid.BufferHeight):
+                    {
+                        this.UpdateAll();
+                    }
+                    break;
+                case nameof(ITerminalGrid.Text):
+                    {
+                        this.Update();
+                    }
+                    break;
             }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            var bufferWidth = this.grid.BufferWidth;
-            var bufferHeight = this.grid.BufferHeight;
-            if (this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
-            {
-                this.updateIndex = 0;
-            }
+            this.UpdateAll();
         }
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            this.updateIndex = 0;
+            this.Update();
         }
 
         private void Style_Validated(object sender, EventArgs e)
         {
-            this.updateIndex = 0;
+            this.Update();
         }
 
         #region IEnumerable

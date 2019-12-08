@@ -32,7 +32,7 @@ using UnityEngine;
 
 namespace JSSoft.Communication.Shells
 {
-    class Shell : IShell, IServiceProvider
+    class Shell : IShell, IServiceProvider, IPromptDrawer, ICommandCompletor
     {
         private readonly Settings settings;
         private readonly CommandContext commandContext;
@@ -56,7 +56,8 @@ namespace JSSoft.Communication.Shells
             this.commandContext = commandContext;
             this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
-            this.terminal.onDrawPrompt = this.OnDrawPrompt;
+            this.terminal.PromptDrawer = this;
+            this.terminal.CommandCompletor = this;
             this.terminal.Prompt = ">";
             this.Title = "Server";
         }
@@ -273,6 +274,24 @@ namespace JSSoft.Communication.Shells
                 this.serviceHost.Closed -= ServiceHost_Closed;
                 await this.serviceHost.CloseAsync(this.Token);
             }
+        }
+
+        #endregion
+
+        #region IPromptDrawer
+
+        void IPromptDrawer.Draw(string command, Color32?[] foregroundColors, Color32?[] backgroundColors)
+        {
+            this.OnDrawPrompt(command, foregroundColors, backgroundColors);
+        }
+
+        #endregion
+
+        #region ICommandCompletor
+
+        string[] ICommandCompletor.Complete(string[] items, string find)
+        {
+            return this.commandContext.GetCompletion(items, find);
         }
 
         #endregion

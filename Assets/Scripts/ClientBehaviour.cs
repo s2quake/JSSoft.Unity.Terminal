@@ -66,7 +66,6 @@ namespace JSSoft.Communication.Shells
             {
                 this.terminal.Executed += Terminal_Executed;
                 this.writer = new CommandWriter(this.terminal);
-                this.terminal.onCompletion = this.commandContext.GetCompletion;
                 this.commandContext.Out = this.writer;
                 this.terminal.Reset();
                 this.terminal.AppendLine($"type 'open' to connect server.");

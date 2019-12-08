@@ -21,28 +21,13 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    [RequireComponent(typeof(Terminal))]
-    public class TerminalEvents : UIBehaviour
+    public interface IPromptDrawer
     {
-        public ExecutedEvent onExecuted { get; set; }
-
-        public OnCompletion onCompletion { get; set; }
-
-        public OnDrawPrompt onDrawPrompt { get; set; }
-
-        public class ExecutedEvent : UnityEvent<string, Action>
-        {
-
-        }
+        void Draw(string command, Color32?[] foregroundColors, Color32?[] backgroundColors);
     }
-    
-    public delegate string[] OnCompletion(string[] items, string find);
-
-    public delegate void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors);
 }

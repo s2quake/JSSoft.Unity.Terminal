@@ -121,8 +121,8 @@ namespace JSSoft.UI
 
         public TerminalGrid()
         {
-            this.rows = new TerminalRowCollection(this);
             this.characterInfos = new TerminalCharacterInfoCollection(this);
+            this.rows = new TerminalRowCollection(this, this.characterInfos);
             this.Selections = new TerminalGridSelection(() => this.OnSelectionChanged(EventArgs.Empty));
         }
 
@@ -190,14 +190,12 @@ namespace JSSoft.UI
         {
             this.text = this.text.Insert(index, text);
             this.InvokePropertyChangedEvent(nameof(Text));
-            this.UpdateRows(false);
         }
 
         public void Remove(int startIndex, int length)
         {
             this.text.Remove(startIndex, length);
             this.InvokePropertyChangedEvent(nameof(Text));
-            this.UpdateRows(false);
         }
 
         public void Focus()
@@ -346,7 +344,6 @@ namespace JSSoft.UI
                     return;
                 this.text = value;
                 this.InvokePropertyChangedEvent(nameof(Text));
-                this.UpdateRows(false);
             }
         }
 
@@ -368,6 +365,7 @@ namespace JSSoft.UI
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.bufferWidth = value;
+                this.InvokePropertyChangedEvent(nameof(BufferWidth));
             }
         }
 
@@ -379,6 +377,7 @@ namespace JSSoft.UI
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.bufferHeight = value;
+                this.InvokePropertyChangedEvent(nameof(BufferHeight));
             }
         }
 
@@ -644,7 +643,6 @@ namespace JSSoft.UI
             base.OnValidate();
             this.UpdateColor();
             this.UpdateLayout();
-            this.UpdateRows(false);
             this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
             this.OnValidated(EventArgs.Empty);
@@ -655,7 +653,6 @@ namespace JSSoft.UI
         {
             base.OnRectTransformDimensionsChange();
             this.UpdateLayout();
-            this.UpdateRows(false);
             this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
             this.OnLayoutChanged(EventArgs.Empty);
@@ -782,12 +779,6 @@ namespace JSSoft.UI
             this.cursorPosition = new TerminalPoint(x, y);
         }
 
-        private void UpdateRows(bool force)
-        {
-            this.characterInfos.Update(force);
-            this.rows.Udpate(this.characterInfos, force);
-        }
-
         private void AttachEvent()
         {
             this.Terminal.OutputTextChanged += Terminal_OutputTextChanged;
@@ -828,7 +819,6 @@ namespace JSSoft.UI
             if (sender is TerminalFont font && this.font == font)
             {
                 this.UpdateLayout();
-                this.UpdateRows(true);
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
@@ -841,7 +831,6 @@ namespace JSSoft.UI
                 this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true)
             {
                 this.UpdateLayout();
-                this.UpdateRows(true);
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
                 this.OnValidated(EventArgs.Empty);
@@ -854,7 +843,6 @@ namespace JSSoft.UI
             {
                 this.UpdateColor();
                 this.UpdateLayout();
-                this.UpdateRows(true);
                 this.UpdateVisibleIndex();
                 this.UpdateCursorPosition();
             }

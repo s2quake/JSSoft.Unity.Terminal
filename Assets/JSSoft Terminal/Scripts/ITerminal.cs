@@ -61,14 +61,16 @@ namespace JSSoft.UI
 
         Color32? BackgroundColor { get; set; }
 
-        OnCompletion onCompletion { get; set; }
+        ICommandCompletor CommandCompletor { get; set; }
 
-        OnDrawPrompt onDrawPrompt { get; set; }
+        IPromptDrawer PromptDrawer { get; set; }
+
+        event EventHandler OutputTextChanged;
+
+        event EventHandler PromptTextChanged;
+
+        event EventHandler CursorPositionChanged;
 
         event EventHandler<TerminalExecuteEventArgs> Executed;
     }
-
-    public delegate string[] OnCompletion(string[] items, string find);
-
-    public delegate void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors);
 }

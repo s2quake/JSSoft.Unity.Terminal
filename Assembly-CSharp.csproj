@@ -57,6 +57,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\Fonts\Serializations\PageSerializationInfo.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Fonts\Serializations\PagesSerializationInfo.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\FontUtility.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\ICommandCompletor.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IInputHandler.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\IKeyBindingCollection.cs" />
@@ -69,6 +70,7 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\InputHandlers\TerminalInputHandlerContext.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\InputHandlers\WindowsInputHandler.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\InputHandlers\WindowsInputHandlerContext.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\IPromptDrawer.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminal.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminalCell.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ITerminalExtensions.cs" />
@@ -77,7 +79,6 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingBase.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindingCollection.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindings\PowerShellKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindings\TerminalGridKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\KeyBindings\TerminalKeyBindings.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\PowerShellBehaviour.cs" />

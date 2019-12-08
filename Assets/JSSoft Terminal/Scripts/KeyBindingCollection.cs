@@ -57,10 +57,6 @@ namespace JSSoft.UI
         public bool Process(object obj, EventModifiers modifiers, KeyCode keyCode)
         {
             var key = $"{modifiers}+{keyCode}";
-            if (this.Name == "Terminal(Windows) Grid Key Bindings")
-            {
-                Debug.Log(key);
-            }
             if (this.itemByKey.ContainsKey(key) == true)
             {
                 var binding = this.itemByKey[key];

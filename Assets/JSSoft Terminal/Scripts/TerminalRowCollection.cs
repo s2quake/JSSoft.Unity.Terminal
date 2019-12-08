@@ -31,15 +31,17 @@ namespace JSSoft.UI
     class TerminalRowCollection : List<TerminalRow>
     {
         private readonly TerminalGrid grid;
+        private readonly TerminalCharacterInfoCollection characterInfos;
         private readonly Terminal terminal;
         private readonly Stack<TerminalRow> pool = new Stack<TerminalRow>();
         private TerminalFont font;
+        private TerminalStyle style;
         private string text = string.Empty;
         private int bufferWidth;
         private int bufferHeight;
         private int updateIndex;
 
-        public TerminalRowCollection(TerminalGrid grid)
+        public TerminalRowCollection(TerminalGrid grid, TerminalCharacterInfoCollection characterInfos)
         {
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.grid.Enabled += Grid_Enabled;
@@ -47,43 +49,65 @@ namespace JSSoft.UI
             this.grid.PropertyChanged += Grid_PropertyChanged;
             this.grid.LayoutChanged += Grid_LayoutChanged;
             this.grid.Validated += Grid_Validated;
+            this.characterInfos = characterInfos;
         }
 
-        public void Udpate(TerminalCharacterInfoCollection characterInfos, bool force)
+        public void UpdateAll()
+        {
+            this.Update(0);
+        }
+
+        public void Update()
+        {
+            this.Update(FindIndex());
+
+            int FindIndex()
+            {
+                if (this.font != this.grid.Font)
+                    return 0;
+                if (this.style != this.grid.Style)
+                    return 0;
+                if (this.bufferWidth != grid.BufferWidth)
+                    return 0;
+                if (this.bufferHeight != grid.BufferHeight)
+                    return 0;
+                var text = this.grid.Text + char.MinValue;
+                return GetIndex(this.text, text);
+            }
+        }
+
+        public void Update(int index)
         {
             var font = this.grid.Font;
+            var style = this.grid.Style;
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            if (this.updateIndex < text.Length || force == true)
+            var volume = characterInfos.Volume;
+            var dic = new Dictionary<int, int>(this.Count);
+            this.Resize(bufferWidth, volume.Bottom);
+            for (var i = index; i < text.Length; i++)
             {
-                var volume = characterInfos.Volume;
-                var index = force == true ? 0 : this.updateIndex;
-                var dic = new Dictionary<int, int>(this.Count);
-                this.Resize(bufferWidth, volume.Bottom);
-                for (var i = index; i < text.Length; i++)
-                {
-                    var characterInfo = characterInfos[i];
-                    var point = characterInfo.Point;
-                    var row = this.Prepare(point.Y);
-                    var cell = row.Cells[point.X];
-                    cell.SetCharacter(characterInfo);
-                    dic[point.Y] = point.X;
-                }
-                foreach (var item in dic)
-                {
-                    var row = this[item.Key];
-                    row.ResetAfter(item.Value + 1);
-                    row.Update();
-                }
-                for (var i = this.Count; i < this.grid.BufferHeight; i++)
-                {
-                    var row = this.Prepare(i);
-                    row.Reset();
-                }
+                var characterInfo = this.characterInfos[i];
+                var point = characterInfo.Point;
+                var row = this.Prepare(point.Y);
+                var cell = row.Cells[point.X];
+                cell.SetCharacter(characterInfo);
+                dic[point.Y] = point.X;
             }
-
+            foreach (var item in dic)
+            {
+                var row = this[item.Key];
+                row.ResetAfter(item.Value + 1);
+                row.Update();
+            }
+            for (var i = this.Count; i < this.grid.BufferHeight; i++)
+            {
+                var row = this.Prepare(i);
+                row.Reset();
+            }
             this.font = font;
+            this.style = style;
             this.text = text;
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
@@ -142,6 +166,7 @@ namespace JSSoft.UI
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalStyleEvents.Validated += Style_Validated;
+            this.UpdateAll();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
@@ -152,37 +177,37 @@ namespace JSSoft.UI
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var propertyName = e.PropertyName;
-            if (propertyName == nameof(ITerminalGrid.Font))
+            switch (propertyName)
             {
-                this.updateIndex = 0;
-            }
-            else if (propertyName == nameof(ITerminalGrid.Text))
-            {
-                var text = this.grid.Text + char.MinValue;
-                this.updateIndex = GetIndex(this.text, text);
+                case nameof(ITerminalGrid.Font):
+                case nameof(ITerminalGrid.Style):
+                case nameof(ITerminalGrid.BufferWidth):
+                case nameof(ITerminalGrid.BufferHeight):
+                    {
+                        this.UpdateAll();
+                    }
+                    break;
+                case nameof(ITerminalGrid.Text):
+                    {
+                        this.Update();
+                    }
+                    break;
             }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            var bufferWidth = this.grid.BufferWidth;
-            var bufferHeight = this.grid.BufferHeight;
-            if (this.bufferWidth != bufferWidth || this.bufferHeight != bufferHeight)
-            {
-                this.updateIndex = 0;
-            }
-            // this.bufferWidth = bufferWidth;
-            // this.bufferHeight = bufferHeight;
+            this.UpdateAll();
         }
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            this.updateIndex = 0;
+            this.Update();
         }
 
         private void Style_Validated(object sender, EventArgs e)
         {
-            this.updateIndex = 0;
+            this.Update();
         }
     }
 }

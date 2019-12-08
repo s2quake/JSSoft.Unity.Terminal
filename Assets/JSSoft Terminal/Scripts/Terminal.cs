@@ -30,9 +30,8 @@ using UnityEngine.EventSystems;
 namespace JSSoft.UI
 {
     [AddComponentMenu("UI/Terminal", 15)]
-    public class Terminal : UIBehaviour, ITerminal
+    public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor
     {
-
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
 
@@ -57,6 +56,8 @@ namespace JSSoft.UI
         private Color32?[] promptForegroundColors = new Color32?[] { };
         private Color32?[] promptBackgroundColors = new Color32?[] { };
         private IKeyBindingCollection keyBindings;
+        private ICommandCompletor commandCompletor;
+        private IPromptDrawer promptDrawer;
 
         private EventHandler<TerminalExecuteEventArgs> executed;
 
@@ -343,10 +344,7 @@ namespace JSSoft.UI
                 this.text = this.outputText + this.promptText;
                 this.cursorPosition = this.command.Length;
                 this.InvokePromptTextChangedEvent();
-                if (this.onDrawPrompt != null)
-                {
-                    this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
-                }
+                this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
             }
         }
 
@@ -364,16 +362,27 @@ namespace JSSoft.UI
                 this.text = this.outputText + this.promptText;
                 this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
                 this.InvokePromptTextChangedEvent();
-                if (this.onDrawPrompt != null)
-                {
-                    this.onDrawPrompt(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
-                }
+                this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
             }
         }
 
-        public OnCompletion onCompletion { get; set; }
+        public ICommandCompletor CommandCompletor
+        {
+            get => this.commandCompletor ?? this;
+            set
+            {
+                this.commandCompletor = value;
+            }
+        }
 
-        public OnDrawPrompt onDrawPrompt { get; set; }
+        public IPromptDrawer PromptDrawer
+        {
+            get => this.promptDrawer ?? this;
+            set
+            {
+                this.promptDrawer = value;
+            }
+        }
 
         public event EventHandler OutputTextChanged;
 
@@ -398,14 +407,7 @@ namespace JSSoft.UI
 
         protected virtual string[] GetCompletion(string[] items, string find)
         {
-            if (this.onCompletion != null)
-            {
-                return this.onCompletion(items, find);
-            }
-            var query = from item in this.completions
-                        where item.StartsWith(find)
-                        select item;
-            return query.ToArray();
+            return this.CommandCompletor.Complete(items, find);
         }
 
         protected override void OnEnable()
@@ -604,6 +606,27 @@ namespace JSSoft.UI
         }
 
         string ITerminal.OutputText => this.outputText;
+
+        #endregion
+
+        #region IPromptDrawer
+
+        void IPromptDrawer.Draw(string command, Color32?[] foregroundColors, Color32?[] backgroundColors)
+        {
+
+        }
+
+        #endregion
+
+        #region ICommandCompletor
+
+        string[] ICommandCompletor.Complete(string[] items, string find)
+        {
+            var query = from item in this.completions
+                        where item.StartsWith(find)
+                        select item;
+            return query.ToArray();
+        }
 
         #endregion
     }
