@@ -62,17 +62,7 @@ namespace JSSoft.UI
 
         public int Width => this.width;
 
-        public IReadOnlyDictionary<char, CharInfo> CharInfos
-        {
-            get
-            {
-                if (this.charInfoByID == null)
-                {
-                    this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
-                }
-                return this.charInfoByID;
-            }
-        }
+        public IReadOnlyDictionary<char, CharInfo> CharInfos => this.charInfoByID;
 
         public event EventHandler Validated;
 
@@ -80,15 +70,27 @@ namespace JSSoft.UI
 
         protected virtual void OnValidate()
         {
+            this.UpdateProperty();
             this.OnValidated(EventArgs.Empty);
         }
 
         protected virtual void Awake()
         {
-            TerminalFontDescriptorEvents.Register(this);
+
         }
 
         protected virtual void OnDestroy()
+        {
+
+        }
+
+        protected virtual void OnEnable()
+        {
+            TerminalFontDescriptorEvents.Register(this);
+            this.UpdateProperty();
+        }
+
+        protected virtual void OnDisable()
         {
             TerminalFontDescriptorEvents.Unregister(this);
         }
@@ -121,6 +123,11 @@ namespace JSSoft.UI
             if (width == 0)
                 throw new InvalidOperationException("invalid font");
             this.width = width;
+        }
+
+        private void UpdateProperty()
+        {
+            this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
         }
 
         private void InvokePropertyChangedEvent(string propertyName)

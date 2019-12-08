@@ -838,7 +838,7 @@ namespace JSSoft.UI
         private void FontDescriptor_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalFontDescriptor descriptor &&
-                this.Font is TerminalFont font && font.Fonts.Contains(descriptor) == true)
+                this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true)
             {
                 this.UpdateLayout();
                 this.UpdateRows(true);

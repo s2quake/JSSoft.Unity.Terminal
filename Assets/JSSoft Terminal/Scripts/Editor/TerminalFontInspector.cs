@@ -34,7 +34,7 @@ namespace JSSoft.UI.Editor
 
         public void OnEnable()
         {
-            this.fontProperty = this.serializedObject.FindProperty("fontList");
+            this.fontProperty = this.serializedObject.FindProperty("descriptorList");
             this.fontList = new ReorderableList(this.serializedObject, this.fontProperty)
             {
                 displayAdd = true,

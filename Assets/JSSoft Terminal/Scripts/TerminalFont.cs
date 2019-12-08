@@ -39,22 +39,23 @@ namespace JSSoft.UI
     {
         private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
         [SerializeField]
-        private List<TerminalFontDescriptor> fontList = new List<TerminalFontDescriptor>();
+        private List<TerminalFontDescriptor> descriptorList = new List<TerminalFontDescriptor>();
         [SerializeField]
         private int width = FontUtility.DefaultItemWidth;
         [SerializeField]
         private int height = FontUtility.DefaultItemHeight;
 
-        private ObservableCollection<TerminalFontDescriptor> fonts = new ObservableCollection<TerminalFontDescriptor>();
+        private ObservableCollection<TerminalFontDescriptor> descriptors = new ObservableCollection<TerminalFontDescriptor>();
+        private Texture2D[] textures = new Texture2D[] { };
 
         public TerminalFont()
         {
-            this.fonts.CollectionChanged += Fonts_CollectionChanged;
+            this.descriptors.CollectionChanged += Descriptors_CollectionChanged;
         }
 
         public bool Contains(char character)
         {
-            foreach (var item in this.Fonts)
+            foreach (var item in this.Descriptors)
             {
                 if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
                     return true;
@@ -66,7 +67,7 @@ namespace JSSoft.UI
         {
             get
             {
-                foreach (var item in this.Fonts)
+                foreach (var item in this.Descriptors)
                 {
                     if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
                         return descriptor[character];
@@ -79,23 +80,9 @@ namespace JSSoft.UI
             }
         }
 
-        public IList<TerminalFontDescriptor> Fonts => this.fonts;
+        public IList<TerminalFontDescriptor> Descriptors => this.descriptors;
 
-        public Texture2D[] Textures
-        {
-            get
-            {
-                var textureList = new List<Texture2D>();
-                foreach (var item in this.fontList)
-                {
-                    if (item is TerminalFontDescriptor descriptor)
-                    {
-                        textureList.AddRange(descriptor.Textures);
-                    }
-                }
-                return textureList.ToArray();
-            }
-        }
+        public Texture2D[] Textures => this.textures;
 
         public int Height
         {
@@ -123,39 +110,36 @@ namespace JSSoft.UI
 
         protected virtual void OnValidate()
         {
+            this.UpdateDescriptors();
+            this.UpdateTextures();
             this.OnValidated(EventArgs.Empty);
         }
 
         protected virtual void Awake()
         {
-            TerminalFontDescriptorEvents.Validated += TerminalFontDescriptor_Validated;
         }
 
         protected virtual void OnDestroy()
         {
-            TerminalFontDescriptorEvents.Validated -= TerminalFontDescriptor_Validated;
         }
 
         protected virtual void OnEnable()
         {
+            this.UpdateDescriptors();
+            this.UpdateTextures();
             TerminalFontEvents.Register(this);
+            TerminalFontDescriptorEvents.Validated += TerminalFontDescriptor_Validated;
         }
 
         protected virtual void OnDisable()
         {
+            TerminalFontDescriptorEvents.Validated -= TerminalFontDescriptor_Validated;
             TerminalFontEvents.Unregister(this);
         }
 
         protected virtual void OnValidated(EventArgs e)
         {
             this.Validated?.Invoke(this, e);
-            this.fonts.CollectionChanged -= Fonts_CollectionChanged;
-            this.fonts.Clear();
-            foreach (var item in this.fontList)
-            {
-                this.fonts.Add(item);
-            }
-            this.fonts.CollectionChanged += Fonts_CollectionChanged;
         }
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -165,14 +149,14 @@ namespace JSSoft.UI
 
         private void UpdateSize()
         {
-            var mainFont = this.Fonts.FirstOrDefault();
+            var mainFont = this.Descriptors.FirstOrDefault();
             this.width = mainFont != null ? mainFont.Width : FontUtility.DefaultItemWidth;
             this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
         }
 
         private void TerminalFontDescriptor_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalFontDescriptor descriptor && this.Fonts.Contains(descriptor))
+            if (sender is TerminalFontDescriptor descriptor && this.Descriptors.Contains(descriptor))
             {
                 this.UpdateSize();
 #if UNITY_EDITOR
@@ -186,10 +170,34 @@ namespace JSSoft.UI
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        private void Fonts_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void Descriptors_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.fontList.Clear();
-            this.fontList.AddRange(this.fonts);
+            this.descriptorList.Clear();
+            this.descriptorList.AddRange(this.descriptors);
+        }
+
+        private void UpdateDescriptors()
+        {
+            this.descriptors.CollectionChanged -= Descriptors_CollectionChanged;
+            this.descriptors.Clear();
+            foreach (var item in this.descriptorList)
+            {
+                this.descriptors.Add(item);
+            }
+            this.descriptors.CollectionChanged += Descriptors_CollectionChanged;
+        }
+
+        private void UpdateTextures()
+        {
+            var textureList = new List<Texture2D>();
+            foreach (var item in this.descriptorList)
+            {
+                if (item is TerminalFontDescriptor descriptor)
+                {
+                    textureList.AddRange(descriptor.Textures);
+                }
+            }
+            this.textures = textureList.ToArray();
         }
     }
 }

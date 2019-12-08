@@ -21,18 +21,9 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Threading;
 using JSSoft.UI;
-
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using System.IO;
 using Ntreev.Library.Threading;
 
 namespace JSSoft.Communication.Shells
@@ -44,6 +35,19 @@ namespace JSSoft.Communication.Shells
         private CommandWriter writer;
         private DispatcherScheduler scheduler;
         private ITerminal terminal;
+        [SerializeField]
+        private TerminalGrid grid;
+
+        [RuntimeInitializeOnLoadMethod]
+        static void OnRuntimeMethodLoad()
+        {
+            // Debug.Log("After Scene is loaded and game is running");
+            // if (Application.isPlaying == true && this.grid != null)
+            // {
+                // var rectangle = this.grid.Rectangle;
+                Screen.SetResolution(1124, 704, false);
+            // }
+        }
 
         static ClientBehaviour()
         {
@@ -52,7 +56,6 @@ namespace JSSoft.Communication.Shells
 
         public void Awake()
         {
-            // Screen.SetResolution(1124, 704, false);
             this.scheduler = DispatcherScheduler.Current;
             this.shell = Container.GetService<IShell>();
             this.commandContext = Container.GetService<CommandContext>();
@@ -61,6 +64,7 @@ namespace JSSoft.Communication.Shells
 
         public async Task Start()
         {
+            Debug.developerConsoleVisible = true;
             if (this.terminal != null)
             {
                 this.terminal.Executed += Terminal_Executed;
