@@ -1,4 +1,4 @@
-// MIT License
+﻿// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -21,42 +21,38 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 namespace JSSoft.UI
 {
-    [CreateAssetMenu(menuName = "Terminal/Terminal Behaviour")]
-    public class TerminalBehaviour : TerminalBehaviourBase
+    public abstract class TerminalBehaviourBase : ScriptableObject
     {
-        protected override void OnAttach(ITerminalGrid grid)
+        protected virtual void OnEnable()
         {
-            grid.GotFocus += Grid_GotFocus;
-            grid.LostFocus += Grid_LostFocus;
+            TerminalGridEvents.Enabled += Grid_Enabled;
+            TerminalGridEvents.Disabled += Grid_Disabled;
         }
 
-        protected override void OnDetach(ITerminalGrid grid)
+        protected virtual void OnDisable()
         {
-            grid.GotFocus -= Grid_GotFocus;
-            grid.LostFocus -= Grid_LostFocus;
+            TerminalGridEvents.Enabled -= Grid_Enabled;
+            TerminalGridEvents.Disabled -= Grid_Disabled;
         }
 
-        private void Grid_GotFocus(object sender, EventArgs e)
+        protected abstract void OnAttach(ITerminalGrid grid);
+
+        protected abstract void OnDetach(ITerminalGrid grid);
+
+        private void Grid_Enabled(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid)
-            {
-                
-            }
+            if (Application.isPlaying == true)
+                this.OnAttach(sender as ITerminalGrid);
         }
 
-        private void Grid_LostFocus(object sender, EventArgs e)
+        private void Grid_Disabled(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid)
-            {
-
-            }
+            if (Application.isPlaying == true)
+                this.OnDetach(sender as ITerminalGrid);
         }
     }
 }

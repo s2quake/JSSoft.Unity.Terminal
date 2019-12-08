@@ -90,7 +90,7 @@ namespace JSSoft.UI
             {
                 Array.Resize(ref this.items, text.Length);
             }
-            do
+            while (index < text.Length)
             {
                 var characterInfo = new TerminalCharacterInfo();
                 var character = text[index];
@@ -114,8 +114,8 @@ namespace JSSoft.UI
                     point.X = 0;
                     point.Y++;
                 }
-                this.items[index] = characterInfo;
-            } while (++index < text.Length);
+                this.items[index++] = characterInfo;
+            }
             this.lt.Y = 0;
             this.rb.Y = point.Y + 1;
             this.font = font;

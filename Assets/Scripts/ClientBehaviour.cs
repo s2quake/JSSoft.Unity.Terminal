@@ -129,9 +129,9 @@ namespace JSSoft.Communication.Shells
             catch (Exception e)
             {
                 if (e.InnerException != null)
-                    this.terminal.AppendLine($"{e.InnerException}");
+                    this.terminal.AppendLine($"{e.InnerException.Message}");
                 else
-                    this.terminal.AppendLine($"{e}");
+                    this.terminal.AppendLine($"{e.Message}");
             }
         }
     }

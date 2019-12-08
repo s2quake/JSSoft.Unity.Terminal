@@ -106,6 +106,8 @@ namespace JSSoft.UI
         private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
         private TerminalStyle style;
+        [SerializeField]
+        private TerminalBehaviourBase behaviour;
 
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;

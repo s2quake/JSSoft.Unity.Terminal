@@ -298,6 +298,11 @@ namespace JSSoft.UI
             {
                 this.blinkDelay = this.grid.CursorBlinkDelay;
             }
+            else if (propertyName == nameof(ITerminalGrid.IsCursorVisible))
+            {
+                this.isVisible = this.grid.IsCursorVisible;
+                this.SetVerticesDirty();
+            }
             else if (propertyName == nameof(ITerminalGrid.CursorPoint))
             {
                 this.UpdateLayout();
