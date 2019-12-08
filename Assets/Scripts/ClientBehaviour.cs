@@ -41,12 +41,9 @@ namespace JSSoft.Communication.Shells
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
         {
-            // Debug.Log("After Scene is loaded and game is running");
-            // if (Application.isPlaying == true && this.grid != null)
-            // {
-                // var rectangle = this.grid.Rectangle;
-                Screen.SetResolution(1124, 704, false);
-            // }
+#if !UNITY_EDITOR
+            Screen.SetResolution(1124, 704, false);
+#endif
         }
 
         static ClientBehaviour()
