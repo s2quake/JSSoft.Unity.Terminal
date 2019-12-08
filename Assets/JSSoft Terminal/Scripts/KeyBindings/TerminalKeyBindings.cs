@@ -33,13 +33,13 @@ namespace JSSoft.UI.KeyBindings
         public static IKeyBindingCollection GetDefaultBindings()
         {
             if (TerminalEnvironment.IsMac == true)
-                return TerminalKeyBindings.Mac;
+                return TerminalKeyBindings.TerminalOnMacOS;
             else if (TerminalEnvironment.IsWindows == true)
-                return TerminalKeyBindings.Windows;
+                return TerminalKeyBindings.TerminalOnWindows;
             throw new NotImplementedException();
         }
 
-        public static readonly IKeyBindingCollection Common = new KeyBindingCollection()
+        public static readonly IKeyBindingCollection Common = new KeyBindingCollection("Terminal Key Bindings")
         {
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, (t) => t.PrevHistory()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, (t) => t.NextHistory()),
@@ -63,7 +63,7 @@ namespace JSSoft.UI.KeyBindings
             new KeyBinding(EventModifiers.Shift, KeyCode.Tab, (t) => t.PrevCompletion())
         };
 
-        public static readonly IKeyBindingCollection Mac = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection TerminalOnMacOS = new KeyBindingCollection("Terminal(MacOS) Key Bindings", Common)
         {
             new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => DeleteToFirst(t)),
             new KeyBinding(EventModifiers.Control, KeyCode.K, (t) => DeleteToLast(t)),
@@ -76,9 +76,22 @@ namespace JSSoft.UI.KeyBindings
             new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
         };
 
-        public static readonly IKeyBindingCollection Windows = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection TerminalOnWindows = new KeyBindingCollection("Terminal(Windows) Key Bindings", Common)
         {
-            new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Prompt = string.Empty),
+            new KeyBinding(EventModifiers.Alt, KeyCode.U, (t) => DeleteToFirst(t)),
+            new KeyBinding(EventModifiers.Alt, KeyCode.K, (t) => DeleteToLast(t)),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.CursorPosition = 0),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.CursorPosition = t.Command.Length),
+            new KeyBinding(EventModifiers.Alt, KeyCode.E, (t) => t.CursorPosition = t.Command.Length),
+            new KeyBinding(EventModifiers.Alt, KeyCode.A, (t) => t.CursorPosition = 0),
+            new KeyBinding(EventModifiers.Alt, KeyCode.W, (t) => DeletePrevWord(t)),
+            new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
+            new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
+        };
+
+        public static readonly IKeyBindingCollection PowerShellOnWindows = new KeyBindingCollection("PowerShell(Windows) Key Bindings", Common)
+        {
+            new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Command = string.Empty),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.CursorPosition = 0),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.CursorPosition = t.Command.Length),
         };

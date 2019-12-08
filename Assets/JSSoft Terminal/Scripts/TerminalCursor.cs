@@ -370,6 +370,7 @@ namespace JSSoft.UI
             this.isBlinkable = this.grid.IsCursorBlinkable;
             this.blinkDelay = this.grid.CursorBlinkDelay;
             this.delay = this.grid.CursorBlinkDelay;
+            this.blinkToggle = false;
             this.SetVerticesDirty();
         }
 

@@ -31,18 +31,18 @@ namespace JSSoft.UI.KeyBindings
         public static IKeyBindingCollection GetDefaultBindings()
         {
             if (TerminalEnvironment.IsMac == true)
-                return TerminalKeyBindings.Mac;
+                return TerminalGridKeyBindings.TerminalOnMacOS;
             else if (TerminalEnvironment.IsWindows == true)
-                return TerminalKeyBindings.Windows;
+                return TerminalGridKeyBindings.TerminalOnWindows;
             throw new NotImplementedException();
         }
-        public static readonly IKeyBindingCollection Common = new KeyBindingCollection()
+        public static readonly IKeyBindingCollection Common = new KeyBindingCollection("Terminal Grid Common Key Bindings")
         {
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageUp, (g) => g.PageUp()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.PageDown, (g) => g.PageDown())
         };
 
-        public static readonly IKeyBindingCollection Mac = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection TerminalOnMacOS = new KeyBindingCollection("Terminal(MacOS) Grid Key Bindings", Common)
         {
             new KeyBinding(EventModifiers.Alt | EventModifiers.Command, KeyCode.PageUp, (g) => g.LineUp()),
             new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command, KeyCode.PageDown, (g) => g.LineDown()),
@@ -52,9 +52,14 @@ namespace JSSoft.UI.KeyBindings
             new KeyBinding(EventModifiers.Command, KeyCode.A, (g) => g.SelectAll()),
         };
 
-        public static readonly IKeyBindingCollection Windows = new KeyBindingCollection(Common)
+        public static readonly IKeyBindingCollection TerminalOnWindows = new KeyBindingCollection("Terminal(Windows) Grid Key Bindings", Common)
         {
-
+            new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Control, KeyCode.PageUp, (g) => g.LineUp()),
+            new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Control, KeyCode.PageDown, (g) => g.LineDown()),
+            new KeyBinding(EventModifiers.Control, KeyCode.Home, (g) => g.ScrollToTop()),
+            new KeyBinding(EventModifiers.Control, KeyCode.End, (g) => g.ScrollToBottom()),
+            new KeyBinding(EventModifiers.Control, KeyCode.C, (g) => g.Copy()),
+            new KeyBinding(EventModifiers.Control, KeyCode.A, (g) => g.SelectAll()),
         };
     }
 }

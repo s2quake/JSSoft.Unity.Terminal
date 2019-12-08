@@ -56,8 +56,6 @@ namespace JSSoft.UI
         [SerializeField]
         [Range(0, 3)]
         private float cursorBlinkDelay = 0.5f;
-        [SerializeField]
-        private TerminalBehaviour behaviour;
 
         public TerminalFont Font
         {
