@@ -222,6 +222,7 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             this.SetVerticesDirty();
+            TerminalEvents.Validated += Terminal_Validated;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
             TerminalGridEvents.GotFocus += TerminalGrid_GotFocus;
             TerminalGridEvents.LostFocus += TerminalGrid_LostFocus;
@@ -235,6 +236,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
+            TerminalEvents.Validated += Terminal_Validated;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
             TerminalGridEvents.GotFocus -= TerminalGrid_GotFocus;
             TerminalGridEvents.LostFocus -= TerminalGrid_LostFocus;
@@ -309,6 +311,15 @@ namespace JSSoft.UI
                 this.UpdateLayout();
             }
             this.SetVerticesDirty();
+        }
+
+        private void Terminal_Validated(object sender, EventArgs e)
+        {
+            if (sender is ITerminal terminal == this.grid?.Terminal)
+            {
+                this.color = this.grid.CursorColor;
+                this.UpdateLayout();
+            }
         }
 
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)

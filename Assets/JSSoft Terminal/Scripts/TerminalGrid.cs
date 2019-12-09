@@ -95,7 +95,7 @@ namespace JSSoft.UI
         [Range(0, 3)]
         private float cursorBlinkDelay = 0.5f;
         [SerializeField]
-        private TerminalPoint cursorPosition;
+        private TerminalPoint cursorPoint;
         [SerializeField]
         private bool isCursorVisible = true;
 
@@ -308,17 +308,7 @@ namespace JSSoft.UI
             set => this.inputHandler = value;
         }
 
-        public Terminal Terminal
-        {
-            get
-            {
-                if (this.terminal == null)
-                {
-                    this.terminal = this.GetComponent<Terminal>();
-                }
-                return this.terminal;
-            }
-        }
+        public Terminal Terminal => this.terminal;
 
         public bool IsFocused
         {
@@ -468,12 +458,12 @@ namespace JSSoft.UI
 
         public TerminalPoint CursorPoint
         {
-            get => this.cursorPosition;
+            get => this.cursorPoint;
             set
             {
-                if (this.cursorPosition != value)
+                if (this.cursorPoint != value)
                 {
-                    this.cursorPosition = value;
+                    this.cursorPoint = value;
                     this.UpdateCursorPosition();
                     this.InvokePropertyChangedEvent(nameof(CursorPoint));
                 }
@@ -498,9 +488,13 @@ namespace JSSoft.UI
             get => this.style;
             set
             {
-                this.style = value;
-                this.UpdateColor();
-                this.InvokePropertyChangedEvent(nameof(Style));
+                if (this.style != value)
+                {
+                    this.style = value;
+                    this.UpdateColor();
+                    this.UpdateLayout();
+                    this.InvokePropertyChangedEvent(nameof(Style));
+                }
             }
         }
 
@@ -654,6 +648,7 @@ namespace JSSoft.UI
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
+            this.terminal = this.GetComponent<Terminal>();
             this.UpdateLayout();
             this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
@@ -668,9 +663,13 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.AttachEvent();
+            this.terminal = this.GetComponent<Terminal>();
             this.VisibleIndex = this.MaximumVisibleIndex;
             TerminalGridEvents.Register(this);
+            TerminalEvents.Validated += Terminal_Validated;
+            TerminalEvents.OutputTextChanged += Terminal_OutputTextChanged;
+            TerminalEvents.PromptTextChanged += Terminal_PromptTextChanged;
+            TerminalEvents.CursorPositionChanged += Terminal_CursorPositionChanged;
             TerminalFontEvents.Validated += Font_Validated;
             TerminalFontDescriptorEvents.Validated += FontDescriptor_Validated;
             TerminalStyleEvents.Validated += Style_Validated;
@@ -679,10 +678,13 @@ namespace JSSoft.UI
 
         protected override void OnDisable()
         {
+            TerminalEvents.Validated -= Terminal_Validated;
+            TerminalEvents.OutputTextChanged -= Terminal_OutputTextChanged;
+            TerminalEvents.PromptTextChanged -= Terminal_PromptTextChanged;
+            TerminalEvents.CursorPositionChanged -= Terminal_CursorPositionChanged;
             TerminalFontEvents.Validated -= Font_Validated;
             TerminalFontDescriptorEvents.Validated -= FontDescriptor_Validated;
             TerminalStyleEvents.Validated -= Style_Validated;
-            this.DetachEvent();
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
             TerminalGridEvents.Unregister(this);
@@ -703,7 +705,7 @@ namespace JSSoft.UI
         protected virtual bool OnPreviewKeyPress(char character)
         {
             // 27: escape key
-            if (character == '\n' || character == 27)
+            if (character == '\n' || character == '\t' || character == 27)
                 return true;
             return false;
         }
@@ -771,44 +773,48 @@ namespace JSSoft.UI
 
         private void UpdateCursorPosition()
         {
-            var x = this.cursorPosition.X;
-            var y = this.cursorPosition.Y;
+            var x = this.cursorPoint.X;
+            var y = this.cursorPoint.Y;
             var maxBufferHeight = Math.Max(this.BufferHeight, this.rows.Count);
             x = Math.Min(x, this.BufferWidth - 1);
             x = Math.Max(x, 0);
             y = Math.Min(y, maxBufferHeight - 1);
             y = Math.Max(y, 0);
-            this.cursorPosition = new TerminalPoint(x, y);
+            this.cursorPoint = new TerminalPoint(x, y);
         }
 
-        private void AttachEvent()
+        private void Terminal_Validated(object sender, EventArgs e)
         {
-            this.Terminal.OutputTextChanged += Terminal_OutputTextChanged;
-            this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
-            this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
-        }
-
-        private void DetachEvent()
-        {
-            this.Terminal.OutputTextChanged -= Terminal_OutputTextChanged;
-            this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
-            this.Terminal.CursorPositionChanged -= Terminal_CursorPositionChanged;
+            if (sender is Terminal terminal == this.terminal)
+            {
+                var index = this.terminal.CursorPosition + this.terminal.OutputText.Length + this.terminal.Prompt.Length;
+                this.text = this.terminal.Text;
+                this.characterInfos.Update();
+                this.rows.Update();
+                this.cursorPoint = this.IndexToPoint(index);
+            }
         }
 
         private void Terminal_OutputTextChanged(object sender, EventArgs e)
         {
-            this.Text = this.Terminal.Text;
+            if (sender is Terminal terminal == this.terminal)
+            {
+                this.Text = this.Terminal.Text;
+            }
         }
 
         private void Terminal_PromptTextChanged(object sender, EventArgs e)
         {
-            this.Text = this.Terminal.Text;
-            this.VisibleIndex = this.MaximumVisibleIndex;
+            if (sender is Terminal terminal == this.terminal)
+            {
+                this.Text = this.Terminal.Text;
+                this.VisibleIndex = this.MaximumVisibleIndex;
+            }
         }
 
         private void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
-            if (this.font != null)
+            if (sender is Terminal terminal == this.terminal)
             {
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
@@ -818,7 +824,7 @@ namespace JSSoft.UI
 
         private void Font_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalFont font && this.font == font)
+            if (sender is TerminalFont font == this.font)
             {
                 this.UpdateLayout();
                 this.UpdateVisibleIndex();

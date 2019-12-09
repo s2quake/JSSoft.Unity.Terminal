@@ -78,12 +78,13 @@ namespace JSSoft.UI
 
         public void Update(int index)
         {
+            Debug.Log($"{this.GetType().Name}: {index}");
             var font = this.grid.Font;
             var style = this.grid.Style;
             var text = this.grid.Text + char.MinValue;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
-            var volume = characterInfos.Volume;
+            var volume = this.characterInfos.Volume;
             var dic = new Dictionary<int, int>(this.Count);
             this.Resize(bufferWidth, volume.Bottom);
             for (var i = index; i < text.Length; i++)
@@ -121,7 +122,6 @@ namespace JSSoft.UI
                 var row = this.pool.Any() == true ? this.pool.Pop() : new TerminalRow(this.grid, this.Count);
                 this.Add(row);
             }
-
             return this[index];
         }
 
@@ -166,13 +166,13 @@ namespace JSSoft.UI
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalStyleEvents.Validated += Style_Validated;
-            this.UpdateAll();
+            this.text = string.Empty;
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
             TerminalStyleEvents.Validated -= Style_Validated;
-            this.text = null;
+            this.text = string.Empty;
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -185,6 +185,7 @@ namespace JSSoft.UI
                 case nameof(ITerminalGrid.BufferWidth):
                 case nameof(ITerminalGrid.BufferHeight):
                     {
+                        Debug.Log(propertyName);
                         this.UpdateAll();
                     }
                     break;
@@ -208,7 +209,10 @@ namespace JSSoft.UI
 
         private void Style_Validated(object sender, EventArgs e)
         {
-            this.Update();
+            if (sender is TerminalStyle style && this.grid.Style == style)
+            {
+                this.Update();
+            }
         }
     }
 }

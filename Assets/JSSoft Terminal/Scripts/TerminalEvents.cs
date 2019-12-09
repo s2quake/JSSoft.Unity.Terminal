@@ -21,28 +21,69 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    [RequireComponent(typeof(Terminal))]
-    public class TerminalEvents : UIBehaviour
+    public static class TerminalEvents
     {
-        public ExecutedEvent onExecuted { get; set; }
+        private static readonly HashSet<ITerminal> terminals = new HashSet<ITerminal>();
 
-        public OnCompletion onCompletion { get; set; }
-
-        public OnDrawPrompt onDrawPrompt { get; set; }
-
-        public class ExecutedEvent : UnityEvent<string, Action>
+        public static void Register(ITerminal terminal)
         {
+            if (terminal == null)
+                throw new ArgumentNullException(nameof(terminal));
+            if (terminals.Contains(terminal) == true)
+                throw new ArgumentException($"{nameof(terminal)} is already exists.");
+            terminals.Add(terminal);
+            terminal.Validated += Terminal_Validated;
+            terminal.OutputTextChanged += Terminal_OutputTextChanged;
+            terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+        }
 
+        public static void Unregister(ITerminal terminal)
+        {
+            if (terminal == null)
+                throw new ArgumentNullException(nameof(terminal));
+            if (terminals.Contains(terminal) == false)
+                throw new ArgumentException($"{nameof(terminal)} does not exists.");
+            terminal.Validated -= Terminal_Validated;
+            terminal.OutputTextChanged += Terminal_OutputTextChanged;
+            terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            terminals.Remove(terminal);
+        }
+
+        public static event EventHandler Validated;
+
+        public static event EventHandler OutputTextChanged;
+
+        public static event EventHandler PromptTextChanged;
+
+        public static event EventHandler CursorPositionChanged;
+
+        private static void Terminal_Validated(object sender, EventArgs e)
+        {
+            Validated?.Invoke(sender, e);
+        }
+
+        private static void Terminal_OutputTextChanged(object sender, EventArgs e)
+        {
+            OutputTextChanged?.Invoke(sender, e);
+        }
+
+        private static void Terminal_PromptTextChanged(object sender, EventArgs e)
+        {
+            PromptTextChanged?.Invoke(sender, e);
+        }
+
+        private static void Terminal_CursorPositionChanged(object sender, EventArgs e)
+        {
+            CursorPositionChanged?.Invoke(sender, e);
         }
     }
-    
-    public delegate string[] OnCompletion(string[] items, string find);
-
-    public delegate void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors);
 }

@@ -88,6 +88,7 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
+            TerminalEvents.Validated += Terminal_Validated;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
@@ -97,6 +98,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
+            TerminalEvents.Validated -= Terminal_Validated;
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
@@ -108,6 +110,14 @@ namespace JSSoft.UI
             if (cell.BackgroundColor is Color32)
                 return true;
             return TerminalGridUtility.IsSelecting(this.grid, cell);
+        }
+
+        private void Terminal_Validated(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid == this.grid)
+            {
+                this.SetVerticesDirty();
+            }
         }
 
         private void TerminalGrid_Validated(object sender, EventArgs e)

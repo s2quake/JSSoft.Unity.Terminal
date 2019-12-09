@@ -65,6 +65,8 @@ namespace JSSoft.UI
 
         IPromptDrawer PromptDrawer { get; set; }
 
+        event EventHandler Validated;
+
         event EventHandler OutputTextChanged;
 
         event EventHandler PromptTextChanged;

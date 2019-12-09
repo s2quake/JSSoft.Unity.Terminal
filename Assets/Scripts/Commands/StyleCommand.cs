@@ -28,6 +28,7 @@ using JSSoft.Communication.Shells;
 using JSSoft.UI;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
+using UnityEngine;
 #if MEF
 using System.ComponentModel.Composition;
 #endif
@@ -51,6 +52,16 @@ namespace JSSoft.Communication.Commands
             this.dispatcher = Dispatcher.Current;
         }
 
+        public override string[] GetCompletions(CommandCompletionContext completionContext)
+        {
+            // if (completionContext.Arguments.Any() == false)
+            {
+                var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+                return resources.Styles.Select(item => item.name).ToArray();
+            }
+            return base.GetCompletions(completionContext);
+        }
+
         [CommandProperty("list")]
         public bool IsList
         {
@@ -66,35 +77,66 @@ namespace JSSoft.Communication.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (this.IsList == true)
+            {
+                await this.ShowStyleListAsync();
+            }
+            else if (this.StyleName == string.Empty)
+            {
+                await this.ShowCurrentStyleAsync();
+            }
+            else
+            {
+                await this.ChangeStyleAsync();
+            }
+        }
+
+        private Task ShowStyleListAsync()
+        {
+            return this.dispatcher.InvokeAsync(() =>
             {
                 var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-                if (this.IsList == true)
+                var names = resources.Styles.Select(item => item.name).ToArray();
+                foreach (var item in names)
                 {
-                    var names = resources.Styles.Select(item => item.name).ToArray();
-                    foreach (var item in names)
-                    {
-                        var isCurrent = this.Grid.Style.name == item ? "*" : " ";
-                        this.Out.WriteLine($"{isCurrent} {item}");
-                    }
+                    var isCurrent = this.Grid.Style.name == item ? "*" : " ";
+                    this.Out.WriteLine($"{isCurrent} {item}");
                 }
-                else if (this.StyleName == string.Empty)
+            });
+        }
+
+        private Task ShowCurrentStyleAsync()
+        {
+            return this.dispatcher.InvokeAsync(() =>
+            {
+                var style = this.Grid.Style;
+                this.Out.WriteLine(style.name);
+            });
+        }
+
+        private async Task ChangeStyleAsync()
+        {
+            var rectangle = await this.dispatcher.InvokeAsync(() =>
+            {
+                var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+                var style = resources.Styles.FirstOrDefault(item => string.Compare(item.name, this.StyleName, true) == 0);
+                if (style != null)
                 {
-                    var name = this.Grid.Style.name;
-                    this.Out.WriteLine(name);
+                    this.Grid.Style = style;
+                    this.Out.WriteLine($"{this.StyleName} applied.");
+                    return this.Grid.Rectangle;
                 }
                 else
                 {
-                    var style = resources.Styles.FirstOrDefault(item => item.name == this.StyleName);
-                    if (style != null)
-                    {
-                        this.Grid.Style = style;
-                        this.Out.WriteLine($"{this.StyleName} applied.");
-                    }
-                    else
-                    {
-                        this.Out.WriteLine($"{this.StyleName} style does not exits.");
-                    }
+                    this.Out.WriteLine($"{this.StyleName} style does not exits.");
+                    return Rect.zero;
+                }
+            });
+            await this.dispatcher.InvokeAsync(() =>
+            {
+                if (Application.isEditor == false && rectangle != Rect.zero)
+                {
+                    Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
                 }
             });
         }

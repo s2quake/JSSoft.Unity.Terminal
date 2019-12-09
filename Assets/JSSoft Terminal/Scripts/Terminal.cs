@@ -30,6 +30,7 @@ using UnityEngine.EventSystems;
 namespace JSSoft.UI
 {
     [AddComponentMenu("UI/Terminal", 15)]
+    [ExecuteAlways]
     public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor
     {
         private readonly List<string> histories = new List<string>();
@@ -384,11 +385,18 @@ namespace JSSoft.UI
             }
         }
 
+        public event EventHandler Validated;
+
         public event EventHandler OutputTextChanged;
 
         public event EventHandler PromptTextChanged;
 
         public event EventHandler CursorPositionChanged;
+
+        protected virtual void OnValidated(EventArgs e)
+        {
+            this.Validated?.Invoke(this, EventArgs.Empty);
+        }
 
         protected virtual void OnOutputTextChanged(EventArgs e)
         {
@@ -417,6 +425,13 @@ namespace JSSoft.UI
             this.promptText = this.prompt + this.command;
             this.text = this.outputText + this.promptText;
             this.cursorPosition = this.command.Length;
+            TerminalEvents.Register(this);
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            TerminalEvents.Unregister(this);
         }
 
 #if UNITY_EDITOR
@@ -431,9 +446,7 @@ namespace JSSoft.UI
             this.promptText = this.prompt + this.command;
             this.text = this.outputText + this.promptText;
             this.cursorPosition = this.command.Length;
-            this.OnOutputTextChanged(EventArgs.Empty);
-            this.OnCursorPositionChanged(EventArgs.Empty);
-            // Debug.Log($"{nameof(Terminal)}.{nameof(OnValidate)}");
+            this.OnValidated(EventArgs.Empty);
         }
 #endif
 

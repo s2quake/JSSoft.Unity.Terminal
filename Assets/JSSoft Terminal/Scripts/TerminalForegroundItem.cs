@@ -91,7 +91,7 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            // base.material = new Material(Graphic.defaultGraphicMaterial);
+            TerminalEvents.Validated += Terminal_Validated;
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalStyleEvents.Validated += TerminalStyle_Validated;
@@ -99,6 +99,7 @@ namespace JSSoft.UI
 
         protected override void OnDisable()
         {
+            TerminalEvents.Validated -= Terminal_Validated;
             TerminalGridEvents.Validated -= TerminalGrid_Validated;
             TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             TerminalStyleEvents.Validated -= TerminalStyle_Validated;
@@ -121,11 +122,23 @@ namespace JSSoft.UI
                 return;
 
             var propertyName = e.PropertyName;
-            if (propertyName == nameof(ITerminalGrid.VisibleIndex))
+            switch (propertyName)
             {
-                this.SetVerticesDirty();
+                case nameof(ITerminalGrid.VisibleIndex):
+                case nameof(ITerminalGrid.Text):
+                case nameof(ITerminalGrid.Style):
+                    {
+                        Debug.Log($"{this.GetType().Name}: {propertyName}");
+                        if (this.IsDestroyed() == false)
+                            this.SetVerticesDirty();
+                    }
+                    break;
             }
-            else if (propertyName == nameof(ITerminalGrid.Text))
+        }
+
+        private void Terminal_Validated(object sender, EventArgs e)
+        {
+            if (sender is Terminal terminal == this.grid.Terminal)
             {
                 this.SetVerticesDirty();
             }
@@ -142,7 +155,7 @@ namespace JSSoft.UI
 
         private void TerminalStyle_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style && this.grid?.Style == style)
+            if (sender is TerminalStyle style == this.grid?.Style)
             {
                 this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                 this.SetVerticesDirty();

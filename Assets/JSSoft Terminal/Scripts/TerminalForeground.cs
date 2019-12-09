@@ -86,9 +86,14 @@ namespace JSSoft.UI
                 return;
 
             var propertyName = e.PropertyName;
-            if (propertyName == nameof(ITerminalGrid.Font))
+            switch (propertyName)
             {
-                this.RefreshChilds();
+                case nameof(ITerminalGrid.Font):
+                case nameof(ITerminalGrid.Style):
+                    {
+                        this.RefreshChilds();
+                    }
+                    break;
             }
         }
 
