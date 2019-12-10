@@ -123,7 +123,7 @@ namespace JSSoft.UI.Editor
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
-            terminalGrid.color = TerminalColors.Black;
+            // terminalGrid.color = TerminalColors.Black;
             terminalGridRect.SetParent(canvasTransform);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
             terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
@@ -145,6 +145,7 @@ namespace JSSoft.UI.Editor
             var cursorObj = new GameObject("TerminalCursor") { layer = canvas.gameObject.layer };
             var cursor = cursorObj.AddComponent<TerminalCursor>();
             var cursorRect = cursor.rectTransform;
+            cursor.material = new Material(Graphic.defaultGraphicMaterial);
             cursor.Grid = terminalGrid;
             cursorRect.SetParent(terminalGridRect);
             cursorRect.anchorMin = Vector3.zero;
@@ -184,7 +185,7 @@ namespace JSSoft.UI.Editor
             scrollbar.targetGraphic = scrollbarImage;
             scrollbar.direction = Scrollbar.Direction.TopToBottom;
             scrollbarImage.sprite = backgroundSprite;
-            scrollbarImage.color = new Color32(139, 139, 139, 0);
+            scrollbarImage.color = TerminalGrid.DefaultScrollbarColor;
             scrollbarImage.type = Image.Type.Sliced;
             scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
             scrollbarRect.SetParent(terminalGridRect);
@@ -208,7 +209,7 @@ namespace JSSoft.UI.Editor
             var handleRect = handleObj.GetComponent<RectTransform>();
             var handleImage = handleObj.GetComponent<Image>();
             handleImage.sprite = uiSprite;
-            handleImage.color = new Color32(139, 139, 139, 0);
+            handleImage.color = TerminalGrid.DefaultScrollbarColor;
             handleImage.type = Image.Type.Sliced;
             handleImage.pixelsPerUnitMultiplier = 0.5f;
             handleRect.SetParent(slidingAreaRect);

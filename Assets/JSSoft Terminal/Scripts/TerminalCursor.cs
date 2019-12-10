@@ -229,7 +229,7 @@ namespace JSSoft.UI
             TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
             TerminalStyleEvents.Validated += Style_Validated;
-            this.isVisible = this.grid != null ? true : this.grid.IsCursorVisible;
+            this.isVisible = this.grid != null ? this.grid.IsCursorVisible : true;
             base.color = TerminalGridUtility.GetCursorColor(this.grid);
         }
 

@@ -47,7 +47,7 @@ namespace JSSoft.UI.Editor
         private SerializedProperty bufferWidthProperty;
         private SerializedProperty bufferHeightProperty;
 
-        private bool isDebug;
+        private bool isDebug = true;
 
         public void OnEnable()
         {
