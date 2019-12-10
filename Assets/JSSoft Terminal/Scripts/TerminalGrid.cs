@@ -347,6 +347,7 @@ namespace JSSoft.UI
                 if (this.font != value)
                 {
                     this.font = value;
+                    this.UpdateLayout();
                     this.InvokePropertyChangedEvent(nameof(Font));
                 }
             }

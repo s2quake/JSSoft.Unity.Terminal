@@ -184,7 +184,6 @@ namespace JSSoft.UI
                 case nameof(ITerminalGrid.BufferWidth):
                 case nameof(ITerminalGrid.BufferHeight):
                     {
-                        Debug.Log(propertyName);
                         this.UpdateAll();
                     }
                     break;

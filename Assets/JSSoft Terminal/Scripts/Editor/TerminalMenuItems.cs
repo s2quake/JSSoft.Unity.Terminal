@@ -123,7 +123,7 @@ namespace JSSoft.UI.Editor
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
-            // terminalGrid.color = TerminalColors.Black;
+            terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
             terminalGridRect.SetParent(canvasTransform);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
             terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
