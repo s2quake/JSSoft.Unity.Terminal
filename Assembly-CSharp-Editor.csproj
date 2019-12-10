@@ -45,6 +45,7 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalFontInspector.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalGridInspector.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalMenuItems.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalStyleBehaviourEndNameEditAction.cs" />
      <None Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalBehaviour.txt" />

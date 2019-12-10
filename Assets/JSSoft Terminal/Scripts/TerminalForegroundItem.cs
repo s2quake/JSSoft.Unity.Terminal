@@ -128,7 +128,6 @@ namespace JSSoft.UI
                 case nameof(ITerminalGrid.Text):
                 case nameof(ITerminalGrid.Style):
                     {
-                        Debug.Log($"{this.GetType().Name}: {propertyName}");
                         if (this.IsDestroyed() == false)
                             this.SetVerticesDirty();
                     }

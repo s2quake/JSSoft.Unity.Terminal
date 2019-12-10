@@ -83,7 +83,6 @@ namespace JSSoft.UI
         [Range(5, 1000)]
         private int bufferHeight = 25;
 
-        [Header("Cursor settings")]
         [SerializeField]
         private TerminalCursorStyle cursorStyle;
         [SerializeField]
@@ -99,7 +98,6 @@ namespace JSSoft.UI
         [SerializeField]
         private bool isCursorVisible = true;
 
-        [Header("Etc settings")]
         [SerializeField]
         private string compositionString = string.Empty;
         [SerializeField]
@@ -332,10 +330,11 @@ namespace JSSoft.UI
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
-                if (this.text == value)
-                    return;
-                this.text = value;
-                this.InvokePropertyChangedEvent(nameof(Text));
+                if (this.text != value)
+                {
+                    this.text = value;
+                    this.InvokePropertyChangedEvent(nameof(Text));
+                }
             }
         }
 
@@ -344,8 +343,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.Font : this.font;
             set
             {
-                this.font = value;
-                this.InvokePropertyChangedEvent(nameof(Font));
+                if (this.font != value)
+                {
+                    this.font = value;
+                    this.InvokePropertyChangedEvent(nameof(Font));
+                }
             }
         }
 
@@ -411,8 +413,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.BackgroundColor : this.backgroundColor;
             set
             {
-                this.backgroundColor = value;
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (this.backgroundColor != value)
+                {
+                    this.backgroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(BackgroundColor));
+                }
             }
         }
 
@@ -421,8 +426,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.ForegroundColor : this.foregroundColor;
             set
             {
-                this.foregroundColor = value;
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (this.foregroundColor != value)
+                {
+                    this.foregroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(ForegroundColor));
+                }
             }
         }
 
@@ -431,8 +439,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.SelectionColor : this.selectionColor;
             set
             {
-                this.selectionColor = value;
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (this.selectionColor != value)
+                {
+                    this.selectionColor = value;
+                    this.InvokePropertyChangedEvent(nameof(SelectionColor));
+                }
             }
         }
 
@@ -441,8 +452,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.CursorColor : this.cursorColor;
             set
             {
-                this.cursorColor = value;
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (this.cursorColor != value)
+                {
+                    this.cursorColor = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorColor));
+                }
             }
         }
 
@@ -451,8 +465,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.CompositionColor : this.compositionColor;
             set
             {
-                this.compositionColor = value;
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (this.compositionColor != value)
+                {
+                    this.compositionColor = value;
+                    this.InvokePropertyChangedEvent(nameof(CompositionColor));
+                }
             }
         }
 
@@ -478,8 +495,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.Padding : this.padding;
             set
             {
-                this.padding = value;
-                this.OnLayoutChanged(EventArgs.Empty);
+                if (this.padding != value)
+                {
+                    this.padding = value;
+                    this.InvokePropertyChangedEvent(nameof(Padding));
+                }
             }
         }
 
@@ -503,8 +523,11 @@ namespace JSSoft.UI
             get => this.isCursorVisible;
             set
             {
-                this.isCursorVisible = value;
-                this.InvokePropertyChangedEvent(nameof(IsCursorVisible));
+                if (this.isCursorVisible != value)
+                {
+                    this.isCursorVisible = value;
+                    this.InvokePropertyChangedEvent(nameof(IsCursorVisible));
+                }
             }
         }
 
@@ -528,8 +551,13 @@ namespace JSSoft.UI
             get => this.compositionString;
             set
             {
-                this.compositionString = value ?? throw new ArgumentNullException(nameof(value));
-                this.InvokePropertyChangedEvent(nameof(CompositionString));
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                if (this.compositionString != value)
+                {
+                    this.compositionString = value;
+                    this.InvokePropertyChangedEvent(nameof(CompositionString));
+                }
             }
         }
 
@@ -538,8 +566,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.CursorStyle : this.cursorStyle;
             set
             {
-                this.cursorStyle = value;
-                this.InvokePropertyChangedEvent(nameof(CursorStyle));
+                if (this.cursorStyle != value)
+                {
+                    this.cursorStyle = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorStyle));
+                }
             }
         }
 
@@ -550,8 +581,11 @@ namespace JSSoft.UI
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorThickness = value;
-                this.InvokePropertyChangedEvent(nameof(CursorThickness));
+                if (this.cursorThickness != value)
+                {
+                    this.cursorThickness = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorThickness));
+                }
             }
         }
 
@@ -560,8 +594,11 @@ namespace JSSoft.UI
             get => this.style != null ? this.style.IsCursorBlinkable : this.isCursorBlinkable;
             set
             {
-                this.isCursorBlinkable = value;
-                this.InvokePropertyChangedEvent(nameof(IsCursorBlinkable));
+                if (this.isCursorBlinkable != value)
+                {
+                    this.isCursorBlinkable = value;
+                    this.InvokePropertyChangedEvent(nameof(IsCursorBlinkable));
+                }
             }
         }
 
@@ -572,8 +609,11 @@ namespace JSSoft.UI
             {
                 if (value < 0.0f)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorBlinkDelay = value;
-                this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
+                if (this.cursorBlinkDelay != value)
+                {
+                    this.cursorBlinkDelay = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
+                }
             }
         }
 
@@ -847,7 +887,7 @@ namespace JSSoft.UI
 
         private void Style_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style && this.style == style)
+            if (sender is TerminalStyle style == this.style)
             {
                 this.UpdateColor();
                 this.UpdateLayout();

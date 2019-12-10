@@ -78,7 +78,6 @@ namespace JSSoft.UI
 
         public void Update(int index)
         {
-            Debug.Log($"{this.GetType().Name}: {index}");
             var font = this.grid.Font;
             var style = this.grid.Style;
             var text = this.grid.Text + char.MinValue;
