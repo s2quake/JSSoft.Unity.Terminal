@@ -171,8 +171,8 @@ namespace JSSoft.UI
                     charInfo.Texture = font.textures[item.Page];
                     font.charInfos[i] = charInfo;
                 }
-                font.charInfoByID = null;
                 font.UpdateWidth();
+                font.UpdateProperty();
             }
         }
 #endif
