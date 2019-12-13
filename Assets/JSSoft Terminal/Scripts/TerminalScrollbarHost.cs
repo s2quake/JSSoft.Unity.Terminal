@@ -84,14 +84,14 @@ namespace JSSoft.UI
 
         private void AttachEvent()
         {
-            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
-            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
         }
 
         private void DetachEvent()
         {
-            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
-            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
         }
 
         private void UpdateScrollbarVisible()
@@ -137,7 +137,7 @@ namespace JSSoft.UI
             this.verticalScrollbar.SetValueWithoutNotify(value);
         }
 
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid == this.grid)
             {
@@ -146,7 +146,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is TerminalGrid grid != this.grid)
                 return;

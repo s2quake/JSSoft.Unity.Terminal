@@ -89,6 +89,9 @@
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCell.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCharacterInfo.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCharacterInfoCollection.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColor.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColorPalette.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColorPaletteEvents.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalColors.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalComposition.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\TerminalCursor.cs" />

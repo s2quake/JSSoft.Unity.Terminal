@@ -76,6 +76,8 @@ namespace JSSoft.UI
         [SerializeField]
         private Color compositionColor = DefaultCompositionColor;
         [SerializeField]
+        private TerminalColorPalette colorPalette;
+        [SerializeField]
         private int visibleIndex;
         [SerializeField]
         [Range(20, 1000)]
@@ -168,9 +170,27 @@ namespace JSSoft.UI
 
         public int PointToIndex(TerminalPoint point) => this.characterInfos.PointToIndex(point);
 
-        public Color32? IndexToBackgroundColor(int index) => this.Terminal.GetBackgroundColor(index);
+        public Color32? IndexToBackgroundColor(int index)
+        {
+            var pallete = this.ColorPalette;
+            var color = this.Terminal.GetBackgroundColor(index);
+            if (color == null)
+                return null;
+            if (pallete != null)
+                return pallete.GetColor(color.Value);
+            return TerminalColors.GetColor(color.Value);
+        }
 
-        public Color32? IndexToForegroundColor(int index) => this.Terminal.GetForegroundColor(index);
+        public Color32? IndexToForegroundColor(int index)
+        {
+            var pallete = this.ColorPalette;
+            var color = this.Terminal.GetForegroundColor(index);
+            if (color == null)
+                return null;
+            if (pallete != null)
+                return pallete.GetColor(color.Value);
+            return TerminalColors.GetColor(color.Value);
+        }
 
         public TerminalCell GetCell(TerminalPoint point)
         {
@@ -471,6 +491,19 @@ namespace JSSoft.UI
                 {
                     this.compositionColor = value;
                     this.InvokePropertyChangedEvent(nameof(CompositionColor));
+                }
+            }
+        }
+
+        public TerminalColorPalette ColorPalette
+        {
+            get => this.style != null ? this.style.ColorPalette : this.colorPalette;
+            set
+            {
+                if (this.colorPalette != value)
+                {
+                    this.colorPalette = value;
+                    this.InvokePropertyChangedEvent(nameof(ColorPalette));
                 }
             }
         }

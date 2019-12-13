@@ -34,7 +34,7 @@ using UnityEditor;
 
 namespace JSSoft.UI
 {
-    [CreateAssetMenu(menuName = "Terminal/Create Font")]
+    [CreateAssetMenu(menuName = "Terminal/Font")]
     public class TerminalFont : ScriptableObject, INotifyPropertyChanged
     {
         private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();

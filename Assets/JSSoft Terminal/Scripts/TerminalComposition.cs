@@ -158,8 +158,8 @@ namespace JSSoft.UI
             base.material = new Material(Shader.Find("Unlit/Color"));
             base.material.color = base.color;
             this.material = new Material(Shader.Find("UI/Default"));
-            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
-            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalStyleEvents.Validated += Style_Validated;
         }
 
@@ -167,8 +167,8 @@ namespace JSSoft.UI
         {
             base.OnDisable();
             this.mesh = null;
-            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
-            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalStyleEvents.Validated -= Style_Validated;
         }
 
@@ -223,7 +223,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (object.Equals(sender, this.grid) == false)
                 return;
@@ -253,7 +253,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid && this.grid == grid)
             {

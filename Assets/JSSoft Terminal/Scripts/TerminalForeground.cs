@@ -69,18 +69,18 @@ namespace JSSoft.UI
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
-            TerminalGridEvents.Validated += TerminalGrid_Validated;
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
+            TerminalGridEvents.Validated += Grid_Validated;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
-            TerminalGridEvents.Validated -= TerminalGrid_Validated;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalGridEvents.Validated -= Grid_Validated;
         }
 
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (object.Equals(sender, this.grid) == false)
                 return;
@@ -97,7 +97,7 @@ namespace JSSoft.UI
             }
         }
 
-        private async void TerminalGrid_Validated(object sender, EventArgs e)
+        private async void Grid_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid == this.grid)
             {

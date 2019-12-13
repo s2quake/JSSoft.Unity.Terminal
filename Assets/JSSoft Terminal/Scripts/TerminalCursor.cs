@@ -223,11 +223,11 @@ namespace JSSoft.UI
             base.OnEnable();
             this.SetVerticesDirty();
             TerminalEvents.Validated += Terminal_Validated;
-            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
-            TerminalGridEvents.GotFocus += TerminalGrid_GotFocus;
-            TerminalGridEvents.LostFocus += TerminalGrid_LostFocus;
-            TerminalGridEvents.Validated += TerminalGrid_Validated;
-            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
+            TerminalGridEvents.GotFocus += Grid_GotFocus;
+            TerminalGridEvents.LostFocus += Grid_LostFocus;
+            TerminalGridEvents.Validated += Grid_Validated;
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalStyleEvents.Validated += Style_Validated;
             this.isVisible = this.grid != null ? this.grid.IsCursorVisible : true;
             base.color = TerminalGridUtility.GetCursorColor(this.grid);
@@ -237,11 +237,11 @@ namespace JSSoft.UI
         {
             base.OnDisable();
             TerminalEvents.Validated += Terminal_Validated;
-            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
-            TerminalGridEvents.GotFocus -= TerminalGrid_GotFocus;
-            TerminalGridEvents.LostFocus -= TerminalGrid_LostFocus;
-            TerminalGridEvents.Validated -= TerminalGrid_Validated;
-            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
+            TerminalGridEvents.GotFocus -= Grid_GotFocus;
+            TerminalGridEvents.LostFocus -= Grid_LostFocus;
+            TerminalGridEvents.Validated -= Grid_Validated;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalStyleEvents.Validated += Style_Validated;
         }
 
@@ -275,7 +275,7 @@ namespace JSSoft.UI
             base.OnRectTransformDimensionsChange();
         }
 
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (object.Equals(sender, this.grid) == false)
                 return;
@@ -322,7 +322,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
@@ -331,7 +331,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_GotFocus(object sender, EventArgs e)
+        private void Grid_GotFocus(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
@@ -339,7 +339,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_LostFocus(object sender, EventArgs e)
+        private void Grid_LostFocus(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
@@ -347,7 +347,7 @@ namespace JSSoft.UI
             }
         }
 
-        private async void TerminalGrid_Validated(object sender, EventArgs e)
+        private async void Grid_Validated(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {

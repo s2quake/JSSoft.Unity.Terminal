@@ -767,7 +767,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 931695111}
+  m_Material: {fileID: 1628769122}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -787,28 +787,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 925086348}
   m_CullTransparentMesh: 0
---- !u!21 &931695111
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &983221444
 GameObject:
   m_ObjectHideFlags: 0
@@ -1092,13 +1070,14 @@ MonoBehaviour:
       m_Calls: []
   font: {fileID: 11400000, guid: 9741a67b6ace542859c96b83ff879c44, type: 2}
   text: "Windows PowerShell\nCopyright (C) Microsoft Corporation. All rights reserved.\n\n\uC0C8\uB85C\uC6B4
-    \uD06C\uB85C\uC2A4 \uD50C\uB7AB\uD3FC PowerShell \uC0AC\uC6A9 https://aka.ms/pscore6\n\r\nPS
+    \uD06C\uB85C\uC2A4 \uD50C\uB7AB\uD3FC PowerShell \uC0AC\uC6A9 https://aka.ms/pscore6\n\r1\nPS
     C:\\Users\\s2quake>"
   backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   foregroundColor: {r: 1, g: 1, b: 1, a: 1}
   selectionColor: {r: 0.19215687, g: 0.30980393, b: 0.5058824, a: 1}
   cursorColor: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
   compositionColor: {r: 0, g: 0, b: 0, a: 1}
+  colorPalette: {fileID: 0}
   visibleIndex: 0
   bufferWidth: 80
   bufferHeight: 25
@@ -1140,7 +1119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outputText: "Windows PowerShell\nCopyright (C) Microsoft Corporation. All rights
     reserved.\n\n\uC0C8\uB85C\uC6B4 \uD06C\uB85C\uC2A4 \uD50C\uB7AB\uD3FC PowerShell
-    \uC0AC\uC6A9 https://aka.ms/pscore6\n\r\n"
+    \uC0AC\uC6A9 https://aka.ms/pscore6\n\r1\n"
   prompt: PS C:\Users\s2quake>
   command: 
 --- !u!224 &1135163110
@@ -1461,6 +1440,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552541324}
   m_CullTransparentMesh: 0
+--- !u!21 &1628769122
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!21 &1652928175
 Material:
   serializedVersion: 6
@@ -1770,6 +1771,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3bcefcfc8cc9f6d489cd5ee21c193236, type: 2}
   - {fileID: 11400000, guid: 94943291b98f32b4fb0626ad81945744, type: 2}
   - {fileID: 11400000, guid: 0440d0970d55d4777a51e0e9fc28933c, type: 2}
+  - {fileID: 11400000, guid: fb012bdbe99964bedadb880e80af7c51, type: 2}
 --- !u!4 &2089326356
 Transform:
   m_ObjectHideFlags: 0
