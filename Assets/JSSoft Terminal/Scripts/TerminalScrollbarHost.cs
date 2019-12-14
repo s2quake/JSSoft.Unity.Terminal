@@ -49,6 +49,7 @@ namespace JSSoft.UI
         private TerminalScrollbar verticalScrollbar;
         private IEnumerator fader;
         private float time = 0.0f;
+        private bool isScrolling;
 
         public TerminalGrid Grid
         {
@@ -137,6 +138,17 @@ namespace JSSoft.UI
             this.verticalScrollbar.SetValueWithoutNotify(value);
         }
 
+        private void UpdateVisibleIndex()
+        {
+            var value1 = (float)this.verticalScrollbar.value;
+            var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.BufferHeight);
+            var value = value1 * value2;
+            Debug.Log(value);
+            this.isScrolling = true;
+            this.grid.VisibleIndex = (int)value;
+            this.isScrolling = false;
+        }
+
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid == this.grid)
@@ -154,11 +166,10 @@ namespace JSSoft.UI
             var propertyName = e.PropertyName;
             if (propertyName == nameof(ITerminalGrid.VisibleIndex))
             {
-                this.UpdateScrollbarValue();
+                if (this.isScrolling == false)
+                    this.UpdateScrollbarValue();
                 if (this.grid.IsScrolling == true && this.isFadable == true)
-                {
                     this.BeginFade();
-                }
             }
             else if (propertyName == nameof(ITerminalGrid.Text))
             {
@@ -171,8 +182,7 @@ namespace JSSoft.UI
         {
             if (this.grid != null)
             {
-                var value1 = (float)this.verticalScrollbar.value;
-                var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.BufferHeight);
+                this.UpdateVisibleIndex();
             }
             if (this.isFadable == true)
             {
@@ -192,12 +202,13 @@ namespace JSSoft.UI
         {
             if (Application.isPlaying == false)
                 return;
-            this.time = this.watingTime + this.fadingTime;
-            if (this.fader == null)
-            {
-                this.fader = this.Fade();
-                this.StartCoroutine(this.fader);
-            }
+                this.GetComponent<Animator>().SetTrigger("FadeOut");
+            // this.time = this.watingTime + this.fadingTime;
+            // if (this.fader == null)
+            // {
+            //     this.fader = this.Fade();
+            //     this.StartCoroutine(this.fader);
+            // }
         }
 
         private IEnumerator Fade()

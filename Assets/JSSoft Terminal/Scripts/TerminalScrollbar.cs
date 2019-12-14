@@ -39,6 +39,16 @@ namespace JSSoft.UI
             this.OnPointerUp(EventArgs.Empty);
         }
 
+        public override void OnPointerEnter(PointerEventData eventData)
+        {
+            base.OnPointerEnter(eventData);
+        }
+
+        public override void OnPointerExit(PointerEventData eventData)
+        {
+            base.OnPointerExit(eventData);
+        }
+
         public event EventHandler PointerUp;
 
         protected virtual void OnPointerUp(EventArgs e)
