@@ -228,7 +228,7 @@ namespace JSSoft.UI
             TerminalGridEvents.LostFocus += Grid_LostFocus;
             TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
-            TerminalStyleEvents.Validated += Style_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
             this.isVisible = this.grid != null ? this.grid.IsCursorVisible : true;
             base.color = TerminalGridUtility.GetCursorColor(this.grid);
         }
@@ -242,7 +242,7 @@ namespace JSSoft.UI
             TerminalGridEvents.LostFocus -= Grid_LostFocus;
             TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
-            TerminalStyleEvents.Validated += Style_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
         }
 
         protected override void Start()
@@ -356,7 +356,7 @@ namespace JSSoft.UI
             }
         }
 
-        private async void Style_Validated(object sender, EventArgs e)
+        private async void Object_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalStyle style == this.grid?.Style)
             {

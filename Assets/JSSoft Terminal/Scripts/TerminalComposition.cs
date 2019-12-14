@@ -160,7 +160,7 @@ namespace JSSoft.UI
             this.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
-            TerminalStyleEvents.Validated += Style_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
         }
 
         protected override void OnDisable()
@@ -169,7 +169,7 @@ namespace JSSoft.UI
             this.mesh = null;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
-            TerminalStyleEvents.Validated -= Style_Validated;
+            TerminalValidationEvents.Validated -= Object_Validated;
         }
 
         protected override void UpdateGeometry()
@@ -261,7 +261,7 @@ namespace JSSoft.UI
             }
         }
 
-        private async void Style_Validated(object sender, EventArgs e)
+        private async void Object_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalStyle style == this.grid?.Style)
             {

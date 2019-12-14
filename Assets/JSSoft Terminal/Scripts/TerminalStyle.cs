@@ -30,7 +30,7 @@ using UnityEngine;
 namespace JSSoft.UI
 {
     [CreateAssetMenu(menuName = "Terminal/Style")]
-    public class TerminalStyle : ScriptableObject, INotifyPropertyChanged
+    public class TerminalStyle : ScriptableObject, INotifyValidated
     {
         [SerializeField]
         private TerminalFont font;
@@ -240,12 +240,12 @@ namespace JSSoft.UI
 
         protected virtual void OnEnable()
         {
-            TerminalStyleEvents.Register(this);
+            TerminalValidationEvents.Register(this);
         }
 
         protected virtual void OnDisable()
         {
-            TerminalStyleEvents.Unregister(this);
+            TerminalValidationEvents.Unregister(this);
         }
 
         protected virtual void OnValidated(EventArgs e)

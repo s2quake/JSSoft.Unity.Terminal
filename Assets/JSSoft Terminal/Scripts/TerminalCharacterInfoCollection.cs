@@ -172,15 +172,13 @@ namespace JSSoft.UI
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
-            TerminalStyleEvents.Validated += Style_Validated;
-            TerminalColorPaletteEvents.Validated += Palette_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
             this.text = string.Empty;
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
-            TerminalStyleEvents.Validated -= Style_Validated;
-            TerminalColorPaletteEvents.Validated -= Palette_Validated;
+            TerminalValidationEvents.Validated -= Object_Validated;
             this.text = string.Empty;
         }
 
@@ -215,19 +213,16 @@ namespace JSSoft.UI
             this.Update();
         }
 
-        private void Style_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style && this.grid.Style == style)
+            switch (sender)
             {
-                this.Update();
-            }
-        }
-
-        private void Palette_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalColorPalette palette && this.grid.ColorPalette == palette)
-            {
-                this.Update();
+                case TerminalStyle style when this.grid.Style == style:
+                    this.Update();
+                    break;
+                case TerminalColorPalette palette when this.grid.ColorPalette == palette:
+                    this.Update();
+                    break;
             }
         }
 

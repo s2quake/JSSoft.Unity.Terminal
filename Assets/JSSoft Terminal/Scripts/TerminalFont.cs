@@ -35,7 +35,7 @@ using UnityEditor;
 namespace JSSoft.UI
 {
     [CreateAssetMenu(menuName = "Terminal/Font")]
-    public class TerminalFont : ScriptableObject, INotifyPropertyChanged
+    public class TerminalFont : ScriptableObject, INotifyValidated
     {
         private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
         [SerializeField]
@@ -127,14 +127,14 @@ namespace JSSoft.UI
         {
             this.UpdateDescriptors();
             this.UpdateTextures();
-            TerminalFontEvents.Register(this);
-            TerminalFontDescriptorEvents.Validated += TerminalFontDescriptor_Validated;
+            TerminalValidationEvents.Register(this);
+            TerminalValidationEvents.Validated += Object_Validated;
         }
 
         protected virtual void OnDisable()
         {
-            TerminalFontDescriptorEvents.Validated -= TerminalFontDescriptor_Validated;
-            TerminalFontEvents.Unregister(this);
+            TerminalValidationEvents.Validated -= Object_Validated;
+            TerminalValidationEvents.Unregister(this);
         }
 
         protected virtual void OnValidated(EventArgs e)
@@ -154,7 +154,7 @@ namespace JSSoft.UI
             this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
         }
 
-        private void TerminalFontDescriptor_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalFontDescriptor descriptor && this.Descriptors.Contains(descriptor))
             {

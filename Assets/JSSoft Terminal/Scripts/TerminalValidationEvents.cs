@@ -26,44 +26,53 @@ using System.ComponentModel;
 
 namespace JSSoft.UI
 {
-    public static class TerminalStyleEvents
+    public static class TerminalValidationEvents
     {
-        private static readonly HashSet<TerminalStyle> styles = new HashSet<TerminalStyle>();
+        private static readonly HashSet<INotifyValidated> objs = new HashSet<INotifyValidated>();
 
-        public static void Register(TerminalStyle style)
+        public static void Register(INotifyValidated obj)
         {
-            if (style == null)
-                throw new ArgumentNullException(nameof(style));
-            if (styles.Contains(style) == true)
-                throw new ArgumentException($"{nameof(style)} is already exists.");
-            styles.Add(style);
-            style.Validated += Style_Validated;
-            style.PropertyChanged += Style_PropertyChanged;
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+            if (objs.Contains(obj) == true)
+                throw new ArgumentException($"{nameof(obj)} is already exists.");
+            objs.Add(obj);
+            obj.Validated += Object_Validated;
+            obj.PropertyChanged += Object_PropertyChanged;
         }
 
-        public static void Unregister(TerminalStyle style)
+        public static void Unregister(INotifyValidated obj)
         {
-            if (style == null)
-                throw new ArgumentNullException(nameof(style));
-            if (styles.Contains(style) == false)
-                throw new ArgumentException($"{nameof(style)} does not exists.");
-            style.Validated -= Style_Validated;
-            style.PropertyChanged -= Style_PropertyChanged;
-            styles.Remove(style);
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+            if (objs.Contains(obj) == false)
+                throw new ArgumentException($"{nameof(obj)} does not exists.");
+            obj.Validated -= Object_Validated;
+            obj.PropertyChanged -= Object_PropertyChanged;
+            objs.Remove(obj);
         }
 
         public static event EventHandler Validated;
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
-        private static void Style_Validated(object sender, EventArgs e)
+        private static void Object_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
         }
 
-        private static void Style_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private static void Object_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(sender, e);
         }
+
+#if UNITY_EDITOR
+        internal static void InvokeValidatedEvent(INotifyValidated obj, EventArgs e)
+        {
+            if (objs.Contains(obj) == false)
+                throw new ArgumentException($"{nameof(obj)} does not exists.");
+            Validated?.Invoke(obj, e);
+        }
+#endif
     }
 }

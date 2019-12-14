@@ -745,9 +745,7 @@ namespace JSSoft.UI
             TerminalEvents.OutputTextChanged += Terminal_OutputTextChanged;
             TerminalEvents.PromptTextChanged += Terminal_PromptTextChanged;
             TerminalEvents.CursorPositionChanged += Terminal_CursorPositionChanged;
-            TerminalFontEvents.Validated += Font_Validated;
-            TerminalFontDescriptorEvents.Validated += FontDescriptor_Validated;
-            TerminalStyleEvents.Validated += Style_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
         }
 
@@ -757,9 +755,7 @@ namespace JSSoft.UI
             TerminalEvents.OutputTextChanged -= Terminal_OutputTextChanged;
             TerminalEvents.PromptTextChanged -= Terminal_PromptTextChanged;
             TerminalEvents.CursorPositionChanged -= Terminal_CursorPositionChanged;
-            TerminalFontEvents.Validated -= Font_Validated;
-            TerminalFontDescriptorEvents.Validated -= FontDescriptor_Validated;
-            TerminalStyleEvents.Validated -= Style_Validated;
+            TerminalValidationEvents.Validated -= Object_Validated;
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
             TerminalGridEvents.Unregister(this);
@@ -897,37 +893,26 @@ namespace JSSoft.UI
             }
         }
 
-        private void Font_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalFont font == this.font)
+            switch (sender)
             {
-                this.UpdateLayout();
-                this.UpdateVisibleIndex();
-                this.UpdateCursorPosition();
-                this.OnValidated(EventArgs.Empty);
-            }
-        }
-
-        private void FontDescriptor_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalFontDescriptor descriptor &&
-                this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true)
-            {
-                this.UpdateLayout();
-                this.UpdateVisibleIndex();
-                this.UpdateCursorPosition();
-                this.OnValidated(EventArgs.Empty);
-            }
-        }
-
-        private void Style_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalStyle style == this.style)
-            {
-                this.UpdateColor();
-                this.UpdateLayout();
-                this.UpdateVisibleIndex();
-                this.UpdateCursorPosition();
+                case TerminalFont font when font == this.font:
+                    this.UpdateLayout();
+                    this.UpdateVisibleIndex();
+                    this.UpdateCursorPosition();
+                    break;
+                case TerminalFontDescriptor descriptor when this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true:
+                    this.UpdateLayout();
+                    this.UpdateVisibleIndex();
+                    this.UpdateCursorPosition();
+                    break;
+                case TerminalStyle style when style == this.style:
+                    this.UpdateColor();
+                    this.UpdateLayout();
+                    this.UpdateVisibleIndex();
+                    this.UpdateCursorPosition();
+                    break;
             }
         }
 

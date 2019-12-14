@@ -94,8 +94,7 @@ namespace JSSoft.UI
             TerminalEvents.Validated += Terminal_Validated;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.Validated += Grid_Validated;
-            TerminalStyleEvents.Validated += Style_Validated;
-            TerminalColorPaletteEvents.Validated += Palette_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
         }
 
         protected override void OnDisable()
@@ -103,8 +102,7 @@ namespace JSSoft.UI
             TerminalEvents.Validated -= Terminal_Validated;
             TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
-            TerminalStyleEvents.Validated -= Style_Validated;
-            TerminalColorPaletteEvents.Validated -= Palette_Validated;
+            TerminalValidationEvents.Validated -= Object_Validated;
             base.OnDisable();
         }
 
@@ -154,20 +152,17 @@ namespace JSSoft.UI
             }
         }
 
-        private void Style_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style == this.grid?.Style)
+            switch (sender)
             {
-                this.color = TerminalGridUtility.GetForegroundColor(this.grid);
-                this.SetVerticesDirty();
-            }
-        }
-
-        private void Palette_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalStyle style == this.grid?.Style)
-            {
-                this.SetVerticesDirty();
+                case TerminalStyle style when this.grid?.Style:
+                    this.color = TerminalGridUtility.GetForegroundColor(this.grid);
+                    this.SetVerticesDirty();
+                    break;
+                case TerminalColorPalette palette when this.grid?.ColorPalette:
+                    this.SetVerticesDirty();
+                    break;
             }
         }
     }

@@ -52,7 +52,7 @@ namespace JSSoft.UI.Editor
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
-                TerminalFontDescriptorEvents.InvokeValidatedEvent(fontDescriptor, EventArgs.Empty);
+                // TerminalFontDescriptorEvents.InvokeValidatedEvent(fontDescriptor, EventArgs.Empty);
             }
         }
 
