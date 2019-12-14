@@ -36,34 +36,15 @@ namespace JSSoft.UI
     {
         [SerializeField]
         private TerminalGrid grid = null;
-        [Header("Fade Settings")]
-        [SerializeField]
-        private bool isFadable = true;
-        [SerializeField]
-        [Range(0, 10)]
-        private float watingTime = 1.0f;
-        [SerializeField]
-        [Range(0, 5)]
-        private float fadingTime = 0.25f;
 
         private TerminalScrollbar verticalScrollbar;
-        private IEnumerator fader;
-        private float time = 0.0f;
         private bool isScrolling;
+        private Animator animator;
 
         public TerminalGrid Grid
         {
             get => this.grid;
             set => this.grid = value;
-        }
-
-        public bool IsFadable
-        {
-            get => this.isFadable;
-            set
-            {
-                this.isFadable = value;
-            }
         }
 
         protected override void OnEnable()
@@ -72,6 +53,7 @@ namespace JSSoft.UI
             this.verticalScrollbar = this.GetComponent<TerminalScrollbar>();
             this.verticalScrollbar.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
             this.verticalScrollbar.PointerUp += VerticalScrollbar_PointerUp;
+            this.animator = this.GetComponent<Animator>();
             this.AttachEvent();
         }
 
@@ -80,6 +62,7 @@ namespace JSSoft.UI
             base.OnDisable();
             this.verticalScrollbar.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);
             this.verticalScrollbar.PointerUp -= VerticalScrollbar_PointerUp;
+            this.animator = null;
             this.DetachEvent();
         }
 
@@ -136,6 +119,8 @@ namespace JSSoft.UI
             if (Application.isPlaying == false)
                 await Task.Delay(1);
             this.verticalScrollbar.SetValueWithoutNotify(value);
+            if (this.verticalScrollbar.IsMouseOn == false)
+                this.verticalScrollbar.IsMouseOn = true;
         }
 
         private void UpdateVisibleIndex()
@@ -143,7 +128,6 @@ namespace JSSoft.UI
             var value1 = (float)this.verticalScrollbar.value;
             var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.BufferHeight);
             var value = value1 * value2;
-            Debug.Log(value);
             this.isScrolling = true;
             this.grid.VisibleIndex = (int)value;
             this.isScrolling = false;
@@ -168,8 +152,6 @@ namespace JSSoft.UI
             {
                 if (this.isScrolling == false)
                     this.UpdateScrollbarValue();
-                if (this.grid.IsScrolling == true && this.isFadable == true)
-                    this.BeginFade();
             }
             else if (propertyName == nameof(ITerminalGrid.Text))
             {
@@ -184,10 +166,6 @@ namespace JSSoft.UI
             {
                 this.UpdateVisibleIndex();
             }
-            if (this.isFadable == true)
-            {
-                this.BeginFade();
-            }
         }
 
         private void VerticalScrollbar_PointerUp(object sender, EventArgs e)
@@ -196,44 +174,6 @@ namespace JSSoft.UI
             {
                 EventSystem.current.SetSelectedGameObject(this.grid.gameObject);
             }
-        }
-
-        private void BeginFade()
-        {
-            if (Application.isPlaying == false)
-                return;
-                this.GetComponent<Animator>().SetTrigger("FadeOut");
-            // this.time = this.watingTime + this.fadingTime;
-            // if (this.fader == null)
-            // {
-            //     this.fader = this.Fade();
-            //     this.StartCoroutine(this.fader);
-            // }
-        }
-
-        private IEnumerator Fade()
-        {
-            var handleRect = this.verticalScrollbar.handleRect;
-            if (handleRect != null)
-            {
-                var handleImage = handleRect.GetComponent<Image>();
-                var totalTime = this.watingTime + this.fadingTime;
-                var color = handleImage.color;
-                color.a = 1.0f;
-                handleImage.color = color;
-
-                do
-                {
-                    color.a = this.time > this.watingTime ? 1.0f : (this.time / this.fadingTime);
-                    handleImage.color = color;
-                    this.time -= Time.deltaTime;
-                    yield return null;
-                }
-                while (this.time >= 0);
-                color.a = 0.0f;
-                handleImage.color = color;
-            }
-            this.fader = null;
         }
     }
 }

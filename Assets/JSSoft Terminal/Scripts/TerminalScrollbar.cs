@@ -23,11 +23,16 @@
 using System;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine;
 
 namespace JSSoft.UI
 {
     public class TerminalScrollbar : Scrollbar
     {
+        private const string mouseOnParam = "MouseOn";
+
+        private new Animator animator;
+
         public override void OnPointerDown(PointerEventData eventData)
         {
             base.OnPointerDown(eventData);
@@ -42,11 +47,25 @@ namespace JSSoft.UI
         public override void OnPointerEnter(PointerEventData eventData)
         {
             base.OnPointerEnter(eventData);
+            if (this.size < 1)
+            {
+                this.IsMouseOn = true;
+            }
         }
 
         public override void OnPointerExit(PointerEventData eventData)
         {
             base.OnPointerExit(eventData);
+            if (this.IsMouseOn == true && eventData.dragging == false)
+            {
+                this.IsMouseOn = false;
+            }
+        }
+
+        public bool IsMouseOn
+        {
+            get => this.animator.GetBool(mouseOnParam);
+            set => this.animator.SetBool(mouseOnParam, value);
         }
 
         public event EventHandler PointerUp;
@@ -54,6 +73,21 @@ namespace JSSoft.UI
         protected virtual void OnPointerUp(EventArgs e)
         {
             this.PointerUp?.Invoke(this, e);
+            if (this.IsMouseOn == true)
+            {
+                this.IsMouseOn = false;
+            }
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            this.animator = this.GetComponent<Animator>();
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
         }
     }
 }
