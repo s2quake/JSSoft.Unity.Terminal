@@ -27,7 +27,7 @@ using UnityEngine;
 namespace JSSoft.UI.Editor
 {
     [CustomEditor(typeof(TerminalGrid))]
-    public class TerminalGridInspector : UnityEditor.Editor
+    public class TerminalGridEditor : UnityEditor.Editor
     {
         private SerializedProperty fontProperty;
         private SerializedProperty styleProperty;

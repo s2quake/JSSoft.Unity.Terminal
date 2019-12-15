@@ -474,7 +474,6 @@ GameObject:
   - component: {fileID: 480832970}
   - component: {fileID: 480832969}
   - component: {fileID: 480832968}
-  - component: {fileID: 480832967}
   - component: {fileID: 480832971}
   m_Layer: 5
   m_Name: TerminalScrollbar
@@ -503,19 +502,6 @@ RectTransform:
   m_AnchoredPosition: {x: -12, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &480832967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 480832965}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a761e435bcd646f6be7a698a3f7a535, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grid: {fileID: 1135163107}
 --- !u!114 &480832968
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,6 +550,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+  grid: {fileID: 1135163107}
 --- !u!114 &480832969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -784,7 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1213035710}
+  m_Material: {fileID: 1261812339}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1163,7 +1150,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1124, y: 704}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!21 &1213035710
+--- !u!21 &1261812339
 Material:
   serializedVersion: 6
   m_ObjectHideFlags: 0
