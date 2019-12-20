@@ -568,10 +568,6 @@ namespace JSSoft.UI
 
         internal TerminalColor? GetForegroundColor(int index)
         {
-            // if (index < this.Text.Length && this.Text[index] == ' ')
-            // {
-            //     return TerminalColors.Transparent;
-            // }
             if (index < this.foregroundColors.Length)
             {
                 return this.foregroundColors[index];
