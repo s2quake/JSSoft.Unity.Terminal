@@ -47,7 +47,7 @@ namespace JSSoft.UI
         private Texture2D[] textures = new Texture2D[] { };
         [SerializeField]
         private int width;
-        private Dictionary<char, CharInfo> charInfoByID;
+        private Dictionary<char, CharInfo> charInfoByID = new Dictionary<char, CharInfo>();
 
         public bool Contains(char character)
         {
@@ -58,7 +58,7 @@ namespace JSSoft.UI
 
         public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
 
-        public int Height => this.baseInfo.Size;
+        public int Height => this.commonInfo.LineHeight;
 
         public int Width => this.width;
 
@@ -173,6 +173,7 @@ namespace JSSoft.UI
                 }
                 font.charInfoByID = null;
                 font.UpdateWidth();
+                font.UpdateProperty();
             }
         }
 #endif
