@@ -29,8 +29,8 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    [CreateAssetMenu(menuName = "Terminal/Create Style")]
-    public class TerminalStyle : ScriptableObject, INotifyPropertyChanged
+    [CreateAssetMenu(menuName = "Terminal/Style")]
+    public class TerminalStyle : ScriptableObject, INotifyValidated
     {
         [SerializeField]
         private TerminalFont font;
@@ -44,6 +44,8 @@ namespace JSSoft.UI
         private Color cursorColor = TerminalGrid.DefaultCursorColor;
         [SerializeField]
         private Color compositionColor = TerminalGrid.DefaultCompositionColor;
+        [SerializeField]
+        private TerminalColorPalette colorPallete;
         [SerializeField]
         private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
@@ -62,8 +64,11 @@ namespace JSSoft.UI
             get => this.font;
             set
             {
-                this.font = value;
-                this.InvokePropertyChangedEvent(nameof(Font));
+                if (this.font != value)
+                {
+                    this.font = value;
+                    this.InvokePropertyChangedEvent(nameof(Font));
+                }
             }
         }
 
@@ -72,8 +77,11 @@ namespace JSSoft.UI
             get => this.backgroundColor;
             set
             {
-                this.backgroundColor = value;
-                this.InvokePropertyChangedEvent(nameof(BackgroundColor));
+                if (this.backgroundColor != value)
+                {
+                    this.backgroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(BackgroundColor));
+                }
             }
         }
 
@@ -82,8 +90,11 @@ namespace JSSoft.UI
             get => this.foregroundColor;
             set
             {
-                this.foregroundColor = value;
-                this.InvokePropertyChangedEvent(nameof(ForegroundColor));
+                if (this.foregroundColor != value)
+                {
+                    this.foregroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(ForegroundColor));
+                }
             }
         }
 
@@ -92,8 +103,11 @@ namespace JSSoft.UI
             get => this.selectionColor;
             set
             {
-                this.selectionColor = value;
-                this.InvokePropertyChangedEvent(nameof(SelectionColor));
+                if (this.selectionColor != value)
+                {
+                    this.selectionColor = value;
+                    this.InvokePropertyChangedEvent(nameof(SelectionColor));
+                }
             }
         }
 
@@ -102,8 +116,11 @@ namespace JSSoft.UI
             get => this.cursorColor;
             set
             {
-                this.cursorColor = value;
-                this.InvokePropertyChangedEvent(nameof(CursorColor));
+                if (this.cursorColor != value)
+                {
+                    this.cursorColor = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorColor));
+                }
             }
         }
 
@@ -112,8 +129,24 @@ namespace JSSoft.UI
             get => this.compositionColor;
             set
             {
-                this.compositionColor = value;
-                this.InvokePropertyChangedEvent(nameof(CompositionColor));
+                if (this.compositionColor != value)
+                {
+                    this.compositionColor = value;
+                    this.InvokePropertyChangedEvent(nameof(CompositionColor));
+                }
+            }
+        }
+
+        public TerminalColorPalette ColorPalette
+        {
+            get => this.colorPallete;
+            set
+            {
+                if (this.colorPallete != value)
+                {
+                    this.colorPallete = value;
+                    this.InvokePropertyChangedEvent(nameof(ColorPalette));
+                }
             }
         }
 
@@ -122,8 +155,11 @@ namespace JSSoft.UI
             get => this.padding;
             set
             {
-                this.padding = value;
-                this.InvokePropertyChangedEvent(nameof(Padding));
+                if (this.padding != value)
+                {
+                    this.padding = value;
+                    this.InvokePropertyChangedEvent(nameof(Padding));
+                }
             }
         }
 
@@ -132,8 +168,11 @@ namespace JSSoft.UI
             get => this.cursorStyle;
             set
             {
-                this.cursorStyle = value;
-                this.InvokePropertyChangedEvent(nameof(CursorStyle));
+                if (this.cursorStyle != value)
+                {
+                    this.cursorStyle = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorStyle));
+                }
             }
         }
 
@@ -144,8 +183,11 @@ namespace JSSoft.UI
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorThickness = value;
-                this.InvokePropertyChangedEvent(nameof(CursorThickness));
+                if (this.cursorThickness != value)
+                {
+                    this.cursorThickness = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorThickness));
+                }
             }
         }
 
@@ -154,8 +196,11 @@ namespace JSSoft.UI
             get => this.isCursorBlinkable;
             set
             {
-                this.isCursorBlinkable = value;
-                this.InvokePropertyChangedEvent(nameof(IsCursorBlinkable));
+                if (this.isCursorBlinkable != value)
+                {
+                    this.isCursorBlinkable = value;
+                    this.InvokePropertyChangedEvent(nameof(IsCursorBlinkable));
+                }
             }
         }
 
@@ -166,8 +211,11 @@ namespace JSSoft.UI
             {
                 if (value < 0.0f)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorBlinkDelay = value;
-                this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
+                if (this.cursorBlinkDelay != value)
+                {
+                    this.cursorBlinkDelay = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
+                }
             }
         }
 
@@ -192,12 +240,12 @@ namespace JSSoft.UI
 
         protected virtual void OnEnable()
         {
-            TerminalStyleEvents.Register(this);
+            TerminalValidationEvents.Register(this);
         }
 
         protected virtual void OnDisable()
         {
-            TerminalStyleEvents.Unregister(this);
+            TerminalValidationEvents.Unregister(this);
         }
 
         protected virtual void OnValidated(EventArgs e)

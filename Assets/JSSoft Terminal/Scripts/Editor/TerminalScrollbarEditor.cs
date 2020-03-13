@@ -20,59 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
+using UnityEditor;
+using UnityEditor.UI;
+using UnityEditorInternal;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.UI.Editor
 {
-    public interface ITerminal
+    [CustomEditor(typeof(TerminalScrollbar))]
+    public class TerminalScrollbarEditor : ScrollbarEditor
     {
-        void Append(string value);
+        private SerializedProperty gridProperty;
+        private SerializedProperty visibleTimeProperty;
 
-        void Reset();
+        public override void OnInspectorGUI()
+        {
+            base.OnInspectorGUI();
+            this.serializedObject.Update();
+            EditorGUILayout.PropertyField(this.gridProperty);
+            EditorGUILayout.PropertyField(this.visibleTimeProperty);
+            this.serializedObject.ApplyModifiedProperties();
+        }
 
-        void ResetColor();
-
-        void Delete();
-
-        void Backspace();
-
-        void NextCompletion();
-
-        void PrevCompletion();
-
-        void NextHistory();
-
-        void PrevHistory();
-
-        void Execute();
-
-        string Command { get; set; }
-
-        string Prompt { get; set; }
-
-        string OutputText { get; }
-
-        int CursorPosition { get; set; }
-
-        bool IsReadOnly { get; }
-
-        TerminalColor? ForegroundColor { get; set; }
-
-        TerminalColor? BackgroundColor { get; set; }
-
-        ICommandCompletor CommandCompletor { get; set; }
-
-        IPromptDrawer PromptDrawer { get; set; }
-
-        event EventHandler Validated;
-
-        event EventHandler OutputTextChanged;
-
-        event EventHandler PromptTextChanged;
-
-        event EventHandler CursorPositionChanged;
-
-        event EventHandler<TerminalExecuteEventArgs> Executed;
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            this.gridProperty = this.serializedObject.FindProperty("grid");
+            this.visibleTimeProperty = this.serializedObject.FindProperty("visibleTime");
+        }
     }
 }

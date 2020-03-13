@@ -21,58 +21,14 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public interface ITerminal
+    public interface INotifyValidated : INotifyPropertyChanged
     {
-        void Append(string value);
-
-        void Reset();
-
-        void ResetColor();
-
-        void Delete();
-
-        void Backspace();
-
-        void NextCompletion();
-
-        void PrevCompletion();
-
-        void NextHistory();
-
-        void PrevHistory();
-
-        void Execute();
-
-        string Command { get; set; }
-
-        string Prompt { get; set; }
-
-        string OutputText { get; }
-
-        int CursorPosition { get; set; }
-
-        bool IsReadOnly { get; }
-
-        TerminalColor? ForegroundColor { get; set; }
-
-        TerminalColor? BackgroundColor { get; set; }
-
-        ICommandCompletor CommandCompletor { get; set; }
-
-        IPromptDrawer PromptDrawer { get; set; }
-
         event EventHandler Validated;
-
-        event EventHandler OutputTextChanged;
-
-        event EventHandler PromptTextChanged;
-
-        event EventHandler CursorPositionChanged;
-
-        event EventHandler<TerminalExecuteEventArgs> Executed;
     }
 }

@@ -35,7 +35,7 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public class TerminalFontDescriptor : ScriptableObject, INotifyPropertyChanged
+    public class TerminalFontDescriptor : ScriptableObject, INotifyValidated
     {
         [SerializeField]
         private BaseInfo baseInfo;
@@ -86,13 +86,13 @@ namespace JSSoft.UI
 
         protected virtual void OnEnable()
         {
-            TerminalFontDescriptorEvents.Register(this);
+            TerminalValidationEvents.Register(this);
             this.UpdateProperty();
         }
 
         protected virtual void OnDisable()
         {
-            TerminalFontDescriptorEvents.Unregister(this);
+            TerminalValidationEvents.Unregister(this);
         }
 
         protected virtual void OnValidated(EventArgs e)
@@ -171,7 +171,6 @@ namespace JSSoft.UI
                     charInfo.Texture = font.textures[item.Page];
                     font.charInfos[i] = charInfo;
                 }
-                font.charInfoByID = null;
                 font.UpdateWidth();
                 font.UpdateProperty();
             }

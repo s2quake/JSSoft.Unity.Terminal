@@ -89,20 +89,20 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             TerminalEvents.Validated += Terminal_Validated;
-            TerminalGridEvents.Validated += TerminalGrid_Validated;
-            TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
-            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
-            TerminalGridEvents.SelectionChanged += TerminalGrid_SelectionChanged;
+            TerminalGridEvents.Validated += Grid_Validated;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
+            TerminalGridEvents.SelectionChanged += Grid_SelectionChanged;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
             TerminalEvents.Validated -= Terminal_Validated;
-            TerminalGridEvents.Validated -= TerminalGrid_Validated;
-            TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
-            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
-            TerminalGridEvents.SelectionChanged -= TerminalGrid_SelectionChanged;
+            TerminalGridEvents.Validated -= Grid_Validated;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalGridEvents.SelectionChanged -= Grid_SelectionChanged;
         }
 
         private bool Predicate(ITerminalCell cell)
@@ -120,7 +120,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_Validated(object sender, EventArgs e)
+        private void Grid_Validated(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
@@ -128,7 +128,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {
@@ -136,7 +136,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (object.Equals(sender, this.grid) == false)
                 return;
@@ -152,7 +152,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_SelectionChanged(object sender, EventArgs e)
+        private void Grid_SelectionChanged(object sender, EventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {

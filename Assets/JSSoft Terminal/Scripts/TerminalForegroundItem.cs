@@ -92,17 +92,17 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             TerminalEvents.Validated += Terminal_Validated;
-            TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
-            TerminalGridEvents.Validated += TerminalGrid_Validated;
-            TerminalStyleEvents.Validated += TerminalStyle_Validated;
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
+            TerminalGridEvents.Validated += Grid_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
         }
 
         protected override void OnDisable()
         {
             TerminalEvents.Validated -= Terminal_Validated;
-            TerminalGridEvents.Validated -= TerminalGrid_Validated;
-            TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
-            TerminalStyleEvents.Validated -= TerminalStyle_Validated;
+            TerminalGridEvents.Validated -= Grid_Validated;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalValidationEvents.Validated -= Object_Validated;
             base.OnDisable();
         }
 
@@ -116,7 +116,7 @@ namespace JSSoft.UI
 
         }
 
-        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (object.Equals(sender, this.grid) == false)
                 return;
@@ -143,7 +143,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalGrid_Validated(object sender, EventArgs e)
+        private void Grid_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid == this.grid)
             {
@@ -152,12 +152,17 @@ namespace JSSoft.UI
             }
         }
 
-        private void TerminalStyle_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style == this.grid?.Style)
+            switch (sender)
             {
-                this.color = TerminalGridUtility.GetForegroundColor(this.grid);
-                this.SetVerticesDirty();
+                case TerminalStyle style when this.grid?.Style:
+                    this.color = TerminalGridUtility.GetForegroundColor(this.grid);
+                    this.SetVerticesDirty();
+                    break;
+                case TerminalColorPalette palette when this.grid?.ColorPalette:
+                    this.SetVerticesDirty();
+                    break;
             }
         }
     }

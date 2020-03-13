@@ -52,7 +52,7 @@ namespace JSSoft.UI.Editor
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
-                TerminalFontDescriptorEvents.InvokeValidatedEvent(fontDescriptor, EventArgs.Empty);
+                // TerminalFontDescriptorEvents.InvokeValidatedEvent(fontDescriptor, EventArgs.Empty);
             }
         }
 
@@ -177,11 +177,10 @@ namespace JSSoft.UI.Editor
             compositionRect.offsetMax = Vector2.zero;
 
             var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image)) { layer = canvas.gameObject.layer };
-            var scrollbarHost = scrollbarObj.AddComponent<TerminalScrollbarHost>();
             var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();
             var scrollbarImage = scrollbarObj.GetComponent<Image>();
             var scrollbarRect = scrollbarImage.rectTransform;
-            scrollbarHost.Grid = terminalGrid;
+            scrollbar.Grid = terminalGrid;
             scrollbar.targetGraphic = scrollbarImage;
             scrollbar.direction = Scrollbar.Direction.TopToBottom;
             scrollbarImage.sprite = backgroundSprite;

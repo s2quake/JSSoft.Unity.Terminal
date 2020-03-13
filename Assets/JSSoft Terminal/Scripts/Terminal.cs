@@ -52,10 +52,10 @@ namespace JSSoft.UI
         private bool isChanged;
         private int cursorPosition;
         private string compositionString;
-        private Color32?[] foregroundColors = new Color32?[] { };
-        private Color32?[] backgroundColors = new Color32?[] { };
-        private Color32?[] promptForegroundColors = new Color32?[] { };
-        private Color32?[] promptBackgroundColors = new Color32?[] { };
+        private TerminalColor?[] foregroundColors = new TerminalColor?[] { };
+        private TerminalColor?[] backgroundColors = new TerminalColor?[] { };
+        private TerminalColor?[] promptForegroundColors = new TerminalColor?[] { };
+        private TerminalColor?[] promptBackgroundColors = new TerminalColor?[] { };
         private IKeyBindingCollection keyBindings;
         private ICommandCompletor commandCompletor;
         private IPromptDrawer promptDrawer;
@@ -121,8 +121,8 @@ namespace JSSoft.UI
             this.completion = string.Empty;
             this.promptText = this.prompt;
             this.cursorPosition = 0;
-            this.foregroundColors = new Color32?[] { };
-            this.backgroundColors = new Color32?[] { };
+            this.foregroundColors = new TerminalColor?[] { };
+            this.backgroundColors = new TerminalColor?[] { };
             this.text = this.outputText + this.promptText;
             this.cursorPosition = 0;
             this.InvokeOutputTextChangedEvent();
@@ -307,9 +307,9 @@ namespace JSSoft.UI
             set => this.keyBindings = value;
         }
 
-        public Color32? ForegroundColor { get; set; }
+        public TerminalColor? ForegroundColor { get; set; }
 
-        public Color32? BackgroundColor { get; set; }
+        public TerminalColor? BackgroundColor { get; set; }
 
         public bool IsReadOnly => this.isReadOnly;
 
@@ -339,8 +339,8 @@ namespace JSSoft.UI
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
                 this.prompt = value;
-                this.promptForegroundColors = new Color32?[value.Length];
-                this.promptBackgroundColors = new Color32?[value.Length];
+                this.promptForegroundColors = new TerminalColor?[value.Length];
+                this.promptBackgroundColors = new TerminalColor?[value.Length];
                 this.promptText = this.prompt + this.command;
                 this.text = this.outputText + this.promptText;
                 this.cursorPosition = this.command.Length;
@@ -499,7 +499,7 @@ namespace JSSoft.UI
             {
                 this.completion = func(completions, this.completion);
                 var inputText = this.inputText;
-                if (prefix == true || postfix == true)
+                if (prefix == true || postfix == true || this.completion.IndexOf(" ") >= 0)
                 {
                     this.command = leftText + "\"" + this.completion + "\"";
                 }
@@ -566,12 +566,8 @@ namespace JSSoft.UI
             }
         }
 
-        internal Color32? GetForegroundColor(int index)
+        internal TerminalColor? GetForegroundColor(int index)
         {
-            if (index < this.Text.Length && this.Text[index] == ' ')
-            {
-                return TerminalColors.Transparent;
-            }
             if (index < this.foregroundColors.Length)
             {
                 return this.foregroundColors[index];
@@ -584,12 +580,12 @@ namespace JSSoft.UI
             return null;
         }
 
-        internal Color32? GetBackgroundColor(int index)
+        internal TerminalColor? GetBackgroundColor(int index)
         {
             // if (index % 2 != 0)
-            //     return TerminalColors.Blue;
+            //     return TerminalColor.Blue;
             // else
-            //     return TerminalColors.Red;
+            //     return TerminalColor.Red;
             if (index < this.backgroundColors.Length)
             {
                 return this.backgroundColors[index];
@@ -624,7 +620,7 @@ namespace JSSoft.UI
 
         #region IPromptDrawer
 
-        void IPromptDrawer.Draw(string command, Color32?[] foregroundColors, Color32?[] backgroundColors)
+        void IPromptDrawer.Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
 
         }

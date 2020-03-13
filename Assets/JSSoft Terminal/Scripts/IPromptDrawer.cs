@@ -28,6 +28,6 @@ namespace JSSoft.UI
 {
     public interface IPromptDrawer
     {
-        void Draw(string command, Color32?[] foregroundColors, Color32?[] backgroundColors);
+        void Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors);
     }
 }

@@ -109,7 +109,7 @@ namespace JSSoft.Communication.Shells
         //     }
         // }
 
-        private void OnDrawPrompt(string prompt, Color32?[] foregroundColors, Color32?[] backgroundColors)
+        private void OnDrawPrompt(string prompt, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
             if (this.UserID != string.Empty)
             {
@@ -122,7 +122,7 @@ namespace JSSoft.Communication.Shells
                 var group = match.Groups[2];
                 for (var i = 0; i < group.Length; i++)
                 {
-                    foregroundColors[group.Index + i] = TerminalColors.Green;
+                    foregroundColors[group.Index + i] = TerminalColor.Green;
                 }
             }
         }
@@ -185,8 +185,8 @@ namespace JSSoft.Communication.Shells
                 }
                 else
                 {
-                    this.terminal.ForegroundColor = TerminalColors.Red;
-                    this.terminal.BackgroundColor = TerminalColors.Blue;
+                    this.terminal.ForegroundColor = TerminalColor.Red;
+                    this.terminal.BackgroundColor = TerminalColor.Blue;
                     this.Title = $"Client {this.serviceHost.Host}:{this.serviceHost.Port}";
                     this.Out.WriteLine("Server is connected.");
                     this.terminal.ResetColor();
@@ -233,13 +233,13 @@ namespace JSSoft.Communication.Shells
             {
                 if (e.Sender == this.UserID)
                 {
-                    this.terminal.ForegroundColor = TerminalColors.Magenta;
+                    this.terminal.ForegroundColor = TerminalColor.Magenta;
                     this.Out.WriteLine($"to '{e.Receiver}': {e.Message}");
                     this.terminal.ResetColor();
                 }
                 else if (e.Receiver == this.UserID)
                 {
-                    this.terminal.ForegroundColor = TerminalColors.Magenta;
+                    this.terminal.ForegroundColor = TerminalColor.Magenta;
                     this.Out.WriteLine($"from '{e.Receiver}': {e.Message}");
                     this.terminal.ResetColor();
                 }
@@ -280,7 +280,7 @@ namespace JSSoft.Communication.Shells
 
         #region IPromptDrawer
 
-        void IPromptDrawer.Draw(string command, Color32?[] foregroundColors, Color32?[] backgroundColors)
+        void IPromptDrawer.Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
             this.OnDrawPrompt(command, foregroundColors, backgroundColors);
         }

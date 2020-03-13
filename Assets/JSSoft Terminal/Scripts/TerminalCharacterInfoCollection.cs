@@ -80,9 +80,11 @@ namespace JSSoft.UI
 
         public void Update(int index)
         {
-            var font = this.grid.Font;
-            var style = this.grid.Style;
             var text = this.grid.Text + char.MinValue;
+            if (index >= text.Length)
+                return;
+            var style = this.grid.Style;
+            var font = this.grid.Font;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
@@ -170,13 +172,13 @@ namespace JSSoft.UI
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
-            TerminalStyleEvents.Validated += Style_Validated;
+            TerminalValidationEvents.Validated += Object_Validated;
             this.text = string.Empty;
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
-            TerminalStyleEvents.Validated -= Style_Validated;
+            TerminalValidationEvents.Validated -= Object_Validated;
             this.text = string.Empty;
         }
 
@@ -211,11 +213,16 @@ namespace JSSoft.UI
             this.Update();
         }
 
-        private void Style_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style && this.grid.Style == style)
+            switch (sender)
             {
-                this.Update();
+                case TerminalStyle style when this.grid.Style == style:
+                    this.Update();
+                    break;
+                case TerminalColorPalette palette when this.grid.ColorPalette == palette:
+                    this.Update();
+                    break;
             }
         }
 

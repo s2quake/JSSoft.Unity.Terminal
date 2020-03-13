@@ -27,7 +27,7 @@ using UnityEngine;
 namespace JSSoft.UI.Editor
 {
     [CustomEditor(typeof(TerminalGrid))]
-    public class TerminalGridInspector : UnityEditor.Editor
+    public class TerminalGridEditor : UnityEditor.Editor
     {
         private SerializedProperty fontProperty;
         private SerializedProperty styleProperty;
@@ -38,6 +38,7 @@ namespace JSSoft.UI.Editor
         private SerializedProperty selectionColorProperty;
         private SerializedProperty cursorColorProperty;
         private SerializedProperty compositionColorProperty;
+        private SerializedProperty colorPaletteProperty;
         private SerializedProperty paddingProperty;
         private SerializedProperty cursorStyleProperty;
         private SerializedProperty cursorThicknessProperty;
@@ -60,6 +61,7 @@ namespace JSSoft.UI.Editor
             this.selectionColorProperty = this.serializedObject.FindProperty("selectionColor");
             this.cursorColorProperty = this.serializedObject.FindProperty("cursorColor");
             this.compositionColorProperty = this.serializedObject.FindProperty("compositionColor");
+            this.colorPaletteProperty = this.serializedObject.FindProperty("colorPalette");
             this.paddingProperty = this.serializedObject.FindProperty("padding");
             this.cursorStyleProperty = this.serializedObject.FindProperty("cursorStyle");
             this.cursorThicknessProperty = this.serializedObject.FindProperty("cursorThickness");
@@ -95,6 +97,7 @@ namespace JSSoft.UI.Editor
             EditorGUILayout.PropertyField(this.selectionColorProperty);
             EditorGUILayout.PropertyField(this.cursorColorProperty);
             EditorGUILayout.PropertyField(this.compositionColorProperty);
+            EditorGUILayout.PropertyField(this.colorPaletteProperty);
             EditorGUILayout.PropertyField(this.paddingProperty, true);
             EditorGUILayout.PropertyField(this.cursorStyleProperty);
             EditorGUILayout.PropertyField(this.cursorThicknessProperty);
