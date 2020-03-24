@@ -56,6 +56,7 @@ namespace JSSoft.UI
         private int volume = 1;
         private float delay;
         private bool blinkToggle;
+        private char character;
 
         public TerminalCursor()
         {
@@ -236,7 +237,7 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalEvents.Validated += Terminal_Validated;
+            TerminalEvents.Validated -= Terminal_Validated;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.GotFocus -= Grid_GotFocus;
             TerminalGridEvents.LostFocus -= Grid_LostFocus;
@@ -309,6 +310,17 @@ namespace JSSoft.UI
             else if (propertyName == nameof(ITerminalGrid.VisibleIndex))
             {
                 this.UpdateLayout();
+            }
+            else if (propertyName == nameof(ITerminalGrid.Text))
+            {
+                var command = this.Terminal.Command;
+                var position = this.Terminal.CursorPosition;
+                var character = position < command.Length ? command[position] : char.MinValue;
+                if (this.character != character)
+                {
+                    this.UpdateLayout();
+                }
+                this.character = character;
             }
             this.SetVerticesDirty();
         }

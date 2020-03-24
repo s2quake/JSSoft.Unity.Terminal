@@ -52,7 +52,6 @@ namespace JSSoft.UI.Editor
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
-                // TerminalFontDescriptorEvents.InvokeValidatedEvent(fontDescriptor, EventArgs.Empty);
             }
         }
 
@@ -170,6 +169,7 @@ namespace JSSoft.UI.Editor
             var composition = compositionObj.AddComponent<TerminalComposition>();
             var compositionRect = composition.rectTransform;
             composition.Grid = terminalGrid;
+            composition.ForegroundColor = TerminalGrid.DefaultForegroundColor;
             compositionRect.SetParent(terminalGridRect);
             compositionRect.anchorMin = Vector3.zero;
             compositionRect.anchorMax = Vector3.one;

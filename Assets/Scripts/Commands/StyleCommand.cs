@@ -54,12 +54,8 @@ namespace JSSoft.Communication.Commands
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)
         {
-            // if (completionContext.Arguments.Any() == false)
-            {
-                var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-                return resources.Styles.Select(item => item.name).ToArray();
-            }
-            return base.GetCompletions(completionContext);
+            var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+            return resources.Styles.Select(item => item.name).ToArray();
         }
 
         [CommandProperty("list")]

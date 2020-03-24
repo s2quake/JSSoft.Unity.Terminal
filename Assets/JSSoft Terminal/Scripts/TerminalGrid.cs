@@ -57,7 +57,7 @@ namespace JSSoft.UI
         public static readonly Color DefaultForegroundColor = new Color32(255, 255, 255, 255);
         public static readonly Color DefaultSelectionColor = new Color32(49, 79, 129, 255);
         public static readonly Color DefaultCursorColor = new Color32(139, 139, 139, 255);
-        public static readonly Color DefaultCompositionColor = new Color32(0, 0, 0, 255);
+        public static readonly Color DefaultCompositionColor = new Color32(255, 255, 255, 255);
         public static readonly Color DefaultScrollbarColor = new Color32(139, 139, 139, 0);
 
         [SerializeField]
@@ -121,6 +121,7 @@ namespace JSSoft.UI
         private float scrollPos;
         private Rect rectangle;
         private IKeyBindingCollection keyBindings;
+        private int cursorVolume;
 
         public TerminalGrid()
         {

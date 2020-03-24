@@ -30,7 +30,8 @@ namespace JSSoft.Communication.Shells
         public CommandContext(IEnumerable<ICommand> commands, IEnumerable<ICommandProvider> methods)
             : base(commands, methods)
         {
-
+            this.Name = "UnityCommand";
+            this.VerifyName = false;
         }
 
         public new string[] GetCompletion(string[] items, string find)

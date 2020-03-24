@@ -154,7 +154,7 @@ namespace JSSoft.UI
                 this.command = this.command.Remove(this.cursorPosition, 1);
                 this.promptText = this.prompt + this.command;
                 this.text = this.outputText + this.promptText;
-                this.InvokePromptTextChangedEvent();
+                this.InvokeOutputTextChangedEvent();
             }
         }
 
@@ -166,7 +166,7 @@ namespace JSSoft.UI
                 this.promptText = this.prompt + this.command;
                 this.cursorPosition--;
                 this.text = this.outputText + this.promptText;
-                this.InvokePromptTextChangedEvent();
+                this.InvokeOutputTextChangedEvent();
             }
         }
 

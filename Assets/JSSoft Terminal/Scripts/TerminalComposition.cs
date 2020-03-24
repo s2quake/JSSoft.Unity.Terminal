@@ -127,7 +127,7 @@ namespace JSSoft.UI
             }
         }
 
-        public Vector2 Offset { get; set; } = new Vector2(2, 0);
+        public Vector2 Offset { get; set; } = new Vector2(0, 0);
 
         public override Texture mainTexture => this.texture;
 
@@ -184,11 +184,12 @@ namespace JSSoft.UI
                 var texture = characterInfo.Texture;
                 var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
+                var volume = FontUtility.GetCharacterVolume(this.Font, character);
                 var padding = TerminalGridUtility.GetPadding(this.grid);
                 var bx = this.columnIndex * itemWidth + padding.Left + (int)this.Offset.x;
                 var by = this.rowIndex * itemHeight + padding.Top + (int)this.Offset.y;
                 var foregroundRect = FontUtility.GetForegroundRect(this.Font, character, bx, by);
-                var backgroundRect = new Rect(bx, by, itemWidth, itemHeight);
+                var backgroundRect = new Rect(bx, by, itemWidth * volume, itemHeight);
                 var uv = FontUtility.GetUV(this.Font, character);
 
                 this.vertices.SetVertex(0, backgroundRect);

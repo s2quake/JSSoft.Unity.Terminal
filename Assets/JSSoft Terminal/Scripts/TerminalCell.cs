@@ -85,6 +85,10 @@ namespace JSSoft.UI
                 this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
                 this.ForegroundUV = FontUtility.GetUV(this.Font, character);
             }
+            for (var i = 1; i < this.Volume; i++)
+            {
+                this.Row.Cells[this.Index + i].Reset();
+            }
         }
 
         public void Reset()
