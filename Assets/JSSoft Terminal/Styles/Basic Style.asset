@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9634ed125b5c34d6abf655ba2dd59090, type: 3}
   m_Name: Basic Style
   m_EditorClassIdentifier: 
-  font: {fileID: 11400000, guid: 9741a67b6ace542859c96b83ff879c44, type: 2}
+  font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
   backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   foregroundColor: {r: 1, g: 1, b: 1, a: 1}
   selectionColor: {r: 0.19215687, g: 0.30980393, b: 0.5058824, a: 1}

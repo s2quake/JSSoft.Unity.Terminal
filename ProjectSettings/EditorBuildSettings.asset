@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/iphone.unity
-    guid: df3ae6422ec4a4200b9f13662829535d
+    path: Assets/terminal.unity
+    guid: f6fd205957ff94e0f9c702555137c688
   m_configObjects: {}
