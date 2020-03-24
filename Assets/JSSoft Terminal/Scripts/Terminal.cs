@@ -51,7 +51,6 @@ namespace JSSoft.UI
         private bool isReadOnly;
         private bool isChanged;
         private int cursorPosition;
-        private string compositionString;
         private TerminalColor?[] foregroundColors = new TerminalColor?[] { };
         private TerminalColor?[] backgroundColors = new TerminalColor?[] { };
         private TerminalColor?[] promptForegroundColors = new TerminalColor?[] { };

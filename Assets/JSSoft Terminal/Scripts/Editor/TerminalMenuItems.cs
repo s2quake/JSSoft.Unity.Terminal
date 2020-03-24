@@ -115,7 +115,8 @@ namespace JSSoft.UI.Editor
 
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-            var font = AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/TerminalFont.asset", typeof(TerminalFont)) as TerminalFont;
+            var font = AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/NanumGothicCoding.asset", typeof(TerminalFont)) as TerminalFont;
+            var controller = AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Animations/TerminalScrollbar/TerminalScrollbar.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
 
             var terminalGridObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
@@ -176,8 +177,9 @@ namespace JSSoft.UI.Editor
             compositionRect.offsetMin = Vector2.zero;
             compositionRect.offsetMax = Vector2.zero;
 
-            var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image)) { layer = canvas.gameObject.layer };
+            var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image), typeof(TerminalScrollbar)) { layer = canvas.gameObject.layer };
             var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();
+            var animator = scrollbarObj.GetComponent<Animator>();
             var scrollbarImage = scrollbarObj.GetComponent<Image>();
             var scrollbarRect = scrollbarImage.rectTransform;
             scrollbar.Grid = terminalGrid;
@@ -194,6 +196,7 @@ namespace JSSoft.UI.Editor
             scrollbarRect.sizeDelta = new Vector2(40, 0);
             scrollbarRect.localPosition = new Vector3(0, 0);
             scrollbarRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, terminalPadding.Right, 20);
+            animator.runtimeAnimatorController = controller;
 
             var slidingAreaObj = new GameObject("Sliding Area", typeof(RectTransform)) { layer = canvas.gameObject.layer };
             var slidingAreaRect = slidingAreaObj.GetComponent<RectTransform>();

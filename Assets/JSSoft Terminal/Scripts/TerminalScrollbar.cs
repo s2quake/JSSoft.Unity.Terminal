@@ -31,6 +31,7 @@ using System.ComponentModel;
 
 namespace JSSoft.UI
 {
+    [RequireComponent(typeof(Animator))]
     class TerminalScrollbar : Scrollbar
     {
         private const string pointerOnParam = "PointerOn";

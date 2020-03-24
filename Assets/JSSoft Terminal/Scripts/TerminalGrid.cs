@@ -1056,10 +1056,7 @@ namespace JSSoft.UI
                     {
                         this.Terminal.InsertCharacter(item.character);
                     }
-                    else
-                    {
-                        this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
-                    }
+                    this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                 }
             }
 
