@@ -25,24 +25,15 @@ using Ntreev.Library.Commands;
 using System.Threading.Tasks;
 using JSSoft.Communication.Services;
 using JSSoft.Communication.Shells;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class UserCommand : CommandMethodBase
     {
-        private readonly Lazy<Shell> shell = null;
-        private readonly Lazy<IUserService> userService = null;
+        private readonly Shell shell;
+        private readonly IUserService userService;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public UserCommand(Lazy<Shell> shell, Lazy<IUserService> userService)
+        public UserCommand(Shell shell, IUserService userService)
         {
             this.shell = shell;
             this.userService = userService;
@@ -51,31 +42,31 @@ namespace JSSoft.Communication.Commands
         [CommandMethod]
         public Task CreateAsync(string userID, string password, Authority authority = Authority.Member)
         {
-            return this.UserService.CreateAsync(this.Shell.UserToken, userID, password, Authority.Admin);
+            return this.userService.CreateAsync(this.shell.UserToken, userID, password, Authority.Admin);
         }
 
         [CommandMethod]
         public Task DeleteAsync(string userID)
         {
-            return this.UserService.DeleteAsync(this.Shell.UserToken, userID);
+            return this.userService.DeleteAsync(this.shell.UserToken, userID);
         }
 
         [CommandMethod]
         public Task RenameAsync(string userName)
         {
-            return this.UserService.RenameAsync(this.Shell.UserToken, userName);
+            return this.userService.RenameAsync(this.shell.UserToken, userName);
         }
 
         [CommandMethod]
         public Task AuthorityAsync(string userID, Authority authority)
         {
-            return this.UserService.SetAuthorityAsync(this.Shell.UserToken, userID, authority);
+            return this.userService.SetAuthorityAsync(this.shell.UserToken, userID, authority);
         }
 
         [CommandMethod]
         public async Task InfoAsync(string userID)
         {
-            var (userName, authority) = await this.UserService.GetInfoAsync(this.Shell.UserToken, userID);
+            var (userName, authority) = await this.userService.GetInfoAsync(this.shell.UserToken, userID);
             this.Out.WriteLine($"UseName: {userName}");
             this.Out.WriteLine($"Authority: {authority}");
         }
@@ -83,7 +74,7 @@ namespace JSSoft.Communication.Commands
         [CommandMethod]
         public async Task ListAsync()
         {
-            var items = await this.UserService.GetUsersAsync(this.Shell.UserToken);
+            var items = await this.userService.GetUsersAsync(this.shell.UserToken);
             foreach (var item in items)
             {
                 this.Out.WriteLine(item);
@@ -93,18 +84,14 @@ namespace JSSoft.Communication.Commands
         [CommandMethod]
         public Task SendMessageAsync(string userID, string message)
         {
-            return this.UserService.SendMessageAsync(this.Shell.UserToken, userID, message);
+            return this.userService.SendMessageAsync(this.shell.UserToken, userID, message);
         }
 
-        public override bool IsEnabled => this.Shell.UserToken != Guid.Empty;
+        public override bool IsEnabled => this.shell.UserToken != Guid.Empty;
 
         protected override bool IsMethodEnabled(CommandMethodDescriptor descriptor)
         {
-            return this.Shell.UserToken != Guid.Empty;
+            return this.shell.UserToken != Guid.Empty;
         }
-
-        private IUserService UserService => this.userService.Value;
-
-        private Shell Shell => this.shell.Value;
     }
 }

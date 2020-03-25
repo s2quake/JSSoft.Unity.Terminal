@@ -27,24 +27,15 @@ using Ntreev.Library.Threading;
 using Ntreev.Library.Commands;
 using JSSoft.Communication.Shells;
 using UnityEngine;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class ExitCommand : CommandAsyncBase
     {
-        private readonly Lazy<IShell> shell = null;
+        private readonly IShell shell;
         private Dispatcher dispatcher;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public ExitCommand(Lazy<IShell> shell)
+        public ExitCommand(IShell shell)
         {
             this.shell = shell;
             this.dispatcher = Dispatcher.Current;
@@ -59,7 +50,7 @@ namespace JSSoft.Communication.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            await this.shell.Value.StopAsync();
+            await this.shell.StopAsync();
 #if UNITY_EDITOR
             await this.dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
 #else

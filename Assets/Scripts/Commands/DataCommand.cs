@@ -25,24 +25,15 @@ using Ntreev.Library.Commands;
 using System.Threading.Tasks;
 using JSSoft.Communication.Services;
 using JSSoft.Communication.Shells;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class DataCommand : CommandMethodBase
     {
-        private readonly Lazy<Shell> shell = null;
-        private readonly Lazy<IDataService> dataService = null;
+        private readonly Shell shell;
+        private readonly IDataService dataService;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public DataCommand(Lazy<Shell> shell, Lazy<IDataService> dataService)
+        public DataCommand(Shell shell, IDataService dataService)
         {
             this.shell = shell;
             this.dataService = dataService;
@@ -51,18 +42,14 @@ namespace JSSoft.Communication.Commands
         [CommandMethod]
         public Task CreateAsync(string dataBaseName)
         {
-            return this.DataService.CreateDataBaseAsync(dataBaseName);
+            return this.dataService.CreateDataBaseAsync(dataBaseName);
         }
 
-        public override bool IsEnabled => this.Shell.UserToken != Guid.Empty;
+        public override bool IsEnabled => this.shell.UserToken != Guid.Empty;
 
         protected override bool IsMethodEnabled(CommandMethodDescriptor descriptor)
         {
-            return this.Shell.UserToken != Guid.Empty;
+            return this.shell.UserToken != Guid.Empty;
         }
-
-        private IDataService DataService => this.dataService.Value;
-
-        private Shell Shell => this.shell.Value;
     }
 }

@@ -26,24 +26,15 @@ using System.Threading.Tasks;
 using JSSoft.Communication.Services;
 using JSSoft.Communication.Shells;
 using Ntreev.Library.Commands;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class LoginCommand : CommandAsyncBase
     {
-        private readonly Lazy<Shell> shell = null;
-        private readonly Lazy<IUserService> userService = null;
+        private readonly Shell shell;
+        private readonly IUserService userService;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public LoginCommand(Lazy<Shell> shell, Lazy<IUserService> userService)
+        public LoginCommand(Shell shell, IUserService userService)
         {
             this.shell = shell;
             this.userService = userService;
@@ -61,16 +52,12 @@ namespace JSSoft.Communication.Commands
             get; set;
         }
 
-        public override bool IsEnabled => this.Shell.UserToken == Guid.Empty;
+        public override bool IsEnabled => this.shell.UserToken == Guid.Empty;
 
         protected override async Task OnExecuteAsync()
         {
-            var token = await this.UserService.LoginAsync(this.UserID, this.Password);
-            await this.Shell.LoginAsync(this.UserID, token);
+            var token = await this.userService.LoginAsync(this.UserID, this.Password);
+            await this.shell.LoginAsync(this.UserID, token);
         }
-
-        private IUserService UserService => this.userService.Value;
-
-        private Shell Shell => this.shell.Value;
     }
 }

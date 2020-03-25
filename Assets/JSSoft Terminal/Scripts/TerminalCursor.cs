@@ -243,7 +243,7 @@ namespace JSSoft.UI
             TerminalGridEvents.LostFocus -= Grid_LostFocus;
             TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
-            TerminalValidationEvents.Validated += Object_Validated;
+            TerminalValidationEvents.Validated -= Object_Validated;
         }
 
         protected override void Start()

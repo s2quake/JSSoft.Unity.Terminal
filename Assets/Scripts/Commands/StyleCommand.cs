@@ -29,24 +29,15 @@ using JSSoft.UI;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class StyleCommand : CommandAsyncBase
     {
-        private readonly Lazy<ITerminalGrid> grid;
+        private readonly ITerminalGrid grid;
         private Dispatcher dispatcher;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public StyleCommand(Lazy<ITerminalGrid> grid)
+        public StyleCommand(ITerminalGrid grid)
         {
             this.grid = grid;
             this.dispatcher = Dispatcher.Current;
@@ -95,7 +86,7 @@ namespace JSSoft.Communication.Commands
                 var names = resources.Styles.Select(item => item.name).ToArray();
                 foreach (var item in names)
                 {
-                    var isCurrent = this.Grid.Style.name == item ? "*" : " ";
+                    var isCurrent = this.grid.Style.name == item ? "*" : " ";
                     this.Out.WriteLine($"{isCurrent} {item}");
                 }
             });
@@ -105,7 +96,7 @@ namespace JSSoft.Communication.Commands
         {
             return this.dispatcher.InvokeAsync(() =>
             {
-                var style = this.Grid.Style;
+                var style = this.grid.Style;
                 this.Out.WriteLine(style.name);
             });
         }
@@ -118,9 +109,9 @@ namespace JSSoft.Communication.Commands
                 var style = resources.Styles.FirstOrDefault(item => string.Compare(item.name, this.StyleName, true) == 0);
                 if (style != null)
                 {
-                    this.Grid.Style = style;
+                    this.grid.Style = style;
                     this.Out.WriteLine($"{this.StyleName} applied.");
-                    return this.Grid.Rectangle;
+                    return this.grid.Rectangle;
                 }
                 else
                 {
@@ -136,7 +127,5 @@ namespace JSSoft.Communication.Commands
                 }
             });
         }
-
-        private ITerminalGrid Grid => this.grid.Value;
     }
 }

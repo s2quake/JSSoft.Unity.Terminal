@@ -25,24 +25,15 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using JSSoft.Communication.Shells;
 using Ntreev.Library.Commands;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class OpenCommand : CommandAsyncBase
     {
         private readonly IServiceContext serviceHost;
-        private readonly Lazy<Shell> shell = null;
+        private readonly Shell shell;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public OpenCommand(IServiceContext serviceHost, Lazy<Shell> shell)
+        public OpenCommand(IServiceContext serviceHost, Shell shell)
         {
             this.serviceHost = serviceHost;
             this.shell = shell;
@@ -62,9 +53,7 @@ namespace JSSoft.Communication.Commands
         {
             this.serviceHost.Host = this.Host;
             this.serviceHost.Port = this.Port;
-            this.Shell.Token = await this.serviceHost.OpenAsync();
+            this.shell.Token = await this.serviceHost.OpenAsync();
         }
-
-        private Shell Shell => this.shell.Value;
     }
 }

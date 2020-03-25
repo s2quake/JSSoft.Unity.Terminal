@@ -392,6 +392,10 @@ namespace JSSoft.UI
 
         public event EventHandler CursorPositionChanged;
 
+        public event EventHandler Enabled;
+
+        public event EventHandler Disabled;
+
         protected virtual void OnValidated(EventArgs e)
         {
             this.Validated?.Invoke(this, EventArgs.Empty);
@@ -412,6 +416,16 @@ namespace JSSoft.UI
             this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        protected virtual void OnEnabled(EventArgs e)
+        {
+            this.Enabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnDisabled(EventArgs e)
+        {
+            this.Disabled?.Invoke(this, e);
+        }
+
         protected virtual string[] GetCompletion(string[] items, string find)
         {
             return this.CommandCompletor.Complete(items, find);
@@ -425,11 +439,13 @@ namespace JSSoft.UI
             this.text = this.outputText + this.promptText;
             this.cursorPosition = this.command.Length;
             TerminalEvents.Register(this);
+            this.OnEnabled(EventArgs.Empty);
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+            this.OnDisabled(EventArgs.Empty);
             TerminalEvents.Unregister(this);
         }
 

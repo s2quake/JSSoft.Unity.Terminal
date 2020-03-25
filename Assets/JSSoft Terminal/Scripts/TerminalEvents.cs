@@ -43,6 +43,8 @@ namespace JSSoft.UI
             terminal.OutputTextChanged += Terminal_OutputTextChanged;
             terminal.PromptTextChanged += Terminal_PromptTextChanged;
             terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            terminal.Enabled += Terminal_Enabled;
+            terminal.Disabled += Terminal_Disabled;
         }
 
         public static void Unregister(ITerminal terminal)
@@ -55,6 +57,8 @@ namespace JSSoft.UI
             terminal.OutputTextChanged += Terminal_OutputTextChanged;
             terminal.PromptTextChanged += Terminal_PromptTextChanged;
             terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            terminal.Enabled -= Terminal_Enabled;
+            terminal.Disabled -= Terminal_Disabled;
             terminals.Remove(terminal);
         }
 
@@ -65,6 +69,10 @@ namespace JSSoft.UI
         public static event EventHandler PromptTextChanged;
 
         public static event EventHandler CursorPositionChanged;
+
+        public static event EventHandler Enabled;
+
+        public static event EventHandler Disabled;
 
         private static void Terminal_Validated(object sender, EventArgs e)
         {
@@ -84,6 +92,16 @@ namespace JSSoft.UI
         private static void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
             CursorPositionChanged?.Invoke(sender, e);
+        }
+
+        private static void Terminal_Enabled(object sender, EventArgs e)
+        {
+            Enabled?.Invoke(sender, e);
+        }
+
+        private static void Terminal_Disabled(object sender, EventArgs e)
+        {
+            Disabled?.Invoke(sender, e);
         }
     }
 }

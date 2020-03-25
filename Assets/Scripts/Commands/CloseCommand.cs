@@ -24,24 +24,15 @@ using System;
 using System.Threading.Tasks;
 using JSSoft.Communication.Shells;
 using Ntreev.Library.Commands;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class CloseCommand : CommandAsyncBase
     {
         private readonly IServiceContext serviceHost;
-        private readonly Lazy<Shell> shell;
+        private readonly Shell shell;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public CloseCommand(IServiceContext serviceHost, Lazy<Shell> shell)
+        public CloseCommand(IServiceContext serviceHost, Shell shell)
         {
             this.serviceHost = serviceHost;
             this.shell = shell;
@@ -51,9 +42,7 @@ namespace JSSoft.Communication.Commands
 
         protected override Task OnExecuteAsync()
         {
-            return this.serviceHost.CloseAsync(this.Shell.Token);
+            return this.serviceHost.CloseAsync(this.shell.Token);
         }
-
-        private Shell Shell => this.shell.Value;
     }
 }

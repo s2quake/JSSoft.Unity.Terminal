@@ -25,6 +25,7 @@ using System.Threading.Tasks;
 using JSSoft.UI;
 using UnityEngine;
 using Ntreev.Library.Threading;
+using Zenject;
 
 namespace JSSoft.Communication.Shells
 {
@@ -51,12 +52,18 @@ namespace JSSoft.Communication.Shells
             JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
         }
 
+        [Inject]
+        void Construct(IShell shell, CommandContext commandContext, ITerminal terminal)
+        {
+            this.shell = shell;
+            this.commandContext = commandContext;
+            this.terminal = terminal;
+            this.terminal.Disabled += Terminal_Disabled;
+        }
+
         public void Awake()
         {
             this.scheduler = DispatcherScheduler.Current;
-            this.shell = Container.GetService<IShell>();
-            this.commandContext = Container.GetService<CommandContext>();
-            this.terminal = Container.GetService<ITerminal>();
         }
 
         public async Task Start()
@@ -110,7 +117,10 @@ namespace JSSoft.Communication.Shells
         {
             e.IsAsync = true;
             await this.RunAsync(e.Command);
-            e.Handled = true;
+            if (this.terminal != null)
+            {
+                e.Handled = true;
+            }
         }
 
         private async Task RunAsync(string commandLine)
@@ -133,6 +143,11 @@ namespace JSSoft.Communication.Shells
                 else
                     this.terminal.AppendLine($"{e.Message}");
             }
+        }
+
+        private void Terminal_Disabled(object sender, EventArgs e)
+        {
+            this.terminal = null;
         }
     }
 }

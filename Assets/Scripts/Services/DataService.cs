@@ -22,16 +22,9 @@
 
 using System;
 using System.Threading.Tasks;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Services
 {
-#if MEF
-    [Export(typeof(IDataService))]
-    [Export(typeof(DataService))]
-#endif
     class DataService : IDataService
     {
         private IDataService dataService;

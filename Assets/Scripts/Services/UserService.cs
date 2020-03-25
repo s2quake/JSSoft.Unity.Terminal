@@ -22,17 +22,9 @@
 
 using System;
 using System.Threading.Tasks;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Services
 {
-#if MEF
-    [Export(typeof(IUserService))]
-    [Export(typeof(INotifyUserService))]
-    [Export(typeof(UserService))]
-#endif
     class UserService : IUserService, IUserServiceCallback, INotifyUserService
     {
         private IUserService userService;

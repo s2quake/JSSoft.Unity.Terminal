@@ -20,22 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Services
 {
-#if MEF
-    [Export(typeof(IServiceHost))]
-#endif
     class UserServiceHost : ClientServiceHostBase<IUserService, IUserServiceCallback>
     {
         private readonly UserService userService;
 
-#if MEF
-        [ImportingConstructor]
-#endif
         public UserServiceHost(UserService userService)
             : base()
         {

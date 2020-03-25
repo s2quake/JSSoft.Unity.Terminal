@@ -30,10 +30,10 @@ namespace JSSoft.Communication.Commands
 {
     class ResetCommand : CommandBase
     {
-        private readonly Lazy<ITerminal> terminal;
+        private readonly ITerminal terminal;
         private Dispatcher dispatcher;
 
-        public ResetCommand(Lazy<ITerminal> terminal)
+        public ResetCommand(ITerminal terminal)
         {
             this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
@@ -41,9 +41,7 @@ namespace JSSoft.Communication.Commands
 
         protected override void OnExecute()
         {
-            this.dispatcher.Invoke(this.Terminal.Reset);
+            this.dispatcher.Invoke(this.terminal.Reset);
         }
-
-        private ITerminal Terminal => this.terminal.Value;
     }
 }

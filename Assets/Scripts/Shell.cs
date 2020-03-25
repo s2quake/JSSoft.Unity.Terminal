@@ -28,14 +28,14 @@ using JSSoft.Communication.Services;
 using JSSoft.UI;
 using Ntreev.Library.Threading;
 using UnityEngine;
-//using Ntreev.Library.Commands;
+using Zenject;
 
 namespace JSSoft.Communication.Shells
 {
     class Shell : IShell, IServiceProvider, IPromptDrawer, ICommandCompletor
     {
         private readonly Settings settings;
-        private readonly CommandContext commandContext;
+        private readonly LazyInject<CommandContext> commandContext;
         private readonly IServiceContext serviceHost;
         private readonly INotifyUserService userServiceNotification;
         private bool isDisposed;
@@ -43,7 +43,7 @@ namespace JSSoft.Communication.Shells
         private ITerminal terminal;
         private Dispatcher dispatcher;
 
-        public Shell(CommandContext commandContext, IServiceContext serviceHost, INotifyUserService userServiceNotification, ITerminal terminal)
+        public Shell(LazyInject<CommandContext> commandContext, IServiceContext serviceHost, INotifyUserService userServiceNotification, ITerminal terminal)
         {
             this.settings = Settings.CreateFromCommandLine();
             this.serviceHost = serviceHost;
@@ -62,16 +62,11 @@ namespace JSSoft.Communication.Shells
             this.Title = "Server";
         }
 
-        public static IShell Create()
-        {
-            return Container.GetService<IShell>();
-        }
-
         public void Dispose()
         {
             if (this.isDisposed == false)
             {
-                Container.Release();
+                // Container.Release();
                 this.isDisposed = true;
             }
         }
@@ -83,31 +78,6 @@ namespace JSSoft.Communication.Shells
             get => Console.Title;
             set => Console.Title = value;
         }
-
-        // public string Prompt
-        // {
-        //     get => this.terminal != null ? this.terminal.Prompt : string.Empty;
-        //     set
-        //     {
-        //         if (this.terminal != null)
-        //         {
-        //             this.terminal.Prompt = value;
-        //         }
-        //     }
-        // }
-
-        // public ITerminal Terminal
-        // {
-        //     get => this.terminal;
-        //     set
-        //     {
-        //         this.terminal = value;
-        //         if (this.terminal != null)
-        //         {
-        //             this.terminal.Prompt = ">";
-        //         }
-        //     }
-        // }
 
         private void OnDrawPrompt(string prompt, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
@@ -155,7 +125,9 @@ namespace JSSoft.Communication.Shells
 
         internal string UserID { get; private set; } = string.Empty;
 
-        private TextWriter Out => this.commandContext.Out;
+        private TextWriter Out => this.CommandContext.Out;
+
+        private CommandContext CommandContext => this.commandContext.Value;
 
         private void UpdatePrompt()
         {
@@ -252,8 +224,8 @@ namespace JSSoft.Communication.Shells
         {
             if (serviceType == typeof(IServiceProvider))
                 return this;
-
-            return Container.GetService(serviceType);
+throw new Exception();
+            // return Container.GetService(serviceType);
         }
 
         #endregion
@@ -291,7 +263,7 @@ namespace JSSoft.Communication.Shells
 
         string[] ICommandCompletor.Complete(string[] items, string find)
         {
-            return this.commandContext.GetCompletion(items, find);
+            return this.CommandContext.GetCompletion(items, find);
         }
 
         #endregion

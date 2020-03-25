@@ -26,39 +26,26 @@ using System.Threading.Tasks;
 using JSSoft.Communication.Services;
 using JSSoft.Communication.Shells;
 using Ntreev.Library.Commands;
-#if MEF
-using System.ComponentModel.Composition;
-#endif
 
 namespace JSSoft.Communication.Commands
 {
-#if MEF
-    [Export(typeof(ICommand))]
-#endif
     class LogoutCommand : CommandAsyncBase
     {
-        private readonly Lazy<Shell> shell = null;
-        private readonly Lazy<IUserService> userService = null;
+        private readonly Shell shell;
+        private readonly IUserService userService;
 
-#if MEF
-        [ImportingConstructor]
-#endif
-        public LogoutCommand(Lazy<Shell> shell, Lazy<IUserService> userService)
+        public LogoutCommand(Shell shell, IUserService userService)
         {
             this.shell = shell;
             this.userService = userService;
         }
 
-        public override bool IsEnabled => this.Shell.UserToken != Guid.Empty;
+        public override bool IsEnabled => this.shell.UserToken != Guid.Empty;
 
         protected override async Task OnExecuteAsync()
         {
-            await this.UserService.LogoutAsync(this.Shell.UserToken);
-            await this.Shell.LogoutAsync();
+            await this.userService.LogoutAsync(this.shell.UserToken);
+            await this.shell.LogoutAsync();
         }
-
-        private IUserService UserService => this.userService.Value;
-
-        private Shell Shell => this.shell.Value;
     }
 }
