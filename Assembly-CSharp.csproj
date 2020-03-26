@@ -373,20 +373,20 @@
  <Reference Include="Ntreev.Library.resources">
  <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/ko-KR/Ntreev.Library.resources.dll</HintPath>
  </Reference>
- <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Mdb">
- <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Lib/Zenject.ReflectionBaking.Mono.Cecil.Mdb.dll</HintPath>
- </Reference>
  <Reference Include="Zenject.ReflectionBaking.Mono.Cecil">
  <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Lib/Zenject.ReflectionBaking.Mono.Cecil.dll</HintPath>
  </Reference>
- <Reference Include="Zenject-usage">
- <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/Source/Usage/Zenject-usage.dll</HintPath>
+ <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Mdb">
+ <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Lib/Zenject.ReflectionBaking.Mono.Cecil.Mdb.dll</HintPath>
  </Reference>
  <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Pdb">
  <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Lib/Zenject.ReflectionBaking.Mono.Cecil.Pdb.dll</HintPath>
  </Reference>
  <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Rocks">
  <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Lib/Zenject.ReflectionBaking.Mono.Cecil.Rocks.dll</HintPath>
+ </Reference>
+ <Reference Include="Zenject-usage">
+ <HintPath>C:/Users/s2quake/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/Source/Usage/Zenject-usage.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/2019.3.6f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -748,6 +748,10 @@
       <Project>{a74dbc28-d7e3-f99c-1ef1-332efaae7138}</Project>
       <Name>Unity.Timeline.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Zenject-Editor.csproj">
+      <Project>{23ab1a84-ab49-5b05-7f4d-66d4aaa8fd84}</Project>
+      <Name>Zenject-Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="com.unity.multiplayer-hlapi.Editor.csproj">
       <Project>{7896b36c-f757-57ad-2a95-f7bcbfd10552}</Project>
       <Name>com.unity.multiplayer-hlapi.Editor</Name>
@@ -767,6 +771,10 @@
     <ProjectReference Include="Unity.Timeline.csproj">
       <Project>{4ceef147-abc9-4521-8a26-6821de649d2d}</Project>
       <Name>Unity.Timeline</Name>
+    </ProjectReference>
+    <ProjectReference Include="Zenject-ReflectionBaking-Editor.csproj">
+      <Project>{f1ac1752-944a-b6d9-f3a7-f56d932c0449}</Project>
+      <Name>Zenject-ReflectionBaking-Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.CollabProxy.Editor.csproj">
       <Project>{60b4a8dd-3702-3090-e559-c21cf298fec8}</Project>
@@ -800,6 +808,10 @@
       <Project>{cfbe34fc-09ff-cfd7-3658-bfcff881fcdd}</Project>
       <Name>UnityEngine.SpatialTracking</Name>
     </ProjectReference>
+    <ProjectReference Include="Zenject-PoolMonitor-Editor.csproj">
+      <Project>{edb7b2fd-f338-a961-d47c-4bfa7c26b402}</Project>
+      <Name>Zenject-PoolMonitor-Editor</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.csproj">
       <Project>{5f18aa11-3d6f-c070-03e5-bd58d334a32e}</Project>
       <Name>Unity.TextMeshPro</Name>
@@ -808,6 +820,10 @@
       <Project>{f237da52-8699-6683-f326-0a29391cc49b}</Project>
       <Name>UnityEditor.XR.LegacyInputHelpers</Name>
     </ProjectReference>
+    <ProjectReference Include="Zenject.csproj">
+      <Project>{515e461f-456c-f5e2-0050-0dbd7d1c4a3e}</Project>
+      <Name>Zenject</Name>
+    </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
       <Project>{5acefe52-c3cb-c50e-ae72-d4564d287780}</Project>
       <Name>UnityEditor.UI</Name>
@@ -815,22 +831,6 @@
     <ProjectReference Include="com.unity.multiplayer-hlapi.Runtime.csproj">
       <Project>{c2105a3e-cdf8-0437-baed-665a88ba4dc2}</Project>
       <Name>com.unity.multiplayer-hlapi.Runtime</Name>
-    </ProjectReference>
-    <ProjectReference Include="Zenject-Editor.csproj">
-      <Project>{23ab1a84-ab49-5b05-7f4d-66d4aaa8fd84}</Project>
-      <Name>Zenject-Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Zenject-ReflectionBaking-Editor.csproj">
-      <Project>{f1ac1752-944a-b6d9-f3a7-f56d932c0449}</Project>
-      <Name>Zenject-ReflectionBaking-Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Zenject-PoolMonitor-Editor.csproj">
-      <Project>{edb7b2fd-f338-a961-d47c-4bfa7c26b402}</Project>
-      <Name>Zenject-PoolMonitor-Editor</Name>
-    </ProjectReference>
-    <ProjectReference Include="Zenject.csproj">
-      <Project>{515e461f-456c-f5e2-0050-0dbd7d1c4a3e}</Project>
-      <Name>Zenject</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
