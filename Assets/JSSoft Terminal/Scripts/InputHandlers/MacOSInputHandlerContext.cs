@@ -80,7 +80,7 @@ namespace JSSoft.UI.InputHandlers
                 var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point); ;
+                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
                     this.UpdateSelecting();
                 }
                 return true;

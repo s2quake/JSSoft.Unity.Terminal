@@ -61,7 +61,7 @@ namespace JSSoft.UI.InputHandlers
                 var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    this.SelectingRange = new TerminalRange(downPoint, point);
                 }
                 return true;
             }
@@ -80,7 +80,7 @@ namespace JSSoft.UI.InputHandlers
                 var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point); ;
+                    this.dragRange = new TerminalRange(downPoint, point);
                     this.UpdateSelecting();
                 }
                 return true;
@@ -280,7 +280,8 @@ namespace JSSoft.UI.InputHandlers
                 {
                     this.SelectingRange = TerminalRange.Empty;
                     this.Selections.Clear();
-                    this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
+                    // this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
+                    this.downRange = new TerminalRange(newPoint, newPoint);
                 }
                 else if (downCount == 2)
                 {
