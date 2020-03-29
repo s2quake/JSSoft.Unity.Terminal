@@ -47,6 +47,7 @@ namespace JSSoft.UI.Editor
 
         private SerializedProperty bufferWidthProperty;
         private SerializedProperty bufferHeightProperty;
+        private SerializedProperty maxBufferHeightProperty;
 
         private bool isDebug = false;
 
@@ -70,6 +71,7 @@ namespace JSSoft.UI.Editor
 
             this.bufferWidthProperty = this.serializedObject.FindProperty("bufferWidth");
             this.bufferHeightProperty = this.serializedObject.FindProperty("bufferHeight");
+            this.maxBufferHeightProperty = this.serializedObject.FindProperty("maxBufferHeight");
         }
 
         public override void OnInspectorGUI()
@@ -108,6 +110,7 @@ namespace JSSoft.UI.Editor
             GUILayout.Space(10);
             EditorGUILayout.PropertyField(this.bufferWidthProperty);
             EditorGUILayout.PropertyField(this.bufferHeightProperty);
+            EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
 
             this.serializedObject.ApplyModifiedProperties();
         }

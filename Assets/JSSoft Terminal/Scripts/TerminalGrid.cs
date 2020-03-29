@@ -85,6 +85,9 @@ namespace JSSoft.UI
         [SerializeField]
         [Range(5, 1000)]
         private int bufferHeight = 25;
+        [SerializeField]
+        [Range(5, 1000)]
+        private int maxBufferHeight = 500;
 
         [SerializeField]
         private TerminalCursorStyle cursorStyle;
@@ -398,6 +401,18 @@ namespace JSSoft.UI
             }
         }
 
+        public int MaxBufferHeight
+        {
+            get => this.maxBufferHeight;
+            set
+            {
+                if (value < this.bufferHeight)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                this.maxBufferHeight = value;
+                this.InvokePropertyChangedEvent(nameof(MaxBufferHeight));
+            }
+        }
+
         public IReadOnlyList<ITerminalRow> Rows => this.rows;
 
         public IReadOnlyList<TerminalCharacterInfo> CharacterInfos => this.characterInfos;
@@ -409,7 +424,7 @@ namespace JSSoft.UI
             get => this.visibleIndex;
             set
             {
-                if (value < 0 || value > this.MaximumVisibleIndex)
+                if (value < 0 || value > this.maxBufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.visibleIndex != value)
                 {
@@ -425,9 +440,9 @@ namespace JSSoft.UI
         {
             get
             {
-                if (this.visibleIndex < 0 || this.Rows.Count < this.BufferHeight)
+                if (this.visibleIndex < 0 || this.rows.MaximumIndex < this.BufferHeight)
                     return 0;
-                return this.Rows.Count - this.BufferHeight;
+                return this.rows.MaximumIndex - this.BufferHeight;
             }
         }
 
@@ -713,6 +728,7 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
+            this.ValidateValue();
             this.UpdateColor();
             this.UpdateLayout();
             this.UpdateVisibleIndex();
@@ -802,6 +818,11 @@ namespace JSSoft.UI
             }
         }
 
+        private void ValidateValue()
+        {
+            this.maxBufferHeight = Math.Max(this.bufferHeight, this.maxBufferHeight);
+        }
+
         private void UpdateColor()
         {
             if (this.style != null)
@@ -819,8 +840,8 @@ namespace JSSoft.UI
             var rect = this.GetComponent<RectTransform>().rect;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
-            var bufferWidth = (int)(rect.width / itemWidth);
-            var bufferHeight = (int)(rect.height / itemHeight);
+            var actualWidth = (int)(rect.width / itemWidth);
+            var actualHeight = (int)(rect.height / itemHeight);
             var rectWidth = this.BufferWidth * itemWidth + this.Padding.Left + this.Padding.Right;
             var rectHeight = this.BufferHeight * itemHeight + this.Padding.Top + this.Padding.Bottom;
             this.rectangle.x = 0;
@@ -1023,11 +1044,11 @@ namespace JSSoft.UI
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
         {
-            if (this.MaximumVisibleIndex > 0)
+            // if (this.MaximumVisibleIndex > 0)
             {
                 this.scrollPos -= eventData.scrollDelta.y;
                 this.scrollPos = Math.Max((int)this.scrollPos, 0);
-                this.scrollPos = Math.Min((int)this.scrollPos, this.MaximumVisibleIndex);
+                this.scrollPos = Math.Min((int)this.scrollPos, this.maxBufferHeight - this.bufferHeight);
                 this.visibleIndex = (int)this.scrollPos;
                 this.IsScrolling = true;
                 this.UpdateVisibleIndex();

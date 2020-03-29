@@ -47,8 +47,6 @@ namespace JSSoft.Communication.Shells
             
             Container.Bind<ITerminalGrid>().FromInstance(UnityEngine.GameObject.FindObjectOfType<TerminalGrid>());
             Container.Bind<ITerminal>().FromInstance(UnityEngine.GameObject.FindObjectOfType<Terminal>());
-            // Container.Bind<Lazy<ITerminal>>().FromInstance(new Lazy<ITerminal>(UnityEngine.GameObject.FindObjectOfType<Terminal>()));
-            // Container.Bind<Lazy<Shell>>()
 
             Container.Bind<ICommand>().To<ResetCommand>().AsSingle();
             Container.Bind<ICommand>().To<CloseCommand>().AsSingle();
@@ -59,7 +57,6 @@ namespace JSSoft.Communication.Shells
             Container.Bind<ICommand>().To<UserCommand>().AsSingle();
             Container.Bind<ICommand>().To<DataCommand>().AsSingle();
             Container.Bind<ICommand>().To<StyleCommand>().AsSingle();
-
 
             Container.Bind<CommandContext>().AsSingle();
             Container.Bind(typeof(IShell), typeof(Shell)).To<Shell>().AsSingle().Lazy();

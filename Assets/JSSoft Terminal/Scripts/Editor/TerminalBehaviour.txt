@@ -1,9 +1,0 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using JSSoft.UI;
-
-public class TerminalBehaviour : JSSoft.UI.TerminalStyleBehaviour
-{
-    
-}

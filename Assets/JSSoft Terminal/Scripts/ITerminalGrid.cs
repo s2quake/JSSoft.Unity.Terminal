@@ -67,6 +67,8 @@ namespace JSSoft.UI
 
         int BufferHeight { get; set; }
 
+        int MaxBufferHeight { get; set; }
+
         IReadOnlyList<ITerminalRow> Rows { get; }
 
         IReadOnlyList<TerminalCharacterInfo> CharacterInfos { get; }

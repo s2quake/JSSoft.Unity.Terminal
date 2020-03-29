@@ -415,7 +415,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 480832969}
   m_HandleRect: {fileID: 983221445}
   m_Direction: 3
-  m_Value: 0
+  m_Value: 0.125
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -467,7 +467,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 480832965}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d46e47aabd1bf43b893051c8f9d7748e, type: 2}
   m_CullingMode: 0
@@ -543,28 +543,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 505143333}
   m_CullTransparentMesh: 0
---- !u!21 &526878682
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &567232090
 GameObject:
   m_ObjectHideFlags: 0
@@ -937,7 +915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 526878682}
+  m_Material: {fileID: 1436274944}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1284,6 +1262,7 @@ MonoBehaviour:
   visibleIndex: 0
   bufferWidth: 80
   bufferHeight: 25
+  maxBufferHeight: 25
   cursorStyle: 0
   cursorThickness: 2
   isCursorBlinkable: 0
@@ -1479,6 +1458,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1305376061}
   m_CullTransparentMesh: 0
+--- !u!21 &1436274944
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1508393757
 GameObject:
   m_ObjectHideFlags: 0

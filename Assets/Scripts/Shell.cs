@@ -66,7 +66,6 @@ namespace JSSoft.Communication.Shells
         {
             if (this.isDisposed == false)
             {
-                // Container.Release();
                 this.isDisposed = true;
             }
         }
@@ -134,9 +133,10 @@ namespace JSSoft.Communication.Shells
             this.dispatcher.VerifyAccess();
             if (this.IsOpened == true)
             {
-                this.terminal.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}>";
                 if (this.UserID != string.Empty)
-                    this.terminal.Prompt += $"@{this.UserID}>";
+                    this.terminal.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}@{this.UserID}>";
+                else
+                    this.terminal.Prompt = $"{this.serviceHost.Host}:{this.serviceHost.Port}>";
             }
             else
             {
@@ -224,7 +224,7 @@ namespace JSSoft.Communication.Shells
         {
             if (serviceType == typeof(IServiceProvider))
                 return this;
-throw new Exception();
+            throw new Exception();
             // return Container.GetService(serviceType);
         }
 

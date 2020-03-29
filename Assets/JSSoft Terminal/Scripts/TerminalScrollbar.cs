@@ -108,6 +108,7 @@ namespace JSSoft.UI
             this.onValueChanged.AddListener(VerticalScrollbar_OnValueChanged);
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
+            TerminalGridEvents.Validated += Grid_Validated;
             this.animator = this.GetComponent<Animator>();
         }
 
@@ -115,6 +116,7 @@ namespace JSSoft.UI
         {
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalGridEvents.Validated -= Grid_Validated;
             this.onValueChanged.RemoveListener(VerticalScrollbar_OnValueChanged);
             base.OnDisable();
         }
@@ -162,6 +164,14 @@ namespace JSSoft.UI
             }
         }
 
+        private void Grid_Validated(object sender, EventArgs e)
+        {
+            if (this.grid != null)
+            {
+                this.UpdateScrollbarSize();
+            }
+        }
+
         private void VerticalScrollbar_OnValueChanged(float arg0)
         {
             if (this.grid != null)
@@ -174,7 +184,8 @@ namespace JSSoft.UI
         {
             var gameObject = this.gameObject;
             var grid = this.grid;
-            var isActive = grid.Rows.Count >= grid.BufferHeight;
+            var isActive = grid.MaxBufferHeight >= grid.BufferHeight;
+            // var isActive = true;
             if (this.enabled != isActive)
             {
                 this.enabled = isActive;
@@ -195,18 +206,20 @@ namespace JSSoft.UI
         private async void UpdateScrollbarSize()
         {
             var size1 = (float)Math.Max(1, grid.BufferHeight);
-            var size2 = (float)Math.Max(1, grid.Rows.Count);
+            var size2 = (float)Math.Max(1, grid.MaxBufferHeight);
             var size = size1 / size2;
-            if (Application.isPlaying == false)
+            if (this.size != size && Application.isPlaying == false)
+            {
                 await Task.Delay(1);
-            this.size = size;
+                this.size = size;
+            }
         }
 
         private async void UpdateScrollbarValue()
         {
             var grid = this.grid;
             var value1 = grid.VisibleIndex;
-            var value2 = (float)Math.Max(1, grid.Rows.Count - grid.BufferHeight);
+            var value2 = (float)Math.Max(1, grid.MaxBufferHeight - grid.BufferHeight);
             var value = value1 / value2;
             if (Application.isPlaying == false)
                 await Task.Delay(1);
@@ -217,8 +230,9 @@ namespace JSSoft.UI
 
         private void UpdateVisibleIndex()
         {
+            var grid = this.grid;
             var value1 = (float)this.value;
-            var value2 = (float)Math.Max(1, this.grid.Rows.Count - this.grid.BufferHeight);
+            var value2 = (float)Math.Max(1, grid.MaxBufferHeight - grid.BufferHeight);
             var value = value1 * value2;
             this.isScrolling = true;
             this.grid.VisibleIndex = (int)value;

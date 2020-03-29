@@ -39,7 +39,10 @@ namespace JSSoft.UI
         private string text = string.Empty;
         private int bufferWidth;
         private int bufferHeight;
+        private int maxBufferHeight;
         private int updateIndex;
+        private int minimumIndex;
+        private int maximumIndex;
 
         public TerminalRowCollection(TerminalGrid grid, TerminalCharacterInfoCollection characterInfos)
         {
@@ -85,9 +88,11 @@ namespace JSSoft.UI
             var style = this.grid.Style;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
+            var maxBufferHeight = this.grid.MaxBufferHeight;
             var volume = this.characterInfos.Volume;
-            var dic = new Dictionary<int, int>(this.Count);
-            this.Resize(bufferWidth, volume.Bottom);
+            var dic = new Dictionary<int, int>(bufferHeight);
+            var maximumIndex = this.MaximumIndex;
+            this.Resize(bufferWidth, maxBufferHeight);
             for (var i = index; i < text.Length; i++)
             {
                 var characterInfo = this.characterInfos[i];
@@ -96,6 +101,7 @@ namespace JSSoft.UI
                 var cell = row.Cells[point.X];
                 cell.SetCharacter(characterInfo);
                 dic[point.Y] = point.X;
+                maximumIndex = point.Y + 1;
             }
             foreach (var item in dic)
             {
@@ -103,7 +109,7 @@ namespace JSSoft.UI
                 row.ResetAfter(item.Value + 1);
                 row.Update();
             }
-            for (var i = this.Count; i < this.grid.BufferHeight; i++)
+            for (var i = maximumIndex; i < maxBufferHeight; i++)
             {
                 var row = this.Prepare(i);
                 row.Reset();
@@ -113,7 +119,9 @@ namespace JSSoft.UI
             this.text = text;
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
+            this.maxBufferHeight = maxBufferHeight;
             this.updateIndex = text.Length;
+            this.maximumIndex = maximumIndex;
         }
 
         public TerminalRow Prepare(int index)
@@ -125,6 +133,10 @@ namespace JSSoft.UI
             }
             return this[index];
         }
+
+        public int MinimumIndex => this.minimumIndex;
+
+        public int MaximumIndex => this.maximumIndex;
 
         private void Resize(int bufferWidth, int bufferHeight)
         {
