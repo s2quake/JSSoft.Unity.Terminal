@@ -885,6 +885,7 @@ namespace JSSoft.UI
                 this.characterInfos.Update();
                 this.rows.Update();
                 this.cursorPoint = this.IndexToPoint(index);
+                this.InvokePropertyChangedEvent(nameof(CursorPoint));
             }
         }
 
@@ -912,6 +913,7 @@ namespace JSSoft.UI
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
                 this.VisibleIndex = this.MaximumVisibleIndex;
+                Debug.Log(this.CursorPoint);
             }
         }
 
