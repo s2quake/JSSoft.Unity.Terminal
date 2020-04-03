@@ -26,9 +26,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 
-namespace JSSoft.UI
+namespace JSSoft.UI.Behaviours
 {
-    [CreateAssetMenu(menuName = "Terminal/Terminal Behaviour")]
+    // [CreateAssetMenu(menuName = "Terminal/Terminal Behaviour")]
     public class TerminalBehaviour : TerminalBehaviourBase
     {
         protected override void OnAttach(ITerminalGrid grid)

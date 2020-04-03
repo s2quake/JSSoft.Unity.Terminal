@@ -43,7 +43,7 @@ namespace JSSoft.Communication.Shells
         static void OnRuntimeMethodLoad()
         {
 #if !UNITY_EDITOR
-            Screen.SetResolution(1124, 679, false);
+            Screen.SetResolution(1124, 724, false);
 #endif
         }
 

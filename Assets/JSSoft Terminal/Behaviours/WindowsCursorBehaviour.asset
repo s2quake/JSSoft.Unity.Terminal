@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ddc6cc5d8cafc4cdabb9cb71790972fb, type: 3}
-  m_Name: macOS Behaviour
+  m_Script: {fileID: 11500000, guid: 2260e72b6fa52a34495c14b19a663958, type: 3}
+  m_Name: WindowsCursorBehaviour
   m_EditorClassIdentifier: 

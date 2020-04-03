@@ -169,6 +169,7 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.UpdateScrollbarSize();
+                this.UpdateScrollbarValue();
             }
         }
 
@@ -185,7 +186,6 @@ namespace JSSoft.UI
             var gameObject = this.gameObject;
             var grid = this.grid;
             var isActive = grid.MaxBufferHeight >= grid.BufferHeight;
-            // var isActive = true;
             if (this.enabled != isActive)
             {
                 this.enabled = isActive;
@@ -205,21 +205,19 @@ namespace JSSoft.UI
 
         private async void UpdateScrollbarSize()
         {
-            var size1 = (float)Math.Max(1, grid.BufferHeight);
-            var size2 = (float)Math.Max(1, grid.MaxBufferHeight);
+            var size1 = (float)this.grid.BufferHeight;
+            var size2 = (float)this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex + this.grid.BufferHeight;
             var size = size1 / size2;
-            if (this.size != size && Application.isPlaying == false)
-            {
+            if (Application.isPlaying == false)
                 await Task.Delay(1);
+            if (this.size != size)
                 this.size = size;
-            }
         }
 
         private async void UpdateScrollbarValue()
         {
-            var grid = this.grid;
-            var value1 = grid.VisibleIndex;
-            var value2 = (float)Math.Max(1, grid.MaxBufferHeight - grid.BufferHeight);
+            var value1 = (float)this.grid.VisibleIndex - this.grid.MinimumVisibleIndex;
+            var value2 = (float)Math.Max(1, this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex);
             var value = value1 / value2;
             if (Application.isPlaying == false)
                 await Task.Delay(1);
@@ -230,12 +228,11 @@ namespace JSSoft.UI
 
         private void UpdateVisibleIndex()
         {
-            var grid = this.grid;
             var value1 = (float)this.value;
-            var value2 = (float)Math.Max(1, grid.MaxBufferHeight - grid.BufferHeight);
+            var value2 = (float)Math.Max(1, this.grid.MaxBufferHeight);
             var value = value1 * value2;
             this.isScrolling = true;
-            this.grid.VisibleIndex = (int)value;
+            this.grid.VisibleIndex = (int)value + this.grid.MinimumVisibleIndex;
             this.isScrolling = false;
         }
 

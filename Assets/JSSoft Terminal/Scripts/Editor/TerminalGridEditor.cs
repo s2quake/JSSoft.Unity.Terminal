@@ -31,7 +31,6 @@ namespace JSSoft.UI.Editor
     {
         private SerializedProperty fontProperty;
         private SerializedProperty styleProperty;
-        private SerializedProperty behaviourProperty;
 
         private SerializedProperty backgroundColorProperty;
         private SerializedProperty foregroundColorProperty;
@@ -55,7 +54,6 @@ namespace JSSoft.UI.Editor
         {
             this.fontProperty = this.serializedObject.FindProperty("font");
             this.styleProperty = this.serializedObject.FindProperty("style");
-            this.behaviourProperty = this.serializedObject.FindProperty("behaviour");
 
             this.backgroundColorProperty = this.serializedObject.FindProperty("backgroundColor");
             this.foregroundColorProperty = this.serializedObject.FindProperty("foregroundColor");
@@ -86,7 +84,6 @@ namespace JSSoft.UI.Editor
             this.serializedObject.Update();
             EditorGUILayout.PropertyField(this.fontProperty);
             EditorGUILayout.PropertyField(this.styleProperty);
-            EditorGUILayout.PropertyField(this.behaviourProperty);
             GUILayout.Space(10);
 
             if (this.styleProperty.objectReferenceValue != null)

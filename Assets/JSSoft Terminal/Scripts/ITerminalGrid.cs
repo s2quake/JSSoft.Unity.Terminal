@@ -75,6 +75,10 @@ namespace JSSoft.UI
 
         int VisibleIndex { get; set; }
 
+        int MinimumVisibleIndex { get; }
+
+        int MaximumVisibleIndex { get; }
+
         Color BackgroundColor { get; set; }
 
         Color ForegroundColor { get; set; }

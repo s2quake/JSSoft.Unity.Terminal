@@ -110,8 +110,6 @@ namespace JSSoft.UI
         private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
         private TerminalStyle style;
-        [SerializeField]
-        private TerminalBehaviourBase behaviour;
 
         private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
@@ -359,6 +357,7 @@ namespace JSSoft.UI
                 {
                     this.text = value;
                     this.InvokePropertyChangedEvent(nameof(Text));
+                    this.UpdateVisibleIndex();
                 }
             }
         }
@@ -424,7 +423,7 @@ namespace JSSoft.UI
             get => this.visibleIndex;
             set
             {
-                if (value < 0 || value > this.maxBufferHeight)
+                if (value < this.MinimumVisibleIndex || value > this.MaximumVisibleIndex)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.visibleIndex != value)
                 {
@@ -436,15 +435,11 @@ namespace JSSoft.UI
             }
         }
 
-        public int MaximumVisibleIndex
-        {
-            get
-            {
-                if (this.visibleIndex < 0 || this.rows.MaximumIndex < this.BufferHeight)
-                    return 0;
-                return this.rows.MaximumIndex - this.BufferHeight;
-            }
-        }
+        public int MinimumVisibleIndex => this.rows.MinimumIndex;
+
+        public int MaximumVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
+
+        // public int MaximumVisibleIndex => Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.BufferHeight;
 
         public Color BackgroundColor
         {
@@ -858,10 +853,8 @@ namespace JSSoft.UI
 
         private void UpdateVisibleIndex()
         {
-            if (this.visibleIndex < 0 || this.Rows.Count < this.BufferHeight)
-                this.visibleIndex = 0;
-            else
-                this.visibleIndex = Math.Min(this.visibleIndex, this.Rows.Count - this.BufferHeight);
+            this.visibleIndex = Math.Max(this.visibleIndex, this.MinimumVisibleIndex);
+            this.visibleIndex = Math.Min(this.visibleIndex, this.MaximumVisibleIndex);
         }
 
         private void UpdateCursorPosition()
@@ -885,7 +878,9 @@ namespace JSSoft.UI
                 this.characterInfos.Update();
                 this.rows.Update();
                 this.cursorPoint = this.IndexToPoint(index);
+                this.visibleIndex = this.MaximumVisibleIndex;
                 this.InvokePropertyChangedEvent(nameof(CursorPoint));
+                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
         }
 
@@ -913,7 +908,6 @@ namespace JSSoft.UI
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
                 this.VisibleIndex = this.MaximumVisibleIndex;
-                Debug.Log(this.CursorPoint);
             }
         }
 
@@ -1046,11 +1040,11 @@ namespace JSSoft.UI
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
         {
-            // if (this.MaximumVisibleIndex > 0)
+            if (this.MaximumVisibleIndex > this.MinimumVisibleIndex)
             {
                 this.scrollPos -= eventData.scrollDelta.y;
-                this.scrollPos = Math.Max((int)this.scrollPos, 0);
-                this.scrollPos = Math.Min((int)this.scrollPos, this.maxBufferHeight - this.bufferHeight);
+                this.scrollPos = Math.Max(this.scrollPos, this.MinimumVisibleIndex);
+                this.scrollPos = Math.Min(this.scrollPos, this.MaximumVisibleIndex);
                 this.visibleIndex = (int)this.scrollPos;
                 this.IsScrolling = true;
                 this.UpdateVisibleIndex();

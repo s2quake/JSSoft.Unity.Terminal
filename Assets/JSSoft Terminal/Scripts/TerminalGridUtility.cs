@@ -57,14 +57,16 @@ namespace JSSoft.UI
             {
                 var topIndex = grid.VisibleIndex;
                 var bottomIndex = topIndex + grid.BufferHeight;
-                var query = from row in grid.Rows
-                            where row.Index >= topIndex && row.Index < bottomIndex
-                            from cell in row.Cells
-                            where predicate(cell)
-                            select cell;
-                return query;
+                for (var i = topIndex; i < bottomIndex; i++)
+                {
+                    var row = grid.Rows[i];
+                    foreach (var item in row.Cells)
+                    {
+                        if (predicate(item) == true)
+                            yield return item;
+                    }
+                }
             }
-            return Enumerable.Empty<ITerminalCell>();
         }
 
         public static ITerminalCell GetCell(ITerminalGrid grid, int cursorLeft, int cursorTop)

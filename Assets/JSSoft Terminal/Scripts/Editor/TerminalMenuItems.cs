@@ -75,6 +75,33 @@ namespace JSSoft.UI.Editor
             ProjectWindowUtil.StartNameEditingIfProjectWindowExists(0, action, "TerminalStyleBehaviour.cs", icon, string.Empty);
         }
 
+        [MenuItem("Assets/Create/Terminal/Style Behaviour Asset", true)]
+        private static bool ValidateCreateStyleBehaviourAsset()
+        {
+            if (Selection.activeObject is MonoScript monoScript)
+            {
+                var type = monoScript.GetClass();
+                return type.IsSubclassOf(typeof(TerminalBehaviourBase));
+            }
+            return false;
+        }
+
+        [MenuItem("Assets/Create/Terminal/Style Behaviour Asset")]
+        public static void CreateStyleBehaviourAsset()
+        {
+            if (Selection.activeObject is MonoScript monoScript)
+            {
+                var type = monoScript.GetClass();
+                var obj = ScriptableObject.CreateInstance(type);
+                var monoPath = AssetDatabase.GetAssetPath(monoScript);
+                var assetDirectory = Path.GetDirectoryName(monoPath);
+                var assetName = Path.GetFileNameWithoutExtension(monoPath);
+                var assetPath = Path.Combine(assetDirectory, assetName + ".asset");
+                AssetDatabase.CreateAsset(obj, assetPath);
+            }
+
+        }
+
         [MenuItem("Terminal/Test")]
         public static void Test()
         {

@@ -26,10 +26,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Collections;
 
-namespace JSSoft.UI
+namespace JSSoft.UI.Behaviours
 {
-    [CreateAssetMenu(menuName = "Terminal/PowerShell Behaviour")]
-    public class PowerShellBehaviour : TerminalBehaviourBase
+    public class WindowsCursorBehaviour : TerminalBehaviourBase
     {
         protected override void OnAttach(ITerminalGrid grid)
         {

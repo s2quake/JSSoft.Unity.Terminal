@@ -35,25 +35,12 @@ namespace JSSoft.UI.Editor
         {
             var text = File.ReadAllText("Assets/JSSoft Terminal/Scripts/Editor/TerminalStyleBehaviour.txt");
             var name = Path.GetFileNameWithoutExtension(pathName);
-            var code = text.Replace("public class TerminalStyleBehaviour", $"public class {name}");
-
-
-
+            var code = text.Replace("public class TerminalBehaviour", $"public class {name}");
             File.WriteAllText(pathName, code);
             AssetDatabase.ImportAsset(pathName);
-            // Debug.Log(pathName);
-            // Debug.Log(resourceFile);
-            //             var mat = (Material)EditorUtility.InstanceIDToObject (instanceId);
-
-            //         //강제적으로 Material을 빨간색으로 설정
-            //         mat.color = Color.red;
-
-            //         AssetDatabase.CreateAsset (mat, pathName);
-            //         AssetDatabase.ImportAsset (pathName);
-            //         ProjectWindowUtil.ShowCreatedAsset (mat);
-            // [출처] [에디터 확장 입문] 번역 11장 ProjectWindowUtil|작성자 해머임팩트
-
-
+            this.AssetPath = pathName;
         }
+
+        public string AssetPath { get; private set; } = string.Empty;
     }
 }

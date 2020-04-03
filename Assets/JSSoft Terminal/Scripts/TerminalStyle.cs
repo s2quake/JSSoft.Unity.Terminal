@@ -58,6 +58,8 @@ namespace JSSoft.UI
         [SerializeField]
         [Range(0, 3)]
         private float cursorBlinkDelay = 0.5f;
+        [SerializeField]
+        private List<TerminalBehaviourBase> behaviourList = new List<TerminalBehaviourBase>();
 
         public TerminalFont Font
         {
@@ -218,6 +220,8 @@ namespace JSSoft.UI
                 }
             }
         }
+
+        public List<TerminalBehaviourBase> BehaviourList => this.behaviourList;
 
         public event EventHandler Validated;
 

@@ -92,7 +92,7 @@ namespace JSSoft.UI
             var volume = this.characterInfos.Volume;
             var dic = new Dictionary<int, int>(bufferHeight);
             var maximumIndex = this.MaximumIndex;
-            this.Resize(bufferWidth, maxBufferHeight);
+            this.Resize(bufferWidth, Math.Max(volume.Bottom, maxBufferHeight));
             for (var i = index; i < text.Length; i++)
             {
                 var characterInfo = this.characterInfos[i];
@@ -121,7 +121,9 @@ namespace JSSoft.UI
             this.bufferHeight = bufferHeight;
             this.maxBufferHeight = maxBufferHeight;
             this.updateIndex = text.Length;
+            this.minimumIndex = Math.Max(0, maximumIndex - maxBufferHeight);
             this.maximumIndex = maximumIndex;
+            // Debug.Log($"min-max: {this.minimumIndex} - {this.maximumIndex}");
         }
 
         public TerminalRow Prepare(int index)
