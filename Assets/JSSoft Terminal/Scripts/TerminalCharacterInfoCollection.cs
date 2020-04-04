@@ -40,6 +40,7 @@ namespace JSSoft.UI
         private string text = string.Empty;
         private int bufferWidth;
         private int bufferHeight;
+        private int maxBufferHeight;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
         {
@@ -70,6 +71,8 @@ namespace JSSoft.UI
                     return 0;
                 if (this.bufferHeight != grid.BufferHeight)
                     return 0;
+                if (this.maxBufferHeight != grid.MaxBufferHeight)
+                    return 0;
                 var text = this.grid.Text + char.MinValue;
                 var index = GetIndex(this.text, text);
                 if (index >= this.items.Length)
@@ -87,6 +90,7 @@ namespace JSSoft.UI
             var font = this.grid.Font;
             var bufferWidth = this.grid.BufferWidth;
             var bufferHeight = this.grid.BufferHeight;
+            var maxBufferHeight = this.grid.MaxBufferHeight;
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
             if (this.items.Length < text.Length)
             {
@@ -125,6 +129,7 @@ namespace JSSoft.UI
             this.text = text;
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
+            this.maxBufferHeight = maxBufferHeight;
         }
 
         public int PointToIndex(TerminalPoint point)
@@ -191,6 +196,7 @@ namespace JSSoft.UI
                 case nameof(ITerminalGrid.Style):
                 case nameof(ITerminalGrid.BufferWidth):
                 case nameof(ITerminalGrid.BufferHeight):
+                case nameof(ITerminalGrid.MaxBufferHeight):
                     {
                         this.UpdateAll();
                     }

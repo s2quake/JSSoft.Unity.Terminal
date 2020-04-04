@@ -208,6 +208,7 @@ namespace JSSoft.UI
             var size1 = (float)this.grid.BufferHeight;
             var size2 = (float)this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex + this.grid.BufferHeight;
             var size = size1 / size2;
+            // Debug.Log($"min-max: {this.grid.MinimumVisibleIndex}-{this.grid.MaximumVisibleIndex}");
             if (Application.isPlaying == false)
                 await Task.Delay(1);
             if (this.size != size)
@@ -229,8 +230,10 @@ namespace JSSoft.UI
         private void UpdateVisibleIndex()
         {
             var value1 = (float)this.value;
-            var value2 = (float)Math.Max(1, this.grid.MaxBufferHeight);
+            var value2 = (float)(this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex);
             var value = value1 * value2;
+            // Debug.Log($"scroll: min-max: {this.grid.MinimumVisibleIndex}-{this.grid.MaximumVisibleIndex}");
+            // Debug.Log($"scroll: {value1}-{value2} -> {(int)value + this.grid.MinimumVisibleIndex}");
             this.isScrolling = true;
             this.grid.VisibleIndex = (int)value + this.grid.MinimumVisibleIndex;
             this.isScrolling = false;
@@ -238,7 +241,12 @@ namespace JSSoft.UI
 
         private bool PointerOnParam
         {
-            get => this.animator.GetBool(pointerOnParam);
+            get
+            {
+                if (Application.isPlaying == true)
+                    this.animator.GetBool(pointerOnParam);
+                return false;
+            }
             set
             {
                 this.time = this.visibleTime;

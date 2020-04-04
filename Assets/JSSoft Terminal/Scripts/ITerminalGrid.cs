@@ -41,6 +41,8 @@ namespace JSSoft.UI
 
         void ScrollToBottom();
 
+        void ScrollToCursor();
+
         void PageUp();
 
         void PageDown();
@@ -99,8 +101,6 @@ namespace JSSoft.UI
 
         bool IsCursorVisible { get; set; }
 
-        bool IsScrolling { get; set; }
-
         TerminalRange SelectingRange { get; set; }
 
         string CompositionString { get; set; }
@@ -116,6 +116,8 @@ namespace JSSoft.UI
         bool IsCursorBlinkable { get; set; }
 
         float CursorBlinkDelay { get; set; }
+
+        bool IsScrollForwardEnabled { get; set; }
 
         IKeyBindingCollection KeyBindings { get; set; }
 

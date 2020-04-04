@@ -57,6 +57,7 @@ namespace JSSoft.UI
         private float delay;
         private bool blinkToggle;
         private char character;
+        private bool isInView = true;
 
         public TerminalCursor()
         {
@@ -165,7 +166,7 @@ namespace JSSoft.UI
 
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect);
             var itemRect = this.GetItemRect();
-            if (this.isVisible == false || this.blinkToggle == true)
+            if (this.isVisible == false || this.blinkToggle == true || this.isInView == false)
             {
                 this.terminalMesh.Count = 0;
             }
@@ -389,6 +390,7 @@ namespace JSSoft.UI
                 this.volume = Math.Max(cell.Volume, 1);
             }
             this.isVisible = this.grid.IsCursorVisible;
+            this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.BufferHeight;
             base.color = TerminalGridUtility.GetCursorColor(this.grid);
             this.style = this.grid.CursorStyle;
             this.thickness = this.grid.CursorThickness;

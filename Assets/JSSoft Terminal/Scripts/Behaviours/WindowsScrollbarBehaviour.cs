@@ -14,11 +14,14 @@ namespace JSSoft.UI.Behaviours
         {
             var gameObject = grid.GameObject;
             var scrollbar = gameObject.GetComponentInChildren<TerminalScrollbar>();
+            var scrollbarImage = scrollbar.GetComponent<Image>();
             var handleRect = scrollbar.handleRect;
             var handleRectImage = handleRect.GetComponent<Image>();
             var animator = scrollbar.GetComponent<Animator>();
             var color = handleRectImage.color;
             animator.enabled = false;
+            scrollbarImage.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+            scrollbarImage.pixelsPerUnitMultiplier = 10.0f;
             handleRectImage.color = new Color(color.r, color.g, color.b, 1.0f);
             handleRectImage.pixelsPerUnitMultiplier = 10.0f;
         }
@@ -27,11 +30,14 @@ namespace JSSoft.UI.Behaviours
         {
             var gameObject = grid.GameObject;
             var scrollbar = gameObject.GetComponentInChildren<TerminalScrollbar>();
+            var scrollbarImage = scrollbar.GetComponent<Image>();
             var handleRect = scrollbar.handleRect;
             var handleRectImage = handleRect.GetComponent<Image>();
             var animator = scrollbar.GetComponent<Animator>();
             var color = handleRectImage.color;
             animator.enabled = true;
+            scrollbarImage.color = new Color(0.54509803f, 0.54509803f, 0.54509803f, 0.0f);
+            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
             handleRectImage.color = new Color(color.r, color.g, color.b, 0.0f);
             handleRectImage.pixelsPerUnitMultiplier = 0.5f;
         }

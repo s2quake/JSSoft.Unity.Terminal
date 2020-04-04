@@ -74,6 +74,8 @@ namespace JSSoft.UI
                     return 0;
                 if (this.bufferHeight != grid.BufferHeight)
                     return 0;
+                if (this.maxBufferHeight != grid.MaxBufferHeight)
+                    return 0;
                 var text = this.grid.Text + char.MinValue;
                 return GetIndex(this.text, text);
             }
@@ -199,6 +201,7 @@ namespace JSSoft.UI
                 case nameof(ITerminalGrid.Style):
                 case nameof(ITerminalGrid.BufferWidth):
                 case nameof(ITerminalGrid.BufferHeight):
+                case nameof(ITerminalGrid.MaxBufferHeight):
                     this.UpdateAll();
                     break;
                 case nameof(ITerminalGrid.Text):

@@ -100,6 +100,8 @@ namespace JSSoft.UI
         [Range(0, 3)]
         private float cursorBlinkDelay = 0.5f;
         [SerializeField]
+        private bool isScrollForwardEnabled;
+        [SerializeField]
         private TerminalPoint cursorPoint;
         [SerializeField]
         private bool isCursorVisible = true;
@@ -231,21 +233,33 @@ namespace JSSoft.UI
 
         public void ScrollToTop()
         {
-            if (this.MaximumVisibleIndex > 0)
+            // if (this.VisibleIndex > this.MinimumVisibleIndex)
             {
                 this.IsScrolling = true;
-                this.VisibleIndex = 0;
+                this.VisibleIndex = this.MinimumVisibleIndex;
                 this.IsScrolling = false;
             }
         }
 
         public void ScrollToBottom()
         {
-            if (this.MaximumVisibleIndex > 0)
+            // if (this.VisibleIndex > this.MaximumVisibleIndex)
             {
                 this.IsScrolling = true;
                 this.VisibleIndex = this.MaximumVisibleIndex;
                 this.IsScrolling = false;
+            }
+        }
+
+        public void ScrollToCursor()
+        {
+            if (this.CursorPoint.Y < this.VisibleIndex)
+            {
+                this.VisibleIndex = this.CursorPoint.Y;
+            }
+            if (this.CursorPoint.Y >= this.VisibleIndex + this.bufferHeight)
+            {
+                this.VisibleIndex = this.CursorPoint.Y - this.bufferHeight + 1;
             }
         }
 
@@ -357,7 +371,7 @@ namespace JSSoft.UI
                 {
                     this.text = value;
                     this.InvokePropertyChangedEvent(nameof(Text));
-                    this.UpdateVisibleIndex();
+                    this.ScrollToCursor();
                 }
             }
         }
@@ -428,6 +442,7 @@ namespace JSSoft.UI
                 if (this.visibleIndex != value)
                 {
                     this.visibleIndex = value;
+                    // Debug.Log(value);
                     this.UpdateVisibleIndex();
                     this.scrollPos = this.visibleIndex;
                     this.InvokePropertyChangedEvent(nameof(VisibleIndex));
@@ -437,9 +452,19 @@ namespace JSSoft.UI
 
         public int MinimumVisibleIndex => this.rows.MinimumIndex;
 
-        public int MaximumVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
+        // public int MaximumVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
 
-        // public int MaximumVisibleIndex => Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.BufferHeight;
+        public int MaximumVisibleIndex
+        {
+            get
+            {
+                if (this.IsScrollForwardEnabled == false)
+                    return Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
+                return Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.BufferHeight;
+            }
+        }
+
+        public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
 
         public Color BackgroundColor
         {
@@ -663,6 +688,19 @@ namespace JSSoft.UI
             }
         }
 
+        public bool IsScrollForwardEnabled
+        {
+            get => this.style != null ? this.style.IsScrollForwardEnabled : this.isScrollForwardEnabled;
+            set
+            {
+                if (this.isScrollForwardEnabled != value)
+                {
+                    this.isScrollForwardEnabled = value;
+                    this.InvokePropertyChangedEvent(nameof(IsScrollForwardEnabled));
+                }
+            }
+        }
+
         public event EventHandler LayoutChanged;
 
         public event EventHandler SelectionChanged;
@@ -726,8 +764,8 @@ namespace JSSoft.UI
             this.ValidateValue();
             this.UpdateColor();
             this.UpdateLayout();
-            this.UpdateVisibleIndex();
             this.UpdateCursorPosition();
+            this.ScrollToCursor();
             this.OnValidated(EventArgs.Empty);
         }
 #endif
@@ -751,7 +789,8 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
-            this.VisibleIndex = this.MaximumVisibleIndex;
+            this.ScrollToTop();
+            this.ScrollToCursor();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.OutputTextChanged += Terminal_OutputTextChanged;
@@ -855,6 +894,7 @@ namespace JSSoft.UI
         {
             this.visibleIndex = Math.Max(this.visibleIndex, this.MinimumVisibleIndex);
             this.visibleIndex = Math.Min(this.visibleIndex, this.MaximumVisibleIndex);
+            // Debug.Log(this.visibleIndex);
         }
 
         private void UpdateCursorPosition()
@@ -878,7 +918,7 @@ namespace JSSoft.UI
                 this.characterInfos.Update();
                 this.rows.Update();
                 this.cursorPoint = this.IndexToPoint(index);
-                this.visibleIndex = this.MaximumVisibleIndex;
+                this.ScrollToCursor();
                 this.InvokePropertyChangedEvent(nameof(CursorPoint));
                 this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
@@ -897,7 +937,9 @@ namespace JSSoft.UI
             if (sender is Terminal terminal == this.terminal)
             {
                 this.Text = this.Terminal.Text;
-                this.VisibleIndex = this.MaximumVisibleIndex;
+                this.ScrollToCursor();
+                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
+                // this.VisibleIndex = this.MaximumVisibleIndex;
             }
         }
 
@@ -907,7 +949,9 @@ namespace JSSoft.UI
             {
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
-                this.VisibleIndex = this.MaximumVisibleIndex;
+                this.ScrollToCursor();
+                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
+                // this.VisibleIndex = this.MaximumVisibleIndex;
             }
         }
 

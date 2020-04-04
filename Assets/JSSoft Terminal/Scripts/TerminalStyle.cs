@@ -59,6 +59,8 @@ namespace JSSoft.UI
         [Range(0, 3)]
         private float cursorBlinkDelay = 0.5f;
         [SerializeField]
+        private bool isScrollForwardEnabled;
+        [SerializeField]
         private List<TerminalBehaviourBase> behaviourList = new List<TerminalBehaviourBase>();
 
         public TerminalFont Font
@@ -217,6 +219,19 @@ namespace JSSoft.UI
                 {
                     this.cursorBlinkDelay = value;
                     this.InvokePropertyChangedEvent(nameof(CursorBlinkDelay));
+                }
+            }
+        }
+
+        public bool IsScrollForwardEnabled
+        {
+            get => this.isScrollForwardEnabled;
+            set
+            {
+                if (this.isScrollForwardEnabled != value)
+                {
+                    this.isScrollForwardEnabled = value;
+                    this.InvokePropertyChangedEvent(nameof(IsScrollForwardEnabled));
                 }
             }
         }

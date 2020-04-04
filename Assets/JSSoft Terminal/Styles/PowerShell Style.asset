@@ -28,6 +28,7 @@ MonoBehaviour:
   cursorThickness: 4
   isCursorBlinkable: 1
   cursorBlinkDelay: 0.6
+  isScrollForwardEnabled: 1
   behaviourList:
   - {fileID: 11400000, guid: d3dff000fa02c476bb1c104430763e31, type: 2}
   - {fileID: 11400000, guid: c6199976afa0c418cab3e1fb0dec8c92, type: 2}
