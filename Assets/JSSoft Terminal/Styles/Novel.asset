@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9634ed125b5c34d6abf655ba2dd59090, type: 3}
+  m_Name: Novel
+  m_EditorClassIdentifier: 
+  font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
+  backgroundColor: {r: 0.9137255, g: 0.85882354, b: 0.7647059, a: 1}
+  foregroundColor: {r: 0.23137255, g: 0.13725491, b: 0.13333334, a: 1}
+  selectionColor: {r: 0.45490196, g: 0.4509804, b: 0.3137255, a: 0.7607843}
+  cursorColor: {r: 0.22745098, g: 0.13725491, b: 0.13333334, a: 0.6509804}
+  compositionColor: {r: 0, g: 0, b: 0, a: 1}
+  colorPallete: {fileID: 11400000, guid: 1032e140c69e644e19985a161f1598a6, type: 2}
+  padding:
+    left: 2
+    top: 2
+    right: 2
+    bottom: 2
+  cursorStyle: 0
+  cursorThickness: 2
+  isCursorBlinkable: 0
+  cursorBlinkDelay: 0.5
+  isScrollForwardEnabled: 0
+  behaviourList:
+  - {fileID: 11400000, guid: ed41edde8f02ee44f9c50e3e42663707, type: 2}
+  - {fileID: 11400000, guid: 150ab82340cb3004e88610d1ce858dd2, type: 2}

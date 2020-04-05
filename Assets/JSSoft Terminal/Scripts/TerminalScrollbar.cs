@@ -244,7 +244,7 @@ namespace JSSoft.UI
             get
             {
                 if (Application.isPlaying == true)
-                    this.animator.GetBool(pointerOnParam);
+                    return this.animator.GetBool(pointerOnParam);
                 return false;
             }
             set
