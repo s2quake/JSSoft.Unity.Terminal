@@ -31,3 +31,4 @@ MonoBehaviour:
   isScrollForwardEnabled: 0
   behaviourList:
   - {fileID: 11400000, guid: ed41edde8f02ee44f9c50e3e42663707, type: 2}
+  - {fileID: 11400000, guid: 150ab82340cb3004e88610d1ce858dd2, type: 2}

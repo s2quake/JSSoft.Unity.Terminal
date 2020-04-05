@@ -171,7 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1941372822}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1300739280}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -301,7 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 694842825}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1465386130}
-  m_Color: {r: 0.003921569, g: 0.14117648, b: 0.3372549, a: 1}
+  m_Color: {r: 0.047058824, g: 0.047058824, b: 0.047058824, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -465,14 +465,14 @@ MonoBehaviour:
   cursorPoint:
     x: 7
     y: 2
-  isCursorVisible: 0
+  isCursorVisible: 1
   compositionString: 
   padding:
     left: 2
     top: 2
     right: 2
     bottom: 2
-  style: {fileID: 11400000, guid: 3bcefcfc8cc9f6d489cd5ee21c193236, type: 2}
+  style: {fileID: 11400000, guid: ed78a7fbb84af3c4aad9c9ca481967e3, type: 2}
 --- !u!222 &286411805
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -532,7 +532,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!1 &459103223
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +980,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!21 &707323200
 Material:
   serializedVersion: 6
@@ -1013,7 +1013,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!1 &870523489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1191,7 +1191,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!1 &950269984
 GameObject:
   m_ObjectHideFlags: 0
@@ -1242,7 +1242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2022600120}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1323,28 +1323,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1085179061
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1194063121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,7 +1372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1085179061}
+  m_Material: {fileID: 1690031086}
   m_Color: {r: 0, g: 0, b: 0, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1446,7 +1424,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.99607843, g: 0.85882354, b: 0.6627451, a: 1}
+    - _Color: {r: 0.9529412, g: 0.9529412, b: 0.9529412, a: 1}
 --- !u!1 &1212098581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,7 +1511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1203678010}
-  m_Color: {r: 0.99607843, g: 0.85882354, b: 0.6627451, a: 1}
+  m_Color: {r: 0.9529412, g: 0.9529412, b: 0.9529412, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1541,10 +1519,10 @@ MonoBehaviour:
   grid: {fileID: 286411804}
   cursorLeft: 7
   cursorTop: 2
-  isVisible: 0
+  isVisible: 1
   isFocused: 0
   style: 1
-  thickness: 4
+  thickness: 6
   isBlinkable: 1
   blinkDelay: 0.6
 --- !u!222 &1277289352
@@ -1605,7 +1583,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 370203843}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1652,7 +1630,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!21 &1465386130
 Material:
   serializedVersion: 6
@@ -1785,6 +1763,28 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!21 &1690031086
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1708847317
 GameObject:
   m_ObjectHideFlags: 0
@@ -1879,7 +1879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2079925942}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1926,7 +1926,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!1 &1914659307
 GameObject:
   m_ObjectHideFlags: 0
@@ -1977,7 +1977,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 707323200}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2024,7 +2024,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!21 &2022600120
 Material:
   serializedVersion: 6
@@ -2057,7 +2057,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!21 &2079925942
 Material:
   serializedVersion: 6
@@ -2090,7 +2090,7 @@ Material:
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
     m_Colors:
-    - _Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+    - _Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
 --- !u!1 &2089326354
 GameObject:
   m_ObjectHideFlags: 0
@@ -2125,6 +2125,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bd5982821e283b64ebc238e7a034673a, type: 2}
   - {fileID: 11400000, guid: fb012bdbe99964bedadb880e80af7c51, type: 2}
   - {fileID: 11400000, guid: 3bcefcfc8cc9f6d489cd5ee21c193236, type: 2}
+  - {fileID: 11400000, guid: ed78a7fbb84af3c4aad9c9ca481967e3, type: 2}
 --- !u!4 &2089326356
 Transform:
   m_ObjectHideFlags: 0
@@ -2189,7 +2190,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 903172542}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2254,7 +2255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 1892942442}
-  m_Color: {r: 0.93333334, g: 0.92941177, b: 0.9411765, a: 1}
+  m_Color: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
