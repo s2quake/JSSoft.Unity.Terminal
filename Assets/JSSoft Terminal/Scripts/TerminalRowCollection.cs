@@ -125,7 +125,6 @@ namespace JSSoft.UI
             this.updateIndex = text.Length;
             this.minimumIndex = Math.Max(0, maximumIndex - maxBufferHeight);
             this.maximumIndex = maximumIndex;
-            // Debug.Log($"min-max: {this.minimumIndex} - {this.maximumIndex}");
         }
 
         public TerminalRow Prepare(int index)

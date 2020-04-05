@@ -134,7 +134,10 @@ namespace JSSoft.UI
             {
                 this.time -= Time.deltaTime;
             }
-            this.animator.SetFloat("Time", this.time);
+            if (this.animator.isActiveAndEnabled == true)
+            {
+                this.animator.SetFloat("Time", this.time);
+            }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
@@ -208,7 +211,6 @@ namespace JSSoft.UI
             var size1 = (float)this.grid.BufferHeight;
             var size2 = (float)this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex + this.grid.BufferHeight;
             var size = size1 / size2;
-            // Debug.Log($"min-max: {this.grid.MinimumVisibleIndex}-{this.grid.MaximumVisibleIndex}");
             if (Application.isPlaying == false)
                 await Task.Delay(1);
             if (this.size != size)
@@ -232,8 +234,6 @@ namespace JSSoft.UI
             var value1 = (float)this.value;
             var value2 = (float)(this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex);
             var value = value1 * value2;
-            // Debug.Log($"scroll: min-max: {this.grid.MinimumVisibleIndex}-{this.grid.MaximumVisibleIndex}");
-            // Debug.Log($"scroll: {value1}-{value2} -> {(int)value + this.grid.MinimumVisibleIndex}");
             this.isScrolling = true;
             this.grid.VisibleIndex = (int)value + this.grid.MinimumVisibleIndex;
             this.isScrolling = false;

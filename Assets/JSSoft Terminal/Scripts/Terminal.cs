@@ -50,6 +50,8 @@ namespace JSSoft.UI
         private int historyIndex;
         private bool isReadOnly;
         private bool isChanged;
+        [SerializeField]
+        private bool isVerbose;
         private int cursorPosition;
         private TerminalColor?[] foregroundColors = new TerminalColor?[] { };
         private TerminalColor?[] backgroundColors = new TerminalColor?[] { };
@@ -311,6 +313,15 @@ namespace JSSoft.UI
         public TerminalColor? BackgroundColor { get; set; }
 
         public bool IsReadOnly => this.isReadOnly;
+
+        public bool IsVerbose
+        {
+            get => this.isVerbose;
+            set
+            {
+                this.isVerbose = value;
+            }
+        }
 
         public int CursorPosition
         {

@@ -57,6 +57,8 @@ namespace JSSoft.UI
 
         bool IsReadOnly { get; }
 
+        bool IsVerbose { get; set; }
+
         TerminalColor? ForegroundColor { get; set; }
 
         TerminalColor? BackgroundColor { get; set; }

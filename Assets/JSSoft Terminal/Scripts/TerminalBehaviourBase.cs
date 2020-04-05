@@ -33,7 +33,6 @@ namespace JSSoft.UI
 
         protected virtual void OnEnable()
         {
-            // Debug.Log($"{this.GetType().Name}.{nameof(OnEnable)}");
             TerminalGridEvents.Enabled += Grid_Enabled;
             TerminalGridEvents.Disabled += Grid_Disabled;
             TerminalGridEvents.Validated += Grid_Validated;
@@ -42,7 +41,6 @@ namespace JSSoft.UI
 
         protected virtual void OnDisable()
         {
-            // Debug.Log($"{this.GetType().Name}.{nameof(OnDisable)}");
             TerminalGridEvents.Enabled -= Grid_Enabled;
             TerminalGridEvents.Disabled -= Grid_Disabled;
             TerminalGridEvents.Validated -= Grid_Validated;
@@ -55,14 +53,12 @@ namespace JSSoft.UI
 
         private void Attach(ITerminalGrid grid)
         {
-            // Debug.Log($"{this.GetType().Name}.{nameof(OnAttach)}");
             this.OnAttach(grid);
             this.gridList.Add(grid);
         }
 
         private void Detach(ITerminalGrid grid)
         {
-            // Debug.Log($"{this.GetType().Name}.{nameof(OnDetach)}");
             this.OnDetach(grid);
             this.gridList.Remove(grid);
         }

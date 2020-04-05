@@ -66,9 +66,9 @@ namespace JSSoft.Communication.Shells
             this.scheduler = DispatcherScheduler.Current;
         }
 
-        public async Task Start()
+        public void Start()
         {
-            Debug.developerConsoleVisible = true;
+            // Debug.developerConsoleVisible = true;
             if (this.terminal != null)
             {
                 this.terminal.Executed += Terminal_Executed;
@@ -102,14 +102,10 @@ namespace JSSoft.Communication.Shells
 
         public async void OnDestroy()
         {
-            // Debug.Log("OnDestroy 1");
             if (this.shell != null)
             {
                 await this.shell.StopAsync();
-                // Debug.Log("OnDestroy 2");
                 this.shell.Dispose();
-                // Debug.Log("OnDestroy 3");
-                // await TestAsync();
             }
         }
 
@@ -131,17 +127,26 @@ namespace JSSoft.Communication.Shells
             }
             catch (System.Reflection.TargetInvocationException e)
             {
+                this.AppendException(e);
+            }
+            catch (Exception e)
+            {
+                this.AppendException(e);
+            }
+        }
+
+        private void AppendException(Exception e)
+        {
+            if (this.terminal.IsVerbose == true)
+            {
+                this.terminal.AppendLine($"{e}");
+            }
+            else
+            {
                 if (e.InnerException != null)
                     this.terminal.AppendLine(e.InnerException.Message);
                 else
                     this.terminal.AppendLine(e.Message);
-            }
-            catch (Exception e)
-            {
-                if (e.InnerException != null)
-                    this.terminal.AppendLine($"{e.InnerException.Message}");
-                else
-                    this.terminal.AppendLine($"{e.Message}");
             }
         }
 

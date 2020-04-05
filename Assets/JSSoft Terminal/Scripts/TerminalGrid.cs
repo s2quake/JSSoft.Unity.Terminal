@@ -440,7 +440,6 @@ namespace JSSoft.UI
                 if (this.visibleIndex != value)
                 {
                     this.visibleIndex = value;
-                    // Debug.Log(value);
                     this.UpdateVisibleIndex();
                     this.scrollPos = this.visibleIndex;
                     this.InvokePropertyChangedEvent(nameof(VisibleIndex));
@@ -879,7 +878,6 @@ namespace JSSoft.UI
         {
             this.visibleIndex = Math.Max(this.visibleIndex, this.MinimumVisibleIndex);
             this.visibleIndex = Math.Min(this.visibleIndex, this.MaximumVisibleIndex);
-            // Debug.Log(this.visibleIndex);
         }
 
         private void UpdateCursorPosition()
