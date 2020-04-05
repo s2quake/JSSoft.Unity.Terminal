@@ -99,7 +99,6 @@ namespace JSSoft.UI.Editor
                 var assetPath = Path.Combine(assetDirectory, assetName + ".asset");
                 AssetDatabase.CreateAsset(obj, assetPath);
             }
-
         }
 
         [MenuItem("Terminal/Test")]

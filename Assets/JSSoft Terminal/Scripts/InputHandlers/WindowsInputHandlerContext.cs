@@ -262,34 +262,35 @@ namespace JSSoft.UI.InputHandlers
         {
             var grid = this.Grid;
             var newPosition = this.WorldToGrid(eventData.position);
-            var newPoint = this.Intersect(newPosition);
+            var newPoint1 = this.Intersect(newPosition);
+            var newPoint2 = new TerminalPoint(newPoint1.X + 1, newPoint1.Y);
             var newTime = Time.time;
             var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
             eventData.useDragThreshold = false;
             this.Focus();
             this.downPosition = newPosition;
-            this.downPoint = newPoint;
+            this.downPoint = newPoint1;
             this.downCount = downCount;
-            this.dragRange = new TerminalRange(newPoint, newPoint);
+            this.dragRange = new TerminalRange(newPoint1, newPoint1);
             this.time = newTime;
 
-            if (newPoint != TerminalPoint.Invalid)
+            if (newPoint1 != TerminalPoint.Invalid)
             {
-                var row = grid.Rows[newPoint.Y];
+                var row = grid.Rows[newPoint1.Y];
                 if (downCount == 1)
                 {
                     this.SelectingRange = TerminalRange.Empty;
                     this.Selections.Clear();
-                    // this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
-                    this.downRange = new TerminalRange(newPoint, newPoint);
+                    this.downRange = new TerminalRange(newPoint1, newPoint1);
+                    this.SelectingRange = new TerminalRange(newPoint1, newPoint2);
                 }
                 else if (downCount == 2)
                 {
-                    this.SelectWord(newPoint);
+                    this.SelectWord(newPoint1);
                 }
                 else if (downCount == 3)
                 {
-                    this.SelectLine(newPoint);
+                    this.SelectLine(newPoint1);
                 }
             }
             return true;

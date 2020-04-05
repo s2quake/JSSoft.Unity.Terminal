@@ -45,10 +45,10 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\MacOSInputBehaviour.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\MacOSScrollbarBehaviour.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\NewBehaviourScript.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\TerminalBehaviour.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\WindowsCursorBehaviour.cs" />
+     <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\WindowsInputBehaviour.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\Behaviours\WindowsScrollbarBehaviour.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\ClipboardUtility.cs" />
      <Compile Include="Assets\JSSoft Terminal\Scripts\CommandStringUtility.cs" />
