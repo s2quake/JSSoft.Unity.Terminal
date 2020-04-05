@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9634ed125b5c34d6abf655ba2dd59090, type: 3}
-  m_Name: Grass Style
+  m_Name: Grass
   m_EditorClassIdentifier: 
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
   backgroundColor: {r: 0.07450981, g: 0.46666667, b: 0.23921569, a: 1}
@@ -18,7 +18,7 @@ MonoBehaviour:
   selectionColor: {r: 0.7137255, g: 0.28627452, b: 0.14901961, a: 1}
   cursorColor: {r: 0.5568628, g: 0.15686275, b: 0, a: 1}
   compositionColor: {r: 0, g: 0, b: 0, a: 1}
-  colorPallete: {fileID: 0}
+  colorPallete: {fileID: 11400000, guid: 1032e140c69e644e19985a161f1598a6, type: 2}
   padding:
     left: 2
     top: 2
@@ -28,3 +28,6 @@ MonoBehaviour:
   cursorThickness: 2
   isCursorBlinkable: 0
   cursorBlinkDelay: 0.5
+  isScrollForwardEnabled: 0
+  behaviourList:
+  - {fileID: 11400000, guid: ed41edde8f02ee44f9c50e3e42663707, type: 2}

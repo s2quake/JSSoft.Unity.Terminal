@@ -34,7 +34,10 @@ namespace JSSoft.UI.Behaviours
         {
             grid.GotFocus += Grid_GotFocus;
             grid.LostFocus += Grid_LostFocus;
-            grid.IsCursorVisible = grid.IsFocused;
+            if (Application.isPlaying == true)
+                grid.IsCursorVisible = grid.IsFocused;
+            else
+                grid.IsCursorVisible = true;
         }
 
         protected override void OnDetach(ITerminalGrid grid)
@@ -46,7 +49,7 @@ namespace JSSoft.UI.Behaviours
 
         private void Grid_GotFocus(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid)
+            if (sender is ITerminalGrid grid && Application.isPlaying == true)
             {
                 grid.IsCursorVisible = true;
             }
@@ -54,7 +57,7 @@ namespace JSSoft.UI.Behaviours
 
         private void Grid_LostFocus(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid)
+            if (sender is ITerminalGrid grid && Application.isPlaying == true)
             {
                 grid.IsCursorVisible = false;
             }
