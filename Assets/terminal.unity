@@ -446,12 +446,13 @@ MonoBehaviour:
 
 
 
+    
+
     C:\>'
   backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   foregroundColor: {r: 1, g: 1, b: 1, a: 1}
   selectionColor: {r: 0.19215687, g: 0.30980393, b: 0.5058824, a: 1}
   cursorColor: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
-  compositionColor: {r: 1, g: 1, b: 1, a: 1}
   colorPalette: {fileID: 0}
   visibleIndex: 0
   bufferWidth: 80
@@ -464,7 +465,7 @@ MonoBehaviour:
   isScrollForwardEnabled: 0
   cursorPoint:
     x: 4
-    y: 3
+    y: 4
   isCursorVisible: 1
   compositionString: 
   padding:
@@ -497,31 +498,12 @@ MonoBehaviour:
 
 
 
+    
+
 '
   prompt: C:\>
   command: 
---- !u!21 &330193554
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 0, g: 0, b: 0, a: 0}
+  isVerbose: 1
 --- !u!21 &370203843
 Material:
   serializedVersion: 6
@@ -1345,6 +1327,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1092171071
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1194063121
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,18 +1398,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 330193554}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Material: {fileID: 1092171071}
+  m_Color: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   text: 
-  foregroundColor: {r: 0, g: 0, b: 0, a: 1}
-  backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+  foregroundColor: {r: 1, g: 1, b: 1, a: 1}
+  backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
+  foregroundMargin:
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+  backgroundMargin:
+    left: 2
+    top: 0
+    right: 0
+    bottom: 0
   grid: {fileID: 286411804}
   columnIndex: 4
-  rowIndex: 3
+  rowIndex: 4
 --- !u!222 &1194063124
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1540,7 +1554,7 @@ MonoBehaviour:
       m_Calls: []
   grid: {fileID: 286411804}
   cursorLeft: 4
-  cursorTop: 3
+  cursorTop: 4
   isVisible: 1
   isFocused: 0
   style: 0
