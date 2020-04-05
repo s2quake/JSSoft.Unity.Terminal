@@ -89,8 +89,6 @@ namespace JSSoft.UI
 
         Color CursorColor { get; set; }
 
-        Color CompositionColor { get; set; }
-
         TerminalThickness Padding { get; set; }
 
         TerminalPoint CursorPoint { get; set; }

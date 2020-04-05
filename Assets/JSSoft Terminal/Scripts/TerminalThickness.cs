@@ -106,6 +106,15 @@ namespace JSSoft.UI
             return pt1.Left != pt2.Left || pt1.Top != pt2.Top || pt1.Right != pt2.Right || pt1.Bottom != pt2.Bottom;
         }
 
+        public static Rect operator +(Rect rect, TerminalThickness value)
+        {
+            var x1 = rect.xMin + value.left;
+            var y1 = rect.yMin + value.top;
+            var x2 = rect.xMax - value.right;
+            var y2 = rect.yMax - value.bottom;
+            return new Rect(x1, y1, x2 - x1, y2 - y1);
+        }
+
         public static readonly TerminalThickness Empty = new TerminalThickness(0);
 
         #region implementations

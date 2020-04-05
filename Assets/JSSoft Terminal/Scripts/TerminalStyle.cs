@@ -43,8 +43,6 @@ namespace JSSoft.UI
         [SerializeField]
         private Color cursorColor = TerminalGrid.DefaultCursorColor;
         [SerializeField]
-        private Color compositionColor = TerminalGrid.DefaultCompositionColor;
-        [SerializeField]
         private TerminalColorPalette colorPallete;
         [SerializeField]
         private TerminalThickness padding = new TerminalThickness(2);
@@ -124,19 +122,6 @@ namespace JSSoft.UI
                 {
                     this.cursorColor = value;
                     this.InvokePropertyChangedEvent(nameof(CursorColor));
-                }
-            }
-        }
-
-        public Color CompositionColor
-        {
-            get => this.compositionColor;
-            set
-            {
-                if (this.compositionColor != value)
-                {
-                    this.compositionColor = value;
-                    this.InvokePropertyChangedEvent(nameof(CompositionColor));
                 }
             }
         }

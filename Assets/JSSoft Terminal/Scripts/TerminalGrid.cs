@@ -74,8 +74,6 @@ namespace JSSoft.UI
         [SerializeField]
         private Color cursorColor = DefaultCursorColor;
         [SerializeField]
-        private Color compositionColor = DefaultCompositionColor;
-        [SerializeField]
         private TerminalColorPalette colorPalette;
         [SerializeField]
         private int visibleIndex;
@@ -514,19 +512,6 @@ namespace JSSoft.UI
                 {
                     this.cursorColor = value;
                     this.InvokePropertyChangedEvent(nameof(CursorColor));
-                }
-            }
-        }
-
-        public Color CompositionColor
-        {
-            get => this.style != null ? this.style.CompositionColor : this.compositionColor;
-            set
-            {
-                if (this.compositionColor != value)
-                {
-                    this.compositionColor = value;
-                    this.InvokePropertyChangedEvent(nameof(CompositionColor));
                 }
             }
         }

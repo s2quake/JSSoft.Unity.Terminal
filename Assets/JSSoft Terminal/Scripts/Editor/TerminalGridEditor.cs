@@ -29,14 +29,13 @@ namespace JSSoft.UI.Editor
     [CustomEditor(typeof(TerminalGrid))]
     public class TerminalGridEditor : UnityEditor.Editor
     {
-        private SerializedProperty fontProperty;
         private SerializedProperty styleProperty;
 
+        private SerializedProperty fontProperty;
         private SerializedProperty backgroundColorProperty;
         private SerializedProperty foregroundColorProperty;
         private SerializedProperty selectionColorProperty;
         private SerializedProperty cursorColorProperty;
-        private SerializedProperty compositionColorProperty;
         private SerializedProperty colorPaletteProperty;
         private SerializedProperty paddingProperty;
         private SerializedProperty cursorStyleProperty;
@@ -52,14 +51,13 @@ namespace JSSoft.UI.Editor
 
         public void OnEnable()
         {
-            this.fontProperty = this.serializedObject.FindProperty("font");
             this.styleProperty = this.serializedObject.FindProperty("style");
 
+            this.fontProperty = this.serializedObject.FindProperty("font");
             this.backgroundColorProperty = this.serializedObject.FindProperty("backgroundColor");
             this.foregroundColorProperty = this.serializedObject.FindProperty("foregroundColor");
             this.selectionColorProperty = this.serializedObject.FindProperty("selectionColor");
             this.cursorColorProperty = this.serializedObject.FindProperty("cursorColor");
-            this.compositionColorProperty = this.serializedObject.FindProperty("compositionColor");
             this.colorPaletteProperty = this.serializedObject.FindProperty("colorPalette");
             this.paddingProperty = this.serializedObject.FindProperty("padding");
             this.cursorStyleProperty = this.serializedObject.FindProperty("cursorStyle");
@@ -82,7 +80,6 @@ namespace JSSoft.UI.Editor
             }
 
             this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.fontProperty);
             EditorGUILayout.PropertyField(this.styleProperty);
             GUILayout.Space(10);
 
@@ -91,11 +88,11 @@ namespace JSSoft.UI.Editor
                 EditorGUILayout.HelpBox("Property cannot be changed when style is applied.", MessageType.Info);
             }
             GUI.enabled = this.styleProperty.objectReferenceValue == null;
+            EditorGUILayout.PropertyField(this.fontProperty);
             EditorGUILayout.PropertyField(this.backgroundColorProperty);
             EditorGUILayout.PropertyField(this.foregroundColorProperty);
             EditorGUILayout.PropertyField(this.selectionColorProperty);
             EditorGUILayout.PropertyField(this.cursorColorProperty);
-            EditorGUILayout.PropertyField(this.compositionColorProperty);
             EditorGUILayout.PropertyField(this.colorPaletteProperty);
             EditorGUILayout.PropertyField(this.paddingProperty, true);
             EditorGUILayout.PropertyField(this.cursorStyleProperty);

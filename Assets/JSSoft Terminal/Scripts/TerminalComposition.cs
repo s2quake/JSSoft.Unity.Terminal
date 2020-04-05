@@ -41,6 +41,10 @@ namespace JSSoft.UI
         [SerializeField]
         private Color backgroundColor = new Color(0, 0, 0, 0);
         [SerializeField]
+        private TerminalThickness foregroundMargin = TerminalThickness.Empty;
+        [SerializeField]
+        private TerminalThickness backgroundMargin = new TerminalThickness(2, 0, 0, 0);
+        [SerializeField]
         private TerminalGrid grid = null;
         [SerializeField]
         private int columnIndex;
@@ -146,8 +150,6 @@ namespace JSSoft.UI
             this.columnIndex = Math.Max(0, this.columnIndex);
             this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
-            base.color = this.backgroundColor;
-            base.material.color = base.color;
         }
 #endif
 
@@ -156,11 +158,11 @@ namespace JSSoft.UI
             base.OnEnable();
             this.mesh = new Mesh();
             base.material = new Material(Shader.Find("Unlit/Color"));
-            base.material.color = base.color;
             this.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
+            this.UpdateColor();
         }
 
         protected override void OnDisable()
@@ -192,9 +194,12 @@ namespace JSSoft.UI
                 var backgroundRect = new Rect(bx, by, itemWidth * volume, itemHeight);
                 var uv = FontUtility.GetUV(this.Font, character);
 
-                this.vertices.SetVertex(0, backgroundRect);
+                base.color = this.backgroundColor;
+                base.material.color = base.color;
+                this.material.color = this.foregroundColor;
+                this.vertices.SetVertex(0, backgroundRect + this.backgroundMargin);
                 this.vertices.Transform(0, rect);
-                this.vertices.SetVertex(4, foregroundRect);
+                this.vertices.SetVertex(4, foregroundRect + this.foregroundMargin);
                 this.vertices.Transform(4, rect);
                 this.uvs.SetUV(0, Vector2.zero, Vector2.zero);
                 this.uvs.SetUV(4, uv);
@@ -246,11 +251,6 @@ namespace JSSoft.UI
                         this.SetVerticesDirty();
                     }
                     break;
-                case nameof(ITerminalGrid.CompositionColor):
-                    {
-                        this.UpdateColor();
-                    }
-                    break;
             }
         }
 
@@ -275,7 +275,8 @@ namespace JSSoft.UI
         {
             if (this.IsDestroyed() == true)
                 return;
-            this.foregroundColor = this.grid.CompositionColor;
+            this.foregroundColor = this.grid.ForegroundColor;
+            base.color = this.backgroundColor = this.grid.BackgroundColor;
             this.SetVerticesDirty();
         }
 
