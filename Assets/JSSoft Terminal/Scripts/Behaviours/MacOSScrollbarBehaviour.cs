@@ -18,12 +18,12 @@ namespace JSSoft.UI.Behaviours
             var handleRect = scrollbar.handleRect;
             var handleRectImage = handleRect.GetComponent<Image>();
             var animator = scrollbar.GetComponent<Animator>();
-            var color = handleRectImage.color;
+            // var color = handleRectImage.color;
             animator.enabled = true;
-            scrollbarImage.color = new Color(0.54509803f, 0.54509803f, 0.54509803f, 0.0f);
-            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
-            handleRectImage.color = new Color(color.r, color.g, color.b, 0.0f);
-            handleRectImage.pixelsPerUnitMultiplier = 0.5f;
+            // scrollbarImage.color = new Color(0.54509803f, 0.54509803f, 0.54509803f, 0.0f);
+            // scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+            // handleRectImage.color = new Color(color.r, color.g, color.b, 0.0f);
+            // handleRectImage.pixelsPerUnitMultiplier = 0.5f;
         }
 
         protected override void OnDetach(ITerminalGrid grid)

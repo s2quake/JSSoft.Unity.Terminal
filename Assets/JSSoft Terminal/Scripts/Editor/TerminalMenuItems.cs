@@ -214,7 +214,7 @@ namespace JSSoft.UI.Editor
             scrollbarImage.sprite = backgroundSprite;
             scrollbarImage.color = TerminalGrid.DefaultScrollbarColor;
             scrollbarImage.type = Image.Type.Sliced;
-            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+            // scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
             scrollbarRect.SetParent(terminalGridRect);
             scrollbarRect.anchorMin = new Vector2(1, 0);
             scrollbarRect.anchorMax = Vector3.one;
@@ -239,7 +239,7 @@ namespace JSSoft.UI.Editor
             handleImage.sprite = uiSprite;
             handleImage.color = TerminalGrid.DefaultScrollbarColor;
             handleImage.type = Image.Type.Sliced;
-            handleImage.pixelsPerUnitMultiplier = 0.5f;
+            // handleImage.pixelsPerUnitMultiplier = 0.5f;
             handleRect.SetParent(slidingAreaRect);
             handleRect.offsetMin = new Vector2(-10.0f, -10.0f);
             handleRect.offsetMax = new Vector2(10.0f, 10.0f);

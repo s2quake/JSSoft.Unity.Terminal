@@ -121,9 +121,9 @@ namespace JSSoft.UI
             base.OnDisable();
         }
 
-        protected override void Update()
+        protected virtual void Update()
         {
-            base.Update();
+            // base.Update();
             if (this.isPointerOn == false && this.PointerOnParam == true)
             {
                 var animationState = this.animator.GetCurrentAnimatorStateInfo(0);
@@ -224,7 +224,7 @@ namespace JSSoft.UI
             var value = value1 / value2;
             if (Application.isPlaying == false)
                 await Task.Delay(1);
-            this.SetValueWithoutNotify(value);
+            // this.SetValueWithoutNotify(value);
             if (this.grid.IsScrolling == true)
                 this.PointerOnParam = true;
         }
