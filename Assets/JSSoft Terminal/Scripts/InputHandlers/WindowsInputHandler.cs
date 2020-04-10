@@ -27,85 +27,14 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI.InputHandlers
 {
-    public class WindowsInputHandler : InputHandler
+    class WindowsInputHandler : InputHandler<WindowsInputHandlerContext>
     {
         public WindowsInputHandler()
         {
+            
         }
 
-        protected override bool OnBeginDrag(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.BeginDrag(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnDrag(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.Drag(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnEndDrag(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.EndDrag(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerClick(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.PointerClick(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerDown(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.PointerDown(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerEnter(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.PointerEnter(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerExit(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.PointerExit(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerUp(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is WindowsInputHandlerContext obj)
-            {
-                return obj.PointerUp(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override InputHandlerContext CreateContext(ITerminalGrid grid)
+        protected override WindowsInputHandlerContext CreateContext(ITerminalGrid grid)
         {
             return new WindowsInputHandlerContext(grid);
         }

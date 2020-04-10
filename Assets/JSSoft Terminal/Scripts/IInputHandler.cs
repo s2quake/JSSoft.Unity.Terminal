@@ -28,20 +28,26 @@ namespace JSSoft.UI
 {
     public interface IInputHandler
     {
-        bool BeginDrag(ITerminalGrid grid, PointerEventData eventData);
+        void Select(ITerminalGrid grid, BaseEventData eventData);
 
-        bool Drag(ITerminalGrid grid, PointerEventData eventData);
+        void Deselect(ITerminalGrid grid, BaseEventData eventData);
 
-        bool EndDrag(ITerminalGrid grid, PointerEventData eventData);
+        void Update(ITerminalGrid grid, BaseEventData eventData);
 
-        bool PointerClick(ITerminalGrid grid, PointerEventData eventData);
+        void BeginDrag(ITerminalGrid grid, PointerEventData eventData);
 
-        bool PointerDown(ITerminalGrid grid, PointerEventData eventData);
+        void Drag(ITerminalGrid grid, PointerEventData eventData);
 
-        bool PointerUp(ITerminalGrid grid, PointerEventData eventData);
+        void EndDrag(ITerminalGrid grid, PointerEventData eventData);
 
-        bool PointerEnter(ITerminalGrid grid, PointerEventData eventData);
+        void PointerClick(ITerminalGrid grid, PointerEventData eventData);
 
-        bool PointerExit(ITerminalGrid grid, PointerEventData eventData);
+        void PointerDown(ITerminalGrid grid, PointerEventData eventData);
+
+        void PointerUp(ITerminalGrid grid, PointerEventData eventData);
+
+        void PointerEnter(ITerminalGrid grid, PointerEventData eventData);
+
+        void PointerExit(ITerminalGrid grid, PointerEventData eventData);
     }
 }
