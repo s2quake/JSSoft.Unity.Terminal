@@ -51,7 +51,7 @@ namespace JSSoft.UI.InputHandlers
 
         }
 
-        public bool BeginDrag(PointerEventData eventData)
+        public override void BeginDrag(PointerEventData eventData)
         {
             var grid = this.Grid;
             var downPoint = this.downPoint;
@@ -63,12 +63,10 @@ namespace JSSoft.UI.InputHandlers
                 {
                     this.SelectingRange = new TerminalRange(downPoint, point);
                 }
-                return true;
             }
-            return false;
         }
 
-        public bool Drag(PointerEventData eventData)
+        public override void Drag(PointerEventData eventData)
         {
             var grid = this.Grid;
             var downPoint = this.downPoint;
@@ -83,12 +81,10 @@ namespace JSSoft.UI.InputHandlers
                     this.dragRange = new TerminalRange(downPoint, point);
                     this.UpdateSelecting();
                 }
-                return true;
             }
-            return false;
         }
 
-        public bool EndDrag(PointerEventData eventData)
+        public override void EndDrag(PointerEventData eventData)
         {
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
@@ -97,42 +93,43 @@ namespace JSSoft.UI.InputHandlers
                 this.Selections.Add(this.SelectingRange);
                 this.SelectingRange = TerminalRange.Empty;
                 this.downPoint = TerminalPoint.Invalid;
-                return true;
             }
-            return false;
         }
 
-        public bool PointerClick(PointerEventData eventData)
+        public override void PointerClick(PointerEventData eventData)
         {
-            return false;
+
         }
 
-        public bool PointerDown(PointerEventData eventData)
+        public override void PointerDown(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                return this.OnLeftPointerDown(eventData);
+                this.OnLeftPointerDown(eventData);
             }
-            return false;
         }
 
-        public bool PointerEnter(PointerEventData eventData)
+        public override void PointerEnter(PointerEventData eventData)
         {
-            return false;
+
         }
 
-        public bool PointerExit(PointerEventData eventData)
+        public override void PointerExit(PointerEventData eventData)
         {
-            return false;
+
         }
 
-        public bool PointerUp(PointerEventData eventData)
+        public override void PointerUp(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                return this.OnLeftPointerUp(eventData);
+                this.OnLeftPointerUp(eventData);
             }
-            return false;
+        }
+
+        public override void Update(BaseEventData eventData)
+        {
+
         }
 
         public static Texture2D CursorTexture

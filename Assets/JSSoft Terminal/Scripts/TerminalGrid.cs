@@ -111,7 +111,6 @@ namespace JSSoft.UI
         [SerializeField]
         private TerminalStyle style;
 
-        private readonly TerminalEventCollection events = new TerminalEventCollection();
         private readonly TerminalRowCollection rows;
         private readonly TerminalCharacterInfoCollection characterInfos;
 
@@ -337,7 +336,7 @@ namespace JSSoft.UI
 
         public IInputHandler InputHandler
         {
-            get => this.inputHandler ?? JSSoft.UI.InputHandler.GetDefaultHandler();
+            get => this.inputHandler ?? InputHandlerUtility.GetDefaultHandler();
             set => this.inputHandler = value;
         }
 
@@ -448,8 +447,6 @@ namespace JSSoft.UI
         }
 
         public int MinimumVisibleIndex => this.rows.MinimumIndex;
-
-        // public int MaximumVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
 
         public int MaximumVisibleIndex
         {
@@ -994,6 +991,26 @@ namespace JSSoft.UI
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
+        private IList<Event> PopEvents()
+        {
+            var eventCount = Event.GetEventCount();
+            if (eventCount > 0)
+            {
+                var eventList = new List<Event>(eventCount);
+                for (var i = 0; i < eventCount; i++)
+                {
+                    var item = new Event();
+                    Event.PopEvent(item);
+                    eventList.Add(item);
+                }
+                return eventList;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         private BaseInput InputSystem
         {
             get
@@ -1017,53 +1034,21 @@ namespace JSSoft.UI
             this.IsFocused = false;
         }
 
-        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
-        {
-            if (this.InputHandler.BeginDrag(this, eventData) == true)
-                return;
-        }
+        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData) => this.InputHandler.BeginDrag(this, eventData);
 
-        void IDragHandler.OnDrag(PointerEventData eventData)
-        {
-            if (this.InputHandler.Drag(this, eventData) == true)
-                return;
-        }
+        void IDragHandler.OnDrag(PointerEventData eventData) => this.InputHandler.Drag(this, eventData);
 
-        void IEndDragHandler.OnEndDrag(PointerEventData eventData)
-        {
-            if (this.InputHandler.EndDrag(this, eventData) == true)
-                return;
-        }
+        void IEndDragHandler.OnEndDrag(PointerEventData eventData) => this.InputHandler.EndDrag(this, eventData);
 
-        void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
-        {
-            if (this.InputHandler.PointerClick(this, eventData) == true)
-                return;
-        }
+        void IPointerClickHandler.OnPointerClick(PointerEventData eventData) => this.InputHandler.PointerClick(this, eventData);
 
-        void IPointerDownHandler.OnPointerDown(PointerEventData eventData)
-        {
-            if (this.InputHandler.PointerDown(this, eventData) == true)
-                return;
-        }
+        void IPointerDownHandler.OnPointerDown(PointerEventData eventData) => this.InputHandler.PointerDown(this, eventData);
 
-        void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
-        {
-            if (this.InputHandler.PointerUp(this, eventData) == true)
-                return;
-        }
+        void IPointerUpHandler.OnPointerUp(PointerEventData eventData) => this.InputHandler.PointerUp(this, eventData);
 
-        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
-        {
-            if (this.InputHandler.PointerEnter(this, eventData) == true)
-                return;
-        }
+        void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData) => this.InputHandler.PointerEnter(this, eventData);
 
-        void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
-        {
-            if (this.InputHandler.PointerExit(this, eventData) == true)
-                return;
-        }
+        void IPointerExitHandler.OnPointerExit(PointerEventData eventData) => this.InputHandler.PointerExit(this, eventData);
 
         void IScrollHandler.OnScroll(PointerEventData eventData)
         {
@@ -1082,30 +1067,31 @@ namespace JSSoft.UI
 
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
-            if (this.events.PopEvents() == false)
-                return;
-
-            this.OnTranslateEvents(events);
-            for (var i = 0; i < events.Count; i++)
+            if (this.PopEvents() is IList<Event> events)
             {
-                var item = events[i];
-                if (item == null)
-                    continue;
-                if (item.rawType == EventType.KeyDown)
+                this.OnTranslateEvents(events);
+                for (var i = 0; i < events.Count; i++)
                 {
-                    var keyCode = item.keyCode;
-                    var modifiers = item.modifiers;
-                    if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
+                    var item = events[i];
+                    if (item == null)
                         continue;
-                    if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
+                    if (item.rawType == EventType.KeyDown)
                     {
-                        this.Terminal.InsertCharacter(item.character);
+                        var keyCode = item.keyCode;
+                        var modifiers = item.modifiers;
+                        if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
+                            continue;
+                        if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
+                        {
+                            this.Terminal.InsertCharacter(item.character);
+                        }
+                        this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                     }
-                    this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                 }
-            }
 
-            eventData.Use();
+                eventData.Use();
+            }
+            this.InputHandler.Update(this, eventData);
         }
 
         ITerminal ITerminalGrid.Terminal => this.terminal;

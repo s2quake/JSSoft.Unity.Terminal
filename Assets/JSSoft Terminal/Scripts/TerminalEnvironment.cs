@@ -29,5 +29,7 @@ namespace JSSoft.UI
         public static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
 
         public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+
+        public static bool IsIPhone => (Application.platform == RuntimePlatform.IPhonePlayer);
     }
 }

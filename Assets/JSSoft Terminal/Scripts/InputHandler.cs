@@ -27,49 +27,68 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public abstract class InputHandler : IInputHandler
+    public abstract class InputHandler<T> : IInputHandler where T : InputHandlerContext
     {
-        private static readonly IInputHandler macOSInputHandler;
-        private static readonly IInputHandler windowsInputHandler;
-        private readonly Dictionary<ITerminalGrid, InputHandlerContext> contextByGrid = new Dictionary<ITerminalGrid, InputHandlerContext>();
+        private readonly Dictionary<ITerminalGrid, T> contextByGrid = new Dictionary<ITerminalGrid, T>();
 
-        static InputHandler()
+        protected virtual void OnSelect(InputHandlerContext context, BaseEventData eventData)
         {
-            macOSInputHandler = new InputHandlers.MacOSInputHandler();
-            windowsInputHandler = new InputHandlers.WindowsInputHandler();
+            context.Select(eventData);
         }
 
-        public static IInputHandler GetDefaultHandler()
+        protected virtual void OnDeselect(InputHandlerContext context, BaseEventData eventData)
         {
-            if (TerminalEnvironment.IsMac == true)
-                return macOSInputHandler;
-            else if (TerminalEnvironment.IsWindows == true)
-                return windowsInputHandler;
-            throw new NotImplementedException();
+            context.Deselect(eventData);
         }
 
-        protected abstract bool OnBeginDrag(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnDrag(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnEndDrag(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnPointerClick(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnPointerDown(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnPointerUp(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnPointerEnter(InputHandlerContext context, PointerEventData eventData);
-
-        protected abstract bool OnPointerExit(InputHandlerContext context, PointerEventData eventData);
-
-        protected virtual InputHandlerContext CreateContext(ITerminalGrid grid)
+        protected virtual void OnUpdate(InputHandlerContext context, BaseEventData eventData)
         {
-            return new InputHandlerContext(grid);
+            context.Update(eventData);
         }
 
-        private InputHandlerContext this[ITerminalGrid grid]
+        protected virtual void OnBeginDrag(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.BeginDrag(eventData);
+        }
+
+        protected virtual void OnDrag(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.Drag(eventData);
+        }
+
+        protected virtual void OnEndDrag(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.EndDrag(eventData);
+        }
+
+        protected virtual void OnPointerClick(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.PointerClick(eventData);
+        }
+
+        protected virtual void OnPointerDown(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.PointerDown(eventData);
+        }
+
+        protected virtual void OnPointerEnter(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.PointerEnter(eventData);
+        }
+
+        protected virtual void OnPointerExit(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.PointerExit(eventData);
+        }
+
+        protected virtual void OnPointerUp(InputHandlerContext context, PointerEventData eventData)
+        {
+            context.PointerUp(eventData);
+        }
+
+        protected abstract T CreateContext(ITerminalGrid grid);
+
+        private T this[ITerminalGrid grid]
         {
             get
             {
@@ -83,44 +102,59 @@ namespace JSSoft.UI
 
         #region IInputHandler
 
-        bool IInputHandler.BeginDrag(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.Select(ITerminalGrid grid, BaseEventData eventData)
         {
-            return this.OnBeginDrag(this[grid], eventData);
+            this.OnSelect(this[grid], eventData);
         }
 
-        bool IInputHandler.Drag(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.Deselect(ITerminalGrid grid, BaseEventData eventData)
         {
-            return this.OnDrag(this[grid], eventData);
+            this.OnDeselect(this[grid], eventData);
         }
 
-        bool IInputHandler.EndDrag(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.Update(ITerminalGrid grid, BaseEventData eventData)
         {
-            return this.OnEndDrag(this[grid], eventData);
+            this.OnUpdate(this[grid], eventData);
         }
 
-        bool IInputHandler.PointerClick(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.BeginDrag(ITerminalGrid grid, PointerEventData eventData)
         {
-            return this.OnPointerClick(this[grid], eventData);
+            this.OnBeginDrag(this[grid], eventData);
         }
 
-        bool IInputHandler.PointerDown(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.Drag(ITerminalGrid grid, PointerEventData eventData)
         {
-            return this.OnPointerDown(this[grid], eventData);
+            this.OnDrag(this[grid], eventData);
         }
 
-        bool IInputHandler.PointerUp(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.EndDrag(ITerminalGrid grid, PointerEventData eventData)
         {
-            return this.OnPointerUp(this[grid], eventData);
+            this.OnEndDrag(this[grid], eventData);
         }
 
-        bool IInputHandler.PointerEnter(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.PointerClick(ITerminalGrid grid, PointerEventData eventData)
         {
-            return this.OnPointerEnter(this[grid], eventData);
+            this.OnPointerClick(this[grid], eventData);
         }
 
-        bool IInputHandler.PointerExit(ITerminalGrid grid, PointerEventData eventData)
+        void IInputHandler.PointerDown(ITerminalGrid grid, PointerEventData eventData)
         {
-            return this.OnPointerExit(this[grid], eventData);
+            this.OnPointerDown(this[grid], eventData);
+        }
+
+        void IInputHandler.PointerUp(ITerminalGrid grid, PointerEventData eventData)
+        {
+            this.OnPointerUp(this[grid], eventData);
+        }
+
+        void IInputHandler.PointerEnter(ITerminalGrid grid, PointerEventData eventData)
+        {
+            this.OnPointerEnter(this[grid], eventData);
+        }
+
+        void IInputHandler.PointerExit(ITerminalGrid grid, PointerEventData eventData)
+        {
+            this.OnPointerExit(this[grid], eventData);
         }
 
         #endregion

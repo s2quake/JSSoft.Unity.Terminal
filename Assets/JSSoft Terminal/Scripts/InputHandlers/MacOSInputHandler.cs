@@ -27,86 +27,14 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI.InputHandlers
 {
-    public class MacOSInputHandler : InputHandler
+    class MacOSInputHandler : InputHandler<MacOSInputHandlerContext>
     {
         public MacOSInputHandler()
         {
             
         }
 
-        protected override bool OnBeginDrag(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.BeginDrag(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnDrag(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.Drag(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnEndDrag(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.EndDrag(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerClick(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.PointerClick(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerDown(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.PointerDown(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerEnter(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.PointerEnter(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerExit(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.PointerExit(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override bool OnPointerUp(InputHandlerContext context, PointerEventData eventData)
-        {
-            if (context is MacOSInputHandlerContext obj)
-            {
-                return obj.PointerUp(eventData);
-            }
-            throw new NotImplementedException();
-        }
-
-        protected override InputHandlerContext CreateContext(ITerminalGrid grid)
+        protected override MacOSInputHandlerContext CreateContext(ITerminalGrid grid)
         {
             return new MacOSInputHandlerContext(grid);
         }

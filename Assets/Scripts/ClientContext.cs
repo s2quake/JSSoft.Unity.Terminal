@@ -20,7 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using JSSoft.Communication;
+using JSSoft.Communication.Services;
 
 namespace JSSoft.Communication.Shells
 {
@@ -30,6 +32,15 @@ namespace JSSoft.Communication.Shells
             : base(serviceHosts)
         {
 
+        }
+
+        protected override InstanceBase CreateInstance(Type type)
+        {
+            if (type == typeof(IUserService))
+                return new UserServiceInstance();
+            else if (type == typeof(IDataService))
+                return new DataServiceInstance();
+            throw new NotImplementedException();
         }
     }
 }
