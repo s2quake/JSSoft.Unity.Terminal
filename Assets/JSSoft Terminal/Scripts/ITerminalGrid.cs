@@ -121,6 +121,8 @@ namespace JSSoft.UI
 
         IInputHandler InputHandler { get; set; }
 
+        IList<TerminalBehaviourBase> BehaviourList { get; }
+
         event EventHandler LayoutChanged;
 
         event EventHandler SelectionChanged;

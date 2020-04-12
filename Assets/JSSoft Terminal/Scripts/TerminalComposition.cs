@@ -275,8 +275,11 @@ namespace JSSoft.UI
         {
             if (this.IsDestroyed() == true)
                 return;
-            this.foregroundColor = this.grid.ForegroundColor;
-            base.color = this.backgroundColor = this.grid.BackgroundColor;
+            if (this.grid != null)
+            {
+                this.foregroundColor = this.grid.ForegroundColor;
+                base.color = this.backgroundColor = this.grid.BackgroundColor;
+            }
             this.SetVerticesDirty();
         }
 

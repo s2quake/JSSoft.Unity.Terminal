@@ -100,6 +100,8 @@ namespace JSSoft.UI
         [SerializeField]
         private bool isScrollForwardEnabled;
         [SerializeField]
+        private List<TerminalBehaviourBase> behaviourList = new List<TerminalBehaviourBase>();
+        [SerializeField]
         private TerminalPoint cursorPoint;
         [SerializeField]
         private bool isCursorVisible = true;
@@ -682,6 +684,8 @@ namespace JSSoft.UI
             }
         }
 
+        public IList<TerminalBehaviourBase> BehaviourList => this.behaviourList;
+
         public event EventHandler LayoutChanged;
 
         public event EventHandler SelectionChanged;
@@ -919,7 +923,6 @@ namespace JSSoft.UI
                 this.Text = this.Terminal.Text;
                 this.ScrollToCursor();
                 this.InvokePropertyChangedEvent(nameof(VisibleIndex));
-                // this.VisibleIndex = this.MaximumVisibleIndex;
             }
         }
 
@@ -931,7 +934,6 @@ namespace JSSoft.UI
                 this.CursorPoint = this.IndexToPoint(index);
                 this.ScrollToCursor();
                 this.InvokePropertyChangedEvent(nameof(VisibleIndex));
-                // this.VisibleIndex = this.MaximumVisibleIndex;
             }
         }
 
@@ -1027,11 +1029,13 @@ namespace JSSoft.UI
         {
             this.InputSystem.imeCompositionMode = IMECompositionMode.On;
             this.IsFocused = true;
+            this.InputHandler.Select(this, eventData);
         }
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
             this.IsFocused = false;
+            this.InputHandler.Deselect(this, eventData);
         }
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData) => this.InputHandler.BeginDrag(this, eventData);

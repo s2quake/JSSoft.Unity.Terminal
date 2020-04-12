@@ -42,6 +42,8 @@ namespace JSSoft.UI.Editor
         private SerializedProperty cursorThicknessProperty;
         private SerializedProperty isCursorBlinkableProperty;
         private SerializedProperty cursorBlinkDelayProperty;
+        private SerializedProperty isScrollForwardEnabledProperty;
+        private SerializedProperty behaviourListProperty;
 
         private SerializedProperty bufferWidthProperty;
         private SerializedProperty bufferHeightProperty;
@@ -64,6 +66,8 @@ namespace JSSoft.UI.Editor
             this.cursorThicknessProperty = this.serializedObject.FindProperty("cursorThickness");
             this.isCursorBlinkableProperty = this.serializedObject.FindProperty("isCursorBlinkable");
             this.cursorBlinkDelayProperty = this.serializedObject.FindProperty("cursorBlinkDelay");
+            this.isScrollForwardEnabledProperty = this.serializedObject.FindProperty("isScrollForwardEnabled");
+            this.behaviourListProperty = this.serializedObject.FindProperty("behaviourList");
 
             this.bufferWidthProperty = this.serializedObject.FindProperty("bufferWidth");
             this.bufferHeightProperty = this.serializedObject.FindProperty("bufferHeight");
@@ -99,6 +103,8 @@ namespace JSSoft.UI.Editor
             EditorGUILayout.PropertyField(this.cursorThicknessProperty);
             EditorGUILayout.PropertyField(this.isCursorBlinkableProperty);
             EditorGUILayout.PropertyField(this.cursorBlinkDelayProperty);
+            EditorGUILayout.PropertyField(this.isScrollForwardEnabledProperty);
+            EditorGUILayout.PropertyField(this.behaviourListProperty, true);
             GUI.enabled = true;
 
             GUILayout.Space(10);

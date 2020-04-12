@@ -27,7 +27,7 @@ using UnityEngine;
 namespace JSSoft.UI.Editor
 {
     [CustomEditor(typeof(TerminalFont))]
-    public class TerminalFontInspector : UnityEditor.Editor
+    public class TerminalFontEditor : UnityEditor.Editor
     {
         private SerializedProperty fontProperty;
         private ReorderableList fontList;

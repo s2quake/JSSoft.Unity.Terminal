@@ -224,7 +224,7 @@ namespace JSSoft.UI
             var value = value1 / value2;
             if (Application.isPlaying == false)
                 await Task.Delay(1);
-            // this.SetValueWithoutNotify(value);
+            this.value = value;
             if (this.grid.IsScrolling == true)
                 this.PointerOnParam = true;
         }

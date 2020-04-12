@@ -98,6 +98,10 @@ namespace JSSoft.UI
                 if (style.BehaviourList.Contains(this) == true)
                     return true;
             }
+            else if (grid.BehaviourList.Contains(this) == true)
+            {
+                return true;
+            }
             return false;
         }
 
