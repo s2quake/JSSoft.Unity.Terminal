@@ -29,52 +29,52 @@ namespace JSSoft.Communication.Services
     {
         public Task CreateAsync(Guid token, string userID, string password, Authority authority)
         {
-            return this.InvokeAsync(nameof(CreateAsync), token, userID, password, authority);
+            return this.InvokeAsync(nameof(CreateAsync), Info(token, userID, password, authority));
         }
 
         public Task DeleteAsync(Guid token, string userID)
         {
-            return this.InvokeAsync(nameof(DeleteAsync), token, userID);
+            return this.InvokeAsync(nameof(DeleteAsync), Info(token, userID));
         }
 
         public Task<(string userName, Authority authority)> GetInfoAsync(Guid token, string userID)
         {
-            return this.InvokeAsync<(string, Authority), Guid, string>(nameof(GetInfoAsync), token, userID);
+            return this.InvokeAsync<(string, Authority)>(nameof(GetInfoAsync), Info(token, userID));
         }
 
         public Task<string[]> GetUsersAsync(Guid token)
         {
-            return this.InvokeAsync<string[], Guid>(nameof(GetUsersAsync), token);
+            return this.InvokeAsync<string[]>(nameof(GetUsersAsync), Info(token));
         }
 
         public Task<bool> IsOnlineAsync(Guid token, string userID)
         {
-            return this.InvokeAsync<bool, Guid, string>(nameof(IsOnlineAsync), token, userID);
+            return this.InvokeAsync<bool>(nameof(IsOnlineAsync), Info(token, userID));
         }
 
         public Task<Guid> LoginAsync(string userID, string password)
         {
-            return this.InvokeAsync<Guid, string, string>(nameof(LoginAsync), userID, password);
+            return this.InvokeAsync<Guid>(nameof(LoginAsync), Info(userID, password));
         }
 
         public Task LogoutAsync(Guid token)
         {
-            return this.InvokeAsync<Guid>(nameof(LogoutAsync), token);
+            return this.InvokeAsync<Guid>(nameof(LogoutAsync), Info(token));
         }
 
         public Task RenameAsync(Guid token, string userName)
         {
-            return this.InvokeAsync<Guid, string>(nameof(RenameAsync), token, userName);
+            return this.InvokeAsync<Guid>(nameof(RenameAsync), Info(token, userName));
         }
 
         public Task SendMessageAsync(Guid token, string userID, string message)
         {
-            return this.InvokeAsync<Guid, string, string>(nameof(SendMessageAsync), token, userID, message);
+            return this.InvokeAsync<Guid>(nameof(SendMessageAsync), Info(token, userID, message));
         }
 
         public Task SetAuthorityAsync(Guid token, string userID, Authority authority)
         {
-            return this.InvokeAsync<Guid, string, Authority>(nameof(SetAuthorityAsync), token, userID, authority);
+            return this.InvokeAsync<Guid>(nameof(SetAuthorityAsync), Info(token, userID, authority));
         }
     }
 }
