@@ -41,6 +41,7 @@ namespace JSSoft.UI.InputHandlers
         private int downCount;
         private TouchScreenKeyboard keyboard;
         private float scrollPos;
+        private bool isDragging;
 
         static IOSInputHandlerContext()
         {
@@ -66,6 +67,7 @@ namespace JSSoft.UI.InputHandlers
             //         this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
             //     }
             // }
+            this.isDragging = true;
         }
 
         public override void Drag(PointerEventData eventData)
@@ -74,7 +76,7 @@ namespace JSSoft.UI.InputHandlers
             Debug.Log(eventData.delta);
             if (grid.MaximumVisibleIndex > grid.MinimumVisibleIndex)
             {
-                this.scrollPos -= eventData.delta.y * 0.1f;
+                this.scrollPos += eventData.delta.y * 0.1f;
                 this.scrollPos = Math.Max(this.scrollPos, grid.MinimumVisibleIndex);
                 this.scrollPos = Math.Min(this.scrollPos, grid.MaximumVisibleIndex);
                 grid.VisibleIndex = (int)this.scrollPos;
@@ -114,6 +116,7 @@ namespace JSSoft.UI.InputHandlers
             //     return true;
             // }
             // return false;
+            this.isDragging = false;
         }
 
         public override void PointerClick(PointerEventData eventData)
@@ -162,8 +165,15 @@ namespace JSSoft.UI.InputHandlers
         {
             if (Input.touchCount > 0)
             {
-            var touch = Input.GetTouch(0);
-            Debug.Log(touch.pressure);
+                var touch = Input.GetTouch(0);
+                if (touch.pressure > 2.0f && this.isDragging == false)
+                {
+                    var terminal = this.Terminal;
+                    var grid = this.Grid;
+                    grid.ScrollToCursor();
+                    // Debug.Log(touch.pressure);
+                    this.keyboard = TouchScreenKeyboard.Open(terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false);
+                }
             }
             if (this.keyboard != null)
             {
@@ -172,10 +182,12 @@ namespace JSSoft.UI.InputHandlers
                     this.Terminal.Command = this.keyboard.text;
                     this.Terminal.Execute();
                     this.keyboard = null;
+                    this.scrollPos = (int)this.Grid.VisibleIndex;
                 }
                 else if (this.keyboard.status == TouchScreenKeyboard.Status.Canceled)
                 {
                     this.keyboard = null;
+                    this.scrollPos = (int)this.Grid.VisibleIndex;
                 }
             }
         }

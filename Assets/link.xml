@@ -1,0 +1,8 @@
+<linker>
+    <assembly fullname="Ntreev.Library.Commands">
+        <type fullname="Ntreev.Library.Commands*" preserve="all" />
+    </assembly>
+    <assembly fullname="JSSoft.Communication">
+        <type fullname="JSSoft.Communication*" preserve="all" />
+    </assembly>
+</linker>
