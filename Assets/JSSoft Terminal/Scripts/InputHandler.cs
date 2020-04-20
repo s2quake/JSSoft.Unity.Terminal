@@ -86,75 +86,85 @@ namespace JSSoft.UI
             context.PointerUp(eventData);
         }
 
-        protected abstract T CreateContext(ITerminalGrid grid);
-
-        private T this[ITerminalGrid grid]
+        protected virtual void OnAttach(InputHandlerContext context, ITerminalGrid grid)
         {
-            get
-            {
-                if (this.contextByGrid.ContainsKey(grid) == false)
-                {
-                    this.contextByGrid.Add(grid, this.CreateContext(grid));
-                }
-                return this.contextByGrid[grid];
-            }
+            context.Attach(grid);
         }
+
+        protected virtual void OnDetach(InputHandlerContext context, ITerminalGrid grid)
+        {
+            context.Detach(grid);
+        }
+
+        protected abstract T CreateContext(ITerminalGrid grid);
 
         #region IInputHandler
 
         void IInputHandler.Select(ITerminalGrid grid, BaseEventData eventData)
         {
-            this.OnSelect(this[grid], eventData);
+            this.OnSelect(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.Deselect(ITerminalGrid grid, BaseEventData eventData)
         {
-            this.OnDeselect(this[grid], eventData);
+            this.OnDeselect(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.Update(ITerminalGrid grid, BaseEventData eventData)
         {
-            this.OnUpdate(this[grid], eventData);
+            this.OnUpdate(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.BeginDrag(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnBeginDrag(this[grid], eventData);
+            this.OnBeginDrag(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.Drag(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnDrag(this[grid], eventData);
+            this.OnDrag(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.EndDrag(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnEndDrag(this[grid], eventData);
+            this.OnEndDrag(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.PointerClick(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnPointerClick(this[grid], eventData);
+            this.OnPointerClick(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.PointerDown(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnPointerDown(this[grid], eventData);
+            this.OnPointerDown(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.PointerUp(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnPointerUp(this[grid], eventData);
+            this.OnPointerUp(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.PointerEnter(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnPointerEnter(this[grid], eventData);
+            this.OnPointerEnter(this.contextByGrid[grid], eventData);
         }
 
         void IInputHandler.PointerExit(ITerminalGrid grid, PointerEventData eventData)
         {
-            this.OnPointerExit(this[grid], eventData);
+            this.OnPointerExit(this.contextByGrid[grid], eventData);
+        }
+
+        void IInputHandler.Attach(ITerminalGrid grid)
+        {
+            this.contextByGrid.Add(grid, this.CreateContext(grid));
+            this.OnAttach(this.contextByGrid[grid], grid);
+        }
+
+        void IInputHandler.Detach(ITerminalGrid grid)
+        {
+            this.OnDetach(this.contextByGrid[grid], grid);
+            this.contextByGrid.Remove(grid);
         }
 
         #endregion

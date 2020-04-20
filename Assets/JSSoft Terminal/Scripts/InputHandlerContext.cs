@@ -29,11 +29,6 @@ namespace JSSoft.UI
 {
     public class InputHandlerContext
     {
-        public InputHandlerContext(ITerminalGrid grid)
-        {
-            this.Grid = grid;
-        }
-
         public virtual void Select(BaseEventData eventData)
         {
 
@@ -56,12 +51,12 @@ namespace JSSoft.UI
 
         public virtual void Drag(PointerEventData eventData)
         {
-            
+
         }
 
         public virtual void EndDrag(PointerEventData eventData)
         {
-            
+
         }
 
         public virtual void PointerClick(PointerEventData eventData)
@@ -71,7 +66,7 @@ namespace JSSoft.UI
 
         public virtual void PointerDown(PointerEventData eventData)
         {
-            
+
         }
 
         public virtual void PointerEnter(PointerEventData eventData)
@@ -89,8 +84,20 @@ namespace JSSoft.UI
 
         }
 
-        public ITerminalGrid Grid { get; }
+        public virtual void Attach(ITerminalGrid grid)
+        {
+            this.Grid = grid;
+            this.Terminal = grid.Terminal;
+        }
 
-        public ITerminal Terminal => this.Grid.Terminal;
+        public virtual void Detach(ITerminalGrid grid)
+        {
+            this.Grid = null;
+            this.Terminal = null;
+        }
+
+        public ITerminalGrid Grid { get; private set; }
+
+        public ITerminal Terminal { get; private set; }
     }
 }

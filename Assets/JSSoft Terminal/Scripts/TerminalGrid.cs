@@ -338,8 +338,13 @@ namespace JSSoft.UI
 
         public IInputHandler InputHandler
         {
-            get => this.inputHandler ?? InputHandlerUtility.GetDefaultHandler();
-            set => this.inputHandler = value;
+            get => this.inputHandler;
+            set
+            {
+                this.inputHandler?.Detach(this);
+                this.inputHandler = value ?? InputHandlerUtility.GetDefaultHandler();
+                this.inputHandler.Attach(this);
+            }
         }
 
         public Terminal Terminal => this.terminal;
@@ -768,6 +773,8 @@ namespace JSSoft.UI
         protected override void Awake()
         {
             base.Awake();
+            this.inputHandler = InputHandlerUtility.GetDefaultHandler();
+            this.inputHandler.Attach(this);
         }
 
         protected override void OnEnable()
@@ -800,6 +807,7 @@ namespace JSSoft.UI
         protected override void OnDestroy()
         {
             base.OnDestroy();
+            this.inputHandler?.Detach(this);
         }
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)

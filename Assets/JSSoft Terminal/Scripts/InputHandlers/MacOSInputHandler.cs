@@ -36,7 +36,7 @@ namespace JSSoft.UI.InputHandlers
 
         protected override MacOSInputHandlerContext CreateContext(ITerminalGrid grid)
         {
-            return new MacOSInputHandlerContext(grid);
+            return new MacOSInputHandlerContext();
         }
     }
 }

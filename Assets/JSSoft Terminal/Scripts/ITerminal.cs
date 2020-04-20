@@ -47,6 +47,10 @@ namespace JSSoft.UI
 
         void Execute();
 
+        void MoveToFirst();
+
+        void MoveToLast();
+
         string Command { get; set; }
 
         string Prompt { get; set; }

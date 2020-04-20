@@ -49,5 +49,9 @@ namespace JSSoft.UI
         void PointerEnter(ITerminalGrid grid, PointerEventData eventData);
 
         void PointerExit(ITerminalGrid grid, PointerEventData eventData);
+
+        void Attach(ITerminalGrid grid);
+
+        void Detach(ITerminalGrid grid);
     }
 }

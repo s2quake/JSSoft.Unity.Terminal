@@ -31,12 +31,12 @@ namespace JSSoft.UI.InputHandlers
     {
         public IOSInputHandler()
         {
-            
+
         }
 
         protected override IOSInputHandlerContext CreateContext(ITerminalGrid grid)
         {
-            return new IOSInputHandlerContext(grid);
+            return new IOSInputHandlerContext();
         }
     }
 }

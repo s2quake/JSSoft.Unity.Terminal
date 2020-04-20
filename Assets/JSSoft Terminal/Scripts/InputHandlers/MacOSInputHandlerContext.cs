@@ -40,17 +40,6 @@ namespace JSSoft.UI.InputHandlers
         private float time;
         private int downCount;
 
-        static MacOSInputHandlerContext()
-        {
-
-        }
-
-        public MacOSInputHandlerContext(ITerminalGrid grid)
-            : base(grid)
-        {
-
-        }
-
         public override void BeginDrag(PointerEventData eventData)
         {
             var grid = this.Grid;

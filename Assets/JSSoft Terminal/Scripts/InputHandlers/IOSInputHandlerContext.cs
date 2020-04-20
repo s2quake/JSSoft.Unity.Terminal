@@ -42,92 +42,114 @@ namespace JSSoft.UI.InputHandlers
         private TouchScreenKeyboard keyboard;
         private float scrollPos;
         private bool isDragging;
+        private bool isScrolling;
+        private bool isDown;
+        private bool isSelecting;
+        private float pressure;
 
-        static IOSInputHandlerContext()
+        public IOSInputHandlerContext()
         {
-
-        }
-
-        public IOSInputHandlerContext(ITerminalGrid grid)
-            : base(grid)
-        {
-
+#if UNITY_IOS && UNITY_EDITOR
+            // Input.simulateMouseWithTouches = true;
+            Debug.Log(Input.simulateMouseWithTouches);
+#endif
         }
 
         public override void BeginDrag(PointerEventData eventData)
         {
-            // var grid = this.Grid;
-            // var downPoint = this.downPoint;
-            // if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
-            // {
-            //     var position = this.WorldToGrid(eventData.position);
-            //     var point = this.Intersect(position);
-            //     if (point != TerminalPoint.Invalid)
-            //     {
-            //         this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
-            //     }
-            // }
+            Debug.Log(nameof(BeginDrag));
+            var grid = this.Grid;
+            var downPoint = this.downPoint;
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                if (this.pressure < 0.5f)
+                {
+                    this.isScrolling = true;
+                    this.scrollPos = (int)grid.VisibleIndex;
+                }
+                else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
+                {
+                    var position = this.WorldToGrid(eventData.position);
+                    var point = this.Intersect(position);
+                    if (point != TerminalPoint.Invalid)
+                    {
+                        this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    }
+                }
+            }
             this.isDragging = true;
         }
 
         public override void Drag(PointerEventData eventData)
         {
-            var grid = this.Grid;
-            Debug.Log(eventData.delta);
-            if (grid.MaximumVisibleIndex > grid.MinimumVisibleIndex)
+            if (eventData.button == PointerEventData.InputButton.Left)
             {
-                this.scrollPos += eventData.delta.y * 0.1f;
-                this.scrollPos = Math.Max(this.scrollPos, grid.MinimumVisibleIndex);
-                this.scrollPos = Math.Min(this.scrollPos, grid.MaximumVisibleIndex);
-                grid.VisibleIndex = (int)this.scrollPos;
-                // this.IsScrolling = true;
-                // this.UpdateVisibleIndex();
-                // this.InvokePropertyChangedEvent(nameof(VisibleIndex));
-                // this.IsScrolling = false;
+                var grid = this.Grid;
+                var downPoint = this.downPoint;
+                var downRange = this.downRange;
+                var dragRange = this.dragRange;
+                if (this.isScrolling == true)
+                {
+                    // Debug.Log(nameof(Drag));
+                    if (grid.MaximumVisibleIndex > grid.MinimumVisibleIndex)
+                    {
+                        this.scrollPos += eventData.delta.y * 0.1f;
+                        this.scrollPos = Math.Max(this.scrollPos, grid.MinimumVisibleIndex);
+                        this.scrollPos = Math.Min(this.scrollPos, grid.MaximumVisibleIndex);
+                        // Debug.Log(this.scrollPos);
+                        grid.VisibleIndex = (int)this.scrollPos;
+                    }
+                }
+                else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
+                {
+                    var position = this.WorldToGrid(eventData.position);
+                    var point = this.Intersect(position);
+                    if (point != TerminalPoint.Invalid)
+                    {
+
+                        this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                        this.UpdateSelecting();
+                    }
+                }
             }
-            // return true;
-            // var grid = this.Grid;
-            // var downPoint = this.downPoint;
-            // var downRange = this.downRange;
-            // var dragRange = this.dragRange;
-            // if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
-            // {
-            //     var position = this.WorldToGrid(eventData.position);
-            //     var point = this.Intersect(position);
-            //     if (point != TerminalPoint.Invalid)
-            //     {
-            //         this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
-            //         this.UpdateSelecting();
-            //     }
-            //     return true;
-            // }
-            // return false;
         }
 
         public override void EndDrag(PointerEventData eventData)
         {
-            // var downPoint = this.downPoint;
-            // if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
-            // {
-            //     this.Selections.Clear();
-            //     this.Selections.Add(this.SelectingRange);
-            //     this.SelectingRange = TerminalRange.Empty;
-            //     this.downPoint = TerminalPoint.Invalid;
-            //     return true;
-            // }
-            // return false;
-            this.isDragging = false;
+            if (eventData.button == PointerEventData.InputButton.Left)
+            {
+                if (this.isScrolling == true)
+                {
+                    this.isScrolling = false;
+                }
+                else if (this.isSelecting == true && this.downPoint != TerminalPoint.Invalid)
+                {
+                    this.Selections.Clear();
+                    this.Selections.Add(this.SelectingRange);
+                    this.SelectingRange = TerminalRange.Empty;
+                    this.downPoint = TerminalPoint.Invalid;
+                }
+            }
         }
 
         public override void PointerClick(PointerEventData eventData)
         {
-
+            Debug.Log(nameof(PointerClick));
+            if (eventData.clickCount == 1 && eventData.dragging == false && this.downPoint != TerminalPoint.Invalid)
+            {
+                // Debug.Log($"dragging: {eventData.dragging}");
+                // var terminal = this.Terminal;
+                // var grid = this.Grid;
+                // grid.ScrollToCursor();
+                // this.keyboard = TouchScreenKeyboard.Open(terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false);
+            }
         }
 
         public override void PointerDown(PointerEventData eventData)
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                // this.isScrolling = true;
                 this.OnLeftPointerDown(eventData);
             }
         }
@@ -146,7 +168,11 @@ namespace JSSoft.UI.InputHandlers
         {
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                this.pressure = 0.0f;
+                this.isDown = false;
+                this.isScrolling = false;
                 this.OnLeftPointerUp(eventData);
+                this.isSelecting = false;
             }
         }
 
@@ -163,16 +189,32 @@ namespace JSSoft.UI.InputHandlers
 
         public override void Update(BaseEventData eventData)
         {
+            // Input.GetTouch(0).
+            var grid = this.Grid;
+            if (this.isDown == true && this.isScrolling == false && this.isSelecting == false)
+            {
+                this.pressure += Time.deltaTime;
+                // Debug.Log(this.pressure);
+            }
+
+            // if (this.isDown == true && this.pressure > 0.5f)
+            // {
+            //     this.SelectWord(this.downPoint);
+            //     this.isDown = false;
+            //     this.isSelecting = true;
+            //     this.isScrolling = false;
+            // }
+            Debug.Log(Input.touchCount);
             if (Input.touchCount > 0)
             {
+                Debug.Log("a");
                 var touch = Input.GetTouch(0);
-                if (touch.pressure > 2.0f && this.isDragging == false)
+                if (touch.pressure > 0.5f)
                 {
-                    var terminal = this.Terminal;
-                    var grid = this.Grid;
-                    grid.ScrollToCursor();
-                    // Debug.Log(touch.pressure);
-                    this.keyboard = TouchScreenKeyboard.Open(terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false);
+                    this.SelectWord(this.downPoint);
+                    this.isDown = false;
+                    this.isSelecting = true;
+                    this.isScrolling = false;
                 }
             }
             if (this.keyboard != null)
@@ -192,16 +234,21 @@ namespace JSSoft.UI.InputHandlers
             }
         }
 
-        public static Texture2D CursorTexture
+        public override void Attach(ITerminalGrid grid)
         {
-            get
-            {
-                if (cursorTexture == null)
-                {
-                    cursorTexture = Resources.Load("ibeam-macos") as Texture2D;
-                }
-                return cursorTexture;
-            }
+            base.Attach(grid);
+            grid.Terminal.Executed += Terminal_Executed;
+        }
+
+        public override void Detach(ITerminalGrid grid)
+        {
+            base.Detach(grid);
+            grid.Terminal.Executed -= Terminal_Executed;
+        }
+
+        private void Terminal_Executed(object sender, TerminalExecuteEventArgs e)
+        {
+            this.scrollPos = (int)this.Grid.VisibleIndex;
         }
 
         private void SelectWord(TerminalPoint point)
@@ -315,65 +362,99 @@ namespace JSSoft.UI.InputHandlers
             }
         }
 
-        private bool OnLeftPointerDown(PointerEventData eventData)
+        private void OnLeftPointerDown(PointerEventData eventData)
         {
-            // var grid = this.Grid;
-            // var terminal = this.Terminal;
-            // var newPosition = this.WorldToGrid(eventData.position);
-            // var newPoint = this.Intersect(newPosition);
-            // var newTime = Time.time;
-            // var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
+            var grid = this.Grid;
+            var terminal = this.Terminal;
+            var newPosition = this.WorldToGrid(eventData.position);
+            var newPoint = this.Intersect(newPosition);
+            var newTime = Time.time;
+            var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
             eventData.useDragThreshold = false;
             this.Focus();
-            // this.downPosition = newPosition;
-            // this.downPoint = newPoint;
-            // this.downCount = downCount;
-            // this.dragRange = new TerminalRange(newPoint, newPoint);
-            // this.time = newTime;
+            this.downPosition = newPosition;
+            this.downPoint = newPoint;
+            this.downCount = downCount;
+            this.dragRange = new TerminalRange(newPoint, newPoint);
+            this.time = newTime;
+            this.isDown = true;
+            this.pressure = 0.0f;
 
-            // if (newPoint != TerminalPoint.Invalid)
-            // {
-            //     var row = grid.Rows[newPoint.Y];
-            //     if (downCount == 1)
-            //     {
-            //         // this.keyboard = TouchScreenKeyboard.Open(terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false);
-            //         this.SelectingRange = TerminalRange.Empty;
-            //         this.Selections.Clear();
-            //         this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
-            //     }
-            //     else if (downCount == 2)
-            //     {
-            //         this.SelectWord(newPoint);
-            //     }
-            //     else if (downCount == 3)
-            //     {
-            //         this.SelectLine(newPoint);
-            //     }
-            // }
-            return true;
+            if (newPoint != TerminalPoint.Invalid)
+            {
+                // var row = grid.Rows[newPoint.Y];
+                if (downCount == 1)
+                {
+                    this.SelectingRange = TerminalRange.Empty;
+                    this.Selections.Clear();
+                    this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
+                }
+                else if (downCount == 2)
+                {
+                    this.SelectWord(newPoint);
+                }
+                else if (downCount == 3)
+                {
+                    this.SelectLine(newPoint);
+                }
+            }
         }
 
-        private bool OnLeftPointerUp(PointerEventData eventData)
+        private void OnLeftPointerUp(PointerEventData eventData)
         {
-            // var position = this.WorldToGrid(eventData.position);
-            // var newPoint = this.Intersect(position);
-            // var oldPoint = this.downPoint;
-            // if (oldPoint == newPoint)
-            // {
-            //     this.Selections.Clear();
-            //     this.Selections.Add(this.SelectingRange);
-            //     this.SelectingRange = TerminalRange.Empty;
-            //     if (this.downCount == 1)
-            //     {
-
-            //     }
-            //     else if (this.downCount == 2)
-            //     {
-            //         this.SelectGroup(newPoint);
-            //     }
-            //     return true;
-            // }
-            return false;
+            var position = this.WorldToGrid(eventData.position);
+            var newPoint1 = this.Intersect(position);
+            var newPoint2 = new TerminalPoint(newPoint1.X + 1, newPoint1.Y);
+            var oldPoint = this.downPoint;
+            if (oldPoint == newPoint1)
+            {
+                this.Selections.Clear();
+                this.Selections.Add(this.SelectingRange);
+                this.SelectingRange = TerminalRange.Empty;
+                if (this.downCount == 1)
+                {
+                    var row = this.Grid.Rows[newPoint1.Y];
+                    var cell = row.Cells[newPoint1.X];
+                    // Debug.Log(cell.TextIndex);
+                    if (cell.TextIndex < 0)
+                    {
+                        var cursorPosition = this.Terminal.CursorPosition;
+                        if (cursorPosition != this.Terminal.Command.Length)
+                        {
+                            this.Terminal.MoveToLast();
+                            this.Grid.ScrollToCursor();
+                        }
+                        else
+                        {
+                            this.Grid.ScrollToCursor();
+                            this.keyboard = TouchScreenKeyboard.Open(this.Terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false);
+                        }
+                    }
+                    else
+                    {
+                        var min = this.Terminal.OutputText.Length;
+                        var max = min + this.Terminal.Command.Length;
+                        var index = cell.TextIndex - min;
+                        if (cell.TextIndex < this.Terminal.OutputText.Length)
+                        {
+                            this.SelectingRange = TerminalRange.Empty;
+                            this.Selections.Clear();
+                            this.downRange = new TerminalRange(newPoint1, newPoint1);
+                            this.SelectingRange = new TerminalRange(newPoint1, newPoint2);
+                        }
+                        else
+                        {
+                            // var cursorPosition = 
+                            this.Terminal.CursorPosition = index - this.Terminal.Prompt.Length;
+                        }
+                        // this.Grid.ScrollToCursor();
+                    }
+                }
+                else if (this.downCount == 2)
+                {
+                    this.SelectGroup(newPoint1);
+                }
+            }
         }
 
         private void UpdateSelecting()

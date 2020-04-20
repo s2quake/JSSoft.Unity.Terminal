@@ -79,6 +79,11 @@ namespace JSSoft.Communication.Shells
                 this.terminal.AppendLine($"example: open --host [address]");
                 this.terminal.CursorPosition = 0;
             }
+            if (this.grid != null)
+            {
+                var rectangle = this.grid.Rectangle;
+                Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
+            }
         }
 
         private async Task TestAsync()

@@ -36,7 +36,7 @@ namespace JSSoft.UI.InputHandlers
 
         protected override WindowsInputHandlerContext CreateContext(ITerminalGrid grid)
         {
-            return new WindowsInputHandlerContext(grid);
+            return new WindowsInputHandlerContext();
         }
     }
 }
