@@ -22,6 +22,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -107,10 +109,123 @@ namespace JSSoft.UI.InputHandlers
             return point;
         }
 
+        public static void Select(ITerminalGrid grid, TerminalRange range)
+        {
+            if (range != TerminalRange.Empty)
+            {
+                Debug.Log(1);
+                grid.Selections.Clear();
+                grid.Selections.Add(range);
+            }
+        }
+
+        public static TerminalRange SelectGroup(ITerminalGrid grid, TerminalPoint point)
+        {
+            var row = grid.Rows[point.Y];
+            var cell = row.Cells[point.X];
+            var index = cell.TextIndex;
+            var character = cell.Character;
+            var patterns = new string[] { @"\[[^\]]*\]", @"\{[^\}]*\}", @"\([^\)]*\)", @"\<[^\>]*\>" };
+            var pattern = string.Join("|", patterns);
+            var matches = Regex.Matches(grid.Text, pattern).Cast<Match>();
+            var match = matches.FirstOrDefault(item => item.Index == index);
+            if (match != null)
+            {
+                var p1 = grid.CharacterInfos[match.Index].Point;
+                var p2 = grid.CharacterInfos[match.Index + match.Length].Point;
+                return new TerminalRange(p1, p2);
+            }
+            return TerminalRange.Empty;
+        }
+
+        public static TerminalRange SelectLine(ITerminalGrid grid, TerminalPoint point)
+        {
+            var row = grid.Rows[point.Y];
+            if (row.Text != string.Empty)
+            {
+                var cell = row.Cells.First();
+                var index = cell.TextIndex;
+                var text = grid.Text + char.MinValue;
+                var matches = Regex.Matches(grid.Text, @"^|$", RegexOptions.Multiline).Cast<Match>();
+                var match1 = matches.Where(item => item.Index <= index).Last();
+                var match2 = matches.Where(item => item.Index > index).First();
+                var p1 = grid.CharacterInfos[match1.Index].Point;
+                var p2 = grid.CharacterInfos[match2.Index].Point;
+                var p3 = new TerminalPoint(0, p1.Y);
+                var p4 = new TerminalPoint(grid.BufferWidth, p2.Y);
+                return new TerminalRange(p3, p4);
+            }
+            else
+            {
+                var p1 = new TerminalPoint(0, point.Y);
+                var p2 = new TerminalPoint(grid.BufferWidth, point.Y);
+                return new TerminalRange(p1, p2);
+            }
+        }
+
+        public static TerminalRange SelectWord(ITerminalGrid grid, TerminalPoint point)
+        {
+            var row = grid.Rows[point.Y];
+            var cell = row.Cells[point.X];
+            if (row.Text == string.Empty)
+                return SelectWordOfEmptyRow(grid, row);
+            else if (cell.Character == char.MinValue)
+                return SelectWordOfEmptyCell(grid, cell);
+            else
+                return SelectWordOfCell(grid, cell);
+        }
+
+        public static Vector2 WorldToGrid(ITerminalGrid grid, Vector2 position) => grid.WorldToGrid(position);
+
+        public static TerminalPoint Intersect(ITerminalGrid grid, Vector2 position) => grid.Intersect(position);
+
         public static bool IsEnabled(ITerminalCell cell)
         {
             var character = cell.Character;
             return character != char.MinValue && character != '\n';
+        }
+
+        private static TerminalRange SelectWordOfEmptyRow(ITerminalGrid grid, ITerminalRow row)
+        {
+            var p1 = new TerminalPoint(0, row.Index);
+            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
+            return new TerminalRange(p1, p2);
+        }
+
+        private static TerminalRange SelectWordOfEmptyCell(ITerminalGrid grid, ITerminalCell cell)
+        {
+            var row = cell.Row;
+            var cells = row.Cells;
+            var p1 = InputHandlerUtility.LastPoint(row, true);
+            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
+            return new TerminalRange(p1, p2);
+        }
+
+        private static TerminalRange SelectWordOfCell(ITerminalGrid grid, ITerminalCell cell)
+        {
+            var text = grid.Text;
+            var index = cell.TextIndex;
+            var character = cell.Character;
+            var pattern = GetPattern();
+            var matches = Regex.Matches(text, pattern).Cast<Match>();
+            var match = matches.First(item => index >= item.Index && index < item.Index + item.Length);
+            var i1 = match.Index;
+            var i2 = i1 + match.Length;
+            var c1 = grid.CharacterInfos[i1];
+            var c2 = grid.CharacterInfos[i2];
+            var p1 = c1.Point;
+            var p2 = c2.Point;
+            return new TerminalRange(p1, p2);
+
+            string GetPattern()
+            {
+                if (char.IsLetterOrDigit(character) == true)
+                    return @"(?:\w+\.(?=\w))*\w+";
+                else if (char.IsWhiteSpace(character) == true)
+                    return @"\s+";
+                else
+                    return @"[^\w\s]";
+            }
         }
     }
 }
