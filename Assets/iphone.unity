@@ -177,6 +177,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 39609581}
   m_CullTransparentMesh: 0
+--- !u!21 &72718896
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &140913278
 GameObject:
   m_ObjectHideFlags: 0
@@ -534,7 +556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1698378721}
+  m_Material: {fileID: 72718896}
   m_Color: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1579,28 +1601,6 @@ Material:
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &1698378721
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1708847317
 GameObject:
   m_ObjectHideFlags: 0
@@ -2218,10 +2218,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   styles:
-  - {fileID: 11400000, guid: 0440d0970d55d4777a51e0e9fc28933c, type: 2}
-  - {fileID: 11400000, guid: ed78a7fbb84af3c4aad9c9ca481967e3, type: 2}
-  - {fileID: 11400000, guid: 3bcefcfc8cc9f6d489cd5ee21c193236, type: 2}
-  - {fileID: 11400000, guid: fb012bdbe99964bedadb880e80af7c51, type: 2}
+  - {fileID: 11400000, guid: abbdc25a9b27f472ba1a08b46cc0bfdb, type: 2}
+  - {fileID: 11400000, guid: 5598f4885dd884a4e814075ed92a1bd7, type: 2}
+  - {fileID: 11400000, guid: e91af394f3c124a609b47122fe7148cc, type: 2}
+  - {fileID: 11400000, guid: e8c7f4e6f7de047ae96deb6664d01614, type: 2}
+  - {fileID: 11400000, guid: e45a50eab49fb44e5a36e80eee554064, type: 2}
+  - {fileID: 11400000, guid: a0b036f5285594f27880f6ee02f63917, type: 2}
+  - {fileID: 11400000, guid: ceeee6f37d28b4f24b9e8663c4494d99, type: 2}
+  - {fileID: 11400000, guid: 488c9600957714a95bad2595c0b09fd9, type: 2}
+  - {fileID: 11400000, guid: 69e01d8a83c4c493fb0691dfd350b067, type: 2}
+  - {fileID: 11400000, guid: 32b7c87d280194fa4aad7d43ade29018, type: 2}
+  - {fileID: 11400000, guid: a6f5a9bb957e64fa8a1bca88616ee319, type: 2}
+  - {fileID: 11400000, guid: 8beff94de233a4c07942ec5416f0499c, type: 2}
 --- !u!4 &2089326356
 Transform:
   m_ObjectHideFlags: 0
