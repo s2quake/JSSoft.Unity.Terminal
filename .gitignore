@@ -60,4 +60,4 @@ crashlytics-build.properties
 
 *.DS_Store
 
-ios/
+/ios
