@@ -53,12 +53,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalFontEditor.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalGridEditor.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalMenuItems.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalScrollbarEditor.cs" />
-     <Compile Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalStyleBehaviourEndNameEditAction.cs" />
-     <None Include="Assets\JSSoft Terminal\Scripts\Editor\TerminalStyleBehaviour.txt" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalFontEditor.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalGridEditor.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalMenuItems.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalScrollbarEditor.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalStyleBehaviourEndNameEditAction.cs" />
+     <None Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalStyleBehaviour.txt" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
