@@ -197,5 +197,19 @@ namespace JSSoft.UI
                 return TerminalGrid.DefaultForegroundColor;
             return grid.ForegroundColor;
         }
+
+        public static Vector2 GetPosition(this ITerminalGrid grid)
+        {
+            var gameObject = grid.GameObject;
+            var rectTransform = gameObject.GetComponent<RectTransform>();
+            return rectTransform.anchoredPosition;
+        }
+
+        public static void SetPosition(this ITerminalGrid grid, Vector2 position)
+        {
+            var gameObject = grid.GameObject;
+            var rectTransform = gameObject.GetComponent<RectTransform>();
+            rectTransform.anchoredPosition = new Vector2(position.x, position.y);
+        }
     }
 }

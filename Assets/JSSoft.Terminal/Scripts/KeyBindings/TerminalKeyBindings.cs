@@ -43,8 +43,8 @@ namespace JSSoft.UI.KeyBindings
         {
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, (t) => t.PrevHistory()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, (t) => t.NextHistory()),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.CursorPosition--),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.CursorPosition++),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.MoveLeft()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.MoveRight()),
             new KeyBinding(EventModifiers.Shift, KeyCode.LeftArrow, (t) => true),
             new KeyBinding(EventModifiers.Shift, KeyCode.RightArrow, (t) => true),
             new KeyBinding(EventModifiers.Shift, KeyCode.UpArrow, (t) => true),

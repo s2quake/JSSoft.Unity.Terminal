@@ -114,6 +114,18 @@ namespace JSSoft.UI
             this.CursorPosition = this.command.Length;
         }
 
+        public void MoveLeft()
+        {
+            if (this.CursorPosition > 0)
+                this.CursorPosition--;
+        }
+
+        public void MoveRight()
+        {
+            if (this.CursorPosition < this.Command.Length)
+                this.CursorPosition++;
+        }
+
         public void ResetOutput()
         {
             this.outputText = string.Empty;
@@ -328,12 +340,14 @@ namespace JSSoft.UI
             get => this.cursorPosition;
             set
             {
-                this.cursorPosition = value;
-                if (this.cursorPosition < 0)
-                    this.cursorPosition = 0;
-                if (this.cursorPosition > this.promptText.Length - this.prompt.Length)
-                    this.cursorPosition = this.promptText.Length - this.prompt.Length;
-                this.OnCursorPositionChanged(EventArgs.Empty);
+                if (value < 0 || value > this.command.Length)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                if (this.cursorPosition != value)
+                {
+                    this.cursorPosition = value;
+                    this.inputText = this.command.Substring(0, this.cursorPosition);
+                    this.OnCursorPositionChanged(EventArgs.Empty);
+                }
             }
         }
 
@@ -348,14 +362,17 @@ namespace JSSoft.UI
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
-                this.prompt = value;
-                this.promptForegroundColors = new TerminalColor?[value.Length];
-                this.promptBackgroundColors = new TerminalColor?[value.Length];
-                this.promptText = this.prompt + this.command;
-                this.text = this.outputText + this.promptText;
-                this.cursorPosition = this.command.Length;
-                this.InvokePromptTextChangedEvent();
-                this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                if (this.prompt != value)
+                {
+                    this.prompt = value;
+                    this.promptForegroundColors = new TerminalColor?[value.Length];
+                    this.promptBackgroundColors = new TerminalColor?[value.Length];
+                    this.promptText = this.prompt + this.command;
+                    this.text = this.outputText + this.promptText;
+                    this.cursorPosition = this.command.Length;
+                    this.InvokePromptTextChangedEvent();
+                    this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                }
             }
         }
 
@@ -368,12 +385,16 @@ namespace JSSoft.UI
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
-                this.command = value;
-                this.promptText = this.prompt + this.command;
-                this.text = this.outputText + this.promptText;
-                this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
-                this.InvokePromptTextChangedEvent();
-                this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                if (this.command != value)
+                {
+                    this.command = value;
+                    this.promptText = this.prompt + this.command;
+                    this.text = this.outputText + this.promptText;
+                    this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
+                    this.inputText = value;
+                    this.InvokePromptTextChangedEvent();
+                    this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                }
             }
         }
 
@@ -521,10 +542,10 @@ namespace JSSoft.UI
             }
 
             var completions = this.GetCompletion(argList.ToArray(), find);
+            var inputText = this.inputText;
             if (completions != null && completions.Any())
             {
                 this.completion = func(completions, this.completion);
-                var inputText = this.inputText;
                 if (prefix == true || postfix == true || this.completion.IndexOf(" ") >= 0)
                 {
                     this.command = leftText + "\"" + this.completion + "\"";
@@ -608,10 +629,6 @@ namespace JSSoft.UI
 
         internal TerminalColor? GetBackgroundColor(int index)
         {
-            // if (index % 2 != 0)
-            //     return TerminalColor.Blue;
-            // else
-            //     return TerminalColor.Red;
             if (index < this.backgroundColors.Length)
             {
                 return this.backgroundColors[index];

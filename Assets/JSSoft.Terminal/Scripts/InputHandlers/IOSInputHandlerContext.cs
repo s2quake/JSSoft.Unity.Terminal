@@ -33,6 +33,7 @@ namespace JSSoft.UI.InputHandlers
     {
         private static Texture2D cursorTexture;
         private readonly float clickThreshold = 0.5f;
+        private readonly Swiper swiper = new Swiper();
         private Vector2 downPosition;
         private TerminalPoint downPoint;
         private TerminalRange dragRange;
@@ -48,6 +49,7 @@ namespace JSSoft.UI.InputHandlers
         private float downTime;
         private float scrollDelta;
         private float scrollSpeed = 1.0f;
+        private Vector2 gridPosition;
 
         public IOSInputHandlerContext()
         {
@@ -171,6 +173,17 @@ namespace JSSoft.UI.InputHandlers
         {
         }
 
+        // public float maxTime = 1.0f;
+        // public float minSwipeDist = 2.0f;
+
+        // float startTime;
+        // float endTime;
+
+        // Vector3 startPos;
+        // Vector3 endPos;
+        // float swipeDistance;
+        // float swipeTime;
+
         public override void Update(BaseEventData eventData)
         {
             var grid = this.Grid;
@@ -204,20 +217,93 @@ namespace JSSoft.UI.InputHandlers
                     }
                 }
             }
+
+            // if (Input.touchCount > 0)
+            // {
+            //     // Debug.Log(Input.touchCount);
+            //     Touch touch = Input.GetTouch(0);
+            //     if (touch.phase == TouchPhase.Began)
+            //     {
+            //         startTime = Time.time;
+            //         startPos = touch.position;
+            //     }
+            //     else if (touch.phase == TouchPhase.Ended)
+            //     {
+            //         endTime = Time.time;
+            //         endPos = touch.position;
+
+            //         swipeDistance = (endPos - startPos).magnitude;
+            //         swipeTime = endTime - startTime;
+
+            //         if (swipeTime < maxTime && swipeDistance > minSwipeDist)
+            //         {
+            //             SwipeFunc();
+            //         }
+            //     }
+            // }
+
+            this.swiper.Update();
+
             if (this.keyboard != null)
             {
+                // Debug.Log(i);
                 if (this.keyboard.status == TouchScreenKeyboard.Status.Done)
                 {
                     this.Terminal.Command = this.keyboard.text;
                     this.Terminal.Execute();
                     this.keyboard = null;
                     this.scrollPos = (int)this.Grid.VisibleIndex;
+                    this.Grid.SetPosition(this.gridPosition);
+                    // var gameObject = this.Grid.GameObject;
+                    // var rectTransform = gameObject.GetComponent<RectTransform>();
+                    // rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 0);
                 }
                 else if (this.keyboard.status == TouchScreenKeyboard.Status.Canceled)
                 {
-                    this.Terminal.Command = this.keyboard.text;
+                    Debug.Log(TouchScreenKeyboard.area);
+                    // this.Terminal.Command = this.keyboard.text;
                     this.keyboard = null;
                     this.scrollPos = (int)this.Grid.VisibleIndex;
+                    var gameObject = this.Grid.GameObject;
+                    var rectTransform = gameObject.GetComponent<RectTransform>();
+                    rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 0);
+                }
+                else if (this.keyboard.status == TouchScreenKeyboard.Status.Visible)
+                {
+                    // Debug.Log(TouchScreenKeyboard.area);
+                    this.Terminal.Command = this.keyboard.text;
+                    if (this.keyboard.selection.length == 0)
+                    {
+                        this.Terminal.CursorPosition = this.keyboard.selection.start;
+                    }
+                    else
+                    {
+                        this.Terminal.CursorPosition = this.keyboard.selection.start;
+                        var index1 = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
+                        var index2 = index1 + this.keyboard.selection.length;
+                        var point1 = this.Grid.IndexToPoint(index1);
+                        var point2 = this.Grid.IndexToPoint(index2);
+                        this.Grid.Selections.Clear();
+                        this.Grid.Selections.Add(new TerminalRange(point1, point2));
+                        // this.Grid.sele
+                    }
+                    var point = this.Grid.CursorPoint;
+                    var height = this.Grid.Font.Height;
+                    var index = point.Y - this.Grid.VisibleIndex;
+                    var i = index * height;
+                    var y = Math.Floor(TouchScreenKeyboard.area.y / this.Grid.Font.Height) * this.Grid.Font.Height;
+                    Debug.Log($"{i}, {y}");
+                    if (i >= y)
+                    {
+                        var gameObject = this.Grid.GameObject;
+                        var rectTransform = gameObject.GetComponent<RectTransform>();
+                        rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, i - (float)y + this.Grid.Font.Height);
+                    }
+                    // Debug.Log($"{this.keyboard.selection.start}: {this.keyboard.selection.length}");
+                }
+                // else
+                {
+
                 }
             }
         }
@@ -225,13 +311,17 @@ namespace JSSoft.UI.InputHandlers
         public override void Attach(ITerminalGrid grid)
         {
             base.Attach(grid);
-            grid.Terminal.Executed += Terminal_Executed;
+            this.Terminal.Executed += Terminal_Executed;
+            this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            this.swiper.Swiped += Swiper_Swiped;
         }
 
         public override void Detach(ITerminalGrid grid)
         {
+            this.Terminal.Executed -= Terminal_Executed;
+            this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
+            this.swiper.Swiped -= Swiper_Swiped;
             base.Detach(grid);
-            grid.Terminal.Executed -= Terminal_Executed;
         }
 
         private void OnLeftPointerDown(PointerEventData eventData)
@@ -306,8 +396,10 @@ namespace JSSoft.UI.InputHandlers
                         }
                         else
                         {
+                            var gridPosition = TerminalGridUtility.GetPosition(this.Grid);
                             this.Grid.ScrollToCursor();
-                            this.keyboard = TouchScreenKeyboard.Open(this.Terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false);
+                            this.keyboard = TouchScreenKeyboard.Open(this.Terminal.Command, TouchScreenKeyboardType.Default, false, false, false, false, "abc");
+                            this.gridPosition = gridPosition;
                         }
                     }
                     else
@@ -351,6 +443,40 @@ namespace JSSoft.UI.InputHandlers
             this.scrollPos = (int)this.Grid.VisibleIndex;
         }
 
+        private void Terminal_PromptTextChanged(object sender, EventArgs e)
+        {
+            if (this.keyboard != null && this.keyboard.text != this.Terminal.Command)
+            {
+                this.keyboard.text = this.Terminal.Command;
+            }
+        }
+
+        private void Swiper_Swiped(object sender, SwipedEventArgs e)
+        {
+            if (this.keyboard != null)
+            {
+                if (e.Direction == SwipeDirection.Right)
+                {
+                    Debug.Log("Horizontal swipe right");
+                    this.Terminal.NextCompletion();
+                    // var gameObject = this.Grid.GameObject;
+                    // var rectTransform = gameObject.GetComponent<RectTransform>();
+                    // Debug.Log(rectTransform.position.y);
+                    // rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 100);
+                    // this.keyboard.text = this.Terminal.Command;
+                }
+                else if (e.Direction == SwipeDirection.Left)
+                {
+                    Debug.Log("Horizontal swipe left");
+                    this.Terminal.PrevCompletion();
+                    // var gameObject = this.Grid.GameObject;
+                    // var rectTransform = gameObject.GetComponent<RectTransform>();
+                    // rectTransform.anchoredPosition = Vector2.zero;
+                    // this.keyboard.text = this.Terminal.Command;
+                }
+            }
+        }
+
         static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
         {
             var diffTime = newTime - oldTime;
@@ -358,6 +484,45 @@ namespace JSSoft.UI.InputHandlers
                 return 1;
             return (count % 3) + 1;
         }
+
+        // void SwipeFunc()
+        // {
+        //     // var gameObject = this.Grid.GameObject;
+        //     //         var rectTransform = gameObject.GetComponent<RectTransform>();
+        //     //         rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 0);
+        //     Vector2 distance = endPos - startPos;
+        //     if (Mathf.Abs(distance.x) > Mathf.Abs(distance.y))
+        //     {
+        //         if (this.keyboard != null)
+        //         {
+        //             if (startPos.x < endPos.x)
+        //             {
+        //                 Debug.Log("Horizontal swipe right");
+        //                 this.Terminal.NextCompletion();
+        //                 // var gameObject = this.Grid.GameObject;
+        //                 // var rectTransform = gameObject.GetComponent<RectTransform>();
+        //                 // Debug.Log(rectTransform.position.y);
+        //                 // rectTransform.anchoredPosition = new Vector2(rectTransform.anchoredPosition.x, 100);
+        //             }
+        //             else
+        //             {
+        //                 Debug.Log("Horizontal swipe left");
+        //                 this.Terminal.PrevCompletion();
+        //                 // var gameObject = this.Grid.GameObject;
+        //                 // var rectTransform = gameObject.GetComponent<RectTransform>();
+        //                 // rectTransform.anchoredPosition = Vector2.zero;
+        //             }
+        //             this.keyboard.text = this.Terminal.Command;
+        //         }
+        //     }
+        //     else if (Mathf.Abs(distance.x) < Mathf.Abs(distance.y))
+        //     {
+        //         if (startPos.y < endPos.y)
+        //             Debug.Log(" vertical  swipe up");
+        //         else
+        //             Debug.Log(" vertical  swipe down");
+        //     }
+        // }
 
         private TerminalRange SelectingRange
         {

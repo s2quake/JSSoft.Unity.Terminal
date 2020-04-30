@@ -51,6 +51,10 @@ namespace JSSoft.UI
 
         void MoveToLast();
 
+        void MoveLeft();
+
+        void MoveRight();
+
         string Command { get; set; }
 
         string Prompt { get; set; }

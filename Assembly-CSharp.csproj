@@ -84,6 +84,9 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSInputHandlerContext.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandler.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandlerContext.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\SwipedEventArgs.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\SwipeDirection.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\Swiper.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\WindowsInputHandler.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\WindowsInputHandlerContext.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlerUtility.cs" />

@@ -35,6 +35,8 @@ namespace JSSoft.UI
 
         ITerminalCell IntersectWithCell(Vector2 position);
 
+        TerminalPoint IndexToPoint(int index);
+
         void Focus();
 
         void ScrollToTop();
