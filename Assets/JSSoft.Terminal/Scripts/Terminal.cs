@@ -392,8 +392,10 @@ namespace JSSoft.UI
                     this.text = this.outputText + this.promptText;
                     this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
                     this.inputText = value;
+                    this.completion = string.Empty;
                     this.InvokePromptTextChangedEvent();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                    Debug.Log($"{nameof(this.inputText)}: '{this.inputText}'");
                 }
             }
         }
@@ -506,6 +508,7 @@ namespace JSSoft.UI
 
         private void CompletionImpl(Func<string[], string, string> func)
         {
+            Debug.Log($"CompletionImpl: '{this.inputText}'");
             var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));
             var find = string.Empty;
             var prefix = false;

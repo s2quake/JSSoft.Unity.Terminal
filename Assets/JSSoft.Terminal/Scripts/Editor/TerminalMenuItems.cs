@@ -105,7 +105,12 @@ namespace JSSoft.UI.Editor
         public static void Test()
         {
             var obj = Selection.activeObject;
-            Debug.Log(obj.GetType());
+            if (obj is GameObject gameObject)
+            {
+                var text = gameObject.GetComponent<Text>();
+                var path = AssetDatabase.GetAssetPath(text.font);
+                Debug.Log(path);
+            }
         }
 
         // [MenuItem("Terminal/Create Font Group")]

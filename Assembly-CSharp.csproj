@@ -79,9 +79,14 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\INotifyValidated.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandler.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlerContext.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\EditorKeyboard.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\InputHandlerUtility.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSInputHandler.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSInputHandlerContext.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSKeyboard.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardBase.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardChangedEventArgs.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardEventArgs.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandler.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandlerContext.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\SwipedEventArgs.cs" />
