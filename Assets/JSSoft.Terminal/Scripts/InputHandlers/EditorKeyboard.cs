@@ -37,13 +37,13 @@ namespace JSSoft.UI.InputHandlers
         private RectTransform panelRect;
         private Button doneButton;
         private Button cancelButton;
-        private string text;
-        private RangeInt selection;
+        // private string text;
+        // private RangeInt selection;
         private Rect area;
 
         public override string Text
         {
-            get => this.text ?? string.Empty;
+            get => this.Terminal.Command;
             set
             {
             }
@@ -51,7 +51,7 @@ namespace JSSoft.UI.InputHandlers
 
         public override RangeInt Selection
         {
-            get => this.selection;
+            get => new RangeInt(this.Terminal.CursorPosition, 0);
             set
             {
             }
@@ -80,7 +80,7 @@ namespace JSSoft.UI.InputHandlers
             this.panelRect = panelRect;
             this.area = new Rect(0, Screen.height - this.panelRect.sizeDelta.y, Screen.width, this.panelRect.sizeDelta.y);
             this.result = null;
-            this.text = text;
+            // this.text = text;
             this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
             this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
         }
@@ -125,12 +125,12 @@ namespace JSSoft.UI.InputHandlers
 
         private void Terminal_PromptTextChanged(object sender, EventArgs e)
         {
-            this.text = this.Terminal.Command;
+            // this.text = this.Terminal.Command;
         }
 
         private void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
-            this.selection = new RangeInt(this.Terminal.CursorPosition, 0);
+            // this.selection = new RangeInt(this.Terminal.CursorPosition, 0);
         }
 
         private static RectTransform CreatePanel(RectTransform canvasRect)

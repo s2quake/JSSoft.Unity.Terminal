@@ -395,7 +395,6 @@ namespace JSSoft.UI
                     this.completion = string.Empty;
                     this.InvokePromptTextChangedEvent();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
-                    Debug.Log($"{nameof(this.inputText)}: '{this.inputText}'");
                 }
             }
         }

@@ -369,13 +369,21 @@ namespace JSSoft.UI.InputHandlers
         {
             if (this.keyboard.IsOpened == true)
             {
-                if (e.Direction == SwipeDirection.Right)
+                if (e.Direction == SwipeDirection.Left)
+                {
+                    this.Terminal.PrevCompletion();
+                }
+                else if (e.Direction == SwipeDirection.Right)
                 {
                     this.Terminal.NextCompletion();
                 }
-                else if (e.Direction == SwipeDirection.Left)
+                else if (e.Direction == SwipeDirection.Up)
                 {
-                    this.Terminal.PrevCompletion();
+                    this.Terminal.PrevHistory();
+                }
+                else if (e.Direction == SwipeDirection.Down)
+                {
+                    this.Terminal.NextHistory();
                 }
             }
         }
