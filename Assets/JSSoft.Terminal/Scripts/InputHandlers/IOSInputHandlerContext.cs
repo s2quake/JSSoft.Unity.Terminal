@@ -31,6 +31,8 @@ namespace JSSoft.UI.InputHandlers
 {
     class IOSInputHandlerContext : InputHandlerContext
     {
+        private const float scrollSpeed = 1.0f;
+        private const float scrollStopSpeed = 100.0f;
         private readonly float clickThreshold = 0.5f;
         private readonly Swiper swiper = new Swiper();
 #if UNITY_EDITOR
@@ -50,7 +52,6 @@ namespace JSSoft.UI.InputHandlers
         private bool isSelecting;
         private float downTime;
         private float scrollDelta;
-        private float scrollSpeed = 1.0f;
         private Vector2 gridPosition;
 
         public IOSInputHandlerContext()
@@ -60,17 +61,21 @@ namespace JSSoft.UI.InputHandlers
 
         public override void BeginDrag(PointerEventData eventData)
         {
+
             var grid = this.Grid;
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                if (this.keyboard.IsOpened == false && this.downTime < 0.5f)
+                Debug.Log($"this.isSelecting: {this.isSelecting}");
+                Debug.Log($"downPoint: {downPoint}");
+                if (this.keyboard.IsOpened == false && this.downCount == 1 && this.downTime < 0.5f)
                 {
                     this.isScrolling = true;
                     this.scrollPos = (int)grid.VisibleIndex;
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
                 {
+                    Debug.Log($"this.isSelecting == true && downPoint != TerminalPoint.Invalid");
                     var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
                     var point = InputHandlerUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
@@ -91,7 +96,8 @@ namespace JSSoft.UI.InputHandlers
                 var dragRange = this.dragRange;
                 if (this.isScrolling == true)
                 {
-                    this.scrollDelta = eventData.delta.y * this.scrollSpeed;
+                    this.scrollDelta = eventData.delta.y * scrollSpeed;
+                    Debug.Log($"scroll delta: {this.scrollDelta}");
                     this.DoScroll();
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
@@ -126,7 +132,7 @@ namespace JSSoft.UI.InputHandlers
 
         public override void PointerClick(PointerEventData eventData)
         {
-
+            Debug.Log(nameof(PointerClick));
         }
 
         public override void PointerDown(PointerEventData eventData)
@@ -149,12 +155,14 @@ namespace JSSoft.UI.InputHandlers
 
         public override void PointerUp(PointerEventData eventData)
         {
+            Debug.Log(nameof(PointerUp));
             if (eventData.button == PointerEventData.InputButton.Left)
             {
+                this.OnLeftPointerUp(eventData);
                 this.downTime = 0.0f;
                 this.isDown = false;
                 this.isSelecting = false;
-                this.OnLeftPointerUp(eventData);
+                // this.downCount = 0;
             }
         }
 
@@ -165,41 +173,32 @@ namespace JSSoft.UI.InputHandlers
 
         public override void Deselect(BaseEventData eventData)
         {
+
         }
 
         public override void Update(BaseEventData eventData)
         {
-            var grid = this.Grid;
-            if (this.isDown == true && this.isScrolling == false && this.isSelecting == false)
+            if (this.isDown == true)
             {
-                this.downTime += Time.deltaTime;
+                if (this.isScrolling == false && this.isSelecting == false)
+                {
+                    this.downTime += Time.deltaTime;
+                }
+                if (this.downCount == 1 && this.downTime > 0.5f)
+                {
+                    this.downRange = InputHandlerUtility.SelectWord(this.Grid, this.downPoint);
+                    this.isSelecting = true;
+                    this.isScrolling = false;
+                    this.UpdateSelecting();
+                    Debug.Log("aldskfjalskjf;laskfjal;skfja;skdfj;asdlkfj");
+                }
             }
-
-            if (this.isDown == true && this.downTime > 0.5f)
+            else
             {
-                this.downRange = InputHandlerUtility.SelectWord(grid, this.downPoint);
-                this.isDown = false;
-                this.isSelecting = true;
-                this.isScrolling = false;
-                this.UpdateSelecting();
-            }
-
-            if (this.isScrolling == true && this.isDown == false)
-            {
-                this.DoScroll();
-                // if (grid.MaximumVisibleIndex > grid.MinimumVisibleIndex)
-                // {
-                //     this.scrollPos += this.scrollDelta * Time.deltaTime;
-                //     this.scrollPos = Math.Max(this.scrollPos, grid.MinimumVisibleIndex);
-                //     this.scrollPos = Math.Min(this.scrollPos, grid.MaximumVisibleIndex);
-                //     this.scrollDelta = Mathf.Lerp(this.scrollDelta, 0, this.scrollSpeed * Time.deltaTime);
-                //     this.Grid.VisibleIndex = (int)this.scrollPos;
-                //     if (Mathf.Abs(this.scrollDelta) < 0.1f)
-                //     {
-                //         this.isScrolling = false;
-                //         this.scrollDelta = 0.0f;
-                //     }
-                // }
+                if (this.isScrolling == true)
+                {
+                    this.DoScroll();
+                }
             }
 
             this.swiper.Update();
@@ -238,6 +237,8 @@ namespace JSSoft.UI.InputHandlers
             var newPoint = InputHandlerUtility.Intersect(grid, newPosition);
             var newTime = Time.time;
             var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
+            var row = grid.Rows[newPoint.Y];
+            var cell = row.Cells[newPoint.X];
             eventData.useDragThreshold = false;
             this.Focus();
             this.downPosition = newPosition;
@@ -248,24 +249,29 @@ namespace JSSoft.UI.InputHandlers
             this.isDown = true;
             this.downTime = 0.0f;
 
-            if (newPoint != TerminalPoint.Invalid)
+            if (this.downPoint != TerminalPoint.Invalid)
             {
                 if (this.isScrolling == true)
                 {
-                    this.isScrolling = false;
+                    // this.isScrolling = false;
                     this.scrollDelta = 0.0f;
                     this.downPoint = TerminalPoint.Invalid;
                     this.downCount = 0;
                 }
                 else if (downCount == 1)
                 {
-                    this.SelectingRange = TerminalRange.Empty;
-                    this.Selections.Clear();
-                    this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
+                    // Debug.Log("downCount == 1");
+                    // this.SelectingRange = TerminalRange.Empty;
+                    // this.Selections.Clear();
+                    // this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
+                    // this.downPoint = downPoint;
                 }
                 else if (downCount == 2)
                 {
+                    Debug.Log("downCount == 2");
+                    this.isSelecting = true;
                     this.downRange = InputHandlerUtility.SelectWord(grid, newPoint);
+                    this.downPoint = newPoint;
                     this.UpdateSelecting();
                 }
                 else if (downCount == 3)
@@ -285,54 +291,36 @@ namespace JSSoft.UI.InputHandlers
             var oldPoint = this.downPoint;
             if (oldPoint == newPoint1)
             {
-                this.Selections.Clear();
-                this.Selections.Add(this.SelectingRange);
-                this.SelectingRange = TerminalRange.Empty;
-                if (this.downCount == 1 && this.isSelecting == false)
+                if (this.downCount == 1)
                 {
-                    var row = this.Grid.Rows[newPoint1.Y];
-                    var cell = row.Cells[newPoint1.X];
-                    if (cell.TextIndex < 0)
+                    if (this.downTime >= 0.5f)
                     {
-                        var cursorPosition = this.Terminal.CursorPosition;
-                        if (cursorPosition != this.Terminal.Command.Length)
-                        {
-                            this.Terminal.MoveToLast();
-                            this.Grid.ScrollToCursor();
-                        }
-                        else
-                        {
-                            // var gridPosition = TerminalGridUtility.GetPosition(this.Grid);
-                            this.Grid.ScrollToCursor();
-                            this.keyboard.Open(this.Grid, this.Terminal.Command);
-                            // this.gridPosition = gridPosition;
-                        }
+                        this.Selections.Clear();
+                        this.Selections.Add(this.SelectingRange);
+                        this.SelectingRange = TerminalRange.Empty;
                     }
                     else
                     {
-                        var min = this.Terminal.OutputText.Length;
-                        var max = min + this.Terminal.Command.Length;
-                        var index = cell.TextIndex - min;
-                        if (cell.TextIndex < this.Terminal.OutputText.Length)
+                        if (this.Selections.Any() == true)
                         {
-                            // this.SelectingRange = TerminalRange.Empty;
-                            // this.Selections.Clear();
-                            // this.downRange = new TerminalRange(newPoint1, newPoint1);
-                            // this.SelectingRange = new TerminalRange(newPoint1, newPoint2);
-                            // var range = InputHandlerUtility.SelectGroup(grid, newPoint1);
-                            // InputHandlerUtility.Select(grid, range);
+                            this.Selections.Clear();
+                            this.SelectingRange = TerminalRange.Empty;
+                            Debug.Log("clear selection");
                         }
                         else
                         {
-                            this.Terminal.CursorPosition = index - this.Terminal.Prompt.Length;
+                            Debug.Log("keyboard");
+                            this.Grid.ScrollToCursor();
+                            this.keyboard.Open(this.Grid, this.Terminal.Command);
                         }
                     }
                 }
-                else if (this.downCount == 2)
-                {
-                    var range = InputHandlerUtility.SelectGroup(grid, newPoint1);
-                    InputHandlerUtility.Select(grid, range);
-                }
+            }
+            else if (this.isSelecting == true)
+            {
+                this.Selections.Clear();
+                this.Selections.Add(this.SelectingRange);
+                this.SelectingRange = TerminalRange.Empty;
             }
         }
 
@@ -348,28 +336,52 @@ namespace JSSoft.UI.InputHandlers
 
         private void DoScroll()
         {
-            var grid = this.Grid;
-            if (grid.MaximumVisibleIndex > grid.MinimumVisibleIndex)
+            var maxIndex = this.Grid.MaximumVisibleIndex;
+            var minIndex = this.Grid.MinimumVisibleIndex;
+            var index = this.Grid.VisibleIndex;
+            var scrollPos = this.scrollPos;
+            var scrollDelta = this.scrollDelta;
+            if (maxIndex > minIndex)
             {
-                this.scrollPos += Time.deltaTime * this.scrollDelta;
-                this.scrollPos = Math.Max(this.scrollPos, grid.MinimumVisibleIndex);
-                this.scrollPos = Math.Min(this.scrollPos, grid.MaximumVisibleIndex);
-                this.scrollDelta = Mathf.Lerp(this.scrollDelta, 0, this.scrollSpeed * Time.deltaTime);
-                this.Grid.VisibleIndex = (int)this.scrollPos;
-                if (Mathf.Abs(this.scrollDelta) < 0.1f)
+                scrollPos += Time.deltaTime * scrollDelta;
+                if (scrollPos <= minIndex)
                 {
-                    this.isScrolling = false;
-                    this.scrollDelta = 0.0f;
+                    index = minIndex;
+                    scrollDelta = 0.0f;
                 }
-                // this.scrollPos += this.scrollDelta * Time.deltaTime;
-                // this.scrollPos = Math.Max(this.scrollPos, grid.MinimumVisibleIndex);
-                // this.scrollPos = Math.Min(this.scrollPos, grid.MaximumVisibleIndex);
-                // this.scrollDelta = Mathf.Lerp(this.scrollDelta, 0, this.scrollSpeed * Time.deltaTime);
-                // this.Grid.VisibleIndex = (int)this.scrollPos;
+                else if (scrollPos >= maxIndex)
+                {
+                    index = maxIndex;
+                    scrollDelta = 0.0f;
+                }
+                else
+                {
+                    index = (int)scrollPos;
+                    if (scrollDelta > 0)
+                    {
+                        scrollDelta -= scrollStopSpeed * Time.deltaTime;
+                        if (scrollDelta < 0)
+                            scrollDelta = 0.0f;
+                    }
+                    else if (scrollDelta < 0)
+                    {
+                        scrollDelta += scrollStopSpeed * Time.deltaTime;
+                        if (scrollDelta > 0)
+                            scrollDelta = 0.0f;
+                    }
+                }
             }
-            else
+            
+            this.scrollDelta = scrollDelta;
+            this.scrollPos = scrollPos;
+            this.Grid.VisibleIndex = index;
+
+            Debug.Log(this.scrollDelta);
+            if (this.scrollDelta == 0.0f && this.isDown == false)
             {
+                this.isScrolling = false;
                 this.scrollDelta = 0.0f;
+                Debug.Log("scroll end");
             }
         }
 
@@ -388,10 +400,12 @@ namespace JSSoft.UI.InputHandlers
 
         private void Swiper_Swiped(object sender, SwipedEventArgs e)
         {
+            Debug.Log("Swiper_Swiped");
             if (this.keyboard.IsOpened == true)
             {
                 if (e.Direction == SwipeDirection.Left)
                 {
+                    Debug.Log("this.Terminal.PrevCompletion();");
                     this.Terminal.PrevCompletion();
                 }
                 else if (e.Direction == SwipeDirection.Right)
@@ -475,7 +489,10 @@ namespace JSSoft.UI.InputHandlers
         static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
         {
             var diffTime = newTime - oldTime;
-            if (diffTime > clickThreshold || oldPosition != newPosition)
+            var distance = (oldPosition - newPosition).magnitude;
+            // Debug.Log(distance);
+            // Debug.Log(oldPosition);
+            if (diffTime > clickThreshold || oldPosition == Vector2.zero || distance > 2)
                 return 1;
             return (count % 3) + 1;
         }
