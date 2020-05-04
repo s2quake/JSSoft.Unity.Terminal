@@ -57,6 +57,7 @@ namespace JSSoft.UI
 
         public void UpdateAll()
         {
+            Debug.Log(nameof(UpdateAll));
             this.Update(0);
         }
 

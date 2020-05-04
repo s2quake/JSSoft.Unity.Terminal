@@ -21,15 +21,19 @@
 // SOFTWARE.
 
 using System;
-using UnityEngine;
 
 namespace JSSoft.UI
 {
-    public static class ITerminalExtensions
+    public class TerminalExecutedEventArgs : EventArgs
     {
-        public static void AppendLine(this ITerminal terminal, string value)
+        public TerminalExecutedEventArgs(string command, Exception exception)
         {
-            terminal.Append(value + Environment.NewLine);
+            this.Command = command ?? throw new ArgumentNullException(nameof(command));
+            this.Exception = exception;
         }
+
+        public string Command { get; }
+
+        public Exception Exception { get; }
     }
 }

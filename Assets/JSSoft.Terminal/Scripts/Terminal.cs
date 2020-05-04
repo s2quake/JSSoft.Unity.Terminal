@@ -61,7 +61,8 @@ namespace JSSoft.UI
         private ICommandCompletor commandCompletor;
         private IPromptDrawer promptDrawer;
 
-        private EventHandler<TerminalExecuteEventArgs> executed;
+        private EventHandler<TerminalExecuteEventArgs> executing;
+        private EventHandler<TerminalExecutedEventArgs> executed;
 
         static Terminal()
         {
@@ -605,14 +606,14 @@ namespace JSSoft.UI
 
         private void ExecuteEvent(string commandText, string prompt)
         {
-            var action = new Action(() => this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt));
+            var action = new Action<Exception>((e) => 
+            {
+                this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt);
+                this.executed?.Invoke(this, new TerminalExecutedEventArgs(commandText, e));
+            });
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
             this.isReadOnly = true;
-            this.executed?.Invoke(this, eventArgs);
-            if (eventArgs.IsAsync == false)
-            {
-                eventArgs.Handled = true;
-            }
+            this.executing?.Invoke(this, eventArgs);
         }
 
         internal TerminalColor? GetForegroundColor(int index)
@@ -653,7 +654,13 @@ namespace JSSoft.UI
             set => this.Prompt = value;
         }
 
-        event EventHandler<TerminalExecuteEventArgs> ITerminal.Executed
+        event EventHandler<TerminalExecuteEventArgs> ITerminal.Executing
+        {
+            add { this.executing += value; }
+            remove { this.executing -= value; }
+        }
+
+        event EventHandler<TerminalExecutedEventArgs> ITerminal.Executed
         {
             add { this.executed += value; }
             remove { this.executed -= value; }

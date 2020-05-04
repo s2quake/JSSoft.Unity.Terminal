@@ -23,6 +23,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -53,8 +54,11 @@ namespace JSSoft.UI
 
         public void Clear()
         {
-            this.itemList.Clear();
-            this.InvokeSelectionChangedEvent();
+            if (this.itemList.Any() == true)
+            {
+                this.itemList.Clear();
+                this.InvokeSelectionChangedEvent();
+            }
         }
 
         public bool Contains(TerminalRange item)

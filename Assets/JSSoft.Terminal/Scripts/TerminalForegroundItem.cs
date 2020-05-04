@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace JSSoft.UI
@@ -127,6 +128,7 @@ namespace JSSoft.UI
                 case nameof(ITerminalGrid.VisibleIndex):
                 case nameof(ITerminalGrid.Text):
                 case nameof(ITerminalGrid.Style):
+                case nameof(ITerminalGrid.SelectingRange):
                     {
                         if (this.IsDestroyed() == false)
                             this.SetVerticesDirty();

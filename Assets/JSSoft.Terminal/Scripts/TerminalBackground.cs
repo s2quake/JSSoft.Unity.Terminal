@@ -150,6 +150,10 @@ namespace JSSoft.UI
             {
                 this.SetVerticesDirty();
             }
+            else if (propertyName == nameof(ITerminalGrid.SelectingRange))
+            {
+                this.SetVerticesDirty();
+            }
         }
 
         private void Grid_SelectionChanged(object sender, EventArgs e)

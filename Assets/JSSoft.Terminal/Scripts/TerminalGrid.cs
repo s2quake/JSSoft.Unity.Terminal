@@ -146,6 +146,18 @@ namespace JSSoft.UI
 
         public TerminalPoint Intersect(Vector2 position)
         {
+            var padding = this.Padding;
+            var itemWidth = this.Font.Width;
+            var itemHeight = this.Font.Height;
+            if (position.x < 0 || position.y < 0)
+                return TerminalPoint.Invalid;
+            position.x -= padding.Left;
+            position.y -= padding.Top;
+            var x = (int)(position.x / itemWidth);
+            var y = (int)(position.y / itemHeight);
+            if (x >= this.BufferWidth || y >= this.rows.Count)
+                return TerminalPoint.Invalid;
+            return new TerminalPoint(x, y);
             foreach (var item in this.rows)
             {
                 var point = item.Intersect(position);
@@ -600,7 +612,7 @@ namespace JSSoft.UI
                 if (this.selectingRange != value)
                 {
                     this.selectingRange = value;
-                    this.OnLayoutChanged(EventArgs.Empty);
+                    this.InvokePropertyChangedEvent(nameof(SelectingRange));
                 }
             }
         }

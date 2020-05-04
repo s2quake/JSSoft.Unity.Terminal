@@ -71,7 +71,7 @@ namespace JSSoft.Communication.Shells
             // Debug.developerConsoleVisible = true;
             if (this.terminal != null)
             {
-                this.terminal.Executed += Terminal_Executed;
+                this.terminal.Executing += Terminal_Executing;
                 this.writer = new CommandWriter(this.terminal);
                 this.commandContext.Out = this.writer;
                 this.terminal.Reset();
@@ -114,29 +114,27 @@ namespace JSSoft.Communication.Shells
             }
         }
 
-        private async void Terminal_Executed(object sender, TerminalExecuteEventArgs e)
+        private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
         {
-            e.IsAsync = true;
-            await this.RunAsync(e.Command);
-            if (this.terminal != null)
-            {
-                e.Handled = true;
-            }
+            await this.RunAsync(e);
         }
 
-        private async Task RunAsync(string commandLine)
+        private async Task RunAsync(TerminalExecuteEventArgs e)
         {
             try
             {
-                await Task.Run(() => this.commandContext.Execute(this.commandContext.Name + " " + commandLine));
+                await Task.Run(() => this.commandContext.Execute(this.commandContext.Name + " " + e.Command));
+                e.Success();
             }
-            catch (System.Reflection.TargetInvocationException e)
+            catch (System.Reflection.TargetInvocationException ex)
             {
-                this.AppendException(e);
+                this.AppendException(ex);
+                e.Fail(ex);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                this.AppendException(e);
+                this.AppendException(ex);
+                e.Fail(ex);
             }
         }
 

@@ -83,7 +83,9 @@ namespace JSSoft.UI
 
         event EventHandler CursorPositionChanged;
 
-        event EventHandler<TerminalExecuteEventArgs> Executed;
+        event EventHandler<TerminalExecuteEventArgs> Executing;
+
+        event EventHandler<TerminalExecutedEventArgs> Executed;
 
         event EventHandler Enabled;
 

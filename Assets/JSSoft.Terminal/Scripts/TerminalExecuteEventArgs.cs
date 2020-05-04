@@ -26,10 +26,10 @@ namespace JSSoft.UI
 {
     public class TerminalExecuteEventArgs : EventArgs
     {
-        private readonly Action action;
-        private bool handled;
+        private readonly Action<Exception> action;
+        private bool isHandled;
 
-        public TerminalExecuteEventArgs(string command, Action action)
+        public TerminalExecuteEventArgs(string command, Action<Exception> action)
         {
             this.Command = command ?? throw new ArgumentNullException(nameof(command));
             this.action = action ?? throw new ArgumentNullException(nameof(action));
@@ -37,19 +37,24 @@ namespace JSSoft.UI
 
         public string Command { get; }
 
-        public bool IsAsync { get; set; }
+        public bool IsHandled => this.isHandled;
 
-        public bool Handled
+        public void Success()
         {
-            get => this.handled;
-            set
-            {
-                if (this.handled == false && value == true)
-                {
-                    this.handled = true;
-                    this.action();
-                }
-            }
+            if (this.isHandled == true)
+                throw new InvalidOperationException("command expired.");
+            this.isHandled = true;
+            this.action(null);
+        }
+
+        public void Fail(Exception exception)
+        {
+            if (this.isHandled == true)
+                throw new InvalidOperationException("command expired.");
+            if (exception == null)
+                throw new ArgumentNullException(nameof(exception));
+            this.isHandled = true;
+            this.action(exception);
         }
     }
 }
