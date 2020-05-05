@@ -55,7 +55,11 @@ namespace JSSoft.UI.InputHandlers
             }
         }
 
+#if UNITY_IOS
         public override Rect Area => TouchScreenKeyboard.area;
+#else
+        public override Rect Area => default(Rect);
+#endif
 
         protected override void OnOpen(string text)
         {

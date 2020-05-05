@@ -158,15 +158,6 @@ namespace JSSoft.UI
             if (x >= this.BufferWidth || y >= this.rows.Count)
                 return TerminalPoint.Invalid;
             return new TerminalPoint(x, y);
-            foreach (var item in this.rows)
-            {
-                var point = item.Intersect(position);
-                if (point != TerminalPoint.Invalid)
-                {
-                    return point;
-                }
-            }
-            return TerminalPoint.Invalid;
         }
 
         public ITerminalCell IntersectWithCell(Vector2 position)

@@ -38,6 +38,7 @@ namespace JSSoft.Communication.Shells
         private ITerminal terminal;
         [SerializeField]
         private TerminalGrid grid;
+        private ScreenOrientation orientation;
 
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
@@ -88,16 +89,6 @@ namespace JSSoft.Communication.Shells
             // this.UpdateTerminalLayout();
         }
 
-        private async Task TestAsync()
-        {
-            Debug.Log("TestAsync 1");
-            await Task.Delay(1000);
-            Debug.Log("TestAsync 2");
-            await Task.Delay(1000);
-            Debug.Log("TestAsync 3");
-        }
-
-        private ScreenOrientation orientation;
         public void Update()
         {
             if (Screen.orientation != this.orientation)
@@ -114,8 +105,18 @@ namespace JSSoft.Communication.Shells
             }
         }
 
+        public async void OnDestroy()
+        {
+            if (this.shell != null)
+            {
+                await this.shell.StopAsync();
+                this.shell.Dispose();
+            }
+        }
+
         private void UpdateTerminalLayout()
         {
+#if UNITY_IOS
             if (this.grid != null)
             {
                 switch (this.orientation)
@@ -136,15 +137,7 @@ namespace JSSoft.Communication.Shells
                         break;
                 }
             }
-        }
-
-        public async void OnDestroy()
-        {
-            if (this.shell != null)
-            {
-                await this.shell.StopAsync();
-                this.shell.Dispose();
-            }
+#endif // UNITY_IOS
         }
 
         private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
