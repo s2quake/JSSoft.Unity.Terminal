@@ -57,6 +57,9 @@ namespace JSSoft.Communication.Shells
             Container.Bind<ICommand>().To<UserCommand>().AsSingle();
             Container.Bind<ICommand>().To<DataCommand>().AsSingle();
             Container.Bind<ICommand>().To<StyleCommand>().AsSingle();
+            Container.Bind<ICommand>().To<VerboseCommand>().AsSingle();
+            Container.Bind<ICommand>().To<WidthCommand>().AsSingle();
+            Container.Bind<ICommand>().To<HeightCommand>().AsSingle();
 
             Container.Bind<CommandContext>().AsSingle();
             Container.Bind(typeof(IShell), typeof(Shell)).To<Shell>().AsSingle().Lazy();

@@ -43,7 +43,7 @@ namespace JSSoft.Communication.Shells
         static void OnRuntimeMethodLoad()
         {
 #if !UNITY_EDITOR
-            Screen.SetResolution(1334, 750, false);
+            // Screen.SetResolution(1334, 750, false);
 #endif
         }
 
@@ -85,7 +85,7 @@ namespace JSSoft.Communication.Shells
                 // Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
             }
             this.orientation = Screen.orientation;
-            this.UpdateTerminalLayout();
+            // this.UpdateTerminalLayout();
         }
 
         private async Task TestAsync()

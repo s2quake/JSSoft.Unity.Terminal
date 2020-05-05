@@ -149,12 +149,15 @@
      <Compile Include="Assets\Scripts\Commands\CloseCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\DataCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\ExitCommand.cs" />
+     <Compile Include="Assets\Scripts\Commands\HeightCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\LoginCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\LogoutCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\OpenCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\ResetCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\StyleCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\UserCommand.cs" />
+     <Compile Include="Assets\Scripts\Commands\VerboseCommand.cs" />
+     <Compile Include="Assets\Scripts\Commands\WidthCommand.cs" />
      <Compile Include="Assets\Scripts\CommandWriter.cs" />
      <Compile Include="Assets\Scripts\DebugLogger.cs" />
      <Compile Include="Assets\Scripts\IShell.cs" />
