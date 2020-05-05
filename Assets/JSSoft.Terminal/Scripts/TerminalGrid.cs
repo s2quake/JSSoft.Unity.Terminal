@@ -401,6 +401,8 @@ namespace JSSoft.UI
                 {
                     this.font = value;
                     this.UpdateLayout();
+                    this.UpdateVisibleIndex();
+                    this.UpdateCursorPosition();
                     this.InvokePropertyChangedEvent(nameof(Font));
                 }
             }
@@ -413,8 +415,14 @@ namespace JSSoft.UI
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.bufferWidth = value;
-                this.InvokePropertyChangedEvent(nameof(BufferWidth));
+                if (this.bufferWidth != value)
+                {
+                    this.bufferWidth = value;
+                    this.UpdateLayout();
+                    this.InvokePropertyChangedEvent(nameof(BufferWidth));
+                    this.UpdateVisibleIndex();
+                    this.UpdateCursorPosition();
+                }
             }
         }
 
@@ -425,8 +433,13 @@ namespace JSSoft.UI
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.bufferHeight = value;
-                this.InvokePropertyChangedEvent(nameof(BufferHeight));
+                if (this.bufferHeight != value)
+                {
+                    this.bufferHeight = value;
+                    this.UpdateLayout();
+                    this.InvokePropertyChangedEvent(nameof(BufferHeight));
+                    this.UpdateVisibleIndex();
+                }
             }
         }
 
@@ -437,8 +450,12 @@ namespace JSSoft.UI
             {
                 if (value < this.bufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.maxBufferHeight = value;
-                this.InvokePropertyChangedEvent(nameof(MaxBufferHeight));
+                if (this.maxBufferHeight != value)
+                {
+                    this.maxBufferHeight = value;
+                    this.UpdateLayout();
+                    this.InvokePropertyChangedEvent(nameof(MaxBufferHeight));
+                }
             }
         }
 

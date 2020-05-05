@@ -37,8 +37,6 @@ namespace JSSoft.UI.InputHandlers
         private RectTransform panelRect;
         private Button doneButton;
         private Button cancelButton;
-        // private string text;
-        // private RangeInt selection;
         private Rect area;
 
         public override string Text
@@ -80,9 +78,14 @@ namespace JSSoft.UI.InputHandlers
             this.panelRect = panelRect;
             this.area = new Rect(0, Screen.height - this.panelRect.sizeDelta.y, Screen.width, this.panelRect.sizeDelta.y);
             this.result = null;
-            // this.text = text;
             this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
             this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+        }
+
+        protected override void OnClose()
+        {
+            this.result = null;
+            this.Release();
         }
 
         protected override bool? OnUpdate()

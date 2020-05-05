@@ -66,8 +66,6 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left)
             {
-                Debug.Log($"this.isSelecting: {this.isSelecting}");
-                Debug.Log($"downPoint: {downPoint}");
                 if (this.keyboard.IsOpened == false && this.downCount == 1 && this.downTime < 0.5f)
                 {
                     this.isScrolling = true;
@@ -75,7 +73,6 @@ namespace JSSoft.UI.InputHandlers
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
                 {
-                    Debug.Log($"this.isSelecting == true && downPoint != TerminalPoint.Invalid");
                     var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
                     var point = InputHandlerUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
@@ -97,7 +94,6 @@ namespace JSSoft.UI.InputHandlers
                 if (this.isScrolling == true)
                 {
                     this.scrollDelta = eventData.delta.y * scrollSpeed;
-                    Debug.Log($"scroll delta: {this.scrollDelta}");
                     this.DoScroll();
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
@@ -132,7 +128,6 @@ namespace JSSoft.UI.InputHandlers
 
         public override void PointerClick(PointerEventData eventData)
         {
-            Debug.Log(nameof(PointerClick));
         }
 
         public override void PointerDown(PointerEventData eventData)
@@ -155,14 +150,12 @@ namespace JSSoft.UI.InputHandlers
 
         public override void PointerUp(PointerEventData eventData)
         {
-            Debug.Log(nameof(PointerUp));
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 this.OnLeftPointerUp(eventData);
                 this.downTime = 0.0f;
                 this.isDown = false;
                 this.isSelecting = false;
-                // this.downCount = 0;
             }
         }
 
@@ -173,7 +166,10 @@ namespace JSSoft.UI.InputHandlers
 
         public override void Deselect(BaseEventData eventData)
         {
-
+            if (this.keyboard.IsOpened == true)
+            {
+                this.keyboard.Close();
+            }
         }
 
         public override void Update(BaseEventData eventData)
@@ -190,7 +186,6 @@ namespace JSSoft.UI.InputHandlers
                     this.isSelecting = true;
                     this.isScrolling = false;
                     this.UpdateSelecting();
-                    Debug.Log("aldskfjalskjf;laskfjal;skfja;skdfj;asdlkfj");
                 }
             }
             else
@@ -210,6 +205,7 @@ namespace JSSoft.UI.InputHandlers
             base.Attach(grid);
             this.Terminal.Executed += Terminal_Executed;
             this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            this.Grid.LayoutChanged += Grid_LayoutChanged;
             this.swiper.Swiped += Swiper_Swiped;
             this.keyboard.Opened += Keyboard_Opened;
             this.keyboard.Done += Keyboard_Done;
@@ -221,6 +217,7 @@ namespace JSSoft.UI.InputHandlers
         {
             this.Terminal.Executed -= Terminal_Executed;
             this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
+            this.Grid.LayoutChanged -= Grid_LayoutChanged;
             this.swiper.Swiped -= Swiper_Swiped;
             this.keyboard.Opened -= Keyboard_Opened;
             this.keyboard.Done -= Keyboard_Done;
@@ -253,31 +250,9 @@ namespace JSSoft.UI.InputHandlers
             {
                 if (this.isScrolling == true)
                 {
-                    // this.isScrolling = false;
                     this.scrollDelta = 0.0f;
                     this.downPoint = TerminalPoint.Invalid;
                     this.downCount = 0;
-                }
-                else if (downCount == 1)
-                {
-                    // Debug.Log("downCount == 1");
-                    // this.SelectingRange = TerminalRange.Empty;
-                    // this.Selections.Clear();
-                    // this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
-                    // this.downPoint = downPoint;
-                }
-                else if (downCount == 2)
-                {
-                    // Debug.Log("downCount == 2");
-                    // this.isSelecting = true;
-                    // this.downRange = InputHandlerUtility.SelectWord(grid, newPoint);
-                    // this.downPoint = newPoint;
-                    // this.UpdateSelecting();
-                }
-                else if (downCount == 3)
-                {
-                    // this.downRange = InputHandlerUtility.SelectLine(grid, newPoint);
-                    // this.UpdateSelecting();
                 }
             }
         }
@@ -303,11 +278,9 @@ namespace JSSoft.UI.InputHandlers
                     {
                         this.Selections.Clear();
                         this.SelectingRange = TerminalRange.Empty;
-                        Debug.Log("clear selection");
                     }
                     else if (this.isExecuting == false)
                     {
-                        Debug.Log("keyboard");
                         this.Grid.ScrollToCursor();
                         this.keyboard.Open(this.Grid, this.Terminal.Command);
                     }
@@ -315,7 +288,6 @@ namespace JSSoft.UI.InputHandlers
             }
             else if (this.isSelecting == true)
             {
-                Debug.Log("this.isSelecting == true");
                 this.Selections.Clear();
                 this.Selections.Add(this.SelectingRange);
                 this.SelectingRange = TerminalRange.Empty;
@@ -372,12 +344,10 @@ namespace JSSoft.UI.InputHandlers
             this.scrollPos = scrollPos;
             this.Grid.VisibleIndex = index;
 
-            Debug.Log(this.scrollDelta);
             if (this.scrollDelta == 0.0f && this.isDown == false)
             {
                 this.isScrolling = false;
                 this.scrollDelta = 0.0f;
-                Debug.Log("scroll end");
             }
         }
 
@@ -393,6 +363,11 @@ namespace JSSoft.UI.InputHandlers
             {
                 this.keyboard.Text = this.Terminal.Command;
             }
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            
         }
 
         private void Swiper_Swiped(object sender, SwipedEventArgs e)
@@ -436,13 +411,8 @@ namespace JSSoft.UI.InputHandlers
             var point = this.Grid.CursorPoint;
             var height = font.Height;
             var index = point.Y - this.Grid.VisibleIndex;
-            Debug.Log($"CursorPoint.Y: {this.Grid.CursorPoint.Y}");
-            Debug.Log($"MinimumVisibleIndex: {this.Grid.MinimumVisibleIndex}");
-            Debug.Log($"MaximumVisibleIndex: {this.Grid.MaximumVisibleIndex}");
-            Debug.Log($"keyboardArea: {keyboardArea.y}, {keyboardArea.height}");
             var gameObject = this.Grid.GameObject;
             var rectTransform = gameObject.GetComponent<RectTransform>();
-            Debug.Log($"position: {rectTransform.position}");
             var camera = gameObject.GetComponentInParent<Canvas>().worldCamera;
             RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, rectTransform.localPosition, camera, out var screenPosition);
             var worldCorners = new Vector3[4];
@@ -453,8 +423,6 @@ namespace JSSoft.UI.InputHandlers
                  worldCorners[2].x - worldCorners[0].x,
                  worldCorners[2].y - worldCorners[0].y);
 
-            Debug.Log($"screenPosition: {screenPosition}");
-            Debug.Log($"result: {result}");
             var i = index * height + result.y + height;
             var y = keyboardArea.y;
             // if (i >= y && keyboardArea.height > 0)

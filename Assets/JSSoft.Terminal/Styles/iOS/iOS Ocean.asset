@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9634ed125b5c34d6abf655ba2dd59090, type: 3}
-  m_Name: Silver Aerogel
+  m_Name: iOS Ocean
   m_EditorClassIdentifier: 
+  styleName: Ocean
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
-  backgroundColor: {r: 0.57254905, g: 0.57254905, b: 0.57254905, a: 1}
-  foregroundColor: {r: 0, g: 0, b: 0, a: 1}
-  selectionColor: {r: 0.39607844, g: 0.4, b: 0.5411765, a: 1}
-  cursorColor: {r: 0.8509804, g: 0.8509804, b: 0.8509804, a: 1}
+  backgroundColor: {r: 0.13333334, g: 0.30980393, b: 0.7372549, a: 1}
+  foregroundColor: {r: 1, g: 1, b: 1, a: 1}
+  selectionColor: {r: 0.12941177, g: 0.42745098, b: 1, a: 1}
+  cursorColor: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
   colorPallete: {fileID: 11400000, guid: 1032e140c69e644e19985a161f1598a6, type: 2}
   padding:
     left: 2

@@ -37,9 +37,23 @@ namespace JSSoft.UI.InputHandlers
 
         public void Open(ITerminalGrid grid, string text)
         {
+            if (this.isOpened == true)
+                throw new InvalidOperationException("keyboard already open.");
             this.grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.text = text ?? throw new ArgumentNullException(nameof(text));
             this.selection = new RangeInt() { start = text.Length };
+        }
+
+        public void Close()
+        {
+            if (this.isOpened == false)
+                throw new InvalidOperationException("keyboard already closed.");
+            this.OnClose();
+            this.isOpened = false;
+            this.grid = null;
+            this.text = null;
+            this.selection = default(RangeInt);
+            this.OnCanceled(EventArgs.Empty);
         }
 
         public void Update()
@@ -73,8 +87,8 @@ namespace JSSoft.UI.InputHandlers
                     this.selection = default(RangeInt);
                     this.OnCanceled(EventArgs.Empty);
                 }
-                else if (this.text != text 
-                        || object.Equals(this.selection, selection) == false 
+                else if (this.text != text
+                        || object.Equals(this.selection, selection) == false
                         || object.Equals(this.area, area) == false)
                 {
                     this.text = text;
@@ -106,6 +120,8 @@ namespace JSSoft.UI.InputHandlers
         public event EventHandler<KeyboardEventArgs> Changed;
 
         protected abstract void OnOpen(string text);
+
+        protected abstract void OnClose();
 
         protected abstract bool? OnUpdate();
 

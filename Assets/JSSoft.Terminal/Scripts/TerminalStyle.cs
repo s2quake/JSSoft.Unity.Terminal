@@ -33,6 +33,8 @@ namespace JSSoft.UI
     public class TerminalStyle : ScriptableObject, INotifyValidated
     {
         [SerializeField]
+        private string styleName;
+        [SerializeField]
         private TerminalFont font;
         [SerializeField]
         private Color backgroundColor = TerminalGrid.DefaultBackgroundColor;
@@ -60,6 +62,19 @@ namespace JSSoft.UI
         private bool isScrollForwardEnabled;
         [SerializeField]
         private List<TerminalBehaviourBase> behaviourList = new List<TerminalBehaviourBase>();
+
+        public string StyleName
+        {
+            get => this.styleName ?? string.Empty;
+            set
+            {
+                if (this.styleName != value)
+                {
+                    this.styleName = value;
+                    this.InvokePropertyChangedEvent(nameof(StyleName));
+                }
+            }
+        }
 
         public TerminalFont Font
         {

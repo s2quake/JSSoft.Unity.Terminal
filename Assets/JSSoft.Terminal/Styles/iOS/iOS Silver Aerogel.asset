@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9634ed125b5c34d6abf655ba2dd59090, type: 3}
-  m_Name: Novel
+  m_Name: iOS Silver Aerogel
   m_EditorClassIdentifier: 
+  styleName: Silver Aerogel
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
-  backgroundColor: {r: 0.9137255, g: 0.85882354, b: 0.7647059, a: 1}
-  foregroundColor: {r: 0.23137255, g: 0.13725491, b: 0.13333334, a: 1}
-  selectionColor: {r: 0.45490196, g: 0.4509804, b: 0.3137255, a: 0.7607843}
-  cursorColor: {r: 0.22745098, g: 0.13725491, b: 0.13333334, a: 0.6509804}
+  backgroundColor: {r: 0.57254905, g: 0.57254905, b: 0.57254905, a: 1}
+  foregroundColor: {r: 0, g: 0, b: 0, a: 1}
+  selectionColor: {r: 0.39607844, g: 0.4, b: 0.5411765, a: 1}
+  cursorColor: {r: 0.8509804, g: 0.8509804, b: 0.8509804, a: 1}
   colorPallete: {fileID: 11400000, guid: 1032e140c69e644e19985a161f1598a6, type: 2}
   padding:
     left: 2

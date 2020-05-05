@@ -508,7 +508,6 @@ namespace JSSoft.UI
 
         private void CompletionImpl(Func<string[], string, string> func)
         {
-            Debug.Log($"CompletionImpl: '{this.inputText}'");
             var matches = new List<Match>(CommandStringUtility.MatchCompletion(this.inputText));
             var find = string.Empty;
             var prefix = false;

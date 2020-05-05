@@ -110,7 +110,6 @@ namespace JSSoft.UI
                     Array.Resize(ref this.uvs, length);
                     Array.Resize(ref this.colors, length);
                     this.capacity = length;
-                    Debug.Log($"length: {length}");
                 }
                 this.count = value;
             }

@@ -66,6 +66,12 @@ namespace JSSoft.UI.InputHandlers
             this.keyboard.text = text;
         }
 
+        protected override void OnClose()
+        {
+            this.keyboard.active = false;
+            this.keyboard = null;
+        }
+
         protected override bool? OnUpdate()
         {
             if (this.keyboard != null)

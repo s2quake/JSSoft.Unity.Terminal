@@ -29,6 +29,7 @@ using JSSoft.UI;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace JSSoft.Communication.Commands
 {
@@ -45,8 +46,8 @@ namespace JSSoft.Communication.Commands
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)
         {
-            var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-            return resources.Styles.Select(item => item.name).ToArray();
+            var styles = GetStyles();
+            return styles.Keys.ToArray();
         }
 
         [CommandProperty("list")]
@@ -82,9 +83,8 @@ namespace JSSoft.Communication.Commands
         {
             return this.dispatcher.InvokeAsync(() =>
             {
-                var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-                var names = resources.Styles.Select(item => item.name).ToArray();
-                foreach (var item in names)
+                var styles = GetStyles();
+                foreach (var item in styles.Keys)
                 {
                     var isCurrent = this.grid.Style.name == item ? "*" : " ";
                     this.Out.WriteLine($"{isCurrent} {item}");
@@ -105,11 +105,10 @@ namespace JSSoft.Communication.Commands
         {
             var rectangle = await this.dispatcher.InvokeAsync(() =>
             {
-                var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-                var style = resources.Styles.FirstOrDefault(item => string.Compare(item.name, this.StyleName, true) == 0);
-                if (style != null)
+                var styles = GetStyles();
+                if (styles.ContainsKey(this.StyleName) == true)
                 {
-                    this.grid.Style = style;
+                    this.grid.Style = styles[this.StyleName];
                     this.Out.WriteLine($"{this.StyleName} applied.");
                     return this.grid.Rectangle;
                 }
@@ -123,9 +122,26 @@ namespace JSSoft.Communication.Commands
             {
                 if (Application.isEditor == false && rectangle != Rect.zero)
                 {
-                    Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
+                    // Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
                 }
             });
+        }
+
+        private static IDictionary<string, TerminalStyle> GetStyles()
+        {
+            var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+            var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
+            foreach (var item in resources.Styles)
+            {
+                if (item != null)
+                {
+                    if (item.StyleName != string.Empty)
+                        styles.Add(item.StyleName, item);
+                    else
+                        styles.Add(item.name, item);
+                }
+            }
+            return styles;
         }
     }
 }

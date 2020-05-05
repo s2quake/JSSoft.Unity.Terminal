@@ -127,11 +127,19 @@ namespace JSSoft.UI
             {
                 case nameof(ITerminalGrid.VisibleIndex):
                 case nameof(ITerminalGrid.Text):
-                case nameof(ITerminalGrid.Style):
                 case nameof(ITerminalGrid.SelectingRange):
                     {
                         if (this.IsDestroyed() == false)
                             this.SetVerticesDirty();
+                    }
+                    break;
+                case nameof(ITerminalGrid.Style):
+                    {
+                        if (this.IsDestroyed() == false)
+                        {
+                            this.color = TerminalGridUtility.GetForegroundColor(this.grid);
+                            this.SetVerticesDirty();
+                        }
                     }
                     break;
             }

@@ -43,7 +43,7 @@ namespace JSSoft.Communication.Shells
         static void OnRuntimeMethodLoad()
         {
 #if !UNITY_EDITOR
-            Screen.SetResolution(1124, 724, false);
+            Screen.SetResolution(1334, 750, false);
 #endif
         }
 
@@ -81,9 +81,11 @@ namespace JSSoft.Communication.Shells
             }
             if (this.grid != null)
             {
-                var rectangle = this.grid.Rectangle;
-                Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
+                // var rectangle = this.grid.Rectangle;
+                // Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
             }
+            this.orientation = Screen.orientation;
+            this.UpdateTerminalLayout();
         }
 
         private async Task TestAsync()
@@ -95,13 +97,44 @@ namespace JSSoft.Communication.Shells
             Debug.Log("TestAsync 3");
         }
 
+        private ScreenOrientation orientation;
         public void Update()
         {
+            if (Screen.orientation != this.orientation)
+            {
+                Debug.Log(Screen.orientation);
+                this.orientation = Screen.orientation;
+                this.UpdateTerminalLayout();
+            }
 #if UNITY_EDITOR
             if (Application.isPlaying && this.scheduler != null)
 #endif
             {
                 this.scheduler.ProcessAll(1000 / 60);
+            }
+        }
+
+        private void UpdateTerminalLayout()
+        {
+            if (this.grid != null)
+            {
+                switch (this.orientation)
+                {
+                    case ScreenOrientation.Portrait:
+                    case ScreenOrientation.PortraitUpsideDown:
+                        {
+                            this.grid.BufferWidth = 57;
+                            this.grid.BufferHeight = 51;
+                        }
+                        break;
+                    case ScreenOrientation.Landscape:
+                    case ScreenOrientation.LandscapeRight:
+                        {
+                            this.grid.BufferWidth = 102;
+                            this.grid.BufferHeight = 28;
+                        }
+                        break;
+                }
             }
         }
 
