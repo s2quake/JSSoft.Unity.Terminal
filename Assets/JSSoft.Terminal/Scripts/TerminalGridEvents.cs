@@ -25,6 +25,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using System.ComponentModel;
+using System.Collections.Specialized;
 
 namespace JSSoft.UI
 {
@@ -68,7 +69,7 @@ namespace JSSoft.UI
 
         public static event EventHandler LayoutChanged;
 
-        public static event EventHandler SelectionChanged;
+        public static event NotifyCollectionChangedEventHandler SelectionChanged;
 
         public static event EventHandler GotFocus;
 
@@ -87,7 +88,7 @@ namespace JSSoft.UI
             LayoutChanged?.Invoke(sender, e);
         }
 
-        private static void Grid_SelectionChanged(object sender, EventArgs e)
+        private static void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             SelectionChanged?.Invoke(sender, e);
         }

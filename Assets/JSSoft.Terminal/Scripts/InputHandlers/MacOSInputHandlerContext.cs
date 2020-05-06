@@ -26,12 +26,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
 
 namespace JSSoft.UI.InputHandlers
 {
     class MacOSInputHandlerContext : InputHandlerContext
     {
         private static Texture2D cursorTexture;
+        private readonly List<TerminalPoint> oldSelections = new List<TerminalPoint>();
         private readonly float clickThreshold = 0.5f;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
@@ -161,6 +163,18 @@ namespace JSSoft.UI.InputHandlers
             }
         }
 
+        public override void Attach(ITerminalGrid grid)
+        {
+            base.Attach(grid);
+            this.Grid.SelectionChanged += Grid_SelectionChanged;
+        }
+
+        public override void Detach(ITerminalGrid grid)
+        {
+            this.Grid.SelectionChanged -= Grid_SelectionChanged;
+            base.Detach(grid);
+        }
+
         public override void Update(BaseEventData eventData)
         {
 
@@ -188,12 +202,58 @@ namespace JSSoft.UI.InputHandlers
 
         private void Focus() => this.Grid.Focus();
 
-        static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
+        private static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
         {
             var diffTime = newTime - oldTime;
             if (diffTime > clickThreshold || oldPosition != newPosition)
                 return 1;
             return (count) % 3 + 1;
+        }
+
+        private void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    {
+                        foreach (var item in e.NewItems)
+                        {
+                            this.oldSelections.Add((TerminalPoint)item);
+                        }
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Remove:
+                    {
+                        foreach (var item in e.OldItems)
+                        {
+                            this.oldSelections.Remove((TerminalPoint)item);
+                        }
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Replace:
+                    {
+                        for (var i = 0; i < e.OldItems.Count; i++)
+                        {
+                            var oldItem = (TerminalPoint)e.OldItems[i];
+                            var newItem = (TerminalPoint)e.NewItems[i];
+                            var index = this.oldSelections.IndexOf(oldItem);
+                            this.oldSelections[index] = newItem;
+                        }
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Move:
+                    {
+                        var item = this.oldSelections[e.OldStartingIndex];
+                        this.oldSelections.RemoveAt(e.OldStartingIndex);
+                        this.oldSelections.Insert(e.NewStartingIndex, item);
+                    }
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    {
+                        this.oldSelections.Clear();
+                    }
+                    break;
+            }
         }
 
         private TerminalRange SelectingRange

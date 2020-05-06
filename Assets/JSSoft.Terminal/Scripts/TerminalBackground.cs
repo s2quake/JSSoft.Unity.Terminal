@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
@@ -156,7 +157,7 @@ namespace JSSoft.UI
             }
         }
 
-        private void Grid_SelectionChanged(object sender, EventArgs e)
+        private void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender is ITerminalGrid grid == this.grid)
             {

@@ -28,6 +28,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 #if UNITY_EDITOR
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
 #endif
@@ -129,7 +131,8 @@ namespace JSSoft.UI
         {
             this.characterInfos = new TerminalCharacterInfoCollection(this);
             this.rows = new TerminalRowCollection(this, this.characterInfos);
-            this.Selections = new TerminalGridSelection(() => this.OnSelectionChanged(EventArgs.Empty));
+            this.Selections = new ObservableCollection<TerminalRange>();
+            this.Selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
         }
 
         public Vector2 WorldToGrid(Vector2 position)
@@ -330,7 +333,7 @@ namespace JSSoft.UI
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
-            this.OnSelectionChanged(EventArgs.Empty);
+            // this.OnSelectionChanged(EventArgs.Empty);
         }
 
         public IKeyBindingCollection KeyBindings
@@ -454,7 +457,7 @@ namespace JSSoft.UI
 
         public IReadOnlyList<TerminalCharacterInfo> CharacterInfos => this.characterInfos;
 
-        public TerminalGridSelection Selections { get; }
+        public ObservableCollection<TerminalRange> Selections { get; }
 
         public int VisibleIndex
         {
@@ -713,7 +716,7 @@ namespace JSSoft.UI
 
         public event EventHandler LayoutChanged;
 
-        public event EventHandler SelectionChanged;
+        public event NotifyCollectionChangedEventHandler SelectionChanged;
 
         public event EventHandler GotFocus;
 
@@ -732,10 +735,10 @@ namespace JSSoft.UI
             this.LayoutChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnSelectionChanged(EventArgs e)
-        {
-            this.SelectionChanged?.Invoke(this, EventArgs.Empty);
-        }
+        // protected virtual void OnSelectionChanged(EventArgs e)
+        // {
+        //     this.SelectionChanged?.Invoke(this, EventArgs.Empty);
+        // }
 
         protected virtual void OnGotFocus(EventArgs e)
         {

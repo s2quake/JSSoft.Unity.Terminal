@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using UnityEngine;
 
@@ -127,7 +128,7 @@ namespace JSSoft.UI
 
         event EventHandler LayoutChanged;
 
-        event EventHandler SelectionChanged;
+        event NotifyCollectionChangedEventHandler SelectionChanged;
 
         event EventHandler GotFocus;
 
