@@ -27,17 +27,20 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
-    public static class InputHandlerUtility
+    public static class InputHandlerInstances
     {
-        public static IInputHandler GetDefaultHandler()
+        public static IInputHandler DefaultHandler
         {
-            if (TerminalEnvironment.IsMac == true)
-                return MacOSInputHandler;
-            else if (TerminalEnvironment.IsWindows == true)
-                return WindowsInputHandler;
-            else if (TerminalEnvironment.IsIPhone == true)
-                return IOSInputHandler;
-            throw new NotImplementedException();
+            get
+            {
+                if (TerminalEnvironment.IsMac == true)
+                    return MacOSInputHandler;
+                else if (TerminalEnvironment.IsWindows == true)
+                    return WindowsInputHandler;
+                else if (TerminalEnvironment.IsIPhone == true)
+                    return IOSInputHandler;
+                throw new NotImplementedException();
+            }
         }
 
         public static IInputHandler MacOSInputHandler { get; } = new InputHandlers.MacOSInputHandler();

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
+using System.ComponentModel;
 
 namespace JSSoft.UI.InputHandlers
 {
@@ -121,6 +122,18 @@ namespace JSSoft.UI.InputHandlers
 
         }
 
+        public override void Attach(ITerminalGrid grid)
+        {
+            base.Attach(grid);
+            this.Grid.PropertyChanged += Grid_PropertyChanged;
+        }
+
+        public override void Detach(ITerminalGrid grid)
+        {
+            this.Grid.PropertyChanged -= Grid_PropertyChanged;
+            base.Detach(grid);
+        }
+
         public static Texture2D CursorTexture
         {
             get
@@ -209,7 +222,7 @@ namespace JSSoft.UI.InputHandlers
             var grid = this.Grid;
             var row = cell.Row;
             var cells = row.Cells;
-            var p1 = InputHandlerUtility.LastPoint(row, true);
+            var p1 = SelectionUtility.LastPoint(row, true);
             var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
             this.downRange = new TerminalRange(p1, p2);
             this.UpdateSelecting();
@@ -315,7 +328,21 @@ namespace JSSoft.UI.InputHandlers
 
         private void Focus() => this.Grid.Focus();
 
-        static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(ITerminalGrid.BufferWidth):
+                case nameof(ITerminalGrid.BufferHeight):
+                case nameof(ITerminalGrid.MaxBufferHeight):
+                    {
+                        this.Grid.Selections.Clear();
+                    }
+                    break;
+            }
+        }
+
+        private static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
         {
             var diffTime = newTime - oldTime;
             if (diffTime > clickThreshold || oldPosition != newPosition)

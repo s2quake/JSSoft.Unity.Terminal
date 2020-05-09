@@ -38,6 +38,8 @@ namespace JSSoft.UI
 
         TerminalPoint IndexToPoint(int index);
 
+        int PointToIndex(TerminalPoint point);
+
         void Focus();
 
         void ScrollToTop();

@@ -177,7 +177,41 @@ namespace JSSoft.UI
 
         public TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;
 
-        public int PointToIndex(TerminalPoint point) => this.characterInfos.PointToIndex(point);
+        public int PointToIndex(TerminalPoint point)
+        {
+            if (point.Y >= 0 && point.Y < this.rows.Count && point.X >= 0 && point.X < this.BufferWidth)
+            {
+                return this.rows[point.Y].Cells[point.X].TextIndex;
+            }
+            return -1;
+        }
+
+        public RangeInt RangeToInt(TerminalRange range)
+        {
+            var beginPoint = range.BeginPoint;
+            var endPoint = range.EndPoint;
+            var beginIndex = this.PointToIndex(beginPoint);
+            var endIndex = this.PointToIndex(endPoint);
+            if (beginIndex < 0)
+            {
+                var row = this.rows[beginPoint.Y];
+                beginPoint = SelectionUtility.LastPoint(row, false);
+                beginIndex = this.PointToIndex(beginPoint);
+                if (beginIndex < 0)
+                {
+                    var lastPoint = this.characterInfos.Last().Point;
+                    beginIndex = lastPoint.Y - beginPoint.Y;
+                }
+            }
+            if (endIndex < 0 && beginIndex < 0)
+            {
+                var lastPoint = this.characterInfos.Last().Point;
+                endIndex = lastPoint.Y - endPoint.Y;
+            }
+            // if (endIndex >= 0)
+            return new RangeInt(beginIndex, endIndex - beginIndex);
+            // return new RangeInt(beginIndex, endIndex);
+        }
 
         public Color32? IndexToBackgroundColor(int index)
         {
@@ -308,8 +342,8 @@ namespace JSSoft.UI
                 var p2 = range.EndPoint;
                 var capacity = p1.DistanceOf(p2, this.BufferWidth);
                 var list = new List<char>(capacity);
-                var i1 = this.characterInfos.PointToIndex(p1);
-                var i2 = this.characterInfos.PointToIndex(p2);
+                var i1 = this.PointToIndex(p1);
+                var i2 = this.PointToIndex(p2);
                 for (var i = i1; i <= i2; i++)
                 {
                     var item = this.characterInfos[i];
@@ -348,7 +382,7 @@ namespace JSSoft.UI
             set
             {
                 this.inputHandler?.Detach(this);
-                this.inputHandler = value ?? InputHandlerUtility.GetDefaultHandler();
+                this.inputHandler = value ?? InputHandlerInstances.DefaultHandler;
                 this.inputHandler.Attach(this);
             }
         }
@@ -396,7 +430,7 @@ namespace JSSoft.UI
                     this.font = value;
                     this.UpdateLayout();
                     this.UpdateVisibleIndex();
-                    this.UpdateCursorPosition();
+                    this.UpdateCursorPoint();
                     this.InvokePropertyChangedEvent(nameof(Font));
                 }
             }
@@ -412,12 +446,61 @@ namespace JSSoft.UI
                 if (this.bufferWidth != value)
                 {
                     this.bufferWidth = value;
-                    this.UpdateLayout();
+                    this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferWidth));
-                    this.UpdateVisibleIndex();
-                    this.UpdateCursorPosition();
+                    this.CursorPoint = this.IndexToPoint(this.Terminal.CursorIndex);
                 }
             }
+        }
+
+        public void Test()
+        {
+            // var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
+            // var rangeList = new List<RangeInt>();
+            // foreach (var item in this.Selections)
+            // {
+            //     var range = this.RangeToInt(item);
+            //     Debug.Log($"{range.start}:{range.length}");
+            //     rangeList.Add(range);
+            // }
+            this.BufferHeight--;
+            // this.BufferWidth--;
+            // this.Selections.Clear();
+            // foreach (var item in rangeList)
+            // {
+            //     if (item.start >= 0)
+            //     {
+            //         var p1 = this.IndexToPoint(item.start);
+            //         if (item.length >= 0)
+            //         {
+            //             var p2 = this.IndexToPoint(item.end);
+            //             this.Selections.Add(new TerminalRange(p1, p2));
+            //         }
+            //         else
+            //         {
+            //             var range = SelectionUtility.SelectLine(this, p1);
+            //             var p2 = range.EndPoint;
+            //             this.Selections.Add(new TerminalRange(p1, p2));
+            //         }
+            //     }
+            //     else
+            //     {
+            //         var p1 = new TerminalPoint(0, this.CursorPoint.Y - item.start);
+            //         // if (item.length >= 0)
+            //         {
+            //         }
+            //         // else
+            //         {
+            //             var p2 = new TerminalPoint(this.BufferWidth, this.CursorPoint.Y - item.end);
+            //             // var p2 = new TerminalPoint(0, this.CursorPoint.Y - item.start);
+            //             // var range = SelectionUtility.SelectLine(this, p1);
+            //             // var p2 = range.EndPoint;
+            //             this.Selections.Add(new TerminalRange(p1, p2));
+            //             Debug.Log($"{item.start}:{item.end}:{item.length}");
+
+            //         }
+            //     }
+            // }
         }
 
         public int BufferHeight
@@ -430,9 +513,9 @@ namespace JSSoft.UI
                 if (this.bufferHeight != value)
                 {
                     this.bufferHeight = value;
-                    this.UpdateLayout();
+                    this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferHeight));
-                    this.UpdateVisibleIndex();
+                    this.CursorPoint = this.IndexToPoint(this.Terminal.CursorIndex);
                 }
             }
         }
@@ -447,7 +530,7 @@ namespace JSSoft.UI
                 if (this.maxBufferHeight != value)
                 {
                     this.maxBufferHeight = value;
-                    this.UpdateLayout();
+                    this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(MaxBufferHeight));
                 }
             }
@@ -563,10 +646,9 @@ namespace JSSoft.UI
                 if (this.cursorPoint != value)
                 {
                     this.cursorPoint = value;
-                    this.UpdateCursorPosition();
+                    this.UpdateCursorPoint();
                     this.InvokePropertyChangedEvent(nameof(CursorPoint));
                 }
-                this.Selections.Clear();
             }
         }
 
@@ -773,11 +855,13 @@ namespace JSSoft.UI
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
+            Debug.Log("OnValidate");
             base.OnValidate();
+            this.terminal = this.GetComponent<Terminal>();
             this.ValidateValue();
             this.UpdateColor();
             this.UpdateLayout();
-            this.UpdateCursorPosition();
+            this.UpdateCursorPoint();
             this.ScrollToCursor();
             this.OnValidated(EventArgs.Empty);
         }
@@ -785,23 +869,26 @@ namespace JSSoft.UI
 
         protected override void OnRectTransformDimensionsChange()
         {
+            Debug.Log("OnRectTransformDimensionsChange");
             base.OnRectTransformDimensionsChange();
             this.terminal = this.GetComponent<Terminal>();
-            this.UpdateLayout();
-            this.UpdateVisibleIndex();
-            this.UpdateCursorPosition();
+            // this.UpdateLayout();
+            // this.UpdateVisibleIndex();
+            // this.UpdateCursorPoint();
             this.OnLayoutChanged(EventArgs.Empty);
         }
 
         protected override void Awake()
         {
+            Debug.Log("Awake");
             base.Awake();
-            this.inputHandler = InputHandlerUtility.GetDefaultHandler();
+            this.inputHandler = InputHandlerInstances.DefaultHandler;
             this.inputHandler.Attach(this);
         }
 
         protected override void OnEnable()
         {
+            Debug.Log("OnEnable");
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
             this.ScrollToTop();
@@ -887,6 +974,11 @@ namespace JSSoft.UI
 
         private void UpdateLayout()
         {
+            this.UpdateLayout(false);
+        }
+
+        private void UpdateLayout(bool force)
+        {
             var rect = this.GetComponent<RectTransform>().rect;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
@@ -898,7 +990,10 @@ namespace JSSoft.UI
             this.rectangle.y = 0;
             this.rectangle.width = rectWidth;
             this.rectangle.height = rectHeight;
-            this.Invoke(nameof(UpdateRectTransform), Time.deltaTime);
+            if (force == true)
+                this.UpdateRectTransform();
+            else
+                this.Invoke(nameof(UpdateRectTransform), float.Epsilon);
         }
 
         private void UpdateRectTransform()
@@ -912,7 +1007,7 @@ namespace JSSoft.UI
             this.visibleIndex = Math.Min(this.visibleIndex, this.MaximumVisibleIndex);
         }
 
-        private void UpdateCursorPosition()
+        private void UpdateCursorPoint()
         {
             var x = this.cursorPoint.X;
             var y = this.cursorPoint.Y;
@@ -932,10 +1027,13 @@ namespace JSSoft.UI
                 this.text = this.terminal.Text;
                 this.characterInfos.Update();
                 this.rows.Update();
-                this.cursorPoint = this.IndexToPoint(index);
+                this.UpdateVisibleIndex();
+                this.CursorPoint = this.IndexToPoint(index);
+                this.Selections.Clear();
+                // this.cursorPoint = this.IndexToPoint(index);
                 this.ScrollToCursor();
-                this.InvokePropertyChangedEvent(nameof(CursorPoint));
-                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
+                // this.InvokePropertyChangedEvent(nameof(CursorPoint));
+                // this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
         }
 
@@ -953,7 +1051,7 @@ namespace JSSoft.UI
             {
                 this.Text = this.Terminal.Text;
                 this.ScrollToCursor();
-                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
+                // this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
         }
 
@@ -963,8 +1061,9 @@ namespace JSSoft.UI
             {
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
+                this.Selections.Clear();
                 this.ScrollToCursor();
-                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
+                // this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
         }
 
@@ -975,18 +1074,18 @@ namespace JSSoft.UI
                 case TerminalFont font when font == this.font:
                     this.UpdateLayout();
                     this.UpdateVisibleIndex();
-                    this.UpdateCursorPosition();
+                    this.UpdateCursorPoint();
                     break;
                 case TerminalFontDescriptor descriptor when this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true:
                     this.UpdateLayout();
                     this.UpdateVisibleIndex();
-                    this.UpdateCursorPosition();
+                    this.UpdateCursorPoint();
                     break;
                 case TerminalStyle style when style == this.style:
                     this.UpdateColor();
                     this.UpdateLayout();
                     this.UpdateVisibleIndex();
-                    this.UpdateCursorPosition();
+                    this.UpdateCursorPoint();
                     break;
             }
         }

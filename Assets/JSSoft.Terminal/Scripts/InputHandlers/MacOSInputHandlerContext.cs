@@ -27,13 +27,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace JSSoft.UI.InputHandlers
 {
     class MacOSInputHandlerContext : InputHandlerContext
     {
         private static Texture2D cursorTexture;
-        private readonly List<TerminalPoint> oldSelections = new List<TerminalPoint>();
+        private readonly List<TerminalRange> oldSelections = new List<TerminalRange>();
         private readonly float clickThreshold = 0.5f;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
@@ -48,11 +49,11 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-                var point = InputHandlerUtility.Intersect(grid, position);
+                var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var point = SelectionUtility.Intersect(grid, position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    grid.SelectingRange = SelectionUtility.UpdatePoint(grid, downPoint, point);
                 }
             }
         }
@@ -65,11 +66,11 @@ namespace JSSoft.UI.InputHandlers
             var dragRange = this.dragRange;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-                var point = InputHandlerUtility.Intersect(grid, position);
+                var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var point = SelectionUtility.Intersect(grid, position);
                 if (point != TerminalPoint.Invalid)
                 {
-                    this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                    this.dragRange = SelectionUtility.UpdatePoint(grid, downPoint, point);
                     this.UpdateSelecting();
                 }
             }
@@ -80,9 +81,9 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                this.Selections.Clear();
-                this.Selections.Add(this.SelectingRange);
-                this.SelectingRange = TerminalRange.Empty;
+                this.Grid.Selections.Clear();
+                this.Grid.Selections.Add(this.Grid.SelectingRange);
+                this.Grid.SelectingRange = TerminalRange.Empty;
                 this.downPoint = TerminalPoint.Invalid;
             }
         }
@@ -97,8 +98,8 @@ namespace JSSoft.UI.InputHandlers
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var grid = this.Grid;
-                var newPosition = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-                var newPoint = InputHandlerUtility.Intersect(grid, newPosition);
+                var newPosition = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var newPoint = SelectionUtility.Intersect(grid, newPosition);
                 var newTime = Time.time;
                 var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
                 eventData.useDragThreshold = false;
@@ -113,18 +114,18 @@ namespace JSSoft.UI.InputHandlers
                 {
                     if (downCount == 1)
                     {
-                        this.SelectingRange = TerminalRange.Empty;
-                        this.Selections.Clear();
-                        this.downRange = InputHandlerUtility.UpdatePoint(grid, newPoint, newPoint);
+                        this.Grid.SelectingRange = TerminalRange.Empty;
+                        this.Grid.Selections.Clear();
+                        this.downRange = SelectionUtility.UpdatePoint(grid, newPoint, newPoint);
                     }
                     else if (downCount == 2)
                     {
-                        this.downRange = InputHandlerUtility.SelectWord(grid, newPoint);
+                        this.downRange = SelectionUtility.SelectWord(grid, newPoint);
                         this.UpdateSelecting();
                     }
                     else if (downCount == 3)
                     {
-                        this.downRange = InputHandlerUtility.SelectLine(grid, newPoint);
+                        this.downRange = SelectionUtility.SelectLine(grid, newPoint);
                         this.UpdateSelecting();
                     }
                 }
@@ -146,18 +147,20 @@ namespace JSSoft.UI.InputHandlers
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var grid = this.Grid;
-                var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-                var newPoint = InputHandlerUtility.Intersect(grid, position);
+                var downCount = this.downCount;
+                var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var newPoint = SelectionUtility.Intersect(grid, position);
                 var oldPoint = this.downPoint;
                 if (oldPoint == newPoint)
                 {
-                    this.Selections.Clear();
-                    this.Selections.Add(this.SelectingRange);
-                    this.SelectingRange = TerminalRange.Empty;
-                    if (this.downCount == 2)
+                    grid.Selections.Clear();
+                    if (grid.SelectingRange != TerminalRange.Empty)
+                        grid.Selections.Add(grid.SelectingRange);
+                    grid.SelectingRange = TerminalRange.Empty;
+                    if (downCount == 2)
                     {
-                        var range = InputHandlerUtility.SelectGroup(grid, newPoint);
-                        InputHandlerUtility.Select(grid, range);
+                        var range = SelectionUtility.SelectGroup(grid, newPoint);
+                        SelectionUtility.Select(grid, range);
                     }
                 }
             }
@@ -167,11 +170,64 @@ namespace JSSoft.UI.InputHandlers
         {
             base.Attach(grid);
             this.Grid.SelectionChanged += Grid_SelectionChanged;
+            this.Grid.PropertyChanged += Grid_PropertyChanged;
+        }
+
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Debug.Log($"Grid_PropertyChanged: {e.PropertyName}");
+            switch (e.PropertyName)
+            {
+                case nameof(ITerminalGrid.BufferHeight):
+                    {
+                        this.Grid.SelectionChanged -= Grid_SelectionChanged;
+                        this.Grid.Selections.Clear();
+                        foreach (var item in rangeList)
+                        {
+                            if (item.start >= 0)
+                            {
+                                var p1 = this.Grid.IndexToPoint(item.start);
+                                if (item.length >= 0)
+                                {
+                                    var p2 = this.Grid.IndexToPoint(item.end);
+                                    this.Grid.Selections.Add(new TerminalRange(p1, p2));
+                                }
+                                else
+                                {
+                                    var range = SelectionUtility.SelectLine(this.Grid, p1);
+                                    var p2 = range.EndPoint;
+                                    this.Grid.Selections.Add(new TerminalRange(p1, p2));
+                                }
+                            }
+                            else
+                            {
+                                var p1 = new TerminalPoint(0, this.Grid.CursorPoint.Y - item.start);
+                                // if (item.length >= 0)
+                                {
+                                }
+                                // else
+                                {
+                                    var p2 = new TerminalPoint(this.Grid.BufferWidth, this.Grid.CursorPoint.Y - item.end);
+                                    // var p2 = new TerminalPoint(0, this.CursorPoint.Y - item.start);
+                                    // var range = SelectionUtility.SelectLine(this, p1);
+                                    // var p2 = range.EndPoint;
+                                    this.Grid.Selections.Add(new TerminalRange(p1, p2));
+                                    Debug.Log($"{item.start}:{item.end}:{item.length}");
+
+                                }
+                            }
+                        }
+                        this.RefreshRangeList();
+                        this.Grid.SelectionChanged += Grid_SelectionChanged;
+                    }
+                    break;
+            }
         }
 
         public override void Detach(ITerminalGrid grid)
         {
             this.Grid.SelectionChanged -= Grid_SelectionChanged;
+            this.Grid.PropertyChanged -= Grid_PropertyChanged;
             base.Detach(grid);
         }
 
@@ -196,8 +252,8 @@ namespace JSSoft.UI.InputHandlers
         {
             var p1 = this.downRange.BeginPoint < this.dragRange.BeginPoint ? this.downRange.BeginPoint : this.dragRange.BeginPoint;
             var p2 = this.downRange.EndPoint > this.dragRange.EndPoint ? this.downRange.EndPoint : this.dragRange.EndPoint;
-            this.Selections.Clear();
-            this.SelectingRange = new TerminalRange(p1, p2);
+            this.Grid.Selections.Clear();
+            this.Grid.SelectingRange = new TerminalRange(p1, p2);
         }
 
         private void Focus() => this.Grid.Focus();
@@ -218,7 +274,8 @@ namespace JSSoft.UI.InputHandlers
                     {
                         foreach (var item in e.NewItems)
                         {
-                            this.oldSelections.Add((TerminalPoint)item);
+                            Debug.Log((TerminalRange)item);
+                            this.oldSelections.Add((TerminalRange)item);
                         }
                     }
                     break;
@@ -226,7 +283,7 @@ namespace JSSoft.UI.InputHandlers
                     {
                         foreach (var item in e.OldItems)
                         {
-                            this.oldSelections.Remove((TerminalPoint)item);
+                            this.oldSelections.Remove((TerminalRange)item);
                         }
                     }
                     break;
@@ -234,8 +291,8 @@ namespace JSSoft.UI.InputHandlers
                     {
                         for (var i = 0; i < e.OldItems.Count; i++)
                         {
-                            var oldItem = (TerminalPoint)e.OldItems[i];
-                            var newItem = (TerminalPoint)e.NewItems[i];
+                            var oldItem = (TerminalRange)e.OldItems[i];
+                            var newItem = (TerminalRange)e.NewItems[i];
                             var index = this.oldSelections.IndexOf(oldItem);
                             this.oldSelections[index] = newItem;
                         }
@@ -254,14 +311,29 @@ namespace JSSoft.UI.InputHandlers
                     }
                     break;
             }
+            this.RefreshRangeList();
         }
-
-        private TerminalRange SelectingRange
+        private void RefreshRangeList()
         {
-            get => this.Grid.SelectingRange;
-            set => this.Grid.SelectingRange = value;
+            // return;
+            Debug.Log("RefreshRangeList");
+            this.rangeList.Clear();
+            foreach (var item in this.oldSelections)
+            {
+                var range = SelectionUtility.RangeToInt(this.Grid, item);
+                Debug.Log($"{range.start}:{range.length}");
+                this.rangeList.Add(range);
+            }
+            Debug.Log("RefreshRangeList ------------");
         }
+        private List<RangeInt> rangeList = new List<RangeInt>();
 
-        private IList<TerminalRange> Selections => this.Grid.Selections;
+        // private TerminalRange SelectingRange
+        // {
+        //     get => this.Grid.SelectingRange;
+        //     set => this.Grid.SelectingRange = value;
+        // }
+
+        // private IList<TerminalRange> Selections => this.Grid.Selections;
     }
 }

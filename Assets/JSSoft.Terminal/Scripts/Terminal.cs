@@ -352,6 +352,8 @@ namespace JSSoft.UI
             }
         }
 
+        public int CursorIndex => this.CursorPosition + this.OutputText.Length + this.Prompt.Length;
+
         public string Text => this.text;
 
         public string OutputText => this.outputText;

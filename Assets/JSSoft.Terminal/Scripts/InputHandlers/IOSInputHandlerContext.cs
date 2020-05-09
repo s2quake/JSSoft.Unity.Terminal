@@ -73,11 +73,11 @@ namespace JSSoft.UI.InputHandlers
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
                 {
-                    var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-                    var point = InputHandlerUtility.Intersect(grid, position);
+                    var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                    var point = SelectionUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
                     {
-                        this.SelectingRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                        this.SelectingRange = SelectionUtility.UpdatePoint(grid, downPoint, point);
                     }
                 }
             }
@@ -98,11 +98,11 @@ namespace JSSoft.UI.InputHandlers
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
                 {
-                    var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-                    var point = InputHandlerUtility.Intersect(grid, position);
+                    var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                    var point = SelectionUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
                     {
-                        this.dragRange = InputHandlerUtility.UpdatePoint(grid, downPoint, point);
+                        this.dragRange = SelectionUtility.UpdatePoint(grid, downPoint, point);
                         this.UpdateSelecting();
                     }
                 }
@@ -182,7 +182,7 @@ namespace JSSoft.UI.InputHandlers
                 }
                 if (this.downCount == 1 && this.downTime > 0.5f && this.isSelecting == false)
                 {
-                    this.downRange = InputHandlerUtility.SelectWord(this.Grid, this.downPoint);
+                    this.downRange = SelectionUtility.SelectWord(this.Grid, this.downPoint);
                     this.isSelecting = true;
                     this.isScrolling = false;
                     this.UpdateSelecting();
@@ -230,8 +230,8 @@ namespace JSSoft.UI.InputHandlers
         {
             var grid = this.Grid;
             var terminal = this.Terminal;
-            var newPosition = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-            var newPoint = InputHandlerUtility.Intersect(grid, newPosition);
+            var newPosition = SelectionUtility.WorldToGrid(grid, eventData.position);
+            var newPoint = SelectionUtility.Intersect(grid, newPosition);
             var newTime = Time.time;
             var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
             var row = grid.Rows[newPoint.Y];
@@ -260,8 +260,8 @@ namespace JSSoft.UI.InputHandlers
         private void OnLeftPointerUp(PointerEventData eventData)
         {
             var grid = this.Grid;
-            var position = InputHandlerUtility.WorldToGrid(grid, eventData.position);
-            var newPoint1 = InputHandlerUtility.Intersect(grid, position);
+            var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+            var newPoint1 = SelectionUtility.Intersect(grid, position);
             var newPoint2 = new TerminalPoint(newPoint1.X + 1, newPoint1.Y);
             var oldPoint = this.downPoint;
             if (oldPoint == newPoint1 && this.keyboard.IsOpened == false)

@@ -64,8 +64,6 @@ namespace JSSoft.UI.InputHandlers
         protected override void OnOpen(string text)
         {
             this.keyboard = TouchScreenKeyboard.Open(text, TouchScreenKeyboardType.Default, false, false, false, false, "type command");
-            // Debug.Log($"this.keyboard.active: {this.keyboard.active}");
-            // Debug.Log($"this.keyboard.text: {this.keyboard.text}");
             this.keyboard.active = true;
             this.keyboard.text = text;
         }

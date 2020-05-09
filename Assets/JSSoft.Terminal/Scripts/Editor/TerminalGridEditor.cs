@@ -112,6 +112,14 @@ namespace JSSoft.UI.Editor
             EditorGUILayout.PropertyField(this.bufferHeightProperty);
             EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
 
+            Rect r = (Rect)EditorGUILayout.BeginVertical("Button");
+            if (GUI.Button(r, "click"))
+            {
+                var f = this.target as TerminalGrid;
+                f.Test();
+            }
+            EditorGUILayout.EndVertical();
+
             this.serializedObject.ApplyModifiedProperties();
         }
     }

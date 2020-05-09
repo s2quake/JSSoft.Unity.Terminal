@@ -92,6 +92,7 @@ namespace JSSoft.UI
             var bufferHeight = this.grid.BufferHeight;
             var maxBufferHeight = this.grid.MaxBufferHeight;
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
+            var grid = this.grid;
             if (this.items.Length < text.Length)
             {
                 Array.Resize(ref this.items, text.Length);
@@ -110,8 +111,8 @@ namespace JSSoft.UI
                 characterInfo.Character = character;
                 characterInfo.Volume = volume;
                 characterInfo.Point = point;
-                characterInfo.BackgroundColor = this.grid.IndexToBackgroundColor(index);
-                characterInfo.ForegroundColor = this.grid.IndexToForegroundColor(index);
+                characterInfo.BackgroundColor = grid.IndexToBackgroundColor(index);
+                characterInfo.ForegroundColor = grid.IndexToForegroundColor(index);
                 characterInfo.Texture = charInfo.Texture;
                 characterInfo.TextIndex = index;
                 point.X += volume;
@@ -130,17 +131,6 @@ namespace JSSoft.UI
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
             this.maxBufferHeight = maxBufferHeight;
-        }
-
-        public int PointToIndex(TerminalPoint point)
-        {
-            for (var i = 0; i < this.Count; i++)
-            {
-                var item = this.items[i];
-                if (point == item.Point)
-                    return i;
-            }
-            return -1;
         }
 
         public static int GetIndex(string text1, string text2)
@@ -194,9 +184,9 @@ namespace JSSoft.UI
             {
                 case nameof(ITerminalGrid.Font):
                 case nameof(ITerminalGrid.Style):
-                case nameof(ITerminalGrid.BufferWidth):
-                case nameof(ITerminalGrid.BufferHeight):
-                case nameof(ITerminalGrid.MaxBufferHeight):
+                // case nameof(ITerminalGrid.BufferWidth):
+                // case nameof(ITerminalGrid.BufferHeight):
+                // case nameof(ITerminalGrid.MaxBufferHeight):
                     {
                         this.UpdateAll();
                     }

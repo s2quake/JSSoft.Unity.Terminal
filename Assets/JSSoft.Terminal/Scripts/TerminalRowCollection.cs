@@ -57,6 +57,7 @@ namespace JSSoft.UI
 
         public void UpdateAll()
         {
+            Debug.Log("UpdateAll");
             this.Update(0);
         }
 
@@ -198,9 +199,9 @@ namespace JSSoft.UI
             {
                 case nameof(ITerminalGrid.Font):
                 case nameof(ITerminalGrid.Style):
-                case nameof(ITerminalGrid.BufferWidth):
-                case nameof(ITerminalGrid.BufferHeight):
-                case nameof(ITerminalGrid.MaxBufferHeight):
+                // case nameof(ITerminalGrid.BufferWidth):
+                // case nameof(ITerminalGrid.BufferHeight):
+                // case nameof(ITerminalGrid.MaxBufferHeight):
                     this.UpdateAll();
                     break;
                 case nameof(ITerminalGrid.Text):
