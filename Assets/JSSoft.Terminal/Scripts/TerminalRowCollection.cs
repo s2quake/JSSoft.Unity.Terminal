@@ -57,7 +57,7 @@ namespace JSSoft.UI
 
         public void UpdateAll()
         {
-            Debug.Log("UpdateAll");
+            Debug.Log($"{nameof(TerminalRowCollection)}.{nameof(UpdateAll)}");
             this.Update(0);
         }
 
@@ -101,9 +101,13 @@ namespace JSSoft.UI
                 var characterInfo = this.characterInfos[i];
                 var point = characterInfo.Point;
                 var row = this.Prepare(point.Y);
-                var cell = row.Cells[point.X];
-                cell.SetCharacter(characterInfo);
-                dic[point.Y] = point.X;
+                // if (characterInfo.Volume > 0)
+                if (point.X < row.Cells.Count)
+                {
+                    var cell = row.Cells[point.X];
+                    cell.SetCharacter(characterInfo);
+                    dic[point.Y] = point.X;
+                }
                 maximumIndex = point.Y + 1;
             }
             foreach (var item in dic)
@@ -199,9 +203,9 @@ namespace JSSoft.UI
             {
                 case nameof(ITerminalGrid.Font):
                 case nameof(ITerminalGrid.Style):
-                // case nameof(ITerminalGrid.BufferWidth):
-                // case nameof(ITerminalGrid.BufferHeight):
-                // case nameof(ITerminalGrid.MaxBufferHeight):
+                    // case nameof(ITerminalGrid.BufferWidth):
+                    // case nameof(ITerminalGrid.BufferHeight):
+                    // case nameof(ITerminalGrid.MaxBufferHeight):
                     this.UpdateAll();
                     break;
                 case nameof(ITerminalGrid.Text):

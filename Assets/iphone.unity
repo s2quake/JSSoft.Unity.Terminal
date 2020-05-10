@@ -534,7 +534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db045bc67a55b42fcba20e98deda08db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 1563554478}
+  m_Material: {fileID: 1080276569}
   m_Color: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -555,7 +555,7 @@ MonoBehaviour:
     bottom: 0
   grid: {fileID: 1852955717}
   columnIndex: 7
-  rowIndex: 1
+  rowIndex: 3
 --- !u!222 &459928936
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -581,7 +581,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &485654247
 RectTransform:
   m_ObjectHideFlags: 0
@@ -614,7 +614,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1122,6 +1122,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &1080276569
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1329071090
 GameObject:
   m_ObjectHideFlags: 0
@@ -1415,28 +1437,6 @@ Material:
     - _StencilReadMask: 255
     - _StencilWriteMask: 255
     - _UseUIAlphaClip: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
---- !u!21 &1563554478
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1634999967
@@ -1915,7 +1915,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 745, y: 1330}
+  m_SizeDelta: {x: 264, y: 1330}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1852955717
 MonoBehaviour:
@@ -1936,14 +1936,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
-  text: "hello world!\r\nPrompt>"
+  text: '123456789012345678000ldskjfldksjfdlskfj
+
+
+    Prompt>'
   backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   foregroundColor: {r: 1, g: 1, b: 1, a: 1}
   selectionColor: {r: 0.19215687, g: 0.30980393, b: 0.5058824, a: 1}
   cursorColor: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
   colorPalette: {fileID: 0}
   visibleIndex: 0
-  bufferWidth: 57
+  bufferWidth: 20
   bufferHeight: 51
   maxBufferHeight: 1000
   cursorStyle: 0
@@ -1956,7 +1959,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bcd9bdb6c155fd842ae12186e6758198, type: 2}
   cursorPoint:
     x: 7
-    y: 1
+    y: 3
   isCursorVisible: 1
   compositionString: 
   padding:
@@ -1985,7 +1988,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac32324f888247949e70e0eb77d3791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outputText: "hello world!\r\n"
+  outputText: '123456789012345678000ldskjfldksjfdlskfj
+
+
+'
   prompt: Prompt>
   command: 
   isVerbose: 1
@@ -2046,7 +2052,7 @@ MonoBehaviour:
       m_Calls: []
   grid: {fileID: 1852955717}
   cursorLeft: 7
-  cursorTop: 1
+  cursorTop: 3
   isVisible: 1
   isFocused: 0
   style: 0

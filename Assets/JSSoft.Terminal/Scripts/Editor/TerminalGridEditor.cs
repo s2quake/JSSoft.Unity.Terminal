@@ -112,13 +112,29 @@ namespace JSSoft.UI.Editor
             EditorGUILayout.PropertyField(this.bufferHeightProperty);
             EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
 
-            Rect r = (Rect)EditorGUILayout.BeginVertical("Button");
-            if (GUI.Button(r, "click"))
+            if (this.target is TerminalGrid grid)
             {
-                var f = this.target as TerminalGrid;
-                f.Test();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("expand width"))
+                {
+                    grid.BufferWidth++;
+                }
+                if (GUILayout.Button("collapse width"))
+                {
+                    grid.BufferWidth--;
+                }
+                GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("expand height"))
+                {
+                    grid.BufferHeight++;
+                }
+                if (GUILayout.Button("collapse height"))
+                {
+                    grid.BufferHeight--;
+                }
+                GUILayout.EndHorizontal();
             }
-            EditorGUILayout.EndVertical();
 
             this.serializedObject.ApplyModifiedProperties();
         }

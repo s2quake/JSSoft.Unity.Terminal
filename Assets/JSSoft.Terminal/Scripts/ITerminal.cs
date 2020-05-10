@@ -61,6 +61,10 @@ namespace JSSoft.UI
 
         string OutputText { get; }
 
+        string PromptText { get; }
+
+        string Text { get; }
+
         int CursorPosition { get; set; }
 
         bool IsReadOnly { get; }

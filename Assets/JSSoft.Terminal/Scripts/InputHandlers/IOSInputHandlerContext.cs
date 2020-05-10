@@ -77,7 +77,7 @@ namespace JSSoft.UI.InputHandlers
                     var point = SelectionUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
                     {
-                        this.SelectingRange = SelectionUtility.UpdatePoint(grid, downPoint, point);
+                        this.Grid.SelectingRange = SelectionUtility.UpdatePoint(grid, downPoint, point);
                     }
                 }
             }
@@ -118,9 +118,9 @@ namespace JSSoft.UI.InputHandlers
                 }
                 else if (this.isSelecting == true && this.downPoint != TerminalPoint.Invalid)
                 {
-                    this.Selections.Clear();
-                    this.Selections.Add(this.SelectingRange);
-                    this.SelectingRange = TerminalRange.Empty;
+                    this.Grid.Selections.Clear();
+                    this.Grid.Selections.Add(this.Grid.SelectingRange);
+                    this.Grid.SelectingRange = TerminalRange.Empty;
                     this.downPoint = TerminalPoint.Invalid;
                 }
             }
@@ -270,14 +270,14 @@ namespace JSSoft.UI.InputHandlers
                 {
                     if (this.downTime >= 0.5f)
                     {
-                        this.Selections.Clear();
-                        this.Selections.Add(this.SelectingRange);
-                        this.SelectingRange = TerminalRange.Empty;
+                        this.Grid.Selections.Clear();
+                        this.Grid.Selections.Add(this.Grid.SelectingRange);
+                        this.Grid.SelectingRange = TerminalRange.Empty;
                     }
-                    else if (this.Selections.Any() == true)
+                    else if (this.Grid.Selections.Any() == true)
                     {
-                        this.Selections.Clear();
-                        this.SelectingRange = TerminalRange.Empty;
+                        this.Grid.Selections.Clear();
+                        this.Grid.SelectingRange = TerminalRange.Empty;
                     }
                     else if (this.isExecuting == false)
                     {
@@ -288,9 +288,9 @@ namespace JSSoft.UI.InputHandlers
             }
             else if (this.isSelecting == true)
             {
-                this.Selections.Clear();
-                this.Selections.Add(this.SelectingRange);
-                this.SelectingRange = TerminalRange.Empty;
+                this.Grid.Selections.Clear();
+                this.Grid.Selections.Add(this.Grid.SelectingRange);
+                this.Grid.SelectingRange = TerminalRange.Empty;
             }
         }
 
@@ -298,8 +298,8 @@ namespace JSSoft.UI.InputHandlers
         {
             var p1 = this.downRange.BeginPoint < this.dragRange.BeginPoint ? this.downRange.BeginPoint : this.dragRange.BeginPoint;
             var p2 = this.downRange.EndPoint > this.dragRange.EndPoint ? this.downRange.EndPoint : this.dragRange.EndPoint;
-            this.Selections.Clear();
-            this.SelectingRange = new TerminalRange(p1, p2);
+            this.Grid.Selections.Clear();
+            this.Grid.SelectingRange = new TerminalRange(p1, p2);
         }
 
         private void Focus() => this.Grid.Focus();
@@ -425,7 +425,6 @@ namespace JSSoft.UI.InputHandlers
 
             var i = index * height + result.y + height;
             var y = keyboardArea.y;
-            // if (i >= y && keyboardArea.height > 0)
             if (i >= y && keyboardArea.height > 0)
             {
                 var pos = new Vector2(this.gridPosition.x, this.gridPosition.y + (i - y));
@@ -463,13 +462,5 @@ namespace JSSoft.UI.InputHandlers
                 return 1;
             return (count % 3) + 1;
         }
-
-        private TerminalRange SelectingRange
-        {
-            get => this.Grid.SelectingRange;
-            set => this.Grid.SelectingRange = value;
-        }
-
-        private IList<TerminalRange> Selections => this.Grid.Selections;
     }
 }

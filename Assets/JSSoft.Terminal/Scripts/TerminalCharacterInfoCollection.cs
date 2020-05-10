@@ -54,6 +54,7 @@ namespace JSSoft.UI
 
         public void UpdateAll()
         {
+            Debug.Log($"{nameof(TerminalCharacterInfoCollection)}.{nameof(UpdateAll)}");
             this.Update(0);
         }
 
@@ -103,7 +104,11 @@ namespace JSSoft.UI
                 var character = text[index];
                 var charInfo = FontUtility.GetCharacter(font, character);
                 var volume = FontUtility.GetCharacterVolume(font, character);
-                if (point.X + volume > bufferWidth)
+                if (point.X >= bufferWidth && character == '\n')
+                {
+                    volume = 0;
+                }
+                if (point.X >= bufferWidth && volume > 0)
                 {
                     point.X = 0;
                     point.Y++;
@@ -115,13 +120,14 @@ namespace JSSoft.UI
                 characterInfo.ForegroundColor = grid.IndexToForegroundColor(index);
                 characterInfo.Texture = charInfo.Texture;
                 characterInfo.TextIndex = index;
+                this.items[index] = characterInfo;
+                index++;
                 point.X += volume;
-                if (point.X >= bufferWidth || character == '\n')
+                if (character == '\n')
                 {
                     point.X = 0;
                     point.Y++;
                 }
-                this.items[index++] = characterInfo;
             }
             this.lt.Y = 0;
             this.rb.Y = point.Y + 1;
@@ -184,9 +190,9 @@ namespace JSSoft.UI
             {
                 case nameof(ITerminalGrid.Font):
                 case nameof(ITerminalGrid.Style):
-                // case nameof(ITerminalGrid.BufferWidth):
-                // case nameof(ITerminalGrid.BufferHeight):
-                // case nameof(ITerminalGrid.MaxBufferHeight):
+                    // case nameof(ITerminalGrid.BufferWidth):
+                    // case nameof(ITerminalGrid.BufferHeight):
+                    // case nameof(ITerminalGrid.MaxBufferHeight):
                     {
                         this.UpdateAll();
                     }

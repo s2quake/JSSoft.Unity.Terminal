@@ -23,106 +23,31 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace JSSoft.UI
 {
-    class TerminalGridSelection : IList<TerminalRange>
+    class TerminalGridSelection : ObservableCollection<TerminalRange>
     {
-        private readonly List<TerminalRange> itemList = new List<TerminalRange>();
-        private readonly Action action;
+        private readonly TerminalGrid grid;
 
-        public TerminalGridSelection(Action action)
+        public TerminalGridSelection(TerminalGrid grid)
         {
-            this.action = action ?? throw new ArgumentNullException(nameof(action));
+            this.grid = grid;
         }
 
-        public TerminalRange this[int index]
+        protected override void ClearItems()
         {
-            get => this.itemList[index];
-            set => this.itemList[index] = value;
+            if (this.Count > 0)
+                base.ClearItems();
         }
 
-        public int Count => this.itemList.Count;
-
-        public void Add(TerminalRange item)
+        protected override void InsertItem(int index, TerminalRange item)
         {
-            this.itemList.Add(item);
-            this.InvokeSelectionChangedEvent();
+            if (item == TerminalRange.Empty)
+                throw new ArgumentException("invalid selection", nameof(item));
+            base.InsertItem(index, item);
         }
-
-        public void Clear()
-        {
-            this.itemList.Clear();
-            this.InvokeSelectionChangedEvent();
-        }
-
-        public bool Contains(TerminalRange item)
-        {
-            return this.itemList.Contains(item);
-        }
-
-        public void CopyTo(TerminalRange[] array, int arrayIndex)
-        {
-            this.itemList.CopyTo(array, arrayIndex);
-        }
-
-        public int IndexOf(TerminalRange item)
-        {
-            return this.IndexOf(item);
-        }
-
-        public void Insert(int index, TerminalRange item)
-        {
-            this.itemList.Insert(index, item);
-            this.InvokeSelectionChangedEvent();
-        }
-
-        public bool Remove(TerminalRange item)
-        {
-            var result = this.itemList.Remove(item);
-            this.InvokeSelectionChangedEvent();
-            return result;
-        }
-
-        public void RemoveAt(int index)
-        {
-            this.itemList.RemoveAt(index);
-            this.InvokeSelectionChangedEvent();
-        }
-
-        private void InvokeSelectionChangedEvent() => this.action();
-
-        #region IEnumerable
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            foreach (var item in this.itemList)
-            {
-                yield return item;
-            }
-        }
-
-        IEnumerator<TerminalRange> IEnumerable<TerminalRange>.GetEnumerator()
-        {
-            foreach (var item in this.itemList)
-            {
-                yield return item;
-            }
-        }
-
-        bool ICollection<TerminalRange>.IsReadOnly
-        {
-            get
-            {
-                if (this.itemList is ICollection<TerminalRange> collections)
-                {
-                    return collections.IsReadOnly;
-                }
-                throw new NotImplementedException();
-            }
-        }
-
-        #endregion
     }
 }
