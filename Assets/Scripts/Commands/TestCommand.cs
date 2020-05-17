@@ -58,6 +58,8 @@ namespace JSSoft.Communication.Commands
             await this.dispatcher.InvokeAsync(() =>
             {
                 var assemblyDirectory = System.IO.Path.GetDirectoryName(GetAssemblyPath());
+                // var name = Type.GetType("UnityEngine.Application, UnityEngine").GetProperty("platform").GetValue(null).ToString();
+                // this.Out.WriteLine(name);
                 this.Out.WriteLine(assemblyDirectory);
                 this.Out.WriteLine($"Linux: {RuntimeInformation.IsOSPlatform(OSPlatform.Linux)}");
                 this.Out.WriteLine($"OSX: {RuntimeInformation.IsOSPlatform(OSPlatform.OSX)}");
