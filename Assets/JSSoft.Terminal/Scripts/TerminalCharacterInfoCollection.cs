@@ -54,7 +54,6 @@ namespace JSSoft.UI
 
         public void UpdateAll()
         {
-            Debug.Log($"{nameof(TerminalCharacterInfoCollection)}.{nameof(UpdateAll)}");
             this.Update(0);
         }
 

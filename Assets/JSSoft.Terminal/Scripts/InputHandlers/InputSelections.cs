@@ -41,15 +41,17 @@ namespace JSSoft.UI.InputHandlers
         public InputSelections(ITerminalGrid grid)
         {
             this.grid = grid;
-            this.grid.SelectionChanged += Grid_SelectionChanged;
-            this.grid.PropertyChanged += Grid_PropertyChanged;
+            this.Grid.SelectionChanged += Grid_SelectionChanged;
+            this.Grid.PropertyChanged += Grid_PropertyChanged;
         }
 
         public void Dispose()
         {
-            this.grid.SelectionChanged -= Grid_SelectionChanged;
-            this.grid.PropertyChanged -= Grid_PropertyChanged;
+            this.Grid.SelectionChanged -= Grid_SelectionChanged;
+            this.Grid.PropertyChanged -= Grid_PropertyChanged;
         }
+
+        public ITerminalGrid Grid => this.grid;
 
         private void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -121,24 +123,31 @@ namespace JSSoft.UI.InputHandlers
 
         private void RangeToSelection()
         {
-            Debug.Log($"{nameof(MacOSInputHandlerContext)}.{nameof(RangeToSelection)}");
-            var terminal = this.grid.Terminal;
-            var text = terminal.Text;
-            var selections = this.grid.Selections;
-            this.grid.SelectionChanged -= Grid_SelectionChanged;
-            this.grid.Selections.Clear();
+            var selectionList = new List<TerminalRange>(this.objByRange.Count);
+            var objByRange = new Dictionary<TerminalRange, RangeInfo>(this.objByRange.Count);
             foreach (var item in this.objByRange.Values)
             {
                 var range = InputHandlerUtility.ObjectToRange(this.grid, item);
-                this.grid.Selections.Add(range);
+                selectionList.Add(range);
             }
-            this.objByRange.Clear();
-            foreach (var item in this.grid.Selections)
+            foreach (var item in selectionList)
             {
                 var range = InputHandlerUtility.RangeToObject(this.grid, item);
-                this.objByRange.Add(item, range);
+                objByRange.Add(item, range);
             }
-            this.grid.SelectionChanged += Grid_SelectionChanged;
+
+            this.Grid.SelectionChanged -= Grid_SelectionChanged;
+            this.Grid.Selections.Clear();
+            this.objByRange.Clear();
+            foreach (var item in selectionList)
+            {
+                this.Grid.Selections.Add(item);
+            }
+            foreach (var item in objByRange)
+            {
+                this.objByRange.Add(item.Key, item.Value);
+            }
+            this.Grid.SelectionChanged += Grid_SelectionChanged;
         }
     }
 }

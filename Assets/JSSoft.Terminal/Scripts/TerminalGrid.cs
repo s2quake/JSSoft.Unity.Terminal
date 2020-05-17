@@ -914,9 +914,7 @@ namespace JSSoft.UI
 
         private void UpdateRectTransform()
         {
-            Debug.Log($"begin: {nameof(UpdateRectTransform)}");
             this.rectTransform.sizeDelta = this.rectangle.size;
-            Debug.Log($"end  : {nameof(UpdateRectTransform)}");
         }
 
         private void UpdateVisibleIndex()

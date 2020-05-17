@@ -57,7 +57,6 @@ namespace JSSoft.UI
 
         public void UpdateAll()
         {
-            Debug.Log($"{nameof(TerminalRowCollection)}.{nameof(UpdateAll)}");
             this.Update(0);
         }
 
