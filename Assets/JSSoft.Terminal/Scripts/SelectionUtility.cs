@@ -46,12 +46,14 @@ namespace JSSoft.UI
             {
                 var l2 = LastPoint(row2, false);
                 var distance = l2.DistanceOf(s2, bufferWidth);
+                gap = Math.Min(gap, bufferWidth - (l2.X + 1));
                 s2.X = distance > gap ? bufferWidth : l2.X + 1;
             }
             else if (isEnabled2 == true && isEnabled1 == false)
             {
                 var l1 = LastPoint(row1, true);
                 var distance = l1.DistanceOf(s1, bufferWidth);
+                gap = Math.Min(gap, bufferWidth - (l1.X + 1));
                 s1.X = distance > gap ? bufferWidth : l1.X;
                 s2.X++;
             }
@@ -61,6 +63,7 @@ namespace JSSoft.UI
                 {
                     var l1 = LastPoint(row1, true);
                     var distance = l1.DistanceOf(s1, bufferWidth);
+                    gap = Math.Min(gap, bufferWidth - (l1.X + 1));
                     s1.X = distance > gap ? bufferWidth : l1.X;
                 }
                 else
@@ -72,6 +75,7 @@ namespace JSSoft.UI
                 {
                     var l2 = LastPoint(row2, true);
                     var distance = l2.DistanceOf(s2, bufferWidth);
+                    gap = Math.Min(gap, bufferWidth - (l2.X + 1));
                     s2.X = distance > gap ? bufferWidth : l2.X;
                 }
                 else
