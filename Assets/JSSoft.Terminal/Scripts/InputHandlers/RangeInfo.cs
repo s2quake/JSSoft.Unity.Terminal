@@ -21,35 +21,23 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace JSSoft.UI
+namespace JSSoft.UI.InputHandlers
 {
-    class TerminalGridSelection : ObservableCollection<TerminalRange>
+    struct RangeInfo
     {
-        private readonly TerminalGrid grid;
+        public object Start { get; set; }
 
-        public TerminalGridSelection(TerminalGrid grid)
-        {
-            this.grid = grid;
-        }
+        public object End { get; set; }
 
-        protected override void ClearItems()
+        public override string ToString()
         {
-            if (this.Count > 0)
-                base.ClearItems();
-        }
-
-        protected override void InsertItem(int index, TerminalRange item)
-        {
-            if (item == TerminalRange.Empty)
-                throw new ArgumentException("invalid selection", nameof(item));
-            if (this.Contains(item) == true)
-                throw new ArgumentException("already exists.");
-            base.InsertItem(index, item);
+            return $"{{{this.Start}}}, {{{this.End}}}";
         }
     }
 }

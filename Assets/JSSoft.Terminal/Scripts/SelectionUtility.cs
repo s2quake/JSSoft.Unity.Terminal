@@ -185,45 +185,6 @@ namespace JSSoft.UI
             return character != char.MinValue && character != '\n';
         }
 
-        public static RangeInt RangeToInt(ITerminalGrid grid, TerminalRange range)
-        {
-            var terminal = grid.Terminal;
-            var beginPoint = range.BeginPoint;
-            var endPoint = range.EndPoint;
-            var beginIndex = grid.PointToIndex(beginPoint);
-            var endIndex = grid.PointToIndex(endPoint);
-            Debug.Log($"from {beginIndex} to {endIndex}");
-            if (beginIndex < 0)
-            {
-                var row = grid.Rows[beginPoint.Y];
-                beginPoint = SelectionUtility.LastPoint(row, false);
-                beginIndex = grid.PointToIndex(beginPoint);
-                if (beginIndex < 0)
-                {
-                    var lastPoint = grid.CharacterInfos.Last().Point;
-                    beginIndex = lastPoint.Y - beginPoint.Y;
-                }
-            }
-            if (endIndex < 0)
-            {
-                if (beginIndex < 0)
-                {
-                    var lastPoint = grid.CharacterInfos.Last().Point;
-                    endIndex = lastPoint.Y - endPoint.Y;
-                }
-                else
-                {
-                    var row = grid.Rows[endPoint.Y];
-                    var text = terminal.Text;
-                    var lastPoint = SelectionUtility.LastPoint(row, false);
-                    endIndex = grid.PointToIndex(lastPoint);
-                    // Debug.Log($"endIndex: {endIndex}");
-                    endIndex = text.IndexOf('\n', endIndex) + 1;
-                }
-            }
-            return new RangeInt(beginIndex, endIndex - beginIndex);
-        }
-
         private static TerminalRange SelectWordOfEmptyRow(ITerminalGrid grid, ITerminalRow row)
         {
             var p1 = new TerminalPoint(0, row.Index);

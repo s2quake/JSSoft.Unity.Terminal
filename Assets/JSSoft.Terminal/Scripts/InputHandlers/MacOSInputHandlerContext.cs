@@ -34,9 +34,8 @@ namespace JSSoft.UI.InputHandlers
     class MacOSInputHandlerContext : InputHandlerContext
     {
         private static Texture2D cursorTexture;
-        private readonly List<TerminalRange> selections = new List<TerminalRange>();
-        private readonly List<RangeInt> rangeList = new List<RangeInt>();
         private readonly float clickThreshold = 0.5f;
+        private InputSelections selections;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
         private TerminalRange dragRange;
@@ -82,9 +81,7 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                // Debug.Log(nameof(EndDrag));
                 this.Grid.Selections.Clear();
-                // Debug.Log(this.Grid.SelectingRange);
                 if (this.Grid.SelectingRange != TerminalRange.Empty)
                 {
                     this.Grid.Selections.Add(this.Grid.SelectingRange);
@@ -121,7 +118,6 @@ namespace JSSoft.UI.InputHandlers
                     if (downCount == 1)
                     {
                         this.Grid.SelectingRange = TerminalRange.Empty;
-                        // this.Grid.Selections.Clear();
                         this.downRange = SelectionUtility.UpdatePoint(grid, newPoint, newPoint);
                     }
                     else if (downCount == 2)
@@ -159,7 +155,12 @@ namespace JSSoft.UI.InputHandlers
                 var oldPoint = this.downPoint;
                 if (oldPoint == newPoint && eventData.dragging == false)
                 {
-                    if (downCount == 2 || downCount == 3)
+                    if (downCount == 1)
+                    {
+                        grid.Selections.Clear();
+                        grid.SelectingRange = TerminalRange.Empty;
+                    }
+                    else if (downCount == 2 || downCount == 3)
                     {
                         SelectionUtility.Select(grid, grid.SelectingRange);
                     }
@@ -170,14 +171,13 @@ namespace JSSoft.UI.InputHandlers
         public override void Attach(ITerminalGrid grid)
         {
             base.Attach(grid);
-            this.Grid.SelectionChanged += Grid_SelectionChanged;
-            this.Grid.PropertyChanged += Grid_PropertyChanged;
+            this.selections = new InputSelections(grid);
         }
 
         public override void Detach(ITerminalGrid grid)
         {
-            this.Grid.SelectionChanged -= Grid_SelectionChanged;
-            this.Grid.PropertyChanged -= Grid_PropertyChanged;
+            this.selections.Dispose();
+            this.selections = null;
             base.Detach(grid);
         }
 
@@ -200,124 +200,6 @@ namespace JSSoft.UI.InputHandlers
             if (diffTime > clickThreshold || oldPosition != newPosition)
                 return 1;
             return (count) % 3 + 1;
-        }
-
-        private void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            // Debug.Log(e.Action);
-            switch (e.Action)
-            {
-                case NotifyCollectionChangedAction.Add:
-                    {
-                        foreach (var item in e.NewItems)
-                        {
-                            // Debug.Log((TerminalRange)item);
-                            this.selections.Add((TerminalRange)item);
-                        }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Remove:
-                    {
-                        foreach (var item in e.OldItems)
-                        {
-                            this.selections.Remove((TerminalRange)item);
-                        }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Replace:
-                    {
-                        for (var i = 0; i < e.OldItems.Count; i++)
-                        {
-                            var oldItem = (TerminalRange)e.OldItems[i];
-                            var newItem = (TerminalRange)e.NewItems[i];
-                            var index = this.selections.IndexOf(oldItem);
-                            this.selections[index] = newItem;
-                        }
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Move:
-                    {
-                        var item = this.selections[e.OldStartingIndex];
-                        this.selections.RemoveAt(e.OldStartingIndex);
-                        this.selections.Insert(e.NewStartingIndex, item);
-                    }
-                    break;
-                case NotifyCollectionChangedAction.Reset:
-                    {
-                        this.selections.Clear();
-                    }
-                    break;
-            }
-            this.SelectionToRange();
-        }
-
-        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
-            {
-                case nameof(ITerminalGrid.BufferWidth):
-                case nameof(ITerminalGrid.BufferHeight):
-                    {
-                        this.RangeToSelection();
-                    }
-                    break;
-            }
-        }
-
-        private void SelectionToRange()
-        {
-            // Debug.Log($"{nameof(MacOSInputHandlerContext)}.{nameof(SelectionToRange)}");
-            this.rangeList.Clear();
-            foreach (var item in this.selections)
-            {
-                var range = SelectionUtility.RangeToInt(this.Grid, item);
-                Debug.Log($"{range.start}:{range.end}");
-                this.rangeList.Add(range);
-            }
-        }
-
-        private void RangeToSelection()
-        {
-            Debug.Log($"{nameof(MacOSInputHandlerContext)}.{nameof(RangeToSelection)}");
-            var text = this.Terminal.Text;
-            this.Grid.SelectionChanged -= Grid_SelectionChanged;
-            this.Grid.Selections.Clear();
-            foreach (var item in this.rangeList)
-            {
-                if (item.start >= 0)
-                {
-                    var p1 = this.Grid.IndexToPoint(item.start);
-                    if (item.length >= 0)
-                    {
-                        if (text[item.end - 1] == '\n')
-                        {
-                            Debug.Log("n");
-                            var p2 = this.Grid.IndexToPoint(item.end);
-                            p2.X = this.Grid.BufferWidth;
-                            this.Grid.Selections.Add(new TerminalRange(p1, p2));
-                        }
-                        else
-                        {
-                            var p2 = this.Grid.IndexToPoint(item.end);
-                            this.Grid.Selections.Add(new TerminalRange(p1, p2));
-                        }
-                    }
-                    else
-                    {
-                        var range = SelectionUtility.SelectLine(this.Grid, p1);
-                        var p2 = range.EndPoint;
-                        this.Grid.Selections.Add(new TerminalRange(p1, p2));
-                    }
-                }
-                else
-                {
-                    var p1 = new TerminalPoint(0, this.Grid.CursorPoint.Y - item.start);
-                    var p2 = new TerminalPoint(this.Grid.BufferWidth, this.Grid.CursorPoint.Y - item.end);
-                    this.Grid.Selections.Add(new TerminalRange(p1, p2));
-                }
-            }
-            this.SelectionToRange();
-            this.Grid.SelectionChanged += Grid_SelectionChanged;
         }
     }
 }

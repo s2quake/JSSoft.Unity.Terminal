@@ -26,6 +26,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace JSSoft.UI.InputHandlers
 {
@@ -40,6 +42,7 @@ namespace JSSoft.UI.InputHandlers
 #else
         private readonly KeyboardBase keyboard = new IOSKeyboard();
 #endif
+        private InputSelections selections;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
         private TerminalRange dragRange;
@@ -211,10 +214,13 @@ namespace JSSoft.UI.InputHandlers
             this.keyboard.Done += Keyboard_Done;
             this.keyboard.Canceled += Keyboard_Canceled;
             this.keyboard.Changed += Keyboard_Changed;
+            this.selections = new InputSelections(grid);
         }
 
         public override void Detach(ITerminalGrid grid)
         {
+            this.selections.Dispose();
+            this.selections = null;
             this.Terminal.Executed -= Terminal_Executed;
             this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
             this.Grid.LayoutChanged -= Grid_LayoutChanged;
@@ -367,7 +373,7 @@ namespace JSSoft.UI.InputHandlers
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            
+
         }
 
         private void Swiper_Swiped(object sender, SwipedEventArgs e)
