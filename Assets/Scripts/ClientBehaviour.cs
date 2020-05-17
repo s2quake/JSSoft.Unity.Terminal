@@ -26,6 +26,7 @@ using JSSoft.UI;
 using UnityEngine;
 using Ntreev.Library.Threading;
 using Zenject;
+using System.ComponentModel;
 
 namespace JSSoft.Communication.Shells
 {
@@ -38,6 +39,8 @@ namespace JSSoft.Communication.Shells
         private ITerminal terminal;
         [SerializeField]
         private TerminalGrid grid;
+        [SerializeField]
+        private bool adjustResolution;
         private ScreenOrientation orientation;
 
         [RuntimeInitializeOnLoadMethod]
@@ -80,11 +83,13 @@ namespace JSSoft.Communication.Shells
                 this.terminal.AppendLine($"example: open --host [address]");
                 this.terminal.CursorPosition = 0;
             }
+#if UNITY_STANDALONE
             if (this.grid != null)
             {
-                // var rectangle = this.grid.Rectangle;
-                // Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
+                var rectangle = this.grid.Rectangle;
+                Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
             }
+#endif // UNITY_STANDALONE
             this.orientation = Screen.orientation;
             // this.UpdateTerminalLayout();
         }
@@ -103,6 +108,16 @@ namespace JSSoft.Communication.Shells
             {
                 this.scheduler.ProcessAll(1000 / 60);
             }
+        }
+
+        public void OnEnable()
+        {
+            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
+        }
+
+        public void OnDisable()
+        {
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
         }
 
         public async void OnDestroy()
@@ -182,6 +197,29 @@ namespace JSSoft.Communication.Shells
         private void Terminal_Disabled(object sender, EventArgs e)
         {
             this.terminal = null;
+        }
+
+        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (object.Equals(sender, this.grid) == true)
+            {
+#if !UNITY_EDITOR
+                switch (e.PropertyName)
+                {
+                    case nameof(ITerminalGrid.Style):
+                    case nameof(ITerminalGrid.BufferWidth):
+                    case nameof(ITerminalGrid.BufferHeight):
+                        {
+                            if (this.adjustResolution == true)
+                            {
+                                var rectangle = this.grid.Rectangle;
+                                Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
+                            }
+                        }
+                        break;
+                }
+#endif
+            }
         }
     }
 }

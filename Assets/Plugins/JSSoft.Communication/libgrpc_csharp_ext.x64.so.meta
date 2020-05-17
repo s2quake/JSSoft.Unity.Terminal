@@ -17,7 +17,7 @@ PluginImporter:
       enabled: 0
       settings:
         Exclude Editor: 0
-        Exclude Linux: 0
+        Exclude Linux: 1
         Exclude Linux64: 0
         Exclude LinuxUniversal: 0
         Exclude OSXUniversal: 0
@@ -27,7 +27,7 @@ PluginImporter:
   - first:
       Any: 
     second:
-      enabled: 1
+      enabled: 0
       settings: {}
   - first:
       Editor: Editor
@@ -36,7 +36,7 @@ PluginImporter:
       settings:
         CPU: AnyCPU
         DefaultValueInitialized: true
-        OS: AnyOS
+        OS: Windows
   - first:
       Facebook: Win
     second:
@@ -52,9 +52,9 @@ PluginImporter:
   - first:
       Standalone: Linux
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: x86
+        CPU: None
   - first:
       Standalone: Linux64
     second:
@@ -65,13 +65,14 @@ PluginImporter:
       Standalone: LinuxUniversal
     second:
       enabled: 1
-      settings: {}
+      settings:
+        CPU: x86_64
   - first:
       Standalone: OSXUniversal
     second:
       enabled: 1
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: Win
     second:

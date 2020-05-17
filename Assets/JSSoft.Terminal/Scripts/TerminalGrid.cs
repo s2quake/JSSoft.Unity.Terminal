@@ -807,6 +807,7 @@ namespace JSSoft.UI
         {
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
+            this.UpdateLayout(true);
             this.ScrollToTop();
             this.ScrollToCursor();
             TerminalGridEvents.Register(this);

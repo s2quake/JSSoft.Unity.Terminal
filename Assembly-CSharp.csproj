@@ -159,6 +159,7 @@
      <Compile Include="Assets\Scripts\Commands\OpenCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\ResetCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\StyleCommand.cs" />
+     <Compile Include="Assets\Scripts\Commands\TestCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\UserCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\VerboseCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\WidthCommand.cs" />
