@@ -607,14 +607,17 @@ namespace JSSoft.UI
 
         private void ExecuteEvent(string commandText, string prompt)
         {
-            var action = new Action<Exception>((e) => 
+            var action = new Action<Exception>((e) =>
             {
                 this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt);
                 this.executed?.Invoke(this, new TerminalExecutedEventArgs(commandText, e));
             });
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
             this.isReadOnly = true;
-            this.executing?.Invoke(this, eventArgs);
+            if (this.executing != null)
+                this.executing.Invoke(this, eventArgs);
+            else
+                action(null);
         }
 
         internal TerminalColor? GetForegroundColor(int index)

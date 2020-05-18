@@ -50,7 +50,9 @@
         "Obj/": true,
         "ProjectSettings/": true,
         "temp/": true,
-        "Temp/": true
+        "Temp/": true,
+        "ios/": true,
+        "osx.app/": true
     },
     "editor.codeLens": false,
     "git.ignoreLimitWarning": true

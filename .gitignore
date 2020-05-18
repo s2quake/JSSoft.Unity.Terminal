@@ -62,3 +62,4 @@ crashlytics-build.properties
 
 /ios
 /osx.app
+libgrpc_csharp_ext.dylib

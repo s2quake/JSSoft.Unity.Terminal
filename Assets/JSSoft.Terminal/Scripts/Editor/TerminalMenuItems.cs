@@ -145,8 +145,8 @@ namespace JSSoft.UI.Editor
 
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-            var font = AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Fonts/NanumGothicCoding.asset", typeof(TerminalFont)) as TerminalFont;
-            var controller = AssetDatabase.LoadAssetAtPath("Assets/JSSoft Terminal/Animations/TerminalScrollbar/TerminalScrollbar.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+            var font = AssetDatabase.LoadAssetAtPath("Assets/JSSoft.Terminal/Fonts/NanumGothicCoding.asset", typeof(TerminalFont)) as TerminalFont;
+            var controller = AssetDatabase.LoadAssetAtPath("Assets/JSSoft.Terminal/Animations/TerminalScrollbar/TerminalScrollbar.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
 
             var terminalGridObj = new GameObject("Terminal") { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
