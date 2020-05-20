@@ -41,7 +41,6 @@ namespace JSSoft.Communication.Shells
         private TerminalGrid grid;
         [SerializeField]
         private bool adjustResolution;
-        private ScreenOrientation orientation;
 
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
@@ -90,18 +89,10 @@ namespace JSSoft.Communication.Shells
                 Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
             }
 #endif // UNITY_STANDALONE
-            this.orientation = Screen.orientation;
-            // this.UpdateTerminalLayout();
         }
 
         public void Update()
         {
-            if (Screen.orientation != this.orientation)
-            {
-                Debug.Log(Screen.orientation);
-                this.orientation = Screen.orientation;
-                this.UpdateTerminalLayout();
-            }
 #if UNITY_EDITOR
             if (Application.isPlaying && this.scheduler != null)
 #endif
@@ -127,32 +118,6 @@ namespace JSSoft.Communication.Shells
                 await this.shell.StopAsync();
                 this.shell.Dispose();
             }
-        }
-
-        private void UpdateTerminalLayout()
-        {
-#if UNITY_IOS
-            if (this.grid != null)
-            {
-                switch (this.orientation)
-                {
-                    case ScreenOrientation.Portrait:
-                    case ScreenOrientation.PortraitUpsideDown:
-                        {
-                            this.grid.BufferWidth = 57;
-                            this.grid.BufferHeight = 51;
-                        }
-                        break;
-                    case ScreenOrientation.Landscape:
-                    case ScreenOrientation.LandscapeRight:
-                        {
-                            this.grid.BufferWidth = 102;
-                            this.grid.BufferHeight = 28;
-                        }
-                        break;
-                }
-            }
-#endif // UNITY_IOS
         }
 
         private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)

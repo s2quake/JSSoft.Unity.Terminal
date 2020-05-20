@@ -153,6 +153,7 @@ namespace JSSoft.UI.Editor
             var terminal = terminalGrid.Terminal;
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
+            terminalGridObj.AddComponent<TerminalOrientationBehaviour>();
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
             terminalGridRect.SetParent(canvasTransform);

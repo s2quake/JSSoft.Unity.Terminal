@@ -965,7 +965,6 @@ namespace JSSoft.UI
             {
                 this.Text = this.Terminal.Text;
                 this.ScrollToCursor();
-                // this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
         }
 
@@ -977,7 +976,6 @@ namespace JSSoft.UI
                 this.CursorPoint = this.IndexToPoint(index);
                 this.Selections.Clear();
                 this.ScrollToCursor();
-                // this.InvokePropertyChangedEvent(nameof(VisibleIndex));
             }
         }
 

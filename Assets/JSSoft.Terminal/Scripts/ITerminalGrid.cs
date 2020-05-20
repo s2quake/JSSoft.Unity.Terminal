@@ -122,6 +122,8 @@ namespace JSSoft.UI
 
         bool IsScrollForwardEnabled { get; set; }
 
+        bool IsScrolling { get; set; }
+
         IKeyBindingCollection KeyBindings { get; set; }
 
         IInputHandler InputHandler { get; set; }

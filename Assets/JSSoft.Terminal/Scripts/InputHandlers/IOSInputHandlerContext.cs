@@ -57,6 +57,10 @@ namespace JSSoft.UI.InputHandlers
         private float downTime;
         private float scrollDelta;
         private Vector2 gridPosition;
+        private TerminalOrientationBehaviour orientationBehaviour;
+        private bool isPortrait;
+        private int bufferWidth;
+        private int bufferHeight;
 
         public IOSInputHandlerContext()
         {
@@ -201,6 +205,7 @@ namespace JSSoft.UI.InputHandlers
 
             this.swiper.Update();
             this.keyboard.Update();
+            // this.orientationBehaviour.Update();
         }
 
         public override void Attach(ITerminalGrid grid)
@@ -208,22 +213,27 @@ namespace JSSoft.UI.InputHandlers
             base.Attach(grid);
             this.Terminal.Executed += Terminal_Executed;
             this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
-            this.Grid.LayoutChanged += Grid_LayoutChanged;
             this.swiper.Swiped += Swiper_Swiped;
             this.keyboard.Opened += Keyboard_Opened;
             this.keyboard.Done += Keyboard_Done;
             this.keyboard.Canceled += Keyboard_Canceled;
             this.keyboard.Changed += Keyboard_Changed;
             this.selections = new InputSelections(grid);
+            this.orientationBehaviour = this.Grid.GameObject.GetComponent<TerminalOrientationBehaviour>();
+            this.orientationBehaviour.Changed.AddListener(OrientationBehaviour_Changed);
+            this.isPortrait = TerminalOrientationBehaviour.IsPortait(Screen.orientation);
+            this.bufferWidth = this.Grid.BufferWidth;
+            this.bufferHeight = this.Grid.BufferHeight;
         }
 
         public override void Detach(ITerminalGrid grid)
         {
+            this.orientationBehaviour.Changed.RemoveListener(OrientationBehaviour_Changed);
+            this.orientationBehaviour = null;
             this.selections.Dispose();
             this.selections = null;
             this.Terminal.Executed -= Terminal_Executed;
             this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
-            this.Grid.LayoutChanged -= Grid_LayoutChanged;
             this.swiper.Swiped -= Swiper_Swiped;
             this.keyboard.Opened -= Keyboard_Opened;
             this.keyboard.Done -= Keyboard_Done;
@@ -346,6 +356,7 @@ namespace JSSoft.UI.InputHandlers
                 }
             }
 
+            this.Grid.IsScrolling = true;
             this.scrollDelta = scrollDelta;
             this.scrollPos = scrollPos;
             this.Grid.VisibleIndex = index;
@@ -354,6 +365,7 @@ namespace JSSoft.UI.InputHandlers
             {
                 this.isScrolling = false;
                 this.scrollDelta = 0.0f;
+                this.Grid.IsScrolling = false;
             }
         }
 
@@ -369,11 +381,6 @@ namespace JSSoft.UI.InputHandlers
             {
                 this.keyboard.Text = this.Terminal.Command;
             }
-        }
-
-        private void Grid_LayoutChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void Swiper_Swiped(object sender, SwipedEventArgs e)
@@ -403,15 +410,34 @@ namespace JSSoft.UI.InputHandlers
         {
             this.Grid.SetCommand(e.Text);
             this.Grid.SelectCommand(e.Selection);
-            this.NewMethod(e.Area);
+            this.AdjustPosition(e.Area);
         }
 
-        private void ResetPosition()
+        private void OrientationBehaviour_Changed(ScreenOrientation oldValue, ScreenOrientation newValue, bool isRotated)
         {
-
+            if (isRotated == true)
+            {
+                var isPortrait = TerminalOrientationBehaviour.IsPortait(newValue);
+                if (isPortrait == this.isPortrait)
+                {
+                    this.Grid.BufferWidth = this.bufferWidth;
+                    this.Grid.BufferHeight = this.bufferHeight;
+                }
+                else
+                {
+                    var rectangle = this.Grid.Rectangle;
+                    var padding = this.Grid.Padding;
+                    var width = (int)(rectangle.width - (padding.Left + padding.Right));
+                    var height = (int)(rectangle.height - (padding.Top + padding.Bottom));
+                    var itemWidth = TerminalGridUtility.GetItemWidth(this.Grid);
+                    var itemHeight = TerminalGridUtility.GetItemHeight(this.Grid);
+                    this.Grid.BufferWidth = height / itemWidth;
+                    this.Grid.BufferHeight = width / itemHeight;
+                }
+            }
         }
 
-        private void NewMethod(Rect keyboardArea)
+        private void AdjustPosition(Rect keyboardArea)
         {
             var font = this.Grid.Font;
             var point = this.Grid.CursorPoint;
@@ -419,8 +445,6 @@ namespace JSSoft.UI.InputHandlers
             var index = point.Y - this.Grid.VisibleIndex;
             var gameObject = this.Grid.GameObject;
             var rectTransform = gameObject.GetComponent<RectTransform>();
-            var camera = gameObject.GetComponentInParent<Canvas>().worldCamera;
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(rectTransform, rectTransform.localPosition, camera, out var screenPosition);
             var worldCorners = new Vector3[4];
             rectTransform.GetWorldCorners(worldCorners);
             var result = new Rect(
@@ -460,7 +484,7 @@ namespace JSSoft.UI.InputHandlers
             this.Grid.SelectCommand(e.Selection);
         }
 
-        static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
+        private static int GetDownCount(int count, float clickThreshold, float oldTime, float newTime, Vector2 oldPosition, Vector2 newPosition)
         {
             var diffTime = newTime - oldTime;
             var distance = (oldPosition - newPosition).magnitude;

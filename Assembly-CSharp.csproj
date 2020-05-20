@@ -136,6 +136,7 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalGridSelection.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalGridUtility.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalMesh.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalOrientationBehaviour.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalPoint.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalRange.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalRow.cs" />
