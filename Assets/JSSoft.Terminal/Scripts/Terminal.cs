@@ -33,6 +33,7 @@ namespace JSSoft.UI
     [ExecuteAlways]
     public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor
     {
+        private const int growSize = 1000;
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
 

@@ -118,6 +118,10 @@ namespace JSSoft.Communication.Shells
                 await this.shell.StopAsync();
                 this.shell.Dispose();
             }
+            if (this.writer != null)
+            {
+                this.writer.Dispose();
+            }
         }
 
         private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)

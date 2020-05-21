@@ -418,12 +418,9 @@ namespace JSSoft.UI.InputHandlers
             if (isRotated == true)
             {
                 var isPortrait = TerminalOrientationBehaviour.IsPortait(newValue);
-                if (isPortrait == this.isPortrait)
-                {
-                    this.Grid.BufferWidth = this.bufferWidth;
-                    this.Grid.BufferHeight = this.bufferHeight;
-                }
-                else
+                var bufferWidth = this.bufferWidth;
+                var bufferHeight = this.bufferHeight;
+                if (isPortrait != this.isPortrait)
                 {
                     var rectangle = this.Grid.Rectangle;
                     var padding = this.Grid.Padding;
@@ -431,9 +428,15 @@ namespace JSSoft.UI.InputHandlers
                     var height = (int)(rectangle.height - (padding.Top + padding.Bottom));
                     var itemWidth = TerminalGridUtility.GetItemWidth(this.Grid);
                     var itemHeight = TerminalGridUtility.GetItemHeight(this.Grid);
-                    this.Grid.BufferWidth = height / itemWidth;
-                    this.Grid.BufferHeight = width / itemHeight;
+                    bufferWidth = height / itemWidth;
+                    bufferHeight = width / itemHeight;
                 }
+                if (this.keyboard.IsOpened == true)
+                    this.Grid.SetPosition(this.gridPosition);
+                this.Grid.BufferWidth = bufferWidth;
+                this.Grid.BufferHeight = bufferHeight;
+                if (this.keyboard.IsOpened == true)
+                    this.AdjustPosition(this.keyboard.Area);
             }
         }
 
@@ -443,17 +446,8 @@ namespace JSSoft.UI.InputHandlers
             var point = this.Grid.CursorPoint;
             var height = font.Height;
             var index = point.Y - this.Grid.VisibleIndex;
-            var gameObject = this.Grid.GameObject;
-            var rectTransform = gameObject.GetComponent<RectTransform>();
-            var worldCorners = new Vector3[4];
-            rectTransform.GetWorldCorners(worldCorners);
-            var result = new Rect(
-                 worldCorners[0].x,
-                 worldCorners[0].y,
-                 worldCorners[2].x - worldCorners[0].x,
-                 worldCorners[2].y - worldCorners[0].y);
-
-            var i = index * height + result.y + height;
+            var rect = this.Grid.GetRect();
+            var i = index * height + (height * (int)(rect.y / height + 1));
             var y = keyboardArea.y;
             if (i >= y && keyboardArea.height > 0)
             {

@@ -29,6 +29,7 @@ using System.Text;
 using System.Threading;
 using Ntreev.Library.Threading;
 using JSSoft.UI;
+using UnityEngine;
 
 namespace JSSoft.Communication.Shells
 {
@@ -41,6 +42,21 @@ namespace JSSoft.Communication.Shells
         {
             this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
+
+            Application.logMessageReceived += LogCallback;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing == true)
+            {
+                Application.logMessageReceived -= LogCallback;
+            }
+        }
+
+        private void LogCallback(string condition, string stackTrace, LogType type)
+        {
+            this.terminal.AppendLine(condition);
         }
 
         public override void Write(char value)

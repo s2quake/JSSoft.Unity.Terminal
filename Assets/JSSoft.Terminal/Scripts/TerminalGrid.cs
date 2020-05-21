@@ -218,22 +218,22 @@ namespace JSSoft.UI
             return row.Cells[point.X];
         }
 
-        public void Append(string text)
-        {
-            this.Append(text, this.text.Length);
-        }
+        // public void Append(string text)
+        // {
+        //     this.Append(text, this.text.Length);
+        // }
 
-        public void Append(string text, int index)
-        {
-            this.text = this.text.Insert(index, text);
-            this.InvokePropertyChangedEvent(nameof(Text));
-        }
+        // public void Append(string text, int index)
+        // {
+        //     this.text = this.text.Insert(index, text);
+        //     this.InvokePropertyChangedEvent(nameof(Text));
+        // }
 
-        public void Remove(int startIndex, int length)
-        {
-            this.text.Remove(startIndex, length);
-            this.InvokePropertyChangedEvent(nameof(Text));
-        }
+        // public void Remove(int startIndex, int length)
+        // {
+        //     this.text.Remove(startIndex, length);
+        //     this.InvokePropertyChangedEvent(nameof(Text));
+        // }
 
         public void Focus()
         {
@@ -422,6 +422,7 @@ namespace JSSoft.UI
                     this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferWidth));
                     this.CursorPoint = this.IndexToPoint(this.Terminal.CursorIndex);
+                    this.UpdateVisibleIndex();
                 }
             }
         }
@@ -439,6 +440,7 @@ namespace JSSoft.UI
                     this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferHeight));
                     this.CursorPoint = this.IndexToPoint(this.Terminal.CursorIndex);
+                    this.UpdateVisibleIndex();
                 }
             }
         }
@@ -920,8 +922,18 @@ namespace JSSoft.UI
 
         private void UpdateVisibleIndex()
         {
+            this.UpdateVisibleIndex(false);
+        }
+
+        private void UpdateVisibleIndex(bool fire)
+        {
+            var visibleIndex = this.visibleIndex;
             this.visibleIndex = Math.Max(this.visibleIndex, this.MinimumVisibleIndex);
             this.visibleIndex = Math.Min(this.visibleIndex, this.MaximumVisibleIndex);
+            if (fire == true && this.visibleIndex != visibleIndex)
+            {
+                this.OnPropertyChanged(new PropertyChangedEventArgs(nameof(VisibleIndex)));
+            }
         }
 
         private void UpdateCursorPoint()
@@ -975,6 +987,7 @@ namespace JSSoft.UI
                 var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
                 this.CursorPoint = this.IndexToPoint(index);
                 this.Selections.Clear();
+                this.UpdateVisibleIndex(true);
                 this.ScrollToCursor();
             }
         }
