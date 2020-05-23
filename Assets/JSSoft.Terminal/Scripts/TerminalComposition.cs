@@ -223,31 +223,31 @@ namespace JSSoft.UI
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (object.Equals(sender, this.grid) == false)
-                return;
-
-            switch (e.PropertyName)
+            if (sender is TerminalGrid grid == this.grid)
             {
-                case nameof(ITerminalGrid.VisibleIndex):
-                case nameof(ITerminalGrid.CursorPoint):
-                    {
-                        var cursorPoint = this.grid.CursorPoint;
-                        var visibleIndex = this.grid.VisibleIndex;
-                        this.columnIndex = cursorPoint.X;
-                        this.rowIndex = cursorPoint.Y - visibleIndex;
-                    }
-                    break;
-                case nameof(ITerminalGrid.CompositionString):
-                    {
-                        this.text = this.grid.CompositionString;
-                    }
-                    break;
+                switch (e.PropertyName)
+                {
+                    case nameof(ITerminalGrid.VisibleIndex):
+                    case nameof(ITerminalGrid.CursorPoint):
+                        {
+                            var cursorPoint = this.grid.CursorPoint;
+                            var visibleIndex = this.grid.VisibleIndex;
+                            this.columnIndex = cursorPoint.X;
+                            this.rowIndex = cursorPoint.Y - visibleIndex;
+                        }
+                        break;
+                    case nameof(ITerminalGrid.CompositionString):
+                        {
+                            this.text = this.grid.CompositionString;
+                        }
+                        break;
+                }
             }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
+            if (sender is TerminalGrid grid == this.grid)
             {
                 this.UpdateColor();
             }

@@ -32,8 +32,8 @@ namespace JSSoft.UI
     [ExecuteAlways]
     class TerminalCompositionBackground : MaskableGraphic
     {
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
         private TerminalComposition composition;
-        private TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalCompositionBackground()
         {

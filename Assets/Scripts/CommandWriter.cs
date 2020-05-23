@@ -43,7 +43,7 @@ namespace JSSoft.Communication.Shells
             this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
 
-            Application.logMessageReceived += LogCallback;
+            // Application.logMessageReceived += LogCallback;
         }
 
         protected override void Dispose(bool disposing)
@@ -56,7 +56,6 @@ namespace JSSoft.Communication.Shells
 
         private void LogCallback(string condition, string stackTrace, LogType type)
         {
-            return;
             if (type == LogType.Error)
             {
                 this.terminal.ForegroundColor = TerminalColor.Red;

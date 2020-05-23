@@ -125,7 +125,6 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCursor.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCursorStyle.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalEnvironment.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalEventCollection.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalEvents.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalExecutedEventArgs.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalExecuteEventArgs.cs" />

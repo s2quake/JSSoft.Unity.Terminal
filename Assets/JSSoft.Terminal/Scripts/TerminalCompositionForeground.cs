@@ -23,7 +23,6 @@
 using System;
 using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -32,8 +31,8 @@ namespace JSSoft.UI
     [ExecuteAlways]
     class TerminalCompositionForeground : MaskableGraphic
     {
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
         private TerminalComposition composition;
-        private TerminalMesh terminalMesh = new TerminalMesh();
         private Texture texture;
 
         public TerminalCompositionForeground()

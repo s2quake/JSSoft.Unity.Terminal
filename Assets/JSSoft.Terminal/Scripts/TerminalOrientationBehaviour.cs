@@ -78,15 +78,7 @@ namespace JSSoft.UI
 
         public ScreenOrientation Orientation => this.orientation;
 
-
         public OrientationChangedEvent Changed => this.changed;
-
-        // public event EventHandler<OrientationChangedEventArgs> Changed;
-
-        // protected virtual void OnChanged(OrientationChangedEventArgs e)
-        // {
-        //     this.Changed?.Invoke(this, e);
-        // }
 
         private void UpdateOrientation(ScreenOrientation oldValue, ScreenOrientation newValue)
         {
@@ -103,6 +95,9 @@ namespace JSSoft.UI
             }
         }
 
+        /// <summary>
+        /// void Callback(ScreenOrientation oldValue, ScreenOrientation newValue, bool isRotated)
+        /// </summary>
         public class OrientationChangedEvent : UnityEvent<ScreenOrientation, ScreenOrientation, bool>
         {
         }
