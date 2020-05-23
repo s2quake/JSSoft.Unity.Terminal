@@ -120,6 +120,8 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalColorPalette.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalColors.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalComposition.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCompositionBackground.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCompositionForeground.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCursor.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCursorStyle.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalEnvironment.cs" />

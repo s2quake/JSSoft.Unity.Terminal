@@ -25,11 +25,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace JSSoft.UI
 {
-    class TerminalComposition : MaskableGraphic
+    [ExecuteAlways]
+    [RequireComponent(typeof(RectTransform))]
+    class TerminalComposition : UIBehaviour, INotifyValidated
     {
         private static readonly int[] backgroundTriangles = new int[6] { 0, 1, 2, 2, 3, 0 };
         private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
@@ -51,31 +54,22 @@ namespace JSSoft.UI
         [SerializeField]
         private int rowIndex;
 
-        private new Material material;
-        private Texture texture;
-        private Vector3[] vertices = new Vector3[8];
-        private Vector2[] uvs = new Vector2[8];
-        private Color32[] colors = new Color32[8];
-        private Mesh mesh;
-
         public TerminalComposition()
         {
 
         }
 
-        public override void Rebuild(CanvasUpdate update)
-        {
-            base.Rebuild(update);
-            if (update == CanvasUpdate.LatePreRender)
-            {
-                this.UpdateGeometry();
-            }
-        }
-
         public TerminalGrid Grid
         {
             get => this.grid;
-            set => this.grid = value;
+            set
+            {
+                if (this.grid != value)
+                {
+                    this.grid = value;
+                    this.InvokePropertyChanged(nameof(Grid));
+                }
+            }
         }
 
         public string Text
@@ -83,8 +77,13 @@ namespace JSSoft.UI
             get => this.text;
             set
             {
-                this.text = value ?? throw new ArgumentNullException(nameof(value));
-                this.SetVerticesDirty();
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                if (this.text != value)
+                {
+                    this.text = value;
+                    this.InvokePropertyChanged(nameof(Text));
+                }
             }
         }
 
@@ -95,8 +94,11 @@ namespace JSSoft.UI
             {
                 if (value < 0 || value >= this.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.columnIndex = value;
-                this.SetVerticesDirty();
+                if (this.columnIndex != value)
+                {
+                    this.columnIndex = value;
+                    this.InvokePropertyChanged(nameof(ColumnIndex));
+                }
             }
         }
 
@@ -107,8 +109,11 @@ namespace JSSoft.UI
             {
                 if (value < 0 || value >= this.BufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.rowIndex = value;
-                this.SetVerticesDirty();
+                if (this.rowIndex != value)
+                {
+                    this.rowIndex = value;
+                    this.InvokePropertyChanged(nameof(RowIndex));
+                }
             }
         }
 
@@ -117,7 +122,11 @@ namespace JSSoft.UI
             get => this.foregroundColor;
             set
             {
-                this.foregroundColor = value;
+                if (this.foregroundColor != value)
+                {
+                    this.foregroundColor = value;
+                    this.InvokePropertyChanged(nameof(ForegroundColor));
+                }
             }
         }
 
@@ -126,21 +135,50 @@ namespace JSSoft.UI
             get => this.backgroundColor;
             set
             {
-                this.backgroundColor = value;
-                base.color = value;
+                if (this.backgroundColor != value)
+                {
+                    this.backgroundColor = value;
+                    this.InvokePropertyChanged(nameof(BackgroundColor));
+                }
             }
         }
 
-        public Vector2 Offset { get; set; } = new Vector2(0, 0);
+        public TerminalThickness ForegroundMargin
+        {
+            get => this.foregroundMargin;
+            set
+            {
+                if (this.foregroundMargin != value)
+                {
+                    this.foregroundMargin = value;
+                    this.InvokePropertyChanged(nameof(ForegroundMargin));
+                }
+            }
+        }
 
-        public override Texture mainTexture => this.texture;
+        public TerminalThickness BackgroundMargin
+        {
+            get => this.backgroundMargin;
+            set
+            {
+                if (this.backgroundMargin != value)
+                {
+                    this.backgroundMargin = value;
+                    this.InvokePropertyChanged(nameof(BackgroundMargin));
+                }
+            }
+        }
+
+        public Vector2 Offset
+        {
+            get; set;
+        } = new Vector2(0, 0);
 
         public TerminalFont Font => this.grid?.Font;
 
-        protected override void OnPopulateMesh(VertexHelper vh)
-        {
-            base.OnPopulateMesh(vh);
-        }
+        public event EventHandler Validated;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
 #if UNITY_EDITOR
         protected override void OnValidate()
@@ -150,83 +188,37 @@ namespace JSSoft.UI
             this.columnIndex = Math.Max(0, this.columnIndex);
             this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
+            this.OnValidated(EventArgs.Empty);
         }
 #endif
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.mesh = new Mesh();
-            base.material = new Material(Shader.Find("Unlit/Color"));
-            this.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
+            TerminalValidationEvents.Register(this);
             this.UpdateColor();
         }
 
         protected override void OnDisable()
         {
-            base.OnDisable();
-            this.mesh = null;
+            TerminalValidationEvents.Unregister(this);
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
+            base.OnDisable();
         }
 
-        protected override void UpdateGeometry()
+        protected virtual void OnValidated(EventArgs e)
         {
-            base.UpdateGeometry();
+            this.Validated?.Invoke(this, e);
+        }
 
-            if (this.columnIndex < this.BufferWidth && this.rowIndex < this.BufferHeight && this.text != string.Empty)
-            {
-                var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, false);
-                var character = this.text.First();
-                var characterInfo = this.Font[character];
-                var texture = characterInfo.Texture;
-                var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
-                var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
-                var volume = FontUtility.GetCharacterVolume(this.Font, character);
-                var padding = TerminalGridUtility.GetPadding(this.grid);
-                var bx = this.columnIndex * itemWidth + padding.Left + (int)this.Offset.x;
-                var by = this.rowIndex * itemHeight + padding.Top + (int)this.Offset.y;
-                var foregroundRect = FontUtility.GetForegroundRect(this.Font, character, bx, by);
-                var backgroundRect = new Rect(bx, by, itemWidth * volume, itemHeight);
-                var uv = FontUtility.GetUV(this.Font, character);
-
-                base.color = this.backgroundColor;
-                base.material.color = base.color;
-                this.material.color = this.foregroundColor;
-                this.vertices.SetVertex(0, backgroundRect + this.backgroundMargin);
-                this.vertices.Transform(0, rect);
-                this.vertices.SetVertex(4, foregroundRect + this.foregroundMargin);
-                this.vertices.Transform(4, rect);
-                this.uvs.SetUV(0, Vector2.zero, Vector2.zero);
-                this.uvs.SetUV(4, uv);
-                this.colors.SetColor(0, this.backgroundColor);
-                this.colors.SetColor(4, this.foregroundColor);
-                this.texture = texture;
-
-                this.mesh.Clear();
-                this.mesh.subMeshCount = 2;
-                this.mesh.vertices = this.vertices;
-                this.mesh.uv = this.uvs;
-                this.mesh.colors32 = this.colors;
-                this.mesh.SetTriangles(backgroundTriangles, 0);
-                this.mesh.SetTriangles(foregroundTriangles, 1);
-
-                this.canvasRenderer.materialCount = 2;
-                this.canvasRenderer.SetTexture(this.texture);
-                this.canvasRenderer.SetMaterial(base.material, 0);
-                this.canvasRenderer.SetMaterial(this.material, 1);
-                this.canvasRenderer.SetMesh(this.mesh);
-            }
-            else
-            {
-                this.mesh.Clear();
-                this.canvasRenderer.SetMesh(this.mesh);
-                this.texture = null;
-            }
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -236,19 +228,18 @@ namespace JSSoft.UI
 
             switch (e.PropertyName)
             {
+                case nameof(ITerminalGrid.VisibleIndex):
                 case nameof(ITerminalGrid.CursorPoint):
                     {
                         var cursorPoint = this.grid.CursorPoint;
                         var visibleIndex = this.grid.VisibleIndex;
                         this.columnIndex = cursorPoint.X;
                         this.rowIndex = cursorPoint.Y - visibleIndex;
-                        this.SetVerticesDirty();
                     }
                     break;
                 case nameof(ITerminalGrid.CompositionString):
                     {
                         this.text = this.grid.CompositionString;
-                        this.SetVerticesDirty();
                     }
                     break;
             }
@@ -278,9 +269,12 @@ namespace JSSoft.UI
             if (this.grid != null)
             {
                 this.foregroundColor = this.grid.ForegroundColor;
-                base.color = this.backgroundColor = this.grid.BackgroundColor;
             }
-            this.SetVerticesDirty();
+        }
+
+        private void InvokePropertyChanged(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;

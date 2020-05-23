@@ -61,6 +61,8 @@ namespace JSSoft.UI
 
         string OutputText { get; }
 
+        string Delimiter { get; }
+
         string PromptText { get; }
 
         string Text { get; }

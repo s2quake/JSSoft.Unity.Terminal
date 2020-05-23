@@ -101,7 +101,7 @@ namespace JSSoft.UI
             this.command = string.Empty;
             this.completion = string.Empty;
             this.promptText = this.prompt;
-            this.text = this.outputText + this.promptText;
+            this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = 0;
             this.InvokePromptTextChangedEvent();
         }
@@ -138,7 +138,7 @@ namespace JSSoft.UI
             this.cursorPosition = 0;
             this.foregroundColors = new TerminalColor?[] { };
             this.backgroundColors = new TerminalColor?[] { };
-            this.text = this.outputText + this.promptText;
+            this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = 0;
             this.InvokeOutputTextChangedEvent();
         }
@@ -169,7 +169,7 @@ namespace JSSoft.UI
             {
                 this.command = this.command.Remove(this.cursorPosition, 1);
                 this.promptText = this.prompt + this.command;
-                this.text = this.outputText + this.promptText;
+                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.InvokeOutputTextChangedEvent();
             }
         }
@@ -181,7 +181,7 @@ namespace JSSoft.UI
                 this.command = this.command.Remove(this.cursorPosition - 1, 1);
                 this.promptText = this.prompt + this.command;
                 this.cursorPosition--;
-                this.text = this.outputText + this.promptText;
+                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.InvokeOutputTextChangedEvent();
             }
         }
@@ -193,7 +193,7 @@ namespace JSSoft.UI
                 this.inputText = this.command = this.histories[this.historyIndex + 1];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.command.Length;
-                this.text = this.outputText + this.promptText;
+                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.historyIndex++;
                 this.InvokePromptTextChangedEvent();
             }
@@ -206,7 +206,7 @@ namespace JSSoft.UI
                 this.inputText = this.command = this.histories[this.historyIndex - 1];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.command.Length;
-                this.text = this.outputText + this.promptText;
+                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.historyIndex--;
                 this.InvokePromptTextChangedEvent();
             }
@@ -215,7 +215,7 @@ namespace JSSoft.UI
                 this.inputText = this.command = this.histories[0];
                 this.promptText = this.prompt + this.inputText;
                 this.cursorPosition = this.command.Length;
-                this.text = this.outputText + this.promptText;
+                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.historyIndex = 0;
                 this.InvokePromptTextChangedEvent();
             }
@@ -302,9 +302,9 @@ namespace JSSoft.UI
 
         public void InsertCharacter(char character)
         {
-            var index = this.outputText.Length + this.prompt.Length + this.cursorPosition;
+            var index = this.outputText.Length + this.Delimiter.Length + this.prompt.Length + this.cursorPosition;
             this.text = this.text.Insert(index, $"{character}");
-            this.promptText = this.Text.Substring(this.outputText.Length);
+            this.promptText = this.Text.Substring(this.outputText.Length + this.Delimiter.Length);
             this.inputText = this.command = this.promptText.Substring(this.prompt.Length);
             this.completion = string.Empty;
             this.cursorPosition++;
@@ -353,11 +353,26 @@ namespace JSSoft.UI
             }
         }
 
-        public int CursorIndex => this.CursorPosition + this.OutputText.Length + this.Prompt.Length;
+        public int CursorIndex => this.CursorPosition + this.OutputText.Length + this.Delimiter.Length + this.Prompt.Length;
 
         public string Text => this.text;
 
         public string OutputText => this.outputText;
+
+        public string Delimiter
+        {
+            get
+            {
+                if (this.outputText != string.Empty && this.outputText.EndsWith(Environment.NewLine) == false)
+                {
+                    return Environment.NewLine;
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
 
         public string Prompt
         {
@@ -372,7 +387,7 @@ namespace JSSoft.UI
                     this.promptForegroundColors = new TerminalColor?[value.Length];
                     this.promptBackgroundColors = new TerminalColor?[value.Length];
                     this.promptText = this.prompt + this.command;
-                    this.text = this.outputText + this.promptText;
+                    this.text = this.outputText + this.Delimiter + this.promptText;
                     this.cursorPosition = this.command.Length;
                     this.InvokePromptTextChangedEvent();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
@@ -393,7 +408,7 @@ namespace JSSoft.UI
                 {
                     this.command = value;
                     this.promptText = this.prompt + this.command;
-                    this.text = this.outputText + this.promptText;
+                    this.text = this.outputText + this.Delimiter + this.promptText;
                     this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
                     this.inputText = value;
                     this.completion = string.Empty;
@@ -473,7 +488,7 @@ namespace JSSoft.UI
             base.OnEnable();
             this.inputText = this.command;
             this.promptText = this.prompt + this.command;
-            this.text = this.outputText + this.promptText;
+            this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = this.command.Length;
             TerminalEvents.Register(this);
             this.OnEnabled(EventArgs.Empty);
@@ -490,14 +505,20 @@ namespace JSSoft.UI
         protected override void OnValidate()
         {
             base.OnValidate();
-            if (this.outputText != string.Empty && this.outputText.EndsWith(Environment.NewLine) == false)
-            {
-                this.outputText += Environment.NewLine;
-            }
             this.inputText = this.command;
             this.promptText = this.prompt + this.command;
-            this.text = this.outputText + this.promptText;
+            this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = this.command.Length;
+            var capacity = this.foregroundColors.Length;
+            while (capacity < this.outputText.Length)
+            {
+                capacity += growSize;
+            }
+            if (this.foregroundColors.Length != capacity)
+            {
+                Array.Resize(ref this.foregroundColors, capacity);
+                Array.Resize(ref this.backgroundColors, capacity);
+            }
             this.OnValidated(EventArgs.Empty);
         }
 #endif
@@ -561,7 +582,7 @@ namespace JSSoft.UI
                 }
                 this.promptText = this.prompt + this.command;
                 this.inputText = inputText;
-                this.text = this.outputText + this.promptText;
+                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.cursorPosition = this.command.Length;
                 this.InvokePromptTextChangedEvent();
             }
@@ -570,15 +591,26 @@ namespace JSSoft.UI
         private void AppendInternal(string text)
         {
             var index = this.outputText.Length;
+            var capacity = this.foregroundColors.Length;
             this.outputText += text;
-            Array.Resize(ref this.foregroundColors, this.outputText.Length);
-            Array.Resize(ref this.backgroundColors, this.outputText.Length);
+
+            while (capacity < this.outputText.Length)
+            {
+                capacity += growSize;
+            }
+            if (this.foregroundColors.Length != capacity)
+            {
+                Array.Resize(ref this.foregroundColors, capacity);
+                Array.Resize(ref this.backgroundColors, capacity);
+            }
+
             for (var i = index; i < this.outputText.Length; i++)
             {
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
-            this.text = this.outputText + this.promptText;
+            // Debug.Log(this.Delimiter);
+            this.text = this.outputText + this.Delimiter + this.promptText;
             this.InvokeOutputTextChangedEvent();
         }
 
@@ -588,7 +620,7 @@ namespace JSSoft.UI
             this.inputText = string.Empty;
             this.completion = string.Empty;
             this.promptText = prompt;
-            this.text = this.outputText + this.promptText;
+            this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = 0;
             this.isReadOnly = false;
             this.InvokePromptTextChangedEvent();
@@ -623,11 +655,11 @@ namespace JSSoft.UI
 
         internal TerminalColor? GetForegroundColor(int index)
         {
-            if (index < this.foregroundColors.Length)
+            if (index < this.outputText.Length && index < this.foregroundColors.Length)
             {
                 return this.foregroundColors[index];
             }
-            var promptIndex = index - this.outputText.Length;
+            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
             if (promptIndex >= 0 && promptIndex < this.promptForegroundColors.Length)
             {
                 return this.promptForegroundColors[promptIndex];
@@ -637,11 +669,11 @@ namespace JSSoft.UI
 
         internal TerminalColor? GetBackgroundColor(int index)
         {
-            if (index < this.backgroundColors.Length)
+            if (index < this.outputText.Length && index < this.backgroundColors.Length)
             {
                 return this.backgroundColors[index];
             }
-            var promptIndex = index - this.outputText.Length;
+            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
             if (promptIndex >= 0 && promptIndex < this.promptBackgroundColors.Length)
             {
                 return this.promptBackgroundColors[promptIndex];

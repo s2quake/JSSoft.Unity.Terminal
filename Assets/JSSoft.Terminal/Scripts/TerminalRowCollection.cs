@@ -100,7 +100,6 @@ namespace JSSoft.UI
                 var characterInfo = this.characterInfos[i];
                 var point = characterInfo.Point;
                 var row = this.Prepare(point.Y);
-                // if (characterInfo.Volume > 0)
                 if (point.X < row.Cells.Count)
                 {
                     var cell = row.Cells[point.X];

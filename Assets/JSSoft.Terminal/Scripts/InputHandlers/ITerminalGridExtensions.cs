@@ -70,7 +70,7 @@ namespace JSSoft.UI.InputHandlers
             else
             {
                 var cursorPosition = selection.start;
-                var index1 = cursorPosition + terminal.OutputText.Length + terminal.Prompt.Length;
+                var index1 = cursorPosition + terminal.OutputText.Length + terminal.Delimiter.Length + terminal.Prompt.Length;
                 var index2 = index1 + selection.length;
                 var point1 = grid.IndexToPoint(index1);
                 var point2 = grid.IndexToPoint(index2);

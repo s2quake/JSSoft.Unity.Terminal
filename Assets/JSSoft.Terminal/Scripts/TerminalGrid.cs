@@ -952,7 +952,7 @@ namespace JSSoft.UI
         {
             if (sender is Terminal terminal == this.terminal)
             {
-                var index = this.terminal.CursorPosition + this.terminal.OutputText.Length + this.terminal.Prompt.Length;
+                var index = this.terminal.CursorIndex;
                 this.text = this.terminal.Text;
                 this.characterInfos.Update();
                 this.rows.Update();
@@ -984,7 +984,7 @@ namespace JSSoft.UI
         {
             if (sender is Terminal terminal == this.terminal)
             {
-                var index = this.Terminal.CursorPosition + this.Terminal.OutputText.Length + this.Terminal.Prompt.Length;
+                var index = this.terminal.CursorIndex;
                 this.CursorPoint = this.IndexToPoint(index);
                 this.Selections.Clear();
                 this.UpdateVisibleIndex(true);
@@ -1123,7 +1123,7 @@ namespace JSSoft.UI
                 this.IsScrolling = false;
             }
         }
-
+        private System.Random r = new System.Random();
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
             if (this.PopEvents() is IList<Event> events)
@@ -1138,6 +1138,13 @@ namespace JSSoft.UI
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
+                        var k = r.Next(0, 10);
+                        if (k < 3)
+                            Debug.LogWarning($"{modifiers} + {keyCode}: {item.character}");
+                        else if (k < 9)
+                            Debug.LogError($"{modifiers} + {keyCode}: {item.character}");
+                        else
+                            Debug.Log($"{modifiers} + {keyCode}: {item.character}");
                         if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
                             continue;
                         if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)

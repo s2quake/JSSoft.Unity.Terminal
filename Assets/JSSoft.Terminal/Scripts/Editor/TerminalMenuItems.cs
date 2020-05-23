@@ -199,7 +199,7 @@ namespace JSSoft.UI.Editor
 
             var compositionObj = new GameObject("TerminalComposition") { layer = canvas.gameObject.layer };
             var composition = compositionObj.AddComponent<TerminalComposition>();
-            var compositionRect = composition.rectTransform;
+            var compositionRect = composition.GetComponent<RectTransform>();
             composition.Grid = terminalGrid;
             composition.ForegroundColor = TerminalGrid.DefaultForegroundColor;
             compositionRect.SetParent(terminalGridRect);
@@ -208,6 +208,26 @@ namespace JSSoft.UI.Editor
             compositionRect.pivot = new Vector2(0.5f, 0.5f);
             compositionRect.offsetMin = Vector2.zero;
             compositionRect.offsetMax = Vector2.zero;
+
+            var compositionBackgroundObj = new GameObject("Background") { layer = canvas.gameObject.layer };
+            var compositionBackground = compositionBackgroundObj.AddComponent<TerminalCompositionBackground>();
+            var compositionBackgroundRect = compositionBackground.rectTransform;
+            compositionBackgroundRect.SetParent(compositionRect);
+            compositionBackgroundRect.anchorMin = Vector3.zero;
+            compositionBackgroundRect.anchorMax = Vector3.one;
+            compositionBackgroundRect.pivot = new Vector2(0.5f, 0.5f);
+            compositionBackgroundRect.offsetMin = Vector2.zero;
+            compositionBackgroundRect.offsetMax = Vector2.zero;
+
+            var compositionForegroundObj = new GameObject("Foreground") { layer = canvas.gameObject.layer };
+            var compositionForeground = compositionForegroundObj.AddComponent<TerminalCompositionForeground>();
+            var compositionForegroundRect = compositionForeground.rectTransform;
+            compositionForegroundRect.SetParent(compositionRect);
+            compositionForegroundRect.anchorMin = Vector3.zero;
+            compositionForegroundRect.anchorMax = Vector3.one;
+            compositionForegroundRect.pivot = new Vector2(0.5f, 0.5f);
+            compositionForegroundRect.offsetMin = Vector2.zero;
+            compositionForegroundRect.offsetMax = Vector2.zero;
 
             var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image), typeof(TerminalScrollbar)) { layer = canvas.gameObject.layer };
             var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();

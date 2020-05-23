@@ -56,7 +56,17 @@ namespace JSSoft.Communication.Shells
 
         private void LogCallback(string condition, string stackTrace, LogType type)
         {
+            return;
+            if (type == LogType.Error)
+            {
+                this.terminal.ForegroundColor = TerminalColor.Red;
+            }
+            else if (type == LogType.Warning)
+            {
+                this.terminal.ForegroundColor = TerminalColor.Yellow;
+            }
             this.terminal.AppendLine(condition);
+            this.terminal.ForegroundColor = null;
         }
 
         public override void Write(char value)
