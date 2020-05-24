@@ -147,7 +147,7 @@ namespace JSSoft.UI
 
         private void Terminal_Validated(object sender, EventArgs e)
         {
-            if (sender is Terminal terminal == this.grid.Terminal)
+            if (sender is Terminal terminal && terminal == this.grid.Terminal)
             {
                 this.SetVerticesDirty();
             }
@@ -155,7 +155,7 @@ namespace JSSoft.UI
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                 this.SetVerticesDirty();

@@ -30,7 +30,7 @@ namespace JSSoft.UI
     public class TerminalMesh
     {
         private int count;
-        private int capacity;
+        // private int capacity;
         private Vector3[] vertices = new Vector3[] { };
         private Vector2[] uvs = new Vector2[] { };
         private Color32[] colors = new Color32[] { };
@@ -104,13 +104,14 @@ namespace JSSoft.UI
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 var length = value * 4;
-                if (length > this.capacity)
-                {
-                    Array.Resize(ref this.vertices, length);
-                    Array.Resize(ref this.uvs, length);
-                    Array.Resize(ref this.colors, length);
-                    this.capacity = length;
-                }
+                // if (length > this.capacity)
+                // {
+                ArrayUtility.Resize(ref this.vertices, length);
+                ArrayUtility.Resize(ref this.uvs, length);
+                ArrayUtility.Resize(ref this.colors, length);
+                //     this.capacity = length;
+                //     Debug.Log(this.capacity);
+                // }
                 this.count = value;
             }
         }

@@ -31,7 +31,6 @@ namespace JSSoft.UI
 {
     class TerminalCharacterInfoCollection : IReadOnlyList<TerminalCharacterInfo>
     {
-        private const int growSize = 1000;
         private readonly TerminalGrid grid;
         private TerminalCharacterInfo[] items = new TerminalCharacterInfo[] { };
         private TerminalPoint lt;
@@ -94,11 +93,7 @@ namespace JSSoft.UI
             var maxBufferHeight = this.grid.MaxBufferHeight;
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
-            var capacity = (text.Length / growSize + 1) * growSize;
-            if (this.items.Length < capacity)
-            {
-                Array.Resize(ref this.items, capacity);
-            }
+            ArrayUtility.Resize(ref this.items, text.Length);
             while (index < text.Length)
             {
                 var characterInfo = new TerminalCharacterInfo();

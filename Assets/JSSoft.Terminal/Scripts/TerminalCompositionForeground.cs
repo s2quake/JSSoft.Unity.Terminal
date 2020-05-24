@@ -111,7 +111,7 @@ namespace JSSoft.UI
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid == this.Grid)
+            if (sender is TerminalGrid grid && grid == this.Grid)
             {
                 switch (e.PropertyName)
                 {
@@ -138,7 +138,7 @@ namespace JSSoft.UI
 
         private void Composition_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalComposition composition == this.composition)
+            if (sender is TerminalComposition composition && composition == this.composition)
             {
                 this.SetVerticesDirty();
                 this.SetMaterialDirty();
@@ -147,7 +147,7 @@ namespace JSSoft.UI
 
         private void Composition_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalComposition composition == this.composition)
+            if (sender is TerminalComposition composition && composition == this.composition)
             {
                 switch (e.PropertyName)
                 {

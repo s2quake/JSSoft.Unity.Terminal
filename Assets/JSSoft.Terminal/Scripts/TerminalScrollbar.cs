@@ -142,7 +142,7 @@ namespace JSSoft.UI
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.UpdateScrollbarVisible();
                 this.UpdateScrollbarSize();

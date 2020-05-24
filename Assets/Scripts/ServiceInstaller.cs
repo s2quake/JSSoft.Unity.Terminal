@@ -32,21 +32,28 @@ using JSSoft.Communication.Services;
 using JSSoft.UI;
 using Terminal = JSSoft.UI.Terminal;
 using Zenject;
+using UnityEngine;
 
 namespace JSSoft.Communication.Shells
 {
-    public class ServiceInstaller : MonoInstaller
+    class ServiceInstaller : MonoInstaller
     {
+        [SerializeField]
+        private TerminalGrid grid;
+
         public override void InstallBindings()
         {
+            if (this.grid == null)
+                throw new InvalidOperationException("TerminalGrid does not exists.");
+
             Container.Bind(typeof(IUserService), typeof(UserService), typeof(INotifyUserService)).To<UserService>().AsSingle();
             Container.Bind(typeof(IDataService), typeof(DataService)).To<DataService>().AsSingle();
             Container.Bind<IServiceHost>().To<UserServiceHost>().AsSingle();
             Container.Bind<IServiceHost>().To<DataServiceHost>().AsSingle();
             Container.Bind<IServiceContext>().To<ClientContext>().AsSingle();
-            
-            Container.Bind<ITerminalGrid>().FromInstance(UnityEngine.GameObject.FindObjectOfType<TerminalGrid>());
-            Container.Bind<ITerminal>().FromInstance(UnityEngine.GameObject.FindObjectOfType<Terminal>());
+
+            Container.Bind<ITerminalGrid>().FromInstance(this.grid);
+            Container.Bind<ITerminal>().FromInstance(this.grid.Terminal);
 
             Container.Bind<ICommand>().To<ResetCommand>().AsSingle();
             Container.Bind<ICommand>().To<CloseCommand>().AsSingle();

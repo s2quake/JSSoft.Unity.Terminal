@@ -20,42 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Ntreev.Library.Threading;
+using System;
+using System.Reflection;
+using UnityEngine;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.UI
 {
-    class DebugLogger : JSSoft.Communication.Logging.ILogger
+    public static class ArrayUtility
     {
-        // private Dispatcher dispatcher;
+        public static int GrowSize { get; set; } = 1000;
 
-        // public DebugLogger()
-        // {
-        //     this.dispatcher = Dispatcher.Current;
-        // }
-
-        public void Debug(object message)
+        public static void Resize<T>(ref T[] items, int desiredSize)
         {
-            UnityEngine.Debug.Log(message);
+            Resize<T>(ref items, desiredSize, GrowSize);
         }
 
-        public void Info(object message)
+        public static void Resize<T>(ref T[] items, int desiredSize, int growSize)
         {
-            UnityEngine.Debug.Log(message);
-        }
-
-        public void Error(object message)
-        {
-
-        }
-
-        public void Warn(object message)
-        {
-
-        }
-
-        public void Fatal(object message)
-        {
-
+            var capacity = (desiredSize / growSize + 1) * growSize;
+            if (items.Length < capacity)
+            {
+                Array.Resize(ref items, capacity);
+            }
         }
     }
 }

@@ -42,30 +42,6 @@ namespace JSSoft.Communication.Shells
         {
             this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
-
-            // Application.logMessageReceived += LogCallback;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing == true)
-            {
-                Application.logMessageReceived -= LogCallback;
-            }
-        }
-
-        private void LogCallback(string condition, string stackTrace, LogType type)
-        {
-            if (type == LogType.Error)
-            {
-                this.terminal.ForegroundColor = TerminalColor.Red;
-            }
-            else if (type == LogType.Warning)
-            {
-                this.terminal.ForegroundColor = TerminalColor.Yellow;
-            }
-            this.terminal.AppendLine(condition);
-            this.terminal.ForegroundColor = null;
         }
 
         public override void Write(char value)

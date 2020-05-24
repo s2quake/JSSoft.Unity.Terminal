@@ -33,7 +33,6 @@ namespace JSSoft.UI
     [ExecuteAlways]
     public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor
     {
-        private const int growSize = 1000;
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
 
@@ -49,6 +48,8 @@ namespace JSSoft.UI
         private string completion;
         private string text = string.Empty;
         private int historyIndex;
+        private bool isExecuting;
+        [SerializeField]
         private bool isReadOnly;
         private bool isChanged;
         [SerializeField]
@@ -326,7 +327,19 @@ namespace JSSoft.UI
 
         public TerminalColor? BackgroundColor { get; set; }
 
-        public bool IsReadOnly => this.isReadOnly;
+        public bool IsReadOnly
+        {
+            get
+            {
+                if (this.isExecuting == true)
+                    return true;
+                return this.isReadOnly;
+            }
+            set
+            {
+                this.isReadOnly = value;
+            }
+        }
 
         public bool IsVerbose
         {
@@ -509,16 +522,8 @@ namespace JSSoft.UI
             this.promptText = this.prompt + this.command;
             this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = this.command.Length;
-            var capacity = this.foregroundColors.Length;
-            while (capacity < this.outputText.Length)
-            {
-                capacity += growSize;
-            }
-            if (this.foregroundColors.Length != capacity)
-            {
-                Array.Resize(ref this.foregroundColors, capacity);
-                Array.Resize(ref this.backgroundColors, capacity);
-            }
+            ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
+            ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
             this.OnValidated(EventArgs.Empty);
         }
 #endif
@@ -594,22 +599,14 @@ namespace JSSoft.UI
             var capacity = this.foregroundColors.Length;
             this.outputText += text;
 
-            while (capacity < this.outputText.Length)
-            {
-                capacity += growSize;
-            }
-            if (this.foregroundColors.Length != capacity)
-            {
-                Array.Resize(ref this.foregroundColors, capacity);
-                Array.Resize(ref this.backgroundColors, capacity);
-            }
+            ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
+            ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
 
             for (var i = index; i < this.outputText.Length; i++)
             {
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
-            // Debug.Log(this.Delimiter);
             this.text = this.outputText + this.Delimiter + this.promptText;
             this.InvokeOutputTextChangedEvent();
         }
@@ -622,7 +619,7 @@ namespace JSSoft.UI
             this.promptText = prompt;
             this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = 0;
-            this.isReadOnly = false;
+            this.isExecuting = false;
             this.InvokePromptTextChangedEvent();
         }
 
@@ -646,7 +643,7 @@ namespace JSSoft.UI
                 this.executed?.Invoke(this, new TerminalExecutedEventArgs(commandText, e));
             });
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
-            this.isReadOnly = true;
+            this.isExecuting = true;
             if (this.executing != null)
                 this.executing.Invoke(this, eventArgs);
             else

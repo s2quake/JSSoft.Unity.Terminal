@@ -118,13 +118,6 @@ namespace JSSoft.Communication.Commands
                     return Rect.zero;
                 }
             });
-            await this.dispatcher.InvokeAsync(() =>
-            {
-                if (Application.isEditor == false && rectangle != Rect.zero)
-                {
-                    // Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
-                }
-            });
         }
 
         private static IDictionary<string, TerminalStyle> GetStyles()

@@ -29,7 +29,6 @@ namespace JSSoft.UI
 {
     public static class FontUtility
     {
-        // private static readonly char defaultCharacter = 'a';
         private static readonly int defaultItemWidth = 14;
         private static readonly int defaultItemHeight = 27;
 
@@ -91,35 +90,5 @@ namespace JSSoft.UI
             var fy = y + charInfo.YOffset;
             return new Rect(fx, fy, charInfo.Width, charInfo.Height);
         }
-
-        // public static int GetItemWidth(TerminalFont font)
-        // {
-        //     if (font == null)
-        //         throw new ArgumentNullException(nameof(font));
-        //     if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
-        //         return characterInfo.XAdvance;
-        //     return defaultItemWidth;
-        // }
-
-        // public static int GetItemHeight(TerminalFont font)
-        // {
-        //     if (font == null)
-        //         throw new ArgumentNullException(nameof(font));
-        //     if (GetCharacter(font, defaultCharacter) is Fonts.CharInfo characterInfo)
-        //         return font.Height;
-        //     return defaultItemHeight;
-        // }
-
-        // public static int GetItemWidth(TerminalFont font, char character)
-        // {
-        //     var itemWidth = font.Width;
-        //     if (GetCharacter(font, character) is Fonts.CharInfo characterInfo)
-        //     {
-        //         var characterWidth = characterInfo.XAdvance;
-        //         var n = Math.Ceiling(characterWidth / (float)itemWidth);
-        //         return (int)(itemWidth * n);
-        //     }
-        //     return itemWidth;
-        // }
     }
 }

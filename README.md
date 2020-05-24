@@ -2,7 +2,7 @@
 
 터미널을 유니티에서 구현한 프로젝트입니다.
 
-![dpng](./terminal.png)
+![dpng](./terminal.gif)
 
 # 실행 방법
 

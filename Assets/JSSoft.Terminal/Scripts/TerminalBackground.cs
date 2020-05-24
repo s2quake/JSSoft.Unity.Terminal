@@ -115,7 +115,7 @@ namespace JSSoft.UI
 
         private void Terminal_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.SetVerticesDirty();
             }
@@ -123,7 +123,7 @@ namespace JSSoft.UI
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.SetAllDirty();
             }
@@ -131,7 +131,7 @@ namespace JSSoft.UI
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.SetVerticesDirty();
             }
@@ -159,7 +159,7 @@ namespace JSSoft.UI
 
         private void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.SetVerticesDirty();
             }

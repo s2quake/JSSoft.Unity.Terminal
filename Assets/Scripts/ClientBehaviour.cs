@@ -45,8 +45,8 @@ namespace JSSoft.Communication.Shells
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
         {
-#if !UNITY_EDITOR
-            // Screen.SetResolution(1334, 750, false);
+#if UNITY_STANDALONE
+            Screen.SetResolution(1050, 660, false);
 #endif
         }
 
@@ -71,7 +71,6 @@ namespace JSSoft.Communication.Shells
 
         public void Start()
         {
-            // Debug.developerConsoleVisible = true;
             if (this.terminal != null)
             {
                 this.terminal.Executing += Terminal_Executing;
@@ -83,7 +82,7 @@ namespace JSSoft.Communication.Shells
                 this.terminal.CursorPosition = 0;
             }
 #if UNITY_STANDALONE
-            if (this.grid != null)
+            if (this.grid != null && this.adjustResolution == true)
             {
                 var rectangle = this.grid.Rectangle;
                 Screen.SetResolution((int)rectangle.width, (int)rectangle.height, false, 0);
@@ -150,16 +149,23 @@ namespace JSSoft.Communication.Shells
 
         private void AppendException(Exception e)
         {
-            if (this.terminal.IsVerbose == true)
+            var message = GetMessage();
+            this.terminal.AppendLine(message);
+            Debug.LogError(message);
+
+            string GetMessage()
             {
-                this.terminal.AppendLine($"{e}");
-            }
-            else
-            {
-                if (e.InnerException != null)
-                    this.terminal.AppendLine(e.InnerException.Message);
+                if (this.terminal.IsVerbose == true)
+                {
+                    return $"{e}";
+                }
                 else
-                    this.terminal.AppendLine(e.Message);
+                {
+                    if (e.InnerException != null)
+                        return e.InnerException.Message;
+                    else
+                        return e.Message;
+                }
             }
         }
 

@@ -260,7 +260,7 @@ namespace JSSoft.UI
 
         protected virtual void Update()
         {
-            if (Application.isPlaying == true && this.blinkDelay > 0 && this.isBlinkable == true)
+            if (Application.isPlaying == true && this.blinkDelay > 0 && this.isBlinkable == true && this.isFocused == true)
             {
                 this.delay -= Time.deltaTime;
                 if (this.delay < 0)
@@ -328,7 +328,7 @@ namespace JSSoft.UI
 
         private void Terminal_Validated(object sender, EventArgs e)
         {
-            if (sender is ITerminal terminal == this.grid?.Terminal)
+            if (sender is Terminal terminal && terminal == this.grid?.Terminal)
             {
                 this.color = this.grid.CursorColor;
                 this.UpdateLayout();
@@ -337,7 +337,7 @@ namespace JSSoft.UI
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.color = this.grid.CursorColor;
                 this.UpdateLayout();
@@ -346,7 +346,7 @@ namespace JSSoft.UI
 
         private void Grid_GotFocus(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.IsFocused = this.grid.IsFocused;
             }
@@ -354,7 +354,7 @@ namespace JSSoft.UI
 
         private void Grid_LostFocus(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.IsFocused = this.grid.IsFocused;
             }
@@ -362,7 +362,7 @@ namespace JSSoft.UI
 
         private async void Grid_Validated(object sender, EventArgs e)
         {
-            if (sender is ITerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 await Task.Delay(1);
                 this.UpdateLayout();
@@ -371,7 +371,7 @@ namespace JSSoft.UI
 
         private async void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style == this.grid?.Style)
+            if (sender is TerminalStyle style && style == this.grid?.Style)
             {
                 await Task.Delay(1);
                 this.UpdateLayout();

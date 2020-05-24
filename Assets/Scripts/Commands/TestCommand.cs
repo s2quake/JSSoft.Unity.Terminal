@@ -48,6 +48,7 @@ namespace JSSoft.Communication.Commands
 
         protected override async Task OnExecuteAsync()
         {
+            await Task.Delay(5000);
             await this.dispatcher.InvokeAsync(() =>
             {
                 this.Out.WriteLine($"Linux: {RuntimeInformation.IsOSPlatform(OSPlatform.Linux)}");

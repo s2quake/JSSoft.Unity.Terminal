@@ -218,23 +218,6 @@ namespace JSSoft.UI
             return row.Cells[point.X];
         }
 
-        // public void Append(string text)
-        // {
-        //     this.Append(text, this.text.Length);
-        // }
-
-        // public void Append(string text, int index)
-        // {
-        //     this.text = this.text.Insert(index, text);
-        //     this.InvokePropertyChangedEvent(nameof(Text));
-        // }
-
-        // public void Remove(int startIndex, int length)
-        // {
-        //     this.text.Remove(startIndex, length);
-        //     this.InvokePropertyChangedEvent(nameof(Text));
-        // }
-
         public void Focus()
         {
             if (EventSystem.current != null)
@@ -742,11 +725,6 @@ namespace JSSoft.UI
             this.LayoutChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        // protected virtual void OnSelectionChanged(EventArgs e)
-        // {
-        //     this.SelectionChanged?.Invoke(this, EventArgs.Empty);
-        // }
-
         protected virtual void OnGotFocus(EventArgs e)
         {
             this.GotFocus?.Invoke(this, EventArgs.Empty);
@@ -950,7 +928,7 @@ namespace JSSoft.UI
 
         private void Terminal_Validated(object sender, EventArgs e)
         {
-            if (sender is Terminal terminal == this.terminal)
+            if (sender is Terminal terminal && terminal == this.terminal)
             {
                 var index = this.terminal.CursorIndex;
                 this.text = this.terminal.Text;
@@ -965,7 +943,7 @@ namespace JSSoft.UI
 
         private void Terminal_OutputTextChanged(object sender, EventArgs e)
         {
-            if (sender is Terminal terminal == this.terminal)
+            if (sender is Terminal terminal && terminal == this.terminal)
             {
                 this.Text = this.Terminal.Text;
             }
@@ -973,7 +951,7 @@ namespace JSSoft.UI
 
         private void Terminal_PromptTextChanged(object sender, EventArgs e)
         {
-            if (sender is Terminal terminal == this.terminal)
+            if (sender is Terminal terminal && terminal == this.terminal)
             {
                 this.Text = this.Terminal.Text;
                 this.ScrollToCursor();
@@ -982,7 +960,7 @@ namespace JSSoft.UI
 
         private void Terminal_CursorPositionChanged(object sender, EventArgs e)
         {
-            if (sender is Terminal terminal == this.terminal)
+            if (sender is Terminal terminal && terminal == this.terminal)
             {
                 var index = this.terminal.CursorIndex;
                 this.CursorPoint = this.IndexToPoint(index);
@@ -1139,17 +1117,18 @@ namespace JSSoft.UI
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
                         var k = r.Next(0, 10);
-                        if (k < 3)
-                            Debug.LogWarning($"{modifiers} + {keyCode}: {item.character}");
-                        else if (k < 9)
-                            Debug.LogError($"{modifiers} + {keyCode}: {item.character}");
-                        else
-                            Debug.Log($"{modifiers} + {keyCode}: {item.character}");
+                        // if (k < 3)
+                        //     Debug.LogWarning($"{modifiers} + {keyCode}: {item.character}");
+                        // else if (k < 9)
+                        //     Debug.LogError($"{modifiers} + {keyCode}: {item.character}");
+                        // else
+                        //     Debug.Log($"{modifiers} + {keyCode}: {item.character}");
                         if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
                             continue;
                         if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
                         {
-                            this.Terminal.InsertCharacter(item.character);
+                            if (this.terminal.IsReadOnly == false)
+                                this.Terminal.InsertCharacter(item.character);
                         }
                         this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                     }

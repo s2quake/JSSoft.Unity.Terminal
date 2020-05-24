@@ -53,6 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\ArrayUtility.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\IOSInputBehaviour.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\MacOSInputBehaviour.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\MacOSScrollbarBehaviour.cs" />
@@ -187,6 +188,7 @@
      <Compile Include="Assets\Scripts\Settings.cs" />
      <Compile Include="Assets\Scripts\Shell.cs" />
      <Compile Include="Assets\Scripts\StyleResources.cs" />
+     <Compile Include="Assets\Scripts\TerminalLogRedirector.cs" />
      <None Include="Assets\link.xml" />
      <None Include="Assets\JSSoft.Terminal\Fonts\Descriptors\D2Coding.fnt" />
      <None Include="Assets\JSSoft.Terminal\Fonts\Descriptors\NanumGothicCoding.fnt" />

@@ -223,7 +223,7 @@ namespace JSSoft.UI
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 switch (e.PropertyName)
                 {
@@ -247,7 +247,7 @@ namespace JSSoft.UI
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.UpdateColor();
             }
@@ -255,7 +255,7 @@ namespace JSSoft.UI
 
         private async void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalStyle style == this.grid?.Style)
+            if (sender is TerminalStyle style && style == this.grid?.Style)
             {
                 await Task.Delay(1);
                 this.UpdateColor();

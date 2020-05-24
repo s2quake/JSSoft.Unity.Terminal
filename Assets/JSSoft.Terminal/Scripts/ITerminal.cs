@@ -69,7 +69,7 @@ namespace JSSoft.UI
 
         int CursorPosition { get; set; }
 
-        bool IsReadOnly { get; }
+        bool IsReadOnly { get; set; }
 
         bool IsVerbose { get; set; }
 

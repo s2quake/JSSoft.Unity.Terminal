@@ -51,21 +51,6 @@ namespace JSSoft.UI
             set => this.grid = value;
         }
 
-        protected override void Awake()
-        {
-
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-        }
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -82,24 +67,23 @@ namespace JSSoft.UI
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (object.Equals(sender, this.grid) == false)
-                return;
-
-            var propertyName = e.PropertyName;
-            switch (propertyName)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
-                case nameof(ITerminalGrid.Font):
-                case nameof(ITerminalGrid.Style):
-                    {
-                        this.RefreshChilds();
-                    }
-                    break;
+                switch (e.PropertyName)
+                {
+                    case nameof(ITerminalGrid.Font):
+                    case nameof(ITerminalGrid.Style):
+                        {
+                            this.RefreshChilds();
+                        }
+                        break;
+                }
             }
         }
 
         private async void Grid_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid == this.grid)
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
                 await Task.Delay(1);
                 this.RefreshChilds();

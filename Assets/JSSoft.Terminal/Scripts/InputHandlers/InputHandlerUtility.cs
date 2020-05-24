@@ -122,7 +122,6 @@ namespace JSSoft.UI.InputHandlers
                     endPoint.X = grid.BufferWidth;
                 range.EndPoint = endPoint;
             }
-            // Debug.Log($"{nameof(ObjectToRange)}: {rangeInfo} -> {range}");
             return range;
         }
     }
