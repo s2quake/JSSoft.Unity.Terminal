@@ -22,7 +22,6 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {

@@ -20,13 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using System.Text.RegularExpressions;
-
 namespace JSSoft.UI.InputHandlers
 {
     enum SwipeDirection

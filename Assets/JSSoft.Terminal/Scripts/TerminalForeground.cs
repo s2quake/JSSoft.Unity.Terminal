@@ -23,11 +23,9 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 using System.Threading.Tasks;
 using System.ComponentModel;
 

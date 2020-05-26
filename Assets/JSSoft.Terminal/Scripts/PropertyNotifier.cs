@@ -22,11 +22,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text.RegularExpressions;
-using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {

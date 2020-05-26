@@ -23,7 +23,6 @@
 using System;
 using System.ComponentModel;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace JSSoft.UI
 {

@@ -24,7 +24,6 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace JSSoft.UI

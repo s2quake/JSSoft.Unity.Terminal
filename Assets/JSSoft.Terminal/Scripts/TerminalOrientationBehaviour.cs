@@ -21,13 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
-using JSSoft.UI;
 using UnityEngine;
-using Ntreev.Library.Threading;
-using Zenject;
-using System.ComponentModel;
-using UnityEngine.UI;
 using UnityEngine.Events;
 
 namespace JSSoft.UI
@@ -72,7 +66,6 @@ namespace JSSoft.UI
                 var orientation = this.orientation;
                 this.orientation = Screen.orientation;
                 this.changed.Invoke(orientation, this.orientation, IsPortait(orientation) != IsPortait(this.orientation));
-                // this.OnChanged(new OrientationChangedEventArgs(orientation, this.orientation));
             }
         }
 

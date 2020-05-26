@@ -26,9 +26,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 #if UNITY_EDITOR
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
@@ -323,7 +321,6 @@ namespace JSSoft.UI
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
-            // this.OnSelectionChanged(EventArgs.Empty);
         }
 
         public IKeyBindingCollection KeyBindings

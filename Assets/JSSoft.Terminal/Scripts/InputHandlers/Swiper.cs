@@ -21,11 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using System.Text.RegularExpressions;
 
 namespace JSSoft.UI.InputHandlers
 {

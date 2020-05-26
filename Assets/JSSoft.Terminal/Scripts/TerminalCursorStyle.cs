@@ -20,11 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using UnityEngine;
-using UnityEngine.TextCore;
-using UnityEngine.UI;
-
 namespace JSSoft.UI
 {
     public enum TerminalCursorStyle

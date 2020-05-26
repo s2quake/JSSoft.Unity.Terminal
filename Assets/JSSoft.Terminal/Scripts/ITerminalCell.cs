@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using UnityEngine;
-using UnityEngine.TextCore;
 
 namespace JSSoft.UI
 {

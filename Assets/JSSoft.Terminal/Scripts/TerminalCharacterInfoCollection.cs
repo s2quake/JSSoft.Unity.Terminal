@@ -25,7 +25,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
-using UnityEngine;
 
 namespace JSSoft.UI
 {
@@ -186,9 +185,6 @@ namespace JSSoft.UI
             {
                 case nameof(ITerminalGrid.Font):
                 case nameof(ITerminalGrid.Style):
-                    // case nameof(ITerminalGrid.BufferWidth):
-                    // case nameof(ITerminalGrid.BufferHeight):
-                    // case nameof(ITerminalGrid.MaxBufferHeight):
                     {
                         this.UpdateAll();
                     }

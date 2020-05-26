@@ -22,11 +22,8 @@
 
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Text.RegularExpressions;
-using System.Collections.Specialized;
 using System.ComponentModel;
 
 namespace JSSoft.UI.InputHandlers
@@ -205,7 +202,6 @@ namespace JSSoft.UI.InputHandlers
 
             this.swiper.Update();
             this.keyboard.Update();
-            // this.orientationBehaviour.Update();
         }
 
         public override void Attach(ITerminalGrid grid)

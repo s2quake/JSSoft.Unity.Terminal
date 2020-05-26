@@ -22,8 +22,6 @@
 
 using System;
 using System.ComponentModel;
-using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace JSSoft.UI
 {
