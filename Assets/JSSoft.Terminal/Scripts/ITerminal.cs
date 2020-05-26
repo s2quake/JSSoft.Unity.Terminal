@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using UnityEngine;
 
 namespace JSSoft.UI
@@ -83,15 +84,17 @@ namespace JSSoft.UI
 
         event EventHandler Validated;
 
-        event EventHandler OutputTextChanged;
+        // event EventHandler OutputTextChanged;
 
-        event EventHandler PromptTextChanged;
+        // event EventHandler PromptTextChanged;
 
-        event EventHandler CursorPositionChanged;
+        // event EventHandler CursorPositionChanged;
 
         event EventHandler<TerminalExecuteEventArgs> Executing;
 
         event EventHandler<TerminalExecutedEventArgs> Executed;
+
+        event PropertyChangedEventHandler PropertyChanged;
 
         event EventHandler Enabled;
 

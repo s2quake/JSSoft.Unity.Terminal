@@ -189,7 +189,7 @@ namespace JSSoft.UI
         public Color32? IndexToBackgroundColor(int index)
         {
             var pallete = this.ColorPalette;
-            var color = this.Terminal.GetBackgroundColor(index);
+            var color = this.terminal.GetBackgroundColor(index);
             if (color == null)
                 return null;
             if (pallete != null)
@@ -200,7 +200,7 @@ namespace JSSoft.UI
         public Color32? IndexToForegroundColor(int index)
         {
             var pallete = this.ColorPalette;
-            var color = this.Terminal.GetForegroundColor(index);
+            var color = this.terminal.GetForegroundColor(index);
             if (color == null)
                 return null;
             if (pallete != null)
@@ -404,7 +404,7 @@ namespace JSSoft.UI
                     this.bufferWidth = value;
                     this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferWidth));
-                    this.CursorPoint = this.IndexToPoint(this.Terminal.CursorIndex);
+                    this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
                     this.UpdateVisibleIndex();
                 }
             }
@@ -422,7 +422,7 @@ namespace JSSoft.UI
                     this.bufferHeight = value;
                     this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferHeight));
-                    this.CursorPoint = this.IndexToPoint(this.Terminal.CursorIndex);
+                    this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
                     this.UpdateVisibleIndex();
                 }
             }
@@ -792,9 +792,7 @@ namespace JSSoft.UI
             this.ScrollToCursor();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
-            TerminalEvents.OutputTextChanged += Terminal_OutputTextChanged;
-            TerminalEvents.PromptTextChanged += Terminal_PromptTextChanged;
-            TerminalEvents.CursorPositionChanged += Terminal_CursorPositionChanged;
+            TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
         }
@@ -802,10 +800,9 @@ namespace JSSoft.UI
         protected override void OnDisable()
         {
             TerminalEvents.Validated -= Terminal_Validated;
-            TerminalEvents.OutputTextChanged -= Terminal_OutputTextChanged;
-            TerminalEvents.PromptTextChanged -= Terminal_PromptTextChanged;
-            TerminalEvents.CursorPositionChanged -= Terminal_CursorPositionChanged;
+            TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
+            this.terminal = null;
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
             TerminalGridEvents.Unregister(this);
@@ -819,7 +816,7 @@ namespace JSSoft.UI
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
         {
-            if (this.Terminal.ProcessKeyEvent(modifiers, keyCode) == true)
+            if (this.terminal.ProcessKeyEvent(modifiers, keyCode) == true)
                 return true;
             return this.KeyBindings.Process(this, modifiers, keyCode);
         }
@@ -941,32 +938,39 @@ namespace JSSoft.UI
             }
         }
 
-        private void Terminal_OutputTextChanged(object sender, EventArgs e)
+        private void Terminal_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is Terminal terminal && terminal == this.terminal)
             {
-                this.Text = this.Terminal.Text;
-            }
-        }
-
-        private void Terminal_PromptTextChanged(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.terminal)
-            {
-                this.Text = this.Terminal.Text;
-                this.ScrollToCursor();
-            }
-        }
-
-        private void Terminal_CursorPositionChanged(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.terminal)
-            {
-                var index = this.terminal.CursorIndex;
-                this.CursorPoint = this.IndexToPoint(index);
-                this.Selections.Clear();
-                this.UpdateVisibleIndex(true);
-                this.ScrollToCursor();
+                switch (e.PropertyName)
+                {
+                    case nameof(Terminal.OutputText):
+                        {
+                            this.Text = this.terminal.Text;
+                            this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
+                            this.Selections.Clear();
+                            this.UpdateVisibleIndex(true);
+                        }
+                        break;
+                    case nameof(Terminal.PromptText):
+                        {
+                            this.Text = this.terminal.Text;
+                            this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
+                            this.Selections.Clear();
+                            this.UpdateVisibleIndex(true);
+                            this.ScrollToCursor();
+                        }
+                        break;
+                    case nameof(Terminal.CursorPosition):
+                        {
+                            var index = this.terminal.CursorIndex;
+                            this.CursorPoint = this.IndexToPoint(index);
+                            this.Selections.Clear();
+                            this.UpdateVisibleIndex(true);
+                            this.ScrollToCursor();
+                        }
+                        break;
+                }
             }
         }
 
@@ -1128,7 +1132,7 @@ namespace JSSoft.UI
                         if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
                         {
                             if (this.terminal.IsReadOnly == false)
-                                this.Terminal.InsertCharacter(item.character);
+                                this.terminal.InsertCharacter(item.character);
                         }
                         this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                     }

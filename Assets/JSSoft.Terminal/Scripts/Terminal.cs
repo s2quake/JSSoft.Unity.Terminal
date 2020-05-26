@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -31,10 +32,11 @@ namespace JSSoft.UI
 {
     [AddComponentMenu("UI/Terminal", 15)]
     [ExecuteAlways]
-    public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor
+    public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor, INotifyValidated
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
+        private readonly PropertyNotifier notifier;
 
         private string promptText = string.Empty;
         [SerializeField]
@@ -55,6 +57,8 @@ namespace JSSoft.UI
         [SerializeField]
         private bool isVerbose;
         private int cursorPosition;
+        public TerminalColor? foregroundColor;
+        public TerminalColor? backgroundColor;
         private TerminalColor?[] foregroundColors = new TerminalColor?[] { };
         private TerminalColor?[] backgroundColors = new TerminalColor?[] { };
         private TerminalColor?[] promptForegroundColors = new TerminalColor?[] { };
@@ -69,6 +73,11 @@ namespace JSSoft.UI
         static Terminal()
         {
 
+        }
+
+        public Terminal()
+        {
+            this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
         }
 
         public void Execute()
@@ -86,25 +95,28 @@ namespace JSSoft.UI
                 this.historyIndex = this.histories.LastIndexOf(commandText) + 1;
             }
 
-            this.prompt = string.Empty;
-            this.promptText = string.Empty;
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.prompt, string.Empty, nameof(Prompt));
+            this.notifier.SetField(ref this.promptText, string.Empty, nameof(PromptText));
+            this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
-            this.command = string.Empty;
             this.completion = string.Empty;
-            this.cursorPosition = 0;
+            this.notifier.End();
             this.AppendLine(promptText);
             this.ExecuteEvent(commandText, prompt);
         }
 
         public void Clear()
         {
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
+            this.notifier.SetField(ref this.promptText, this.prompt, nameof(PromptText));
+            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
-            this.command = string.Empty;
             this.completion = string.Empty;
-            this.promptText = this.prompt;
-            this.text = this.outputText + this.Delimiter + this.promptText;
-            this.cursorPosition = 0;
-            this.InvokePromptTextChangedEvent();
+            this.notifier.End();
         }
 
         public void MoveToFirst()
@@ -131,17 +143,18 @@ namespace JSSoft.UI
 
         public void ResetOutput()
         {
-            this.outputText = string.Empty;
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.outputText, string.Empty, nameof(OutputText));
+            this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
+            this.notifier.SetField(ref this.promptText, this.prompt, nameof(PromptText));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
+            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
-            this.command = string.Empty;
             this.completion = string.Empty;
-            this.promptText = this.prompt;
-            this.cursorPosition = 0;
             this.foregroundColors = new TerminalColor?[] { };
             this.backgroundColors = new TerminalColor?[] { };
-            this.text = this.outputText + this.Delimiter + this.promptText;
-            this.cursorPosition = 0;
-            this.InvokeOutputTextChangedEvent();
+            this.notifier.End();
         }
 
         public void Append(string text)
@@ -168,10 +181,11 @@ namespace JSSoft.UI
         {
             if (this.cursorPosition < this.command.Length)
             {
-                this.command = this.command.Remove(this.cursorPosition, 1);
-                this.promptText = this.prompt + this.command;
-                this.text = this.outputText + this.Delimiter + this.promptText;
-                this.InvokeOutputTextChangedEvent();
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.command, this.command.Remove(this.cursorPosition, 1), nameof(Command));
+                this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
+                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.notifier.End();
             }
         }
 
@@ -179,11 +193,12 @@ namespace JSSoft.UI
         {
             if (this.cursorPosition > 0)
             {
-                this.command = this.command.Remove(this.cursorPosition - 1, 1);
-                this.promptText = this.prompt + this.command;
-                this.cursorPosition--;
-                this.text = this.outputText + this.Delimiter + this.promptText;
-                this.InvokeOutputTextChangedEvent();
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.command, this.command.Remove(this.cursorPosition - 1, 1), nameof(Command));
+                this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
+                this.notifier.SetField(ref this.cursorPosition, this.cursorPosition - 1, nameof(CursorPosition));
+                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.notifier.End();
             }
         }
 
@@ -191,12 +206,13 @@ namespace JSSoft.UI
         {
             if (this.historyIndex + 1 < this.histories.Count)
             {
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.promptText, this.prompt + this.inputText, nameof(PromptText));
+                this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
+                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
                 this.inputText = this.command = this.histories[this.historyIndex + 1];
-                this.promptText = this.prompt + this.inputText;
-                this.cursorPosition = this.command.Length;
-                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.historyIndex++;
-                this.InvokePromptTextChangedEvent();
+                this.notifier.End();
             }
         }
 
@@ -204,21 +220,23 @@ namespace JSSoft.UI
         {
             if (this.historyIndex > 0)
             {
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.promptText, this.prompt + this.inputText, nameof(PromptText));
+                this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
+                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
                 this.inputText = this.command = this.histories[this.historyIndex - 1];
-                this.promptText = this.prompt + this.inputText;
-                this.cursorPosition = this.command.Length;
-                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.historyIndex--;
-                this.InvokePromptTextChangedEvent();
+                this.notifier.End();
             }
             else if (this.histories.Count == 1)
             {
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.promptText, this.prompt + this.inputText, nameof(PromptText));
+                this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
+                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
                 this.inputText = this.command = this.histories[0];
-                this.promptText = this.prompt + this.inputText;
-                this.cursorPosition = this.command.Length;
-                this.text = this.outputText + this.Delimiter + this.promptText;
                 this.historyIndex = 0;
-                this.InvokePromptTextChangedEvent();
+                this.notifier.End();
             }
         }
 
@@ -297,19 +315,23 @@ namespace JSSoft.UI
 
         public void ResetColor()
         {
-            this.ForegroundColor = null;
-            this.BackgroundColor = null;
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.foregroundColor, null, nameof(ForegroundColor));
+            this.notifier.SetField(ref this.backgroundColor, null, nameof(BackgroundColor));
+            this.notifier.End();
         }
 
         public void InsertCharacter(char character)
         {
             var index = this.outputText.Length + this.Delimiter.Length + this.prompt.Length + this.cursorPosition;
-            this.text = this.text.Insert(index, $"{character}");
-            this.promptText = this.Text.Substring(this.outputText.Length + this.Delimiter.Length);
-            this.inputText = this.command = this.promptText.Substring(this.prompt.Length);
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.text, this.text.Insert(index, $"{character}"), nameof(Text));
+            this.notifier.SetField(ref this.promptText, this.text.Substring(this.outputText.Length + this.Delimiter.Length), nameof(PromptText));
+            this.notifier.SetField(ref this.command, this.promptText.Substring(this.prompt.Length), nameof(Command));
+            this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + 1, nameof(CursorPosition));
+            this.inputText = this.command;
             this.completion = string.Empty;
-            this.cursorPosition++;
-            this.InvokePromptTextChangedEvent();
+            this.notifier.End();
         }
 
         public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
@@ -320,24 +342,54 @@ namespace JSSoft.UI
         public IKeyBindingCollection KeyBindings
         {
             get => this.keyBindings ?? JSSoft.UI.KeyBindings.TerminalKeyBindings.GetDefaultBindings();
-            set => this.keyBindings = value;
+            set
+            {
+                if (this.keyBindings != value)
+                {
+                    this.keyBindings = value;
+                    this.InvokePropertyChangedEvent(nameof(KeyBindings));
+                }
+            }
         }
 
-        public TerminalColor? ForegroundColor { get; set; }
+        public TerminalColor? ForegroundColor
+        {
+            get => this.foregroundColor;
+            set
+            {
+                if (this.foregroundColor != value)
+                {
+                    this.foregroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(ForegroundColor));
+                }
+            }
+        }
 
-        public TerminalColor? BackgroundColor { get; set; }
+        public TerminalColor? BackgroundColor
+        {
+            get => this.backgroundColor;
+            set
+            {
+                if (this.backgroundColor != value)
+                {
+                    this.backgroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(BackgroundColor));
+                }
+            }
+        }
+
+        public bool IsExecuting => this.isExecuting;
 
         public bool IsReadOnly
         {
-            get
-            {
-                if (this.isExecuting == true)
-                    return true;
-                return this.isReadOnly;
-            }
+            get => this.isReadOnly;
             set
             {
-                this.isReadOnly = value;
+                if (this.isReadOnly != value)
+                {
+                    this.isReadOnly = value;
+                    this.InvokePropertyChangedEvent(nameof(IsReadOnly));
+                }
             }
         }
 
@@ -346,7 +398,11 @@ namespace JSSoft.UI
             get => this.isVerbose;
             set
             {
-                this.isVerbose = value;
+                if (this.isVerbose != value)
+                {
+                    this.isVerbose = value;
+                    this.InvokePropertyChangedEvent(nameof(IsVerbose));
+                }
             }
         }
 
@@ -361,7 +417,7 @@ namespace JSSoft.UI
                 {
                     this.cursorPosition = value;
                     this.inputText = this.command.Substring(0, this.cursorPosition);
-                    this.OnCursorPositionChanged(EventArgs.Empty);
+                    this.InvokePropertyChangedEvent(nameof(CursorPosition));
                 }
             }
         }
@@ -396,13 +452,14 @@ namespace JSSoft.UI
                     throw new ArgumentNullException(nameof(value));
                 if (this.prompt != value)
                 {
-                    this.prompt = value;
-                    this.promptForegroundColors = new TerminalColor?[value.Length];
-                    this.promptBackgroundColors = new TerminalColor?[value.Length];
-                    this.promptText = this.prompt + this.command;
-                    this.text = this.outputText + this.Delimiter + this.promptText;
-                    this.cursorPosition = this.command.Length;
-                    this.InvokePromptTextChangedEvent();
+                    this.notifier.Begin();
+                    this.notifier.SetField(ref this.prompt, value, nameof(Prompt));
+                    this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
+                    this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                    this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
+                    ArrayUtility.Resize(ref this.promptForegroundColors, value.Length);
+                    ArrayUtility.Resize(ref this.promptBackgroundColors, value.Length);
+                    this.notifier.End();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
             }
@@ -419,13 +476,14 @@ namespace JSSoft.UI
                     throw new ArgumentNullException(nameof(value));
                 if (this.command != value)
                 {
-                    this.command = value;
-                    this.promptText = this.prompt + this.command;
-                    this.text = this.outputText + this.Delimiter + this.promptText;
-                    this.cursorPosition = Math.Min(this.cursorPosition, this.command.Length);
+                    this.notifier.Begin();
+                    this.notifier.SetField(ref this.command, value, nameof(Command));
+                    this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
+                    this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                    this.notifier.SetField(ref this.cursorPosition, Math.Min(this.cursorPosition, this.command.Length), nameof(CursorPosition));
                     this.inputText = value;
                     this.completion = string.Empty;
-                    this.InvokePromptTextChangedEvent();
+                    this.notifier.End();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
             }
@@ -436,7 +494,11 @@ namespace JSSoft.UI
             get => this.commandCompletor ?? this;
             set
             {
-                this.commandCompletor = value;
+                if (this.commandCompletor != value)
+                {
+                    this.commandCompletor = value;
+                    this.InvokePropertyChangedEvent(nameof(CommandCompletor));
+                }
             }
         }
 
@@ -445,17 +507,17 @@ namespace JSSoft.UI
             get => this.promptDrawer ?? this;
             set
             {
-                this.promptDrawer = value;
+                if (this.promptDrawer != value)
+                {
+                    this.promptDrawer = value;
+                    this.InvokePropertyChangedEvent(nameof(PromptDrawer));
+                }
             }
         }
 
         public event EventHandler Validated;
 
-        public event EventHandler OutputTextChanged;
-
-        public event EventHandler PromptTextChanged;
-
-        public event EventHandler CursorPositionChanged;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public event EventHandler Enabled;
 
@@ -466,19 +528,9 @@ namespace JSSoft.UI
             this.Validated?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnOutputTextChanged(EventArgs e)
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            this.OutputTextChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnPropmtTextChanged(EventArgs e)
-        {
-            this.PromptTextChanged?.Invoke(this, EventArgs.Empty);
-        }
-
-        protected virtual void OnCursorPositionChanged(EventArgs e)
-        {
-            this.CursorPositionChanged?.Invoke(this, EventArgs.Empty);
+            this.PropertyChanged?.Invoke(this, e);
         }
 
         protected virtual void OnEnabled(EventArgs e)
@@ -577,62 +629,67 @@ namespace JSSoft.UI
             if (completions != null && completions.Any())
             {
                 this.completion = func(completions, this.completion);
+                this.notifier.Begin();
                 if (prefix == true || postfix == true || this.completion.IndexOf(" ") >= 0)
                 {
-                    this.command = leftText + "\"" + this.completion + "\"";
+                    this.notifier.SetField(ref this.command, leftText + "\"" + this.completion + "\"", nameof(Command));
                 }
                 else
                 {
-                    this.command = leftText + this.completion;
+                    this.notifier.SetField(ref this.command, leftText + this.completion, nameof(Command));
                 }
-                this.promptText = this.prompt + this.command;
+                this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
+                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                 this.inputText = inputText;
-                this.text = this.outputText + this.Delimiter + this.promptText;
-                this.cursorPosition = this.command.Length;
-                this.InvokePromptTextChangedEvent();
+                this.notifier.End();
             }
         }
 
         private void AppendInternal(string text)
         {
             var index = this.outputText.Length;
-            var capacity = this.foregroundColors.Length;
-            this.outputText += text;
-
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.outputText, this.outputText + text, nameof(OutputText));
+            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
             ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
             ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
-
             for (var i = index; i < this.outputText.Length; i++)
             {
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
-            this.text = this.outputText + this.Delimiter + this.promptText;
-            this.InvokeOutputTextChangedEvent();
+            this.notifier.End();
         }
 
         private void InsertPrompt(string prompt)
         {
-            this.prompt = prompt;
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.prompt, prompt, nameof(Prompt));
+            this.notifier.SetField(ref this.promptText, prompt, nameof(PromptText));
+            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
+            this.notifier.SetField(ref this.isExecuting, false, nameof(IsExecuting));
             this.inputText = string.Empty;
             this.completion = string.Empty;
-            this.promptText = prompt;
-            this.text = this.outputText + this.Delimiter + this.promptText;
-            this.cursorPosition = 0;
-            this.isExecuting = false;
-            this.InvokePromptTextChangedEvent();
+            this.notifier.End();
         }
 
-        private void InvokePromptTextChangedEvent()
+        private void InvokePropertyChangedEvent(string propertyName)
         {
-            this.OnPropmtTextChanged(EventArgs.Empty);
-            this.OnCursorPositionChanged(EventArgs.Empty);
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
-        private void InvokeOutputTextChangedEvent()
+        private IEnumerable<string> GetDependencyProperties(string propertyName)
         {
-            this.OnOutputTextChanged(EventArgs.Empty);
-            this.OnCursorPositionChanged(EventArgs.Empty);
+            switch (propertyName)
+            {
+                case nameof(Text):
+                    {
+                        yield return nameof(CursorPosition);
+                    }
+                    break;
+            }
         }
 
         private void ExecuteEvent(string commandText, string prompt)
@@ -644,6 +701,7 @@ namespace JSSoft.UI
             });
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
             this.isExecuting = true;
+            this.InvokePropertyChangedEvent(nameof(IsExecuting));
             if (this.executing != null)
                 this.executing.Invoke(this, eventArgs);
             else

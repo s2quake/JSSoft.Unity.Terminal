@@ -212,7 +212,7 @@ namespace JSSoft.UI.InputHandlers
         {
             base.Attach(grid);
             this.Terminal.Executed += Terminal_Executed;
-            this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            this.Terminal.PropertyChanged += Terminal_PropertyChanged;
             this.swiper.Swiped += Swiper_Swiped;
             this.keyboard.Opened += Keyboard_Opened;
             this.keyboard.Done += Keyboard_Done;
@@ -233,7 +233,7 @@ namespace JSSoft.UI.InputHandlers
             this.selections.Dispose();
             this.selections = null;
             this.Terminal.Executed -= Terminal_Executed;
-            this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
+            this.Terminal.PropertyChanged -= Terminal_PropertyChanged;
             this.swiper.Swiped -= Swiper_Swiped;
             this.keyboard.Opened -= Keyboard_Opened;
             this.keyboard.Done -= Keyboard_Done;
@@ -375,9 +375,9 @@ namespace JSSoft.UI.InputHandlers
             this.isExecuting = false;
         }
 
-        private void Terminal_PromptTextChanged(object sender, EventArgs e)
+        private void Terminal_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (this.keyboard.IsOpened == true)
+            if (e.PropertyName == nameof(ITerminal.PromptText) && this.keyboard.IsOpened == true)
             {
                 this.keyboard.Text = this.Terminal.Command;
             }

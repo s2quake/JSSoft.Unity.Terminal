@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -40,11 +41,12 @@ namespace JSSoft.UI
                 throw new ArgumentException($"{nameof(terminal)} is already exists.");
             terminals.Add(terminal);
             terminal.Validated += Terminal_Validated;
-            terminal.OutputTextChanged += Terminal_OutputTextChanged;
-            terminal.PromptTextChanged += Terminal_PromptTextChanged;
-            terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            // terminal.OutputTextChanged += Terminal_OutputTextChanged;
+            // terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            // terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
             terminal.Enabled += Terminal_Enabled;
             terminal.Disabled += Terminal_Disabled;
+            terminal.PropertyChanged += Terminal_PropertyChanged;
         }
 
         public static void Unregister(ITerminal terminal)
@@ -54,44 +56,52 @@ namespace JSSoft.UI
             if (terminals.Contains(terminal) == false)
                 throw new ArgumentException($"{nameof(terminal)} does not exists.");
             terminal.Validated -= Terminal_Validated;
-            terminal.OutputTextChanged += Terminal_OutputTextChanged;
-            terminal.PromptTextChanged += Terminal_PromptTextChanged;
-            terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            // terminal.OutputTextChanged += Terminal_OutputTextChanged;
+            // terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            // terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
             terminal.Enabled -= Terminal_Enabled;
             terminal.Disabled -= Terminal_Disabled;
+            terminal.PropertyChanged -= Terminal_PropertyChanged;
             terminals.Remove(terminal);
         }
 
         public static event EventHandler Validated;
 
-        public static event EventHandler OutputTextChanged;
+        // public static event EventHandler OutputTextChanged;
 
-        public static event EventHandler PromptTextChanged;
+        // public static event EventHandler PromptTextChanged;
 
-        public static event EventHandler CursorPositionChanged;
+        // public static event EventHandler CursorPositionChanged;
 
         public static event EventHandler Enabled;
 
         public static event EventHandler Disabled;
+
+        public static event PropertyChangedEventHandler PropertyChanged;
 
         private static void Terminal_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
         }
 
-        private static void Terminal_OutputTextChanged(object sender, EventArgs e)
-        {
-            OutputTextChanged?.Invoke(sender, e);
-        }
+        // private static void Terminal_OutputTextChanged(object sender, EventArgs e)
+        // {
+        //     OutputTextChanged?.Invoke(sender, e);
+        // }
 
-        private static void Terminal_PromptTextChanged(object sender, EventArgs e)
-        {
-            PromptTextChanged?.Invoke(sender, e);
-        }
+        // private static void Terminal_PromptTextChanged(object sender, EventArgs e)
+        // {
+        //     PromptTextChanged?.Invoke(sender, e);
+        // }
 
-        private static void Terminal_CursorPositionChanged(object sender, EventArgs e)
+        // private static void Terminal_CursorPositionChanged(object sender, EventArgs e)
+        // {
+        //     CursorPositionChanged?.Invoke(sender, e);
+        // }
+
+        private static void Terminal_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            CursorPositionChanged?.Invoke(sender, e);
+            PropertyChanged?.Invoke(sender, e);
         }
 
         private static void Terminal_Enabled(object sender, EventArgs e)

@@ -110,6 +110,7 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindingCollection.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindings\TerminalGridKeyBindings.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindings\TerminalKeyBindings.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\PropertyNotifier.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\SelectionUtility.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Terminal.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalBackground.cs" />

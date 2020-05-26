@@ -78,8 +78,8 @@ namespace JSSoft.UI.InputHandlers
             this.panelRect = panelRect;
             this.area = new Rect(0, Screen.height - this.panelRect.sizeDelta.y, Screen.width, this.panelRect.sizeDelta.y);
             this.result = null;
-            this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
-            this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
+            // this.Terminal.PromptTextChanged += Terminal_PromptTextChanged;
+            // this.Terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
         }
 
         protected override void OnClose()
@@ -115,8 +115,8 @@ namespace JSSoft.UI.InputHandlers
 
         private void Release()
         {
-            this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
-            this.Terminal.CursorPositionChanged -= Terminal_CursorPositionChanged;
+            // this.Terminal.PromptTextChanged -= Terminal_PromptTextChanged;
+            // this.Terminal.CursorPositionChanged -= Terminal_CursorPositionChanged;
             this.doneButton.onClick.RemoveAllListeners();
             this.cancelButton.onClick.RemoveAllListeners();
             GameObject.Destroy(this.panelRect.gameObject);
@@ -126,15 +126,15 @@ namespace JSSoft.UI.InputHandlers
             this.area = default(Rect);
         }
 
-        private void Terminal_PromptTextChanged(object sender, EventArgs e)
-        {
-            // this.text = this.Terminal.Command;
-        }
+        // private void Terminal_PromptTextChanged(object sender, EventArgs e)
+        // {
+        //     // this.text = this.Terminal.Command;
+        // }
 
-        private void Terminal_CursorPositionChanged(object sender, EventArgs e)
-        {
-            // this.selection = new RangeInt(this.Terminal.CursorPosition, 0);
-        }
+        // private void Terminal_CursorPositionChanged(object sender, EventArgs e)
+        // {
+        //     // this.selection = new RangeInt(this.Terminal.CursorPosition, 0);
+        // }
 
         private static RectTransform CreatePanel(RectTransform canvasRect)
         {
