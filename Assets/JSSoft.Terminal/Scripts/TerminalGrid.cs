@@ -139,7 +139,7 @@ namespace JSSoft.UI
             var pixelRect = this.canvas.pixelRect;
             var localPosition = new Vector2(position.x, pixelRect.height - position.y);
             var rect = this.GetRect();
-            return position - rect.position;
+            return localPosition - rect.position;
         }
 
         public TerminalPoint Intersect(Vector2 position)
