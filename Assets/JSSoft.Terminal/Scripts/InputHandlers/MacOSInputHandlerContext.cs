@@ -43,7 +43,7 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var position = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
                 var point = SelectionUtility.Intersect(grid, position);
                 if (point != TerminalPoint.Invalid)
                 {
@@ -60,7 +60,7 @@ namespace JSSoft.UI.InputHandlers
             var dragRange = this.dragRange;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var position = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
                 var point = SelectionUtility.Intersect(grid, position);
                 if (point != TerminalPoint.Invalid)
                 {
@@ -95,7 +95,7 @@ namespace JSSoft.UI.InputHandlers
             if (eventData.button == PointerEventData.InputButton.Left)
             {
                 var grid = this.Grid;
-                var newPosition = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var newPosition = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
                 var newPoint = SelectionUtility.Intersect(grid, newPosition);
                 var newTime = Time.time;
                 var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
@@ -144,7 +144,7 @@ namespace JSSoft.UI.InputHandlers
             {
                 var grid = this.Grid;
                 var downCount = this.downCount;
-                var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                var position = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
                 var newPoint = SelectionUtility.Intersect(grid, position);
                 var oldPoint = this.downPoint;
                 if (oldPoint == newPoint && eventData.dragging == false)

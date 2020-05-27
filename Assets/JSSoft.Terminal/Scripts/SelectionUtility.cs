@@ -177,7 +177,7 @@ namespace JSSoft.UI
                 return SelectWordOfCell(grid, cell);
         }
 
-        public static Vector2 WorldToGrid(ITerminalGrid grid, Vector2 position) => grid.WorldToGrid(position);
+        public static Vector2 WorldToGrid(ITerminalGrid grid, Vector2 position, Camera camera) => grid.WorldToGrid(position, camera);
 
         public static TerminalPoint Intersect(ITerminalGrid grid, Vector2 position) => grid.Intersect(position);
 

@@ -323,6 +323,8 @@ namespace JSSoft.UI
 
         public void InsertCharacter(char character)
         {
+            if (this.isReadOnly == true || this.isExecuting == true)
+                throw new InvalidOperationException();
             var index = this.outputText.Length + this.Delimiter.Length + this.prompt.Length + this.cursorPosition;
             this.notifier.Begin();
             this.notifier.SetField(ref this.text, this.text.Insert(index, $"{character}"), nameof(Text));

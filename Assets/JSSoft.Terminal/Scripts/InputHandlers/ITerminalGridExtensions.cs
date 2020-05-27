@@ -26,29 +26,6 @@ namespace JSSoft.UI.InputHandlers
 {
     public static class ITerminalGridExtensions
     {
-        public static Vector2 GetPosition(this ITerminalGrid grid)
-        {
-            var gameObject = grid.GameObject;
-            var rectTransform = gameObject.GetComponent<RectTransform>();
-            return rectTransform.anchoredPosition;
-        }
-
-        public static void SetPosition(this ITerminalGrid grid, Vector2 position)
-        {
-            var gameObject = grid.GameObject;
-            var rectTransform = gameObject.GetComponent<RectTransform>();
-            rectTransform.anchoredPosition = new Vector2(position.x, position.y);
-        }
-
-        public static Rect GetRect(this ITerminalGrid grid)
-        {
-            var gameObject = grid.GameObject;
-            var rectTransform = gameObject.GetComponent<RectTransform>();
-            var worldCorners = new Vector3[4];
-            rectTransform.GetWorldCorners(worldCorners);
-            return new Rect(worldCorners[0].x, worldCorners[0].y, worldCorners[2].x - worldCorners[0].x, worldCorners[2].y - worldCorners[0].y);
-        }
-
         public static void SetCommand(this ITerminalGrid grid, string command)
         {
             var terminal = grid.Terminal;

@@ -46,7 +46,7 @@ namespace JSSoft.UI.InputHandlers
             var downPoint = this.downPoint;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = this.WorldToGrid(eventData.position);
+                var position = this.WorldToGrid(eventData.position, eventData.pressEventCamera);
                 var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
@@ -63,7 +63,7 @@ namespace JSSoft.UI.InputHandlers
             var dragRange = this.dragRange;
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
-                var position = this.WorldToGrid(eventData.position);
+                var position = this.WorldToGrid(eventData.position, eventData.pressEventCamera);
                 var point = this.Intersect(position);
                 if (point != TerminalPoint.Invalid)
                 {
@@ -259,7 +259,7 @@ namespace JSSoft.UI.InputHandlers
         private bool OnLeftPointerDown(PointerEventData eventData)
         {
             var grid = this.Grid;
-            var newPosition = this.WorldToGrid(eventData.position);
+            var newPosition = this.WorldToGrid(eventData.position, eventData.pressEventCamera);
             var newPoint1 = this.Intersect(newPosition);
             var newPoint2 = new TerminalPoint(newPoint1.X + 1, newPoint1.Y);
             var newTime = Time.time;
@@ -296,7 +296,7 @@ namespace JSSoft.UI.InputHandlers
 
         private bool OnLeftPointerUp(PointerEventData eventData)
         {
-            var position = this.WorldToGrid(eventData.position);
+            var position = this.WorldToGrid(eventData.position, eventData.pressEventCamera);
             var newPoint = this.Intersect(position);
             var oldPoint = this.downPoint;
             if (oldPoint == newPoint)
@@ -321,7 +321,7 @@ namespace JSSoft.UI.InputHandlers
             this.SelectingRange = new TerminalRange(p1, p2);
         }
 
-        private Vector2 WorldToGrid(Vector2 position) => this.Grid.WorldToGrid(position);
+        private Vector2 WorldToGrid(Vector2 position, Camera camera) => this.Grid.WorldToGrid(position, camera);
 
         private TerminalPoint Intersect(Vector2 position) => this.Grid.Intersect(position);
 

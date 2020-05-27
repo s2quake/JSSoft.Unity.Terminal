@@ -169,7 +169,7 @@ namespace JSSoft.UI
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalValidationEvents.Validated += Object_Validated;
-            this.text = string.Empty;
+            this.text = this.grid.text;
         }
 
         private void Grid_Disabled(object sender, EventArgs e)

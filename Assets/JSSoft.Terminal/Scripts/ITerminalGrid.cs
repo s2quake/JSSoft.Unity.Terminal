@@ -30,7 +30,7 @@ namespace JSSoft.UI
 {
     public interface ITerminalGrid
     {
-        Vector2 WorldToGrid(Vector2 position);
+        Vector2 WorldToGrid(Vector2 position, Camera camera);
 
         TerminalPoint Intersect(Vector2 position);
 

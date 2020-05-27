@@ -89,7 +89,6 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSKeyboard.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\ITerminalGridExtensions.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardBase.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardChangedEventArgs.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardEventArgs.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandler.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandlerContext.cs" />
@@ -104,6 +103,7 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalCell.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalExtensions.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalGrid.cs" />
+     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalGridExtensions.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalRow.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBinding.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindingBase.cs" />

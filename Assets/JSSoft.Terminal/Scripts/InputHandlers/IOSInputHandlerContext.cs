@@ -77,7 +77,7 @@ namespace JSSoft.UI.InputHandlers
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
                 {
-                    var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                    var position = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
                     var point = SelectionUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
                     {
@@ -102,7 +102,7 @@ namespace JSSoft.UI.InputHandlers
                 }
                 else if (this.isSelecting == true && downPoint != TerminalPoint.Invalid)
                 {
-                    var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+                    var position = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
                     var point = SelectionUtility.Intersect(grid, position);
                     if (point != TerminalPoint.Invalid)
                     {
@@ -242,7 +242,7 @@ namespace JSSoft.UI.InputHandlers
         {
             var grid = this.Grid;
             var terminal = this.Terminal;
-            var newPosition = SelectionUtility.WorldToGrid(grid, eventData.position);
+            var newPosition = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
             var newPoint = SelectionUtility.Intersect(grid, newPosition);
             var newTime = Time.time;
             var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
@@ -272,7 +272,7 @@ namespace JSSoft.UI.InputHandlers
         private void OnLeftPointerUp(PointerEventData eventData)
         {
             var grid = this.Grid;
-            var position = SelectionUtility.WorldToGrid(grid, eventData.position);
+            var position = SelectionUtility.WorldToGrid(grid, eventData.position, eventData.pressEventCamera);
             var newPoint1 = SelectionUtility.Intersect(grid, position);
             var newPoint2 = new TerminalPoint(newPoint1.X + 1, newPoint1.Y);
             var oldPoint = this.downPoint;

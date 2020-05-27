@@ -28,6 +28,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.ComponentModel;
 using System.Collections.Specialized;
+using JSSoft.UI.InputHandlers;
 #if UNITY_EDITOR
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
 #endif
@@ -133,16 +134,12 @@ namespace JSSoft.UI
             this.Selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
         }
 
-        public Vector2 WorldToGrid(Vector2 position)
+        public Vector2 WorldToGrid(Vector2 position, Camera camera)
         {
-            var rect = this.rectTransform.rect;
-            var camera = this.GetComponentInParent<Canvas>().worldCamera;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(this.rectTransform, position, camera, out var localPosition);
-            localPosition.y = rect.height - localPosition.y;
-            localPosition.y += TerminalGridUtility.GetItemHeight(this) * this.visibleIndex;
-            localPosition.x += (int)this.Rectangle.width / 2;
-            localPosition.y -= (int)this.Rectangle.height / 2;
-            return localPosition;
+            var pixelRect = this.canvas.pixelRect;
+            var localPosition = new Vector2(position.x, pixelRect.height - position.y);
+            var rect = this.GetRect();
+            return position - rect.position;
         }
 
         public TerminalPoint Intersect(Vector2 position)

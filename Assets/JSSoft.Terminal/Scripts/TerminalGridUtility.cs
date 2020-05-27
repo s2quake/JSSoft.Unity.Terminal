@@ -159,12 +159,12 @@ namespace JSSoft.UI
             return new GlyphRect(x, y, itemWidth, itemHeight);
         }
 
-        public static GlyphRect GetRect(ITerminalGrid grid, TerminalPoint point)
+        public static GlyphRect GetGlyphRect(ITerminalGrid grid, TerminalPoint point)
         {
-            return GetRect(grid, point.X, point.Y);
+            return GetGlyphRect(grid, point.X, point.Y);
         }
 
-        public static GlyphRect GetRect(ITerminalGrid grid, int x, int y)
+        public static GlyphRect GetGlyphRect(ITerminalGrid grid, int x, int y)
         {
             var itemWidth = TerminalGridUtility.GetItemWidth(grid);
             var itemHeight = TerminalGridUtility.GetItemHeight(grid);
