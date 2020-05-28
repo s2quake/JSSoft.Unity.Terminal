@@ -69,7 +69,10 @@ namespace JSSoft.UI
         {
             base.OnPopulateMesh(vh);
             if (this.composition == null)
+            {
+                vh.Clear();
                 return;
+            }
 
             var text = this.composition.Text;
             var columnIndex = this.composition.ColumnIndex;

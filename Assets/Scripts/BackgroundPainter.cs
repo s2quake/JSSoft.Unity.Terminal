@@ -32,7 +32,7 @@ namespace JSSoft.Communication.Shells
     public class BackgroundPainter : MaskableGraphic
     {
         [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
 
         protected override void OnEnable()
         {

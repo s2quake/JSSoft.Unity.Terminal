@@ -58,6 +58,7 @@
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalMenuItems.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalScrollbarEditor.cs" />
      <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalStyleBehaviourEndNameEditAction.cs" />
+     <Compile Include="Assets\Scripts\Editor\TerminalLogRedirectorEditor.cs" />
      <None Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalStyleBehaviour.txt" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>

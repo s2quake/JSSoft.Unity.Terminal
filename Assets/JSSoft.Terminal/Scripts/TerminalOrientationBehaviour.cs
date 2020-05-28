@@ -29,7 +29,8 @@ namespace JSSoft.UI
     [RequireComponent(typeof(TerminalGrid))]
     public class TerminalOrientationBehaviour : MonoBehaviour
     {
-        private readonly OrientationChangedEvent changed = new OrientationChangedEvent();
+        [SerializeField]
+        private OrientationChangedEvent changed;
         private TerminalGrid grid;
         private ScreenOrientation orientation;
 
@@ -45,6 +46,14 @@ namespace JSSoft.UI
                     return false;
                 default:
                     throw new ArgumentException($"{orientation}: invalid orientation", nameof(orientation));
+            }
+        }
+
+        public void Start()
+        {
+            if (this.changed == null)
+            {
+                this.changed = new OrientationChangedEvent();
             }
         }
 
@@ -65,13 +74,23 @@ namespace JSSoft.UI
             {
                 var orientation = this.orientation;
                 this.orientation = Screen.orientation;
-                this.changed.Invoke(orientation, this.orientation, IsPortait(orientation) != IsPortait(this.orientation));
+                this.changed?.Invoke(orientation, this.orientation, IsPortait(orientation) != IsPortait(this.orientation));
             }
         }
 
         public ScreenOrientation Orientation => this.orientation;
 
-        public OrientationChangedEvent Changed => this.changed;
+        public OrientationChangedEvent Changed
+        {
+            get => this.changed;
+            set
+            {
+                if (this.changed != value)
+                {
+                    this.changed = value;
+                }
+            }
+        }
 
         private void UpdateOrientation(ScreenOrientation oldValue, ScreenOrientation newValue)
         {
@@ -91,6 +110,7 @@ namespace JSSoft.UI
         /// <summary>
         /// void Callback(ScreenOrientation oldValue, ScreenOrientation newValue, bool isRotated)
         /// </summary>
+        [Serializable]
         public class OrientationChangedEvent : UnityEvent<ScreenOrientation, ScreenOrientation, bool>
         {
         }

@@ -26,13 +26,6 @@ namespace JSSoft.Communication.Shells
 {
     class DebugLogger : JSSoft.Communication.Logging.ILogger
     {
-        // private Dispatcher dispatcher;
-
-        // public DebugLogger()
-        // {
-        //     this.dispatcher = Dispatcher.Current;
-        // }
-
         public void Debug(object message)
         {
             UnityEngine.Debug.Log(message);

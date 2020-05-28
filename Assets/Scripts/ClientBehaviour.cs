@@ -38,9 +38,9 @@ namespace JSSoft.Communication.Shells
         private DispatcherScheduler scheduler;
         private ITerminal terminal;
         [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
         [SerializeField]
-        private bool adjustResolution;
+        private bool adjustResolution = false;
 
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()

@@ -20,13 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using Ntreev.Library.Threading;
 using JSSoft.UI;
 using UnityEngine;
@@ -38,28 +31,80 @@ namespace JSSoft.Communication.Shells
     {
         private Terminal terminal;
         [SerializeField]
-        private LogType logType;
+        private LogType logType = LogType.Log;
         [SerializeField]
-        private bool useColor;
+        private bool useForegroundColor;
         [SerializeField]
-        private TerminalColor color;
+        private bool useBackgroundColor;
+        [SerializeField]
+        private TerminalColor foregroundColor;
+        [SerializeField]
+        private TerminalColor backgroundColor;
         private Dispatcher dispatcher;
 
         public TerminalLogRedirector()
         {
         }
 
+        public bool UseForegroundColor
+        {
+            get => this.useForegroundColor;
+            set
+            {
+                if (this.useForegroundColor != value)
+                {
+                    this.useForegroundColor = value;
+                }
+            }
+        }
+
+        public bool UseBackgroundColor
+        {
+            get => this.useBackgroundColor;
+            set
+            {
+                if (this.useBackgroundColor != value)
+                {
+                    this.useBackgroundColor = value;
+                }
+            }
+        }
+
+        private TerminalColor ForegroundColor
+        {
+            get => this.foregroundColor;
+            set
+            {
+                if (this.foregroundColor != value)
+                {
+                    this.foregroundColor = value;
+                }
+            }
+        }
+
+        private TerminalColor BackgroundColor
+        {
+            get => this.backgroundColor;
+            set
+            {
+                if (this.backgroundColor != value)
+                {
+                    this.backgroundColor = value;
+                }
+            }
+        }
+
         protected virtual void OnEnable()
         {
             this.dispatcher = Dispatcher.Current;
             this.terminal = this.GetComponent<Terminal>();
-            Application.logMessageReceived += Application_LogMessageReceived;
+            // Application.logMessageReceived += Application_LogMessageReceived;
             Application.logMessageReceivedThreaded += Application_LogMessageReceivedThreaded;
         }
 
         protected virtual void OnDisable()
         {
-            Application.logMessageReceived -= Application_LogMessageReceived;
+            // Application.logMessageReceived -= Application_LogMessageReceived;
             Application.logMessageReceivedThreaded -= Application_LogMessageReceivedThreaded;
             this.dispatcher = null;
             this.terminal = null;
@@ -72,17 +117,25 @@ namespace JSSoft.Communication.Shells
 
         private async void Application_LogMessageReceivedThreaded(string condition, string stackTrace, LogType type)
         {
-            await this.dispatcher.InvokeAsync(() => this.SendMessage(condition, stackTrace, type));
+            if (this.dispatcher.CheckAccess() == true)
+                this.SendMessage(condition, stackTrace, type);
+            else
+                await this.dispatcher.InvokeAsync(() => this.SendMessage(condition, stackTrace, type));
         }
 
         private void SendMessage(string condition, string stackTrace, LogType type)
         {
             if (this.logType == type)
             {
-                if (this.useColor == true)
-                    this.terminal.ForegroundColor = this.color;
+                var foregroundColor = this.terminal.ForegroundColor;
+                var backgroundColor = this.terminal.BackgroundColor;
+                if (this.useForegroundColor == true)
+                    this.terminal.ForegroundColor = this.foregroundColor;
+                if (this.useBackgroundColor == true)
+                    this.terminal.BackgroundColor = this.backgroundColor;
                 this.terminal.AppendLine(condition);
-                this.terminal.ForegroundColor = null;
+                this.terminal.ForegroundColor = foregroundColor;
+                this.terminal.BackgroundColor = backgroundColor;
             }
         }
     }

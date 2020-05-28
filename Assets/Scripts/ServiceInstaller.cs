@@ -39,7 +39,7 @@ namespace JSSoft.Communication.Shells
     class ServiceInstaller : MonoInstaller
     {
         [SerializeField]
-        private TerminalGrid grid;
+        private TerminalGrid grid = null;
 
         public override void InstallBindings()
         {

@@ -142,6 +142,7 @@ namespace JSSoft.UI.Editor
                 canvas = GameObject.FindObjectOfType<Canvas>();
             }
             var canvasTransform = canvas.transform;
+            var pixelRect = canvas.pixelRect;
 
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
@@ -274,7 +275,13 @@ namespace JSSoft.UI.Editor
             handleRect.pivot = new Vector2(0.5f, 0.5f);
 
             scrollbar.handleRect = handleRect;
+
+            var padding = terminalGrid.Padding;
+            var bufferWidth = (int)((pixelRect.width - (padding.Left + padding.Right)) / font.Width);
+            var bufferHeight = (int)((pixelRect.height - (padding.Top + padding.Bottom)) / font.Height);
             terminalGrid.Font = font;
+            terminalGrid.BufferWidth = bufferWidth;
+            terminalGrid.BufferHeight = bufferHeight;
             terminal.AppendLine("hello world!");
             terminal.Prompt = "Prompt>";
         }

@@ -80,10 +80,10 @@ namespace JSSoft.UI
         private int visibleIndex;
         [SerializeField]
         [Range(20, 1000)]
-        private int bufferWidth = 80;
+        private int bufferWidth = 10;
         [SerializeField]
         [Range(5, 1000)]
-        private int bufferHeight = 25;
+        private int bufferHeight = 2;
         [SerializeField]
         [Range(5, 1000)]
         private int maxBufferHeight = 500;
@@ -365,7 +365,6 @@ namespace JSSoft.UI
                 {
                     this.text = value;
                     this.InvokePropertyChangedEvent(nameof(Text));
-                    this.ScrollToCursor();
                 }
             }
         }
