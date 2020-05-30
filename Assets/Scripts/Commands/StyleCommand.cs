@@ -31,9 +31,9 @@ using Ntreev.Library.Threading;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.UI.Commands
 {
-    class StyleCommand : CommandAsyncBase
+    public class StyleCommand : CommandAsyncBase
     {
         private readonly ITerminalGrid grid;
         private Dispatcher dispatcher;

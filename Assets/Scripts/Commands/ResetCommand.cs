@@ -26,9 +26,9 @@ using JSSoft.UI;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.UI.Commands
 {
-    class ResetCommand : CommandBase
+    public class ResetCommand : CommandBase
     {
         private readonly ITerminal terminal;
         private Dispatcher dispatcher;

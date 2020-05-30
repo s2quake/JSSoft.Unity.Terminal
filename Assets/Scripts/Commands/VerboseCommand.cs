@@ -31,9 +31,9 @@ using Ntreev.Library.Threading;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.UI.Commands
 {
-    class VerboseCommand : CommandAsyncBase
+    public class VerboseCommand : CommandAsyncBase
     {
         private readonly ITerminal terminal;
         private Dispatcher dispatcher;

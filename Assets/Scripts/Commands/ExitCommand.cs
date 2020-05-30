@@ -28,16 +28,14 @@ using Ntreev.Library.Commands;
 using JSSoft.Communication.Shells;
 using UnityEngine;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.UI.Commands
 {
-    class ExitCommand : CommandAsyncBase
+    public class ExitCommand : CommandAsyncBase
     {
-        private readonly IShell shell;
         private Dispatcher dispatcher;
 
-        public ExitCommand(IShell shell)
+        public ExitCommand()
         {
-            this.shell = shell;
             this.dispatcher = Dispatcher.Current;
         }
 
@@ -50,7 +48,6 @@ namespace JSSoft.Communication.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            await this.shell.StopAsync();
             this.Exit();
         }
 
