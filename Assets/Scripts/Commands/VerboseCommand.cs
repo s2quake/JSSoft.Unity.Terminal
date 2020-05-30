@@ -35,12 +35,10 @@ namespace JSSoft.Terminal.Commands
 {
     public class VerboseCommand : CommandAsyncBase
     {
-        private readonly ITerminal terminal;
-        private Dispatcher dispatcher;
+        private readonly Dispatcher dispatcher;
 
-        public VerboseCommand(ITerminal terminal)
+        public VerboseCommand()
         {
-            this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
         }
 
@@ -51,14 +49,17 @@ namespace JSSoft.Terminal.Commands
             get; set;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
             await this.dispatcher.InvokeAsync(() =>
             {
-                if (this.Value == null)
-                    this.Out.WriteLine($"Verbose: {this.terminal.IsVerbose}");
-                else
-                    this.terminal.IsVerbose = (bool)this.Value;
+                if (source is GameObject gameObject && gameObject.GetComponent<ITerminal>() is ITerminal terminal)
+                {
+                    if (this.Value == null)
+                        this.Out.WriteLine($"Verbose: {terminal.IsVerbose}");
+                    else
+                        terminal.IsVerbose = (bool)this.Value;
+                }
             });
         }
     }

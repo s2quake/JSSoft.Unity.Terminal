@@ -92,21 +92,6 @@
      <Compile Include="Assets\Scripts\Settings.cs" />
      <Compile Include="Assets\Scripts\Shell.cs" />
      <Compile Include="Assets\Scripts\StyleResources.cs" />
- <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.PackageManagerUI.Editor">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.CollabProxy.Editor">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.TextMeshPro">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Analytics.DataPrivacy">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
- </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>/Applications/Unity/Hub/Editor/2018.4.20f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
  </Reference>
@@ -311,17 +296,11 @@
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>/Applications/Unity/Hub/Editor/2018.4.20f1/Unity.app/Contents/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
- <Reference Include="Ntreev.Library">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/Ntreev.Library.dll</HintPath>
- </Reference>
  <Reference Include="Google.Protobuf">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/Google.Protobuf.dll</HintPath>
  </Reference>
  <Reference Include="JSSoft.Communication">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/JSSoft.Communication.dll</HintPath>
- </Reference>
- <Reference Include="Ntreev.Library.Commands">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/Ntreev.Library.Commands.dll</HintPath>
  </Reference>
  <Reference Include="Grpc.Core">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/Grpc.Core.dll</HintPath>
@@ -341,12 +320,6 @@
  <Reference Include="System.Memory">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/System.Memory.dll</HintPath>
  </Reference>
- <Reference Include="Ntreev.Library.resources">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/ko-KR/Ntreev.Library.resources.dll</HintPath>
- </Reference>
- <Reference Include="Ntreev.Library.Commands.resources">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Communication/ko-KR/Ntreev.Library.Commands.resources.dll</HintPath>
- </Reference>
  <Reference Include="Zenject-usage">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/Source/Usage/Zenject-usage.dll</HintPath>
  </Reference>
@@ -364,6 +337,18 @@
  </Reference>
  <Reference Include="Unity.Analytics.StandardEvents">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/PackageCache/com.unity.analytics@3.2.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
+ </Reference>
+ <Reference Include="Ntreev.Library.resources">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/ko-KR/Ntreev.Library.resources.dll</HintPath>
+ </Reference>
+ <Reference Include="Ntreev.Library">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/Ntreev.Library.dll</HintPath>
+ </Reference>
+ <Reference Include="Ntreev.Library.Commands">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/Ntreev.Library.Commands.dll</HintPath>
+ </Reference>
+ <Reference Include="Ntreev.Library.Commands.resources">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/ko-KR/Ntreev.Library.Commands.resources.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>/Applications/Unity/Hub/Editor/2018.4.20f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

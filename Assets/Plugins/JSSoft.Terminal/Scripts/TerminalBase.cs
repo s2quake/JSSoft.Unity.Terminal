@@ -97,5 +97,11 @@ namespace JSSoft.Terminal
         public abstract void ResetColor();
 
         public new abstract void Reset();
+
+        #region ITerminal
+
+        GameObject ITerminal.GameObject => this.gameObject;
+
+        #endregion
     }
 }

@@ -38,7 +38,7 @@ namespace JSSoft.Communication.Shells
         private DispatcherScheduler scheduler;
         private ITerminal terminal;
         [SerializeField]
-        private ITerminalGrid grid = null;
+        private TerminalGridBase grid = null;
         [SerializeField]
         private bool adjustResolution = false;
 
@@ -125,14 +125,14 @@ namespace JSSoft.Communication.Shells
 
         private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
         {
-            await this.RunAsync(e);
+            await this.RunAsync(sender as ITerminal, e);
         }
 
-        private async Task RunAsync(TerminalExecuteEventArgs e)
+        private async Task RunAsync(ITerminal terminal, TerminalExecuteEventArgs e)
         {
             try
             {
-                await Task.Run(() => this.commandContext.Execute(this.commandContext.Name + " " + e.Command));
+                await Task.Run(() => this.commandContext.Execute(terminal.GameObject, this.commandContext.Name + " " + e.Command));
                 e.Success();
             }
             catch (System.Reflection.TargetInvocationException ex)

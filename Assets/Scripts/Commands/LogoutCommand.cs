@@ -42,7 +42,7 @@ namespace JSSoft.Communication.Commands
 
         public override bool IsEnabled => this.shell.UserToken != Guid.Empty;
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
             await this.userService.LogoutAsync(this.shell.UserToken);
             await this.shell.LogoutAsync();

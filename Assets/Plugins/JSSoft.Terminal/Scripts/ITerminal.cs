@@ -22,6 +22,7 @@
 
 using System;
 using System.ComponentModel;
+using UnityEngine;
 
 namespace JSSoft.Terminal
 {
@@ -80,6 +81,8 @@ namespace JSSoft.Terminal
         ICommandCompletor CommandCompletor { get; set; }
 
         IPromptDrawer PromptDrawer { get; set; }
+
+        GameObject GameObject { get; }
 
         event EventHandler Validated;
 

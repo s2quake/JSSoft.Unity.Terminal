@@ -37,16 +37,14 @@ namespace JSSoft.Communication.Commands
 {
     class TestCommand : CommandAsyncBase
     {
-        private readonly ITerminalGrid grid;
-        private Dispatcher dispatcher;
+        private readonly Dispatcher dispatcher;
 
-        public TestCommand(ITerminalGrid grid)
+        public TestCommand()
         {
-            this.grid = grid;
             this.dispatcher = Dispatcher.Current;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
             await Task.Delay(5000);
             await this.dispatcher.InvokeAsync(() =>

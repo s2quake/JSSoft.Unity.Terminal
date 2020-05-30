@@ -25,23 +25,25 @@ using System.Threading.Tasks;
 using JSSoft.Terminal;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
+using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
     public class ResetCommand : CommandBase
     {
-        private readonly ITerminal terminal;
         private Dispatcher dispatcher;
 
-        public ResetCommand(ITerminal terminal)
+        public ResetCommand()
         {
-            this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
         }
 
-        protected override void OnExecute()
+        protected override void OnExecute(object source)
         {
-            this.dispatcher.Invoke(this.terminal.Reset);
+            if (source is GameObject gameObject && gameObject.GetComponent<TerminalBase>() is TerminalBase terminal)
+            {
+                this.dispatcher.Invoke(terminal.Reset);
+            }
         }
     }
 }

@@ -35,12 +35,10 @@ namespace JSSoft.Communication.Commands
 {
     class HeightCommand : CommandAsyncBase
     {
-        private readonly ITerminalGrid grid;
         private Dispatcher dispatcher;
 
-        public HeightCommand(ITerminalGrid grid)
+        public HeightCommand()
         {
-            this.grid = grid;
             this.dispatcher = Dispatcher.Current;
         }
 
@@ -51,14 +49,17 @@ namespace JSSoft.Communication.Commands
             get; set;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
             await this.dispatcher.InvokeAsync(() =>
             {
-                if (this.Value == null)
-                    this.Out.WriteLine($"width: {this.grid.BufferHeight}");
-                else
-                    this.grid.BufferHeight = (int)this.Value;
+                if (source is GameObject gameObject && gameObject.GetComponent<ITerminalGrid>() is ITerminalGrid grid)
+                {
+                    if (this.Value == null)
+                        this.Out.WriteLine($"width: {grid.BufferHeight}");
+                    else
+                        grid.BufferHeight = (int)this.Value;
+                }
             });
         }
     }

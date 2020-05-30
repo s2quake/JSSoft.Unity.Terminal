@@ -63,7 +63,7 @@ namespace JSSoft.Terminal.Commands
             get; set;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
             if (this.IsList == true)
             {

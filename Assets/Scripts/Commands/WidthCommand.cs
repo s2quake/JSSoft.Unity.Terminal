@@ -35,12 +35,10 @@ namespace JSSoft.Communication.Commands
 {
     class WidthCommand : CommandAsyncBase
     {
-        private readonly ITerminalGrid grid;
-        private Dispatcher dispatcher;
+        private readonly Dispatcher dispatcher;
 
-        public WidthCommand(ITerminalGrid grid)
+        public WidthCommand()
         {
-            this.grid = grid;
             this.dispatcher = Dispatcher.Current;
         }
 
@@ -51,14 +49,17 @@ namespace JSSoft.Communication.Commands
             get; set;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
             await this.dispatcher.InvokeAsync(() =>
             {
-                if (this.Value == null)
-                    this.Out.WriteLine($"width: {this.grid.BufferWidth}");
-                else
-                    this.grid.BufferWidth = (int)this.Value;
+                if (source is GameObject gameObject && gameObject.GetComponent<ITerminalGrid>() is ITerminalGrid grid)
+                {
+                    if (this.Value == null)
+                        this.Out.WriteLine($"width: {grid.BufferWidth}");
+                    else
+                        grid.BufferWidth = (int)this.Value;
+                }
             });
         }
     }

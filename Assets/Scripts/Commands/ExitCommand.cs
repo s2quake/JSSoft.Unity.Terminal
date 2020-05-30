@@ -46,7 +46,7 @@ namespace JSSoft.Terminal.Commands
             get; set;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(object source)
         {
 #if UNITY_EDITOR
             await this.dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
