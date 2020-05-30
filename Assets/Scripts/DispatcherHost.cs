@@ -22,31 +22,30 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.Terminal;
-using Ntreev.Library.Commands;
-using Ntreev.Library.Threading;
 using UnityEngine;
+using Ntreev.Library.Threading;
+using Zenject;
+using System.ComponentModel;
 
-namespace JSSoft.Terminal.Commands
+namespace JSSoft.Communication.Shells
 {
-    public class ResetCommand : CommandAsyncBase
+    public class DispatcherHost : MonoBehaviour
     {
-        private readonly Dispatcher dispatcher;
+        private DispatcherScheduler scheduler;
 
-        public ResetCommand()
+        public void Awake()
         {
-            this.dispatcher = Dispatcher.Current;
+            this.scheduler = DispatcherScheduler.Current;
         }
 
-        protected override Task OnExecuteAsync(object source)
+        public void Update()
         {
-            return this.dispatcher.InvokeAsync(() =>
+#if UNITY_EDITOR
+            if (Application.isPlaying && this.scheduler != null)
+#endif
             {
-                if (source is GameObject gameObject && gameObject.GetComponent<TerminalBase>() is TerminalBase terminal)
-                {
-                    terminal.Reset();
-                }
-            });
+                this.scheduler.ProcessAll(1000 / 60);
+            }
         }
     }
 }

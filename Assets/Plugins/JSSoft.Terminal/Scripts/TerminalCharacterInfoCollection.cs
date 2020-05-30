@@ -25,6 +25,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
+using UnityEngine;
 
 namespace JSSoft.Terminal
 {
@@ -169,7 +170,7 @@ namespace JSSoft.Terminal
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalValidationEvents.Validated += Object_Validated;
-            this.text = this.grid.text;
+            this.text = string.Empty;
         }
 
         private void Grid_Disabled(object sender, EventArgs e)

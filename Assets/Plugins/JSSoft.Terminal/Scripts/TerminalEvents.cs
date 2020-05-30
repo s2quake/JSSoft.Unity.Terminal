@@ -50,9 +50,6 @@ namespace JSSoft.Terminal
             if (terminals.Contains(terminal) == false)
                 throw new ArgumentException($"{nameof(terminal)} does not exists.");
             terminal.Validated -= Terminal_Validated;
-            // terminal.OutputTextChanged += Terminal_OutputTextChanged;
-            // terminal.PromptTextChanged += Terminal_PromptTextChanged;
-            // terminal.CursorPositionChanged += Terminal_CursorPositionChanged;
             terminal.Enabled -= Terminal_Enabled;
             terminal.Disabled -= Terminal_Disabled;
             terminal.PropertyChanged -= Terminal_PropertyChanged;

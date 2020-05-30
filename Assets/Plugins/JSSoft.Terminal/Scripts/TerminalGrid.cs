@@ -1116,7 +1116,7 @@ namespace JSSoft.Terminal
                             continue;
                         if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
                         {
-                            if (this.terminal.IsReadOnly == false)
+                            if (this.terminal.IsReadOnly == false && this.terminal.IsExecuting == false)
                                 this.terminal.InsertCharacter(item.character);
                         }
                         this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;

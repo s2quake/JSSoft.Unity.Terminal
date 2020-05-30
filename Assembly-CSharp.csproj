@@ -57,6 +57,7 @@
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
      <Compile Include="Assets\Scripts\CommandContext.cs" />
+     <Compile Include="Assets\Scripts\CommandContextHost.cs" />
      <Compile Include="Assets\Scripts\Commands\CloseCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\DataCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\ExitCommand.cs" />
@@ -72,6 +73,7 @@
      <Compile Include="Assets\Scripts\Commands\WidthCommand.cs" />
      <Compile Include="Assets\Scripts\CommandWriter.cs" />
      <Compile Include="Assets\Scripts\DebugLogger.cs" />
+     <Compile Include="Assets\Scripts\DispatcherHost.cs" />
      <Compile Include="Assets\Scripts\IShell.cs" />
      <Compile Include="Assets\Scripts\ServiceInstaller.cs" />
      <Compile Include="Assets\Scripts\Services\Authority.cs" />
@@ -92,6 +94,21 @@
      <Compile Include="Assets\Scripts\Settings.cs" />
      <Compile Include="Assets\Scripts\Shell.cs" />
      <Compile Include="Assets\Scripts\StyleResources.cs" />
+ <Reference Include="Unity.TextMeshPro.Editor">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.PackageManagerUI.Editor">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.CollabProxy.Editor">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.TextMeshPro">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Analytics.DataPrivacy">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.Analytics.DataPrivacy.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>/Applications/Unity/Hub/Editor/2018.4.20f1/Unity.app/Contents/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
  </Reference>
@@ -335,20 +352,20 @@
  <Reference Include="Zenject.ReflectionBaking.Mono.Cecil.Rocks">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/Zenject/OptionalExtras/ReflectionBaking/Lib/Zenject.ReflectionBaking.Mono.Cecil.Rocks.dll</HintPath>
  </Reference>
- <Reference Include="Unity.Analytics.StandardEvents">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/PackageCache/com.unity.analytics@3.2.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
- </Reference>
- <Reference Include="Ntreev.Library.resources">
- <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/ko-KR/Ntreev.Library.resources.dll</HintPath>
- </Reference>
  <Reference Include="Ntreev.Library">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/Ntreev.Library.dll</HintPath>
  </Reference>
  <Reference Include="Ntreev.Library.Commands">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/Ntreev.Library.Commands.dll</HintPath>
  </Reference>
+ <Reference Include="Ntreev.Library.resources">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/ko-KR/Ntreev.Library.resources.dll</HintPath>
+ </Reference>
  <Reference Include="Ntreev.Library.Commands.resources">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Assets/Plugins/JSSoft.Terminal/Plugins/ko-KR/Ntreev.Library.Commands.resources.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Analytics.StandardEvents">
+ <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/PackageCache/com.unity.analytics@3.2.3/AnalyticsStandardEvents/Unity.Analytics.StandardEvents.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>/Applications/Unity/Hub/Editor/2018.4.20f1/Unity.app/Contents/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
@@ -710,12 +727,12 @@
       <Project>{841AAB23-49AB-055B-7F4D-66D4AAA8FD84}</Project>      <Name>Zenject-Editor</Name>    </ProjectReference>
     <ProjectReference Include="Zenject-ReflectionBaking-Editor.csproj">
       <Project>{5217ACF1-4A94-D9B6-F3A7-F56D932C0449}</Project>      <Name>Zenject-ReflectionBaking-Editor</Name>    </ProjectReference>
+    <ProjectReference Include="JSSoft.Terminal.csproj">
+      <Project>{A13325E3-6BA9-03A2-41D4-B5EFBE043365}</Project>      <Name>JSSoft.Terminal</Name>    </ProjectReference>
     <ProjectReference Include="Zenject-PoolMonitor-Editor.csproj">
       <Project>{FDB2B7ED-38F3-61A9-D47C-4BFA7C26B402}</Project>      <Name>Zenject-PoolMonitor-Editor</Name>    </ProjectReference>
     <ProjectReference Include="Zenject.csproj">
       <Project>{1F465E51-6C45-E2F5-0050-0DBD7D1C4A3E}</Project>      <Name>Zenject</Name>    </ProjectReference>
-    <ProjectReference Include="JSSoft.Terminal.csproj">
-      <Project>{A13325E3-6BA9-03A2-41D4-B5EFBE043365}</Project>      <Name>JSSoft.Terminal</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
