@@ -22,7 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.UI;
+using JSSoft.Terminal;
 
 namespace JSSoft.Communication.Shells
 {

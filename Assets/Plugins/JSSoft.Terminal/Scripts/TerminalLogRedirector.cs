@@ -21,15 +21,15 @@
 // SOFTWARE.
 
 using Ntreev.Library.Threading;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using UnityEngine;
 
 namespace JSSoft.Communication.Shells
 {
-    [RequireComponent(typeof(Terminal))]
+    [RequireComponent(typeof(TerminalBase))]
     class TerminalLogRedirector : MonoBehaviour
     {
-        private Terminal terminal;
+        private TerminalBase terminal;
         [SerializeField]
         private LogType logType = LogType.Log;
         [SerializeField]
@@ -97,7 +97,7 @@ namespace JSSoft.Communication.Shells
         protected virtual void OnEnable()
         {
             this.dispatcher = Dispatcher.Current;
-            this.terminal = this.GetComponent<Terminal>();
+            this.terminal = this.GetComponent<TerminalBase>();
             // Application.logMessageReceived += Application_LogMessageReceived;
             Application.logMessageReceivedThreaded += Application_LogMessageReceivedThreaded;
         }

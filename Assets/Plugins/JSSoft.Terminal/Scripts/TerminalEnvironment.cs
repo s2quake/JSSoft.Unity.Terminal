@@ -22,7 +22,7 @@
 
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public static class TerminalEnvironment
     {

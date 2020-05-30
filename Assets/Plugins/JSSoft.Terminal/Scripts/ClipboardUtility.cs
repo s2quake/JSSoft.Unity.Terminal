@@ -24,7 +24,7 @@ using System;
 using System.Reflection;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public static class ClipboardUtility
     {

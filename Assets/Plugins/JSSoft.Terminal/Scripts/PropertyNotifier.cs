@@ -23,7 +23,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     class PropertyNotifier : IDisposable
     {

@@ -27,13 +27,13 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using JSSoft.UI.Fonts;
+using JSSoft.Terminal.Fonts;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public class TerminalFontDescriptor : ScriptableObject, INotifyValidated
     {

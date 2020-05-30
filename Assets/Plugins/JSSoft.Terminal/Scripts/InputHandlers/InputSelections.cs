@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     class InputSelections : IDisposable
     {

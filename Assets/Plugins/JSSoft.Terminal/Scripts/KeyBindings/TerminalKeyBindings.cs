@@ -24,9 +24,9 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
-using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.ITerminal>;
+using KeyBinding = JSSoft.Terminal.KeyBinding<JSSoft.Terminal.ITerminal>;
 
-namespace JSSoft.UI.KeyBindings
+namespace JSSoft.Terminal.KeyBindings
 {
     public static class TerminalKeyBindings
     {

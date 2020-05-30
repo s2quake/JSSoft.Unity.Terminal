@@ -23,7 +23,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using JSSoft.UI.Fonts;
+using JSSoft.Terminal.Fonts;
 using UnityEngine;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
@@ -32,7 +32,7 @@ using System.Collections.Specialized;
 using UnityEditor;
 #endif
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Font")]
     public class TerminalFont : ScriptableObject, INotifyValidated

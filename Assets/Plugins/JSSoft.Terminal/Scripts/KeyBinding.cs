@@ -23,7 +23,7 @@
 using System;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public class KeyBinding<T> : KeyBindingBase<T> where T : class
     {

@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.ComponentModel;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     class TerminalCharacterInfoCollection : IReadOnlyList<TerminalCharacterInfo>
     {

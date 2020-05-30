@@ -25,7 +25,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.TextCore;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public class TerminalMesh
     {

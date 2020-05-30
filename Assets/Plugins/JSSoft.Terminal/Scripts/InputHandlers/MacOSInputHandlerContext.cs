@@ -23,7 +23,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     class MacOSInputHandlerContext : InputHandlerContext
     {

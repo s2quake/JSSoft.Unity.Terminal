@@ -23,7 +23,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public interface IKeyBindingCollection : IEnumerable<IKeyBinding>
     {

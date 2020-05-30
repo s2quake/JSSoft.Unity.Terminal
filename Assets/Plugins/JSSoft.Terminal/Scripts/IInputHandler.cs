@@ -22,7 +22,7 @@
 
 using UnityEngine.EventSystems;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public interface IInputHandler
     {

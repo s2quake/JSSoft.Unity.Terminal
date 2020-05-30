@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Style")]
     public class TerminalStyle : ScriptableObject, INotifyValidated

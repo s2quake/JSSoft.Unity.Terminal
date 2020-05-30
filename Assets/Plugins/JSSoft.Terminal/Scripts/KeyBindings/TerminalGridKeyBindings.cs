@@ -22,9 +22,9 @@
 
 using System;
 using UnityEngine;
-using KeyBinding = JSSoft.UI.KeyBinding<JSSoft.UI.ITerminalGrid>;
+using KeyBinding = JSSoft.Terminal.KeyBinding<JSSoft.Terminal.ITerminalGrid>;
 
-namespace JSSoft.UI.KeyBindings
+namespace JSSoft.Terminal.KeyBindings
 {
     public static class TerminalGridKeyBindings
     {

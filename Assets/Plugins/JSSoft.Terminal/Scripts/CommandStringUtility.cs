@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     static class CommandStringUtility
     {

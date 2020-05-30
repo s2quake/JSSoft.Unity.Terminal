@@ -22,7 +22,7 @@
 
 using UnityEngine;
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     public static class ITerminalGridExtensions
     {

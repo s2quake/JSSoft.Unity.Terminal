@@ -24,7 +24,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [RequireComponent(typeof(TerminalGrid))]
     public class TerminalOrientationBehaviour : MonoBehaviour

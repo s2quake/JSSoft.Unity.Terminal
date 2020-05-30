@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     class IOSInputHandler : InputHandler<IOSInputHandlerContext>
     {

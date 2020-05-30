@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]

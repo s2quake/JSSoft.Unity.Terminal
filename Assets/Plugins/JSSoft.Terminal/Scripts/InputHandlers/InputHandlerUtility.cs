@@ -22,7 +22,7 @@
 
 using System.Linq;
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     static class InputHandlerUtility
     {

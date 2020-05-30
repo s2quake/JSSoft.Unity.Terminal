@@ -26,7 +26,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     class TerminalForegroundItem : MaskableGraphic
     {

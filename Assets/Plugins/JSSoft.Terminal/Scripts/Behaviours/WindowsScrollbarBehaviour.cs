@@ -23,7 +23,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace JSSoft.UI.Behaviours
+namespace JSSoft.Terminal.Behaviours
 {
     public class WindowsScrollbarBehaviour : TerminalBehaviourBase
     {

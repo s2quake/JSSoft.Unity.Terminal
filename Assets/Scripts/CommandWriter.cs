@@ -28,7 +28,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Ntreev.Library.Threading;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using UnityEngine;
 
 namespace JSSoft.Communication.Shells

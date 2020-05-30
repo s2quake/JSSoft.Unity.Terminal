@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public static class TerminalGridUtility
     {

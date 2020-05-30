@@ -23,7 +23,7 @@
 using System;
 using System.ComponentModel;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public interface INotifyValidated : INotifyPropertyChanged
     {

@@ -29,7 +29,7 @@ using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]

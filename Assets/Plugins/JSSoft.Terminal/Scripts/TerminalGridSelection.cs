@@ -23,7 +23,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     class TerminalGridSelection : ObservableCollection<TerminalRange>
     {

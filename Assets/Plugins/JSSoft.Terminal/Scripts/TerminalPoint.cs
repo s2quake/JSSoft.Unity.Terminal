@@ -23,7 +23,7 @@
 using System;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [Serializable]
     public struct TerminalPoint : IEquatable<TerminalPoint>, IComparable

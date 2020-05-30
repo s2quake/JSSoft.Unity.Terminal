@@ -27,11 +27,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Ntreev.Library.Commands;
-using JSSoft.UI.Commands;
+using JSSoft.Terminal.Commands;
 using JSSoft.Communication.Commands;
 using JSSoft.Communication.Services;
-using JSSoft.UI;
-using Terminal = JSSoft.UI.Terminal;
+using JSSoft.Terminal;
 using Zenject;
 using UnityEngine;
 
@@ -40,7 +39,7 @@ namespace JSSoft.Communication.Shells
     class ServiceInstaller : MonoInstaller
     {
         [SerializeField]
-        private TerminalGrid grid = null;
+        private ITerminalGrid grid = null;
 
         public override void InstallBindings()
         {

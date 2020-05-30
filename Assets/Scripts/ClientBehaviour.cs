@@ -22,7 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using UnityEngine;
 using Ntreev.Library.Threading;
 using Zenject;
@@ -38,7 +38,7 @@ namespace JSSoft.Communication.Shells
         private DispatcherScheduler scheduler;
         private ITerminal terminal;
         [SerializeField]
-        private TerminalGrid grid = null;
+        private ITerminalGrid grid = null;
         [SerializeField]
         private bool adjustResolution = false;
 

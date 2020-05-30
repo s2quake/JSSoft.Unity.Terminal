@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEditorInternal;

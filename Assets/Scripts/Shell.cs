@@ -25,7 +25,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JSSoft.Communication.Services;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using Ntreev.Library.Threading;
 using UnityEngine;
 using Zenject;

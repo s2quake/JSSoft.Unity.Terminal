@@ -24,7 +24,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace JSSoft.UI.Editor
+namespace JSSoft.Terminal.Editor
 {
     [CustomEditor(typeof(TerminalGrid))]
     public class TerminalGridEditor : UnityEditor.Editor

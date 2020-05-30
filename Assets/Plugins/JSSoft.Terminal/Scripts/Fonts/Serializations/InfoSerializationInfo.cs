@@ -22,7 +22,7 @@
 
 using System.Xml.Serialization;
 
-namespace JSSoft.UI.Fonts.Serializations
+namespace JSSoft.Terminal.Fonts.Serializations
 {
     public struct InfoSerializationInfo
     {

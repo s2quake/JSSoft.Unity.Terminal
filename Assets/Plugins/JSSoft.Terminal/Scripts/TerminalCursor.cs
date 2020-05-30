@@ -27,7 +27,7 @@ using UnityEngine;
 using UnityEngine.TextCore;
 using UnityEngine.UI;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     class TerminalCursor : MaskableGraphic
     {
@@ -158,7 +158,7 @@ namespace JSSoft.UI
             }
         }
 
-        public Terminal Terminal => this.grid?.Terminal;
+        public TerminalBase Terminal => this.grid?.Terminal;
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {

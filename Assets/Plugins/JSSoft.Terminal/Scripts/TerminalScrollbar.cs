@@ -28,7 +28,7 @@ using UnityEngine;
 using System.Threading.Tasks;
 using System.ComponentModel;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [RequireComponent(typeof(Animator))]
     internal class TerminalScrollbar : Scrollbar

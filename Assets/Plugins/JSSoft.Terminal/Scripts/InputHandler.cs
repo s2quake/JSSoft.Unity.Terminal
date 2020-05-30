@@ -23,7 +23,7 @@
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public abstract class InputHandler<T> : IInputHandler where T : InputHandlerContext
     {

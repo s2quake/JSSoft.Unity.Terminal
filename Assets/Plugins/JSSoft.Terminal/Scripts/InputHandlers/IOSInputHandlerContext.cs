@@ -26,7 +26,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using System.ComponentModel;
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     class IOSInputHandlerContext : InputHandlerContext
     {

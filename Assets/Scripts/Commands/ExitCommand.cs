@@ -28,7 +28,7 @@ using Ntreev.Library.Commands;
 using JSSoft.Communication.Shells;
 using UnityEngine;
 
-namespace JSSoft.UI.Commands
+namespace JSSoft.Terminal.Commands
 {
     public class ExitCommand : CommandAsyncBase
     {
@@ -48,15 +48,10 @@ namespace JSSoft.UI.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            this.Exit();
-        }
-
-        private void Exit()
-        {
 #if UNITY_EDITOR
-            this.dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
+            await this.dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
 #else
-            this.dispatcher.InvokeAsync(() => UnityEngine.Application.Quit());
+            await this.dispatcher.InvokeAsync(() => UnityEngine.Application.Quit());
 #endif
         }
     }

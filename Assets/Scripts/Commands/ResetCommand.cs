@@ -22,11 +22,11 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 
-namespace JSSoft.UI.Commands
+namespace JSSoft.Terminal.Commands
 {
     public class ResetCommand : CommandBase
     {

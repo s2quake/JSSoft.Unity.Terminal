@@ -27,7 +27,7 @@ using UnityEngine.EventSystems;
 using System.Text.RegularExpressions;
 using System.ComponentModel;
 
-namespace JSSoft.UI.InputHandlers
+namespace JSSoft.Terminal.InputHandlers
 {
     class WindowsInputHandlerContext : InputHandlerContext
     {

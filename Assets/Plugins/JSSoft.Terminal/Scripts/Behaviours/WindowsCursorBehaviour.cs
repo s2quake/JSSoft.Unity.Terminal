@@ -23,7 +23,7 @@
 using System;
 using UnityEngine;
 
-namespace JSSoft.UI.Behaviours
+namespace JSSoft.Terminal.Behaviours
 {
     public class WindowsCursorBehaviour : TerminalBehaviourBase
     {

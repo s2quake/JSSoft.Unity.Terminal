@@ -25,7 +25,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public class KeyBindingCollection : IKeyBindingCollection
     {

@@ -24,7 +24,7 @@ using System;
 using System.ComponentModel;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Palette")]
     public class TerminalColorPalette : ScriptableObject, INotifyPropertyChanged

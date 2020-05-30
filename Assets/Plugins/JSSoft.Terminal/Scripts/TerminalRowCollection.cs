@@ -25,7 +25,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     class TerminalRowCollection : List<TerminalRow>
     {

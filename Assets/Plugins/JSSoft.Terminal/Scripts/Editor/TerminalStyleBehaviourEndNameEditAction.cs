@@ -27,7 +27,7 @@ using UnityEditor.ProjectWindowCallback;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace JSSoft.UI.Editor
+namespace JSSoft.Terminal.Editor
 {
     public class TerminalStyleBehaviourEndNameEditAction : EndNameEditAction
     {

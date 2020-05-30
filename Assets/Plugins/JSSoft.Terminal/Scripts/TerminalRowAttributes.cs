@@ -22,7 +22,7 @@
 
 using System;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [Flags]
     public enum TerminalRowAttributes

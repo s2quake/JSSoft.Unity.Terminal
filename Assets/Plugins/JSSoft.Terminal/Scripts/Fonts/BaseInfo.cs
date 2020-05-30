@@ -23,7 +23,7 @@
 using System;
 using UnityEngine;
 
-namespace JSSoft.UI.Fonts
+namespace JSSoft.Terminal.Fonts
 {
     [Serializable]
     public struct BaseInfo

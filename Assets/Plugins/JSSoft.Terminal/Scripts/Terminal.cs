@@ -28,11 +28,10 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
-    [AddComponentMenu("UI/Terminal", 15)]
     [ExecuteAlways]
-    public class Terminal : UIBehaviour, ITerminal, IPromptDrawer, ICommandCompletor, INotifyValidated
+    class Terminal : TerminalBase, IPromptDrawer, ICommandCompletor, INotifyValidated
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -80,7 +79,7 @@ namespace JSSoft.UI
             this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
         }
 
-        public void Execute()
+        public override void Execute()
         {
             var commandText = this.command;
             var promptText = this.promptText;
@@ -119,29 +118,29 @@ namespace JSSoft.UI
             this.notifier.End();
         }
 
-        public void MoveToFirst()
+        public override void MoveToFirst()
         {
             this.CursorPosition = 0;
         }
 
-        public void MoveToLast()
+        public override void MoveToLast()
         {
             this.CursorPosition = this.command.Length;
         }
 
-        public void MoveLeft()
+        public override void MoveLeft()
         {
             if (this.CursorPosition > 0)
                 this.CursorPosition--;
         }
 
-        public void MoveRight()
+        public override void MoveRight()
         {
             if (this.CursorPosition < this.Command.Length)
                 this.CursorPosition++;
         }
 
-        public void ResetOutput()
+        public override void Reset()
         {
             this.notifier.Begin();
             this.notifier.SetField(ref this.outputText, string.Empty, nameof(OutputText));
@@ -157,7 +156,7 @@ namespace JSSoft.UI
             this.notifier.End();
         }
 
-        public void Append(string text)
+        public override void Append(string text)
         {
             this.AppendInternal(text);
         }
@@ -167,17 +166,17 @@ namespace JSSoft.UI
             this.AppendInternal(text + Environment.NewLine);
         }
 
-        public void NextCompletion()
+        public override void NextCompletion()
         {
             this.CompletionImpl(NextCompletion);
         }
 
-        public void PrevCompletion()
+        public override void PrevCompletion()
         {
             this.CompletionImpl(PrevCompletion);
         }
 
-        public void Delete()
+        public override void Delete()
         {
             if (this.cursorPosition < this.command.Length)
             {
@@ -189,7 +188,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void Backspace()
+        public override void Backspace()
         {
             if (this.cursorPosition > 0)
             {
@@ -202,7 +201,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void NextHistory()
+        public override void NextHistory()
         {
             if (this.historyIndex + 1 < this.histories.Count)
             {
@@ -216,7 +215,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void PrevHistory()
+        public override void PrevHistory()
         {
             if (this.historyIndex > 0)
             {
@@ -313,7 +312,7 @@ namespace JSSoft.UI
             return text;
         }
 
-        public void ResetColor()
+        public override void ResetColor()
         {
             this.notifier.Begin();
             this.notifier.SetField(ref this.foregroundColor, null, nameof(ForegroundColor));
@@ -343,7 +342,7 @@ namespace JSSoft.UI
 
         public IKeyBindingCollection KeyBindings
         {
-            get => this.keyBindings ?? JSSoft.UI.KeyBindings.TerminalKeyBindings.GetDefaultBindings();
+            get => this.keyBindings ?? JSSoft.Terminal.KeyBindings.TerminalKeyBindings.GetDefaultBindings();
             set
             {
                 if (this.keyBindings != value)
@@ -354,7 +353,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalColor? ForegroundColor
+        public override TerminalColor? ForegroundColor
         {
             get => this.foregroundColor;
             set
@@ -367,7 +366,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalColor? BackgroundColor
+        public override TerminalColor? BackgroundColor
         {
             get => this.backgroundColor;
             set
@@ -382,7 +381,7 @@ namespace JSSoft.UI
 
         public bool IsExecuting => this.isExecuting;
 
-        public bool IsReadOnly
+        public override bool IsReadOnly
         {
             get => this.isReadOnly;
             set
@@ -395,7 +394,7 @@ namespace JSSoft.UI
             }
         }
 
-        public bool IsVerbose
+        public override bool IsVerbose
         {
             get => this.isVerbose;
             set
@@ -408,7 +407,7 @@ namespace JSSoft.UI
             }
         }
 
-        public int CursorPosition
+        public override int CursorPosition
         {
             get => this.cursorPosition;
             set
@@ -426,11 +425,11 @@ namespace JSSoft.UI
 
         public int CursorIndex => this.CursorPosition + this.OutputText.Length + this.Delimiter.Length + this.Prompt.Length;
 
-        public string Text => this.text;
+        public override string Text => this.text;
 
-        public string OutputText => this.outputText;
+        public override string OutputText => this.outputText;
 
-        public string Delimiter
+        public override string Delimiter
         {
             get
             {
@@ -445,7 +444,7 @@ namespace JSSoft.UI
             }
         }
 
-        public string Prompt
+        public override string Prompt
         {
             get => this.prompt;
             set
@@ -467,9 +466,9 @@ namespace JSSoft.UI
             }
         }
 
-        public string PromptText => this.promptText;
+        public override string PromptText => this.promptText;
 
-        public string Command
+        public override string Command
         {
             get => this.command;
             set
@@ -491,7 +490,7 @@ namespace JSSoft.UI
             }
         }
 
-        public ICommandCompletor CommandCompletor
+        public override ICommandCompletor CommandCompletor
         {
             get => this.commandCompletor ?? this;
             set
@@ -504,7 +503,7 @@ namespace JSSoft.UI
             }
         }
 
-        public IPromptDrawer PromptDrawer
+        public override IPromptDrawer PromptDrawer
         {
             get => this.promptDrawer ?? this;
             set
@@ -517,13 +516,13 @@ namespace JSSoft.UI
             }
         }
 
-        public event EventHandler Validated;
+        public override event EventHandler Validated;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public override event PropertyChangedEventHandler PropertyChanged;
 
-        public event EventHandler Enabled;
+        public override event EventHandler Enabled;
 
-        public event EventHandler Disabled;
+        public override event EventHandler Disabled;
 
         protected virtual void OnValidated(EventArgs e)
         {
@@ -740,27 +739,27 @@ namespace JSSoft.UI
 
         #region ITerminal
 
-        void ITerminal.Reset() => this.ResetOutput();
+        // void ITerminal.Reset() => this.ResetOutput();
 
-        string ITerminal.Prompt
-        {
-            get => this.Prompt;
-            set => this.Prompt = value;
-        }
+        // public override string Prompt
+        // {
+        //     get => this.Prompt;
+        //     set => this.Prompt = value;
+        // }
 
-        event EventHandler<TerminalExecuteEventArgs> ITerminal.Executing
+        public override event EventHandler<TerminalExecuteEventArgs> Executing
         {
             add { this.executing += value; }
             remove { this.executing -= value; }
         }
 
-        event EventHandler<TerminalExecutedEventArgs> ITerminal.Executed
+        public override event EventHandler<TerminalExecutedEventArgs> Executed
         {
             add { this.executed += value; }
             remove { this.executed -= value; }
         }
 
-        string ITerminal.OutputText => this.outputText;
+        // public override string OutputText => this.outputText;
 
         #endregion
 

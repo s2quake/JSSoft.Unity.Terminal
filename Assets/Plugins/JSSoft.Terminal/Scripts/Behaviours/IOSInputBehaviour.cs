@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace JSSoft.UI.Behaviours
+namespace JSSoft.Terminal.Behaviours
 {
     public class IOSInputBehaviour : TerminalBehaviourBase
     {

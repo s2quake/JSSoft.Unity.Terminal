@@ -28,19 +28,19 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.ComponentModel;
 using System.Collections.Specialized;
-using JSSoft.UI.InputHandlers;
+using JSSoft.Terminal.InputHandlers;
 #if UNITY_EDITOR
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
 #endif
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     [RequireComponent(typeof(Terminal))]
     [RequireComponent(typeof(RectTransform))]
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    public class TerminalGrid : MaskableGraphic, ITerminalGrid, INotifyPropertyChanged,
+    class TerminalGrid : TerminalGridBase,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
@@ -54,13 +54,6 @@ namespace JSSoft.UI
         ISelectHandler,
         IDeselectHandler
     {
-        public static readonly Color DefaultBackgroundColor = new Color32(23, 23, 23, 255);
-        public static readonly Color DefaultForegroundColor = new Color32(255, 255, 255, 255);
-        public static readonly Color DefaultSelectionColor = new Color32(49, 79, 129, 255);
-        public static readonly Color DefaultCursorColor = new Color32(139, 139, 139, 255);
-        public static readonly Color DefaultCompositionColor = new Color32(255, 255, 255, 255);
-        public static readonly Color DefaultScrollbarColor = new Color32(139, 139, 139, 0);
-
         [SerializeField]
         private TerminalFont font = null;
         [SerializeField]
@@ -116,6 +109,7 @@ namespace JSSoft.UI
 
         private readonly TerminalRowCollection rows;
         private readonly TerminalCharacterInfoCollection characterInfos;
+        private readonly TerminalGridSelection selections;
 
         private IInputHandler inputHandler;
         private Terminal terminal;
@@ -130,11 +124,11 @@ namespace JSSoft.UI
         {
             this.characterInfos = new TerminalCharacterInfoCollection(this);
             this.rows = new TerminalRowCollection(this, this.characterInfos);
-            this.Selections = new TerminalGridSelection(this);
-            this.Selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
+            this.selections = new TerminalGridSelection(this);
+            this.selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
         }
 
-        public Vector2 WorldToGrid(Vector2 position, Camera camera)
+        public override Vector2 WorldToGrid(Vector2 position, Camera camera)
         {
             var pixelRect = this.canvas.pixelRect;
             var localPosition = new Vector2(position.x, pixelRect.height - position.y);
@@ -142,7 +136,7 @@ namespace JSSoft.UI
             return localPosition - rect.position;
         }
 
-        public TerminalPoint Intersect(Vector2 position)
+        public override TerminalPoint Intersect(Vector2 position)
         {
             var padding = this.Padding;
             var itemWidth = this.Font.Width;
@@ -158,7 +152,7 @@ namespace JSSoft.UI
             return new TerminalPoint(x, y);
         }
 
-        public ITerminalCell IntersectWithCell(Vector2 position)
+        public override ITerminalCell IntersectWithCell(Vector2 position)
         {
             foreach (var item in this.rows)
             {
@@ -170,9 +164,9 @@ namespace JSSoft.UI
             return null;
         }
 
-        public TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;
+        public override TerminalPoint IndexToPoint(int index) => this.characterInfos[index].Point;
 
-        public int PointToIndex(TerminalPoint point)
+        public override int PointToIndex(TerminalPoint point)
         {
             if (point.Y >= 0 && point.Y < this.rows.Count && point.X >= 0 && point.X < this.BufferWidth)
             {
@@ -203,17 +197,7 @@ namespace JSSoft.UI
             return TerminalColors.GetColor(color.Value);
         }
 
-        internal TerminalCell GetCell(TerminalPoint point)
-        {
-            if (point.Y < 0 || point.Y >= this.rows.Count)
-                return null;
-            var row = this.rows[point.Y];
-            if (point.X < 0 || point.X >= row.Cells.Count)
-                return null;
-            return row.Cells[point.X];
-        }
-
-        public void Focus()
+        public override void Focus()
         {
             if (EventSystem.current != null)
             {
@@ -221,7 +205,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void ScrollToTop()
+        public override void ScrollToTop()
         {
             // if (this.VisibleIndex > this.MinimumVisibleIndex)
             {
@@ -231,7 +215,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void ScrollToBottom()
+        public override void ScrollToBottom()
         {
             // if (this.VisibleIndex > this.MaximumVisibleIndex)
             {
@@ -241,7 +225,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void ScrollToCursor()
+        public override void ScrollToCursor()
         {
             if (this.CursorPoint.Y < this.VisibleIndex)
             {
@@ -253,27 +237,27 @@ namespace JSSoft.UI
             }
         }
 
-        public void PageUp()
+        public override void PageUp()
         {
             this.Scroll(-this.BufferHeight);
         }
 
-        public void PageDown()
+        public override void PageDown()
         {
             this.Scroll(this.BufferHeight);
         }
 
-        public void LineUp()
+        public override void LineUp()
         {
             this.Scroll(-1);
         }
 
-        public void LineDown()
+        public override void LineDown()
         {
             this.Scroll(1);
         }
 
-        public void Scroll(int value)
+        public override void Scroll(int value)
         {
             var visibleIndex = this.VisibleIndex + value;
             if (visibleIndex >= 0 && visibleIndex <= this.MaximumVisibleIndex)
@@ -284,7 +268,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void Copy()
+        public override void Copy()
         {
             if (this.Selections.Any() == true)
             {
@@ -311,7 +295,7 @@ namespace JSSoft.UI
             }
         }
 
-        public void SelectAll()
+        public override void SelectAll()
         {
             var p1 = new TerminalPoint(0, 0);
             var p2 = new TerminalPoint(this.BufferWidth, this.rows.Count);
@@ -320,13 +304,13 @@ namespace JSSoft.UI
             this.Selections.Add(range);
         }
 
-        public IKeyBindingCollection KeyBindings
+        public override IKeyBindingCollection KeyBindings
         {
-            get => this.keyBindings ?? JSSoft.UI.KeyBindings.TerminalGridKeyBindings.GetDefaultBindings();
+            get => this.keyBindings ?? JSSoft.Terminal.KeyBindings.TerminalGridKeyBindings.GetDefaultBindings();
             set => this.keyBindings = value;
         }
 
-        public IInputHandler InputHandler
+        public override IInputHandler InputHandler
         {
             get => this.inputHandler;
             set
@@ -337,24 +321,11 @@ namespace JSSoft.UI
             }
         }
 
-        public Terminal Terminal => this.terminal;
+        public override TerminalBase Terminal => this.terminal;
 
-        public bool IsFocused
-        {
-            get => this.isFocused;
-            set
-            {
-                if (this.isFocused == value)
-                    return;
-                this.isFocused = value;
-                if (this.isFocused == true)
-                    this.OnGotFocus(EventArgs.Empty);
-                else
-                    this.OnLostFocus(EventArgs.Empty);
-            }
-        }
+        public override bool IsFocused => this.isFocused;
 
-        public string Text
+        public override string Text
         {
             get => this.text;
             set
@@ -369,7 +340,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalFont Font
+        public override TerminalFont Font
         {
             get => this.style != null ? this.style.Font : this.font;
             set
@@ -385,7 +356,7 @@ namespace JSSoft.UI
             }
         }
 
-        public int BufferWidth
+        public override int BufferWidth
         {
             get => this.bufferWidth;
             set
@@ -403,7 +374,7 @@ namespace JSSoft.UI
             }
         }
 
-        public int BufferHeight
+        public override int BufferHeight
         {
             get => this.bufferHeight;
             set
@@ -421,7 +392,7 @@ namespace JSSoft.UI
             }
         }
 
-        public int MaxBufferHeight
+        public override int MaxBufferHeight
         {
             get => this.maxBufferHeight;
             set
@@ -437,13 +408,11 @@ namespace JSSoft.UI
             }
         }
 
-        public IReadOnlyList<ITerminalRow> Rows => this.rows;
+        public override IReadOnlyList<ITerminalRow> Rows => this.rows;
 
-        public IReadOnlyList<TerminalCharacterInfo> CharacterInfos => this.characterInfos;
+        public override IReadOnlyList<TerminalCharacterInfo> CharacterInfos => this.characterInfos;
 
-        internal TerminalGridSelection Selections { get; }
-
-        public int VisibleIndex
+        public override int VisibleIndex
         {
             get => this.visibleIndex;
             set
@@ -460,9 +429,9 @@ namespace JSSoft.UI
             }
         }
 
-        public int MinimumVisibleIndex => this.rows.MinimumIndex;
+        public override int MinimumVisibleIndex => this.rows.MinimumIndex;
 
-        public int MaximumVisibleIndex
+        public override int MaximumVisibleIndex
         {
             get
             {
@@ -474,7 +443,7 @@ namespace JSSoft.UI
 
         public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
 
-        public Color BackgroundColor
+        public override Color BackgroundColor
         {
             get => this.style != null ? this.style.BackgroundColor : this.backgroundColor;
             set
@@ -487,7 +456,7 @@ namespace JSSoft.UI
             }
         }
 
-        public Color ForegroundColor
+        public override Color ForegroundColor
         {
             get => this.style != null ? this.style.ForegroundColor : this.foregroundColor;
             set
@@ -500,7 +469,7 @@ namespace JSSoft.UI
             }
         }
 
-        public Color SelectionColor
+        public override Color SelectionColor
         {
             get => this.style != null ? this.style.SelectionColor : this.selectionColor;
             set
@@ -513,7 +482,7 @@ namespace JSSoft.UI
             }
         }
 
-        public Color CursorColor
+        public override Color CursorColor
         {
             get => this.style != null ? this.style.CursorColor : this.cursorColor;
             set
@@ -539,7 +508,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalPoint CursorPoint
+        public override TerminalPoint CursorPoint
         {
             get => this.cursorPoint;
             set
@@ -553,9 +522,9 @@ namespace JSSoft.UI
             }
         }
 
-        public Rect Rectangle => this.rectangle;
+        public override Rect Rectangle => this.rectangle;
 
-        public TerminalThickness Padding
+        public override TerminalThickness Padding
         {
             get => this.style != null ? this.style.Padding : this.padding;
             set
@@ -568,7 +537,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalStyle Style
+        public override TerminalStyle Style
         {
             get => this.style;
             set
@@ -583,7 +552,7 @@ namespace JSSoft.UI
             }
         }
 
-        public bool IsCursorVisible
+        public override bool IsCursorVisible
         {
             get => this.isCursorVisible;
             set
@@ -596,9 +565,9 @@ namespace JSSoft.UI
             }
         }
 
-        public bool IsScrolling { get; set; }
+        public override bool IsScrolling { get; set; }
 
-        public TerminalRange SelectingRange
+        public override TerminalRange SelectingRange
         {
             get => this.selectingRange;
             set
@@ -611,7 +580,7 @@ namespace JSSoft.UI
             }
         }
 
-        public string CompositionString
+        public override string CompositionString
         {
             get => this.compositionString;
             set
@@ -626,7 +595,7 @@ namespace JSSoft.UI
             }
         }
 
-        public TerminalCursorStyle CursorStyle
+        public override TerminalCursorStyle CursorStyle
         {
             get => this.style != null ? this.style.CursorStyle : this.cursorStyle;
             set
@@ -639,7 +608,7 @@ namespace JSSoft.UI
             }
         }
 
-        public int CursorThickness
+        public override int CursorThickness
         {
             get => this.style != null ? this.style.CursorThickness : this.cursorThickness;
             set
@@ -654,7 +623,7 @@ namespace JSSoft.UI
             }
         }
 
-        public bool IsCursorBlinkable
+        public override bool IsCursorBlinkable
         {
             get => this.style != null ? this.style.IsCursorBlinkable : this.isCursorBlinkable;
             set
@@ -667,7 +636,7 @@ namespace JSSoft.UI
             }
         }
 
-        public float CursorBlinkDelay
+        public override float CursorBlinkDelay
         {
             get => this.style != null ? this.style.CursorBlinkDelay : this.cursorBlinkDelay;
             set
@@ -682,7 +651,7 @@ namespace JSSoft.UI
             }
         }
 
-        public bool IsScrollForwardEnabled
+        public override bool IsScrollForwardEnabled
         {
             get => this.style != null ? this.style.IsScrollForwardEnabled : this.isScrollForwardEnabled;
             set
@@ -695,23 +664,35 @@ namespace JSSoft.UI
             }
         }
 
-        public IList<TerminalBehaviourBase> BehaviourList => this.behaviourList;
+        public override IList<TerminalBehaviourBase> BehaviourList => this.behaviourList;
 
-        public event EventHandler LayoutChanged;
+        public override IList<TerminalRange> Selections => this.selections;
 
-        public event NotifyCollectionChangedEventHandler SelectionChanged;
+        public override event EventHandler LayoutChanged;
 
-        public event EventHandler GotFocus;
+        public override event NotifyCollectionChangedEventHandler SelectionChanged;
 
-        public event EventHandler LostFocus;
+        public override event EventHandler GotFocus;
 
-        public event EventHandler Validated;
+        public override event EventHandler LostFocus;
 
-        public event EventHandler Enabled;
+        public override event EventHandler Validated;
 
-        public event EventHandler Disabled;
+        public override event EventHandler Enabled;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public override event EventHandler Disabled;
+
+        public override event PropertyChangedEventHandler PropertyChanged;
+
+        internal TerminalCell GetCell(TerminalPoint point)
+        {
+            if (point.Y < 0 || point.Y >= this.rows.Count)
+                return null;
+            var row = this.rows[point.Y];
+            if (point.X < 0 || point.X >= row.Cells.Count)
+                return null;
+            return row.Cells[point.X];
+        }
 
         protected virtual void OnLayoutChanged(EventArgs e)
         {
@@ -1018,6 +999,17 @@ namespace JSSoft.UI
             return query;
         }
 
+        private void SetFocused(bool value)
+        {
+            if (this.isFocused == value)
+                return;
+            this.isFocused = value;
+            if (this.isFocused == true)
+                this.OnGotFocus(EventArgs.Empty);
+            else
+                this.OnLostFocus(EventArgs.Empty);
+        }
+
         private void InvokePropertyChangedEvent(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
@@ -1058,13 +1050,13 @@ namespace JSSoft.UI
         void ISelectHandler.OnSelect(BaseEventData eventData)
         {
             this.InputSystem.imeCompositionMode = IMECompositionMode.On;
-            this.IsFocused = true;
+            this.SetFocused(true);
             this.InputHandler.Select(this, eventData);
         }
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
-            this.IsFocused = false;
+            this.SetFocused(false);
             this.InputHandler.Deselect(this, eventData);
         }
 
@@ -1136,11 +1128,11 @@ namespace JSSoft.UI
             this.InputHandler.Update(this, eventData);
         }
 
-        ITerminal ITerminalGrid.Terminal => this.terminal;
+        // ITerminal ITerminalGrid.Terminal => this.terminal;
 
-        IList<TerminalRange> ITerminalGrid.Selections => this.Selections;
+        // IList<TerminalRange> ITerminalGrid.Selections => this.Selections;
 
-        GameObject ITerminalGrid.GameObject => this.gameObject;
+        // GameObject ITerminalGrid.GameObject => this.gameObject;
 
         #endregion
     }

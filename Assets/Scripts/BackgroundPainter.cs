@@ -22,7 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.UI;
+using JSSoft.Terminal;
 using UnityEngine;
 using UnityEngine.UI;
 using System.ComponentModel;
@@ -32,7 +32,7 @@ namespace JSSoft.Communication.Shells
     public class BackgroundPainter : MaskableGraphic
     {
         [SerializeField]
-        private TerminalGrid grid = null;
+        private TerminalBase grid = null;
 
         protected override void OnEnable()
         {
@@ -52,7 +52,7 @@ namespace JSSoft.Communication.Shells
 
         private void TerminalGrid_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
+            if (sender is TerminalGridBase grid && this.grid == grid)
             {
                 base.color = grid.BackgroundColor;
             }
@@ -60,7 +60,7 @@ namespace JSSoft.Communication.Shells
 
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
+            if (sender is TerminalGridBase grid && this.grid == grid)
             {
                 var canvas = this.GetComponentInParent<Canvas>();
                 var canvasRect = canvas.GetComponent<RectTransform>();
@@ -71,7 +71,7 @@ namespace JSSoft.Communication.Shells
 
         private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid && this.grid == grid)
+            if (sender is TerminalGridBase grid && this.grid == grid)
             {
                 base.color = grid.BackgroundColor;
             }

@@ -26,7 +26,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using UnityEngine;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public interface ITerminalGrid
     {

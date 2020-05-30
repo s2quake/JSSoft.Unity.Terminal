@@ -24,7 +24,7 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace JSSoft.UI.Editor
+namespace JSSoft.Terminal.Editor
 {
     [CustomEditor(typeof(TerminalFont))]
     public class TerminalFontEditor : UnityEditor.Editor

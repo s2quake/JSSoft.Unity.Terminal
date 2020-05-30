@@ -25,7 +25,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Collections.Specialized;
 
-namespace JSSoft.UI
+namespace JSSoft.Terminal
 {
     public static class TerminalGridEvents
     {
