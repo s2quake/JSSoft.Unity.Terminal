@@ -20,33 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using UnityEditor;
-using UnityEditor.UI;
-using UnityEditorInternal;
+using System;
+using System.Linq;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using UnityEngine;
+using System.Threading.Tasks;
+using System.ComponentModel;
 
-namespace JSSoft.UI.Editor
-{
-    [CustomEditor(typeof(TerminalScrollbar))]
-    public class TerminalScrollbarEditor : ScrollbarEditor
-    {
-        private SerializedProperty gridProperty;
-        private SerializedProperty visibleTimeProperty;
-
-        public override void OnInspectorGUI()
-        {
-            base.OnInspectorGUI();
-            this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.gridProperty);
-            EditorGUILayout.PropertyField(this.visibleTimeProperty);
-            this.serializedObject.ApplyModifiedProperties();
-        }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            this.gridProperty = this.serializedObject.FindProperty("grid");
-            this.visibleTimeProperty = this.serializedObject.FindProperty("visibleTime");
-        }
-    }
-}
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("JSSoft.Terminal.Editor")]

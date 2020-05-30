@@ -25,7 +25,7 @@ using UnityEngine;
 
 namespace JSSoft.UI
 {
-    class TerminalCell : ITerminalCell
+    internal class TerminalCell : ITerminalCell
     {
         private int volume;
 

@@ -53,13 +53,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalFontEditor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalGridEditor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalMenuItems.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalScrollbarEditor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalStyleBehaviourEndNameEditAction.cs" />
      <Compile Include="Assets\Scripts\Editor\TerminalLogRedirectorEditor.cs" />
-     <None Include="Assets\JSSoft.Terminal\Scripts\Editor\TerminalStyleBehaviour.txt" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
@@ -747,6 +741,8 @@
       <Project>{FDB2B7ED-38F3-61A9-D47C-4BFA7C26B402}</Project>      <Name>Zenject-PoolMonitor-Editor</Name>    </ProjectReference>
     <ProjectReference Include="Zenject.csproj">
       <Project>{1F465E51-6C45-E2F5-0050-0DBD7D1C4A3E}</Project>      <Name>Zenject</Name>    </ProjectReference>
+    <ProjectReference Include="JSSoft.Terminal.csproj">
+      <Project>{A13325E3-6BA9-03A2-41D4-B5EFBE043365}</Project>      <Name>JSSoft.Terminal</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -53,103 +53,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ArrayUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\IOSInputBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\MacOSInputBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\MacOSScrollbarBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\WindowsCursorBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\WindowsInputBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Behaviours\WindowsScrollbarBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ClipboardUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\CommandStringUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\BaseInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\CharInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\CommonInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\CharSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\CharsSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\CommonSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\FontSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\InfoSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\PageSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Fonts\Serializations\PagesSerializationInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\FontUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ICommandCompletor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\IInputHandler.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\IKeyBinding.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\IKeyBindingCollection.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\INotifyValidated.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandler.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlerContext.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlerInstances.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\EditorKeyboard.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\InputHandlerUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\InputSelections.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSInputHandler.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSInputHandlerContext.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\IOSKeyboard.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\ITerminalGridExtensions.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardBase.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\KeyboardEventArgs.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandler.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\MacOSInputHandlerContext.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\RangeInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\SwipedEventArgs.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\SwipeDirection.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\Swiper.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\WindowsInputHandler.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\InputHandlers\WindowsInputHandlerContext.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\IPromptDrawer.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminal.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalCell.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalExtensions.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalGrid.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalGridExtensions.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\ITerminalRow.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBinding.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindingBase.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindingCollection.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindings\TerminalGridKeyBindings.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\KeyBindings\TerminalKeyBindings.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\PropertyNotifier.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\SelectionUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\Terminal.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalBackground.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalBehaviourBase.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCell.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCharacterInfo.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCharacterInfoCollection.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalColor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalColorPalette.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalColors.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalComposition.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCompositionBackground.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCompositionForeground.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCursor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalCursorStyle.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalEnvironment.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalEvents.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalExecutedEventArgs.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalExecuteEventArgs.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalFont.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalFontDescriptor.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalForeground.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalForegroundItem.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalGrid.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalGridEvents.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalGridSelection.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalGridUtility.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalMesh.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalOrientationBehaviour.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalPoint.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalRange.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalRow.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalRowAttributes.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalRowCollection.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalScrollbar.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalStyle.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalThickness.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\TerminalValidationEvents.cs" />
-     <Compile Include="Assets\JSSoft.Terminal\Scripts\VertexUtility.cs" />
      <Compile Include="Assets\Scripts\BackgroundPainter.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
@@ -189,10 +92,6 @@
      <Compile Include="Assets\Scripts\Settings.cs" />
      <Compile Include="Assets\Scripts\Shell.cs" />
      <Compile Include="Assets\Scripts\StyleResources.cs" />
-     <Compile Include="Assets\Scripts\TerminalLogRedirector.cs" />
-     <None Include="Assets\link.xml" />
-     <None Include="Assets\JSSoft.Terminal\Fonts\Descriptors\D2Coding.fnt" />
-     <None Include="Assets\JSSoft.Terminal\Fonts\Descriptors\NanumGothicCoding.fnt" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
@@ -830,6 +729,8 @@
       <Project>{FDB2B7ED-38F3-61A9-D47C-4BFA7C26B402}</Project>      <Name>Zenject-PoolMonitor-Editor</Name>    </ProjectReference>
     <ProjectReference Include="Zenject.csproj">
       <Project>{1F465E51-6C45-E2F5-0050-0DBD7D1C4A3E}</Project>      <Name>Zenject</Name>    </ProjectReference>
+    <ProjectReference Include="JSSoft.Terminal.csproj">
+      <Project>{A13325E3-6BA9-03A2-41D4-B5EFBE043365}</Project>      <Name>JSSoft.Terminal</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

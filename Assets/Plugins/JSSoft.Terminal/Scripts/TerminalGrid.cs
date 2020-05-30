@@ -40,7 +40,7 @@ namespace JSSoft.UI
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    class TerminalGrid : MaskableGraphic, ITerminalGrid, INotifyPropertyChanged,
+    public class TerminalGrid : MaskableGraphic, ITerminalGrid, INotifyPropertyChanged,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
@@ -203,7 +203,7 @@ namespace JSSoft.UI
             return TerminalColors.GetColor(color.Value);
         }
 
-        public TerminalCell GetCell(TerminalPoint point)
+        internal TerminalCell GetCell(TerminalPoint point)
         {
             if (point.Y < 0 || point.Y >= this.rows.Count)
                 return null;
@@ -441,7 +441,7 @@ namespace JSSoft.UI
 
         public IReadOnlyList<TerminalCharacterInfo> CharacterInfos => this.characterInfos;
 
-        public TerminalGridSelection Selections { get; }
+        internal TerminalGridSelection Selections { get; }
 
         public int VisibleIndex
         {
