@@ -27,6 +27,8 @@ using Ntreev.Library.Threading;
 using Ntreev.Library.Commands;
 using JSSoft.Communication.Shells;
 using UnityEngine;
+using System.Threading;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
@@ -34,19 +36,16 @@ namespace JSSoft.Terminal.Commands
     {
         [CommandProperty(IsRequired = true)]
         [DefaultValue(0)]
-        public int ExitCode
-        {
-            get; set;
-        }
+        public int ExitCode { get; set; }
 
         protected override async Task OnExecuteAsync(object source)
         {
             if (source is ITerminal terminal)
             {
 #if UNITY_EDITOR
-                await terminal.Dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
+                await terminal.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
 #else
-                await terminal.Dispatcher.InvokeAsync(() => UnityEngine.Application.Quit());
+                await terminal.InvokeAsync(() => UnityEngine.Application.Quit());
 #endif
             }
         }

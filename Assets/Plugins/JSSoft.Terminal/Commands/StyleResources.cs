@@ -27,7 +27,7 @@ using UnityEngine;
 using Ntreev.Library.Threading;
 using System.Collections.Generic;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Terminal.Commands
 {
     public class StyleResources : MonoBehaviour
     {

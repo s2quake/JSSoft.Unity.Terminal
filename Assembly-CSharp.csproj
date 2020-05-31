@@ -85,7 +85,6 @@
      <Compile Include="Assets\Scripts\Services\UserServiceInstance.cs" />
      <Compile Include="Assets\Scripts\Settings.cs" />
      <Compile Include="Assets\Scripts\Shell.cs" />
-     <Compile Include="Assets\Scripts\StyleResources.cs" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/s2quake-mac/Projects/JSSoft.Unity.Terminal/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>

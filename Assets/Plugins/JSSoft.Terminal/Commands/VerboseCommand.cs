@@ -30,37 +30,28 @@ using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
 using System.Collections.Generic;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
     public class VerboseCommand : CommandAsyncBase
     {
-        private readonly Dispatcher dispatcher;
-
-        public VerboseCommand()
-        {
-            this.dispatcher = Dispatcher.Current;
-        }
-
         [CommandProperty(IsRequired = true)]
         [DefaultValue("")]
-        public bool? Value
-        {
-            get; set;
-        }
+        public bool? Value { get; set; }
 
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (source is ITerminal terminal)
             {
-                if (source is GameObject gameObject && gameObject.GetComponent<ITerminal>() is ITerminal terminal)
+                await terminal.InvokeAsync(() =>
                 {
                     if (this.Value == null)
                         this.Out.WriteLine($"Verbose: {terminal.IsVerbose}");
                     else
                         terminal.IsVerbose = (bool)this.Value;
-                }
-            });
+                });
+            }
         }
     }
 }

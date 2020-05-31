@@ -23,6 +23,7 @@
 using System;
 using System.Threading.Tasks;
 using JSSoft.Terminal;
+using JSSoft.Terminal.Tasks;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
@@ -31,18 +32,11 @@ namespace JSSoft.Terminal.Commands
 {
     public class ResetCommand : CommandAsyncBase
     {
-        public ResetCommand()
-        {
-        }
-
         protected override async Task OnExecuteAsync(object source)
         {
             if (source is ITerminal terminal)
             {
-                await terminal.Dispatcher.InvokeAsync(() =>
-                {
-                    terminal.Reset();
-                });
+                await terminal.InvokeAsync(terminal.Reset);
             }
         }
     }

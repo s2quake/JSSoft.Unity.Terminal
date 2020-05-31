@@ -30,20 +30,12 @@ using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
 using System.Collections.Generic;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
     public class StyleCommand : CommandAsyncBase
     {
-        private readonly ITerminalGrid grid;
-        private Dispatcher dispatcher;
-
-        public StyleCommand(ITerminalGrid grid)
-        {
-            this.grid = grid;
-            this.dispatcher = Dispatcher.Current;
-        }
-
         public override string[] GetCompletions(CommandCompletionContext completionContext)
         {
             var styles = GetStyles();
@@ -51,66 +43,69 @@ namespace JSSoft.Terminal.Commands
         }
 
         [CommandProperty("list")]
-        public bool IsList
-        {
-            get; set;
-        }
+        public bool IsList { get; set; }
 
         [CommandProperty(IsRequired = true)]
         [DefaultValue("")]
-        public string StyleName
-        {
-            get; set;
-        }
+        public string StyleName { get; set; }
 
         protected override async Task OnExecuteAsync(object source)
         {
-            if (this.IsList == true)
+            if (source is ITerminal terminal)
             {
-                await this.ShowStyleListAsync();
-            }
-            else if (this.StyleName == string.Empty)
-            {
-                await this.ShowCurrentStyleAsync();
-            }
-            else
-            {
-                await this.ChangeStyleAsync();
+                if (this.IsList == true)
+                {
+                    await this.ShowStyleListAsync(terminal);
+                }
+                else if (this.StyleName == string.Empty)
+                {
+                    await this.ShowCurrentStyleAsync(terminal);
+                }
+                else
+                {
+                    await this.ChangeStyleAsync(terminal);
+                }
             }
         }
 
-        private Task ShowStyleListAsync()
+        private Task ShowStyleListAsync(ITerminal terminal)
         {
-            return this.dispatcher.InvokeAsync(() =>
+            return terminal.InvokeAsync(() =>
             {
+                var gameObject = terminal.GameObject;
+                var grid = gameObject.GetComponent<ITerminalGrid>();
                 var styles = GetStyles();
                 foreach (var item in styles.Keys)
                 {
-                    var isCurrent = this.grid.Style.name == item ? "*" : " ";
+                    var isCurrent = grid.Style.name == item ? "*" : " ";
                     this.Out.WriteLine($"{isCurrent} {item}");
                 }
             });
         }
 
-        private Task ShowCurrentStyleAsync()
+        private Task ShowCurrentStyleAsync(ITerminal terminal)
         {
-            return this.dispatcher.InvokeAsync(() =>
+            return terminal.InvokeAsync(() =>
             {
-                var style = this.grid.Style;
+                var gameObject = terminal.GameObject;
+                var grid = gameObject.GetComponent<ITerminalGrid>();
+                var style = grid.Style;
                 this.Out.WriteLine(style.name);
             });
         }
 
-        private async Task ChangeStyleAsync()
+        private async Task ChangeStyleAsync(ITerminal terminal)
         {
-            var rectangle = await this.dispatcher.InvokeAsync(() =>
+            var rectangle = await terminal.InvokeAsync(() =>
             {
+                var gameObject = terminal.GameObject;
+                var grid = gameObject.GetComponent<ITerminalGrid>();
                 var styles = GetStyles();
                 if (styles.ContainsKey(this.StyleName) == true)
                 {
-                    this.grid.Style = styles[this.StyleName];
+                    grid.Style = styles[this.StyleName];
                     this.Out.WriteLine($"{this.StyleName} applied.");
-                    return this.grid.Rectangle;
+                    return grid.Rectangle;
                 }
                 else
                 {
@@ -122,20 +117,19 @@ namespace JSSoft.Terminal.Commands
 
         private static IDictionary<string, TerminalStyle> GetStyles()
         {
-            throw new NotImplementedException();
-            // var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-            // var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
-            // foreach (var item in resources.Styles)
-            // {
-            //     if (item != null)
-            //     {
-            //         if (item.StyleName != string.Empty)
-            //             styles.Add(item.StyleName, item);
-            //         else
-            //             styles.Add(item.name, item);
-            //     }
-            // }
-            // return styles;
+            var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+            var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
+            foreach (var item in resources.Styles)
+            {
+                if (item != null)
+                {
+                    if (item.StyleName != string.Empty)
+                        styles.Add(item.StyleName, item);
+                    else
+                        styles.Add(item.name, item);
+                }
+            }
+            return styles;
         }
     }
 }

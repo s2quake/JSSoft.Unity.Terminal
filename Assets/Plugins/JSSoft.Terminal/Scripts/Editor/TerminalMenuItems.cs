@@ -281,6 +281,8 @@ namespace JSSoft.Terminal.Editor
             terminalGrid.BufferHeight = bufferHeight;
             terminal.AppendLine("hello world!");
             terminal.Prompt = "Prompt>";
+
+            Selection.activeGameObject = terminalGridObj;
         }
 
         private static Canvas PrepareCanvas()

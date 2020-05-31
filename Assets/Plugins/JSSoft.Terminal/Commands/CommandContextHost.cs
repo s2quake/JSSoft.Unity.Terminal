@@ -36,6 +36,7 @@ namespace JSSoft.Terminal.Commands
         private CommandContext commandContext;
         private TerminalBase terminal;
         private CommandWriter writer;
+        [TextArea(5, 10)]
         [SerializeField]
         private string text = "type 'help' to help.";
 
@@ -51,7 +52,8 @@ namespace JSSoft.Terminal.Commands
             {
                 new ResetCommand(),
                 new ExitCommand(),
-                new VerboseCommand()
+                new VerboseCommand(),
+                new StyleCommand()
             };
             this.commandContext = new CommandContext(commands, Enumerable.Empty<ICommandProvider>());
         }
@@ -77,7 +79,14 @@ namespace JSSoft.Terminal.Commands
         {
             if (sender is ITerminal terminal)
             {
-                await this.RunAsync(terminal, e);
+                if (terminal.Dispatcher != null)
+                {
+                    await this.RunAsync(terminal, e);
+                }
+                else
+                {
+                    this.terminal.AppendLine("dispatcher is null.");
+                }
             }
         }
 
