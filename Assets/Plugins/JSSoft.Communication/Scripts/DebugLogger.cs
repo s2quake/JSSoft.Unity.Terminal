@@ -22,7 +22,7 @@
 
 using Ntreev.Library.Threading;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     class DebugLogger : JSSoft.Communication.Logging.ILogger
     {

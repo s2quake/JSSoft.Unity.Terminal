@@ -24,7 +24,7 @@ using System;
 using JSSoft.Communication;
 using JSSoft.Communication.Services;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     class ClientContext : ClientContextBase
     {

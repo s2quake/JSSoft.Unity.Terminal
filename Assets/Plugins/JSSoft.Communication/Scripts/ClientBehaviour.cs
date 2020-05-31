@@ -29,7 +29,7 @@ using Zenject;
 using System.ComponentModel;
 using JSSoft.Terminal.Commands;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     public class ClientBehaviour : MonoBehaviour
     {

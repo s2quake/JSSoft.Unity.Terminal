@@ -28,7 +28,7 @@ using UnityEditor.UI;
 using UnityEditorInternal;
 using UnityEngine;
 
-namespace JSSoft.Communication.Shells.Editor
+namespace JSSoft.Communication.Editor
 {
     [CustomEditor(typeof(TerminalLogRedirector))]
     public class TerminalLogRedirectorEditor : UnityEditor.Editor

@@ -22,7 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.Communication.Shells;
+using JSSoft.Communication;
 using Ntreev.Library.Commands;
 
 namespace JSSoft.Communication.Commands

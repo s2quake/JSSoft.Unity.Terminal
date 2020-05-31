@@ -21,15 +21,6 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using JSSoft.Communication.Shells;
-using JSSoft.Terminal;
-using Ntreev.Library.Commands;
-using Ntreev.Library.Threading;
-using UnityEngine;
-using System.Collections.Generic;
 
 namespace JSSoft.Terminal.Commands
 {

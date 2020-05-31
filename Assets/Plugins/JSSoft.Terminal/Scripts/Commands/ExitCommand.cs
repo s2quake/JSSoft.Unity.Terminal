@@ -25,7 +25,6 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using Ntreev.Library.Threading;
 using Ntreev.Library.Commands;
-using JSSoft.Communication.Shells;
 using UnityEngine;
 using System.Threading;
 using JSSoft.Terminal.Tasks;

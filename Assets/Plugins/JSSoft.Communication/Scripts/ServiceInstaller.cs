@@ -34,7 +34,7 @@ using JSSoft.Terminal;
 using Zenject;
 using UnityEngine;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     class ServiceInstaller : MonoInstaller
     {

@@ -26,7 +26,7 @@ using JSSoft.Communication;
 using Ntreev.Library.Commands;
 using UnityEngine;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     public class Settings
     {

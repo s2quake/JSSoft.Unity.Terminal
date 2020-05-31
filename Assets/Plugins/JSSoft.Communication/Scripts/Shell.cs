@@ -31,7 +31,7 @@ using Ntreev.Library.Threading;
 using UnityEngine;
 using Zenject;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     class Shell : IShell, IServiceProvider, IPromptDrawer, ICommandCompletor
     {

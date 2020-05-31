@@ -24,7 +24,7 @@ using System;
 using Ntreev.Library.Commands;
 using System.Threading.Tasks;
 using JSSoft.Communication.Services;
-using JSSoft.Communication.Shells;
+using JSSoft.Communication;
 
 namespace JSSoft.Communication.Commands
 {

@@ -21,39 +21,27 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using JSSoft.Communication;
+using JSSoft.Terminal;
+using UnityEngine;
+using Ntreev.Library.Threading;
+using Zenject;
+using System.ComponentModel;
+using JSSoft.Terminal.Commands;
+using System.Collections.Generic;
 using Ntreev.Library.Commands;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication
 {
-    class OpenCommand : CommandAsyncBase
+    public class ClientCommandContextHost : CommandContextHost
     {
-        private readonly IServiceContext serviceHost;
-        private readonly Shell shell;
-
-        public OpenCommand(IServiceContext serviceHost, Shell shell)
+        protected override IEnumerable<ICommand> CollectCommands()
         {
-            this.serviceHost = serviceHost;
-            this.shell = shell;
-        }
+            foreach (var item in base.CollectCommands())
+            {
+                yield return item;
+            }
 
-        [CommandProperty]
-        [DefaultValue(ClientContextBase.DefaultHost)]
-        public string Host { get; set; }
-
-        [CommandProperty]
-        [DefaultValue(ClientContextBase.DefaultPort)]
-        public int Port { get; set; }
-
-        public override bool IsEnabled => this.serviceHost.IsOpened == false;
-
-        protected override async Task OnExecuteAsync(object source)
-        {
-            this.serviceHost.Host = this.Host;
-            this.serviceHost.Port = this.Port;
-            this.shell.Token = await this.serviceHost.OpenAsync();
         }
     }
 }

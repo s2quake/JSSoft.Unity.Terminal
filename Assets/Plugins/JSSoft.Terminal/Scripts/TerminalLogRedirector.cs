@@ -24,7 +24,7 @@ using Ntreev.Library.Threading;
 using JSSoft.Terminal;
 using UnityEngine;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     [RequireComponent(typeof(TerminalBase))]
     class TerminalLogRedirector : MonoBehaviour

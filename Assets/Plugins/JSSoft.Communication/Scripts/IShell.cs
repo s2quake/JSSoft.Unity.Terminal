@@ -24,7 +24,7 @@ using System;
 using System.Threading.Tasks;
 using JSSoft.Terminal;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Communication
 {
     public interface IShell : IDisposable
     {
