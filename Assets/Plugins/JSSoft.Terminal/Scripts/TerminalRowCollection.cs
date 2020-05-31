@@ -86,7 +86,7 @@ namespace JSSoft.Terminal
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
-            Debug.Log($"{nameof(TerminalRowCollection)}.{nameof(Update)}: {index}");
+            // Debug.Log($"{nameof(TerminalRowCollection)}.{nameof(Update)}: {index}");
             var font = this.grid.Font;
             var style = this.grid.Style;
             var bufferWidth = this.grid.BufferWidth;

@@ -25,9 +25,6 @@ using System.Threading.Tasks;
 using JSSoft.Terminal;
 using UnityEngine;
 using Ntreev.Library.Threading;
-using Zenject;
-using System.ComponentModel;
-using JSSoft.Terminal.Commands;
 using JSSoft.Communication.Services;
 using System.Text.RegularExpressions;
 
@@ -37,10 +34,6 @@ namespace JSSoft.Communication
     {
         [SerializeField]
         private TerminalBase terminal;
-        // [SerializeField]
-        // private TerminalGridBase grid = null;
-        [SerializeField]
-        private bool adjustResolution = false;
         private readonly Settings settings;
         private readonly UserService userService;
         private readonly DataService dataService;

@@ -24,8 +24,6 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using Ntreev.Library.Threading;
-using Zenject;
-using System.ComponentModel;
 
 namespace JSSoft.Terminal
 {

@@ -20,13 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
-using JSSoft.Terminal;
 using UnityEngine;
-using Ntreev.Library.Threading;
-using Zenject;
-using System.ComponentModel;
 using JSSoft.Terminal.Commands;
 using System.Collections.Generic;
 using Ntreev.Library.Commands;
@@ -37,7 +31,7 @@ namespace JSSoft.Communication
     public class ClientCommandContextHost : CommandContextHost
     {
         [SerializeField]
-        private ClientContextHost clientContext;
+        private ClientContextHost clientContext = null;
 
         protected override IEnumerable<ICommand> CollectCommands()
         {

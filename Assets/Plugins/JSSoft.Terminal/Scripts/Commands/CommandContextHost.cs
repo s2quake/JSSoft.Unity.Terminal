@@ -42,7 +42,7 @@ namespace JSSoft.Terminal.Commands
         [SerializeField]
         private string text = "type 'help' to help.";
         [SerializeField]
-        private bool isTest;
+        private bool isTest = false;
 
         public string Text
         {
