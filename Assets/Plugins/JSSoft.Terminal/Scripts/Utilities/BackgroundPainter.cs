@@ -27,7 +27,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.ComponentModel;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Terminal.Utilities
 {
     public class BackgroundPainter : MaskableGraphic
     {

@@ -53,18 +53,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\BackgroundPainter.cs" />
      <Compile Include="Assets\Scripts\ClientBehaviour.cs" />
      <Compile Include="Assets\Scripts\ClientContext.cs" />
      <Compile Include="Assets\Scripts\Commands\CloseCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\DataCommand.cs" />
-     <Compile Include="Assets\Scripts\Commands\HeightCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\LoginCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\LogoutCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\OpenCommand.cs" />
-     <Compile Include="Assets\Scripts\Commands\TestCommand.cs" />
      <Compile Include="Assets\Scripts\Commands\UserCommand.cs" />
-     <Compile Include="Assets\Scripts\Commands\WidthCommand.cs" />
      <Compile Include="Assets\Scripts\DebugLogger.cs" />
      <Compile Include="Assets\Scripts\IShell.cs" />
      <Compile Include="Assets\Scripts\ServiceInstaller.cs" />

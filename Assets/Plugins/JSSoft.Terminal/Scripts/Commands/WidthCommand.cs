@@ -31,8 +31,9 @@ using Ntreev.Library.Threading;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Terminal.Commands
 {
+    [TestCommand]
     class WidthCommand : CommandAsyncBase
     {
         private readonly Dispatcher dispatcher;

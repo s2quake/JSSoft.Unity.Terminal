@@ -33,8 +33,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Terminal.Commands
 {
+    [TestCommand]
     class TestCommand : CommandAsyncBase
     {
         private readonly Dispatcher dispatcher;

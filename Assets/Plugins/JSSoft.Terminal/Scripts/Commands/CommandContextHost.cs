@@ -27,6 +27,7 @@ using System.Linq;
 using JSSoft.Terminal;
 using System.Threading.Tasks;
 using System;
+using System.Collections.Generic;
 
 namespace JSSoft.Terminal.Commands
 {
@@ -39,6 +40,8 @@ namespace JSSoft.Terminal.Commands
         [TextArea(5, 10)]
         [SerializeField]
         private string text = "type 'help' to help.";
+        [SerializeField]
+        private bool isTest;
 
         public string Text
         {
@@ -48,14 +51,11 @@ namespace JSSoft.Terminal.Commands
 
         protected virtual void Awake()
         {
-            var commands = new ICommand[]
-            {
-                new ResetCommand(),
-                new ExitCommand(),
-                new VerboseCommand(),
-                new StyleCommand()
-            };
-            this.commandContext = new CommandContext(commands, Enumerable.Empty<ICommandProvider>());
+            var query = from item in this.CollectCommands()
+                        where this.isTest == true || 
+                              Attribute.GetCustomAttribute(item.GetType(), typeof(TestCommandAttribute)) is null
+                        select item;
+            this.commandContext = new CommandContext(query.ToArray(), Enumerable.Empty<ICommandProvider>());
         }
 
         protected virtual void OnEnable()
@@ -73,6 +73,18 @@ namespace JSSoft.Terminal.Commands
         protected virtual void OnDisable()
         {
 
+        }
+
+        protected virtual IEnumerable<ICommand> CollectCommands()
+        {
+            yield return new ResetCommand();
+            yield return new ExitCommand();
+            yield return new VerboseCommand();
+            yield return new StyleCommand();
+
+            yield return new TestCommand();
+            yield return new WidthCommand();
+            yield return new HeightCommand();
         }
 
         private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
