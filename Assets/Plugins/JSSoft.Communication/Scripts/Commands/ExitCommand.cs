@@ -23,34 +23,26 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using JSSoft.Communication.Services;
-using JSSoft.Communication;
+using Ntreev.Library.Threading;
 using Ntreev.Library.Commands;
+using UnityEngine;
+using System.Threading;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Communication.Commands
 {
-    class LoginCommand : CommandAsyncBase
+    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
     {
         private readonly ClientContextHost clientContext;
-        private readonly IUserService userService;
 
-        public LoginCommand(ClientContextHost clientContext)
+        public ExitCommand(ClientContextHost clientContext)
         {
-            this.clientContext = clientContext;
-            this.userService = clientContext.UserService;
+            this.clientContext = clientContext;    
         }
-
-        [CommandProperty(IsRequired = true)]
-        public string UserID { get; set; }
-
-        [CommandProperty(IsRequired = true)]
-        public string Password { get; set; }
-
-        public override bool IsEnabled => this.clientContext.UserToken == Guid.Empty;
-
+        
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.clientContext.LoginAsync(this.UserID, this.Password);
+            await base.OnExecuteAsync(source);
         }
     }
 }

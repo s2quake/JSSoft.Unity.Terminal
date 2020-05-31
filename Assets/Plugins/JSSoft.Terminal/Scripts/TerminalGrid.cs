@@ -946,6 +946,11 @@ namespace JSSoft.Terminal
                             this.ScrollToCursor();
                         }
                         break;
+                    case nameof(Terminal.Text):
+                        {
+                            this.ScrollToCursor();
+                        }
+                        break;
                 }
             }
         }

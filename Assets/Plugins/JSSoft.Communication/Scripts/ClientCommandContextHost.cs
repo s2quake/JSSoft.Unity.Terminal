@@ -43,6 +43,11 @@ namespace JSSoft.Communication
         {
             foreach (var item in base.CollectCommands())
             {
+                if (item is JSSoft.Terminal.Commands.ExitCommand)
+                {
+                    yield return new JSSoft.Communication.Commands.ExitCommand(this.clientContext);
+                    continue;
+                }
                 yield return item;
             }
             yield return new CloseCommand(this.clientContext);

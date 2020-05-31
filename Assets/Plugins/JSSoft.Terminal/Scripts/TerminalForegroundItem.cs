@@ -81,7 +81,6 @@ namespace JSSoft.Terminal
             }
             this.material.color = base.color;
             this.terminalMesh.Fill(vh);
-            Debug.Log($"{nameof(TerminalForegroundItem)}.{nameof(OnPopulateMesh)}");
         }
 
         protected override void OnRectTransformDimensionsChange()

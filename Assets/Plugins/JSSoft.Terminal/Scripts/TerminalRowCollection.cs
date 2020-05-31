@@ -218,10 +218,7 @@ namespace JSSoft.Terminal
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            if (Application.isPlaying == false)
-            {
-                this.Update();
-            }
+            this.Update();
         }
 
         private void Object_Validated(object sender, EventArgs e)

@@ -42,7 +42,14 @@ namespace JSSoft.Terminal.Commands
         }
 
         [CommandProperty("list")]
+        [CommandPropertyTrigger(nameof(IsRemove), false)]
+        [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsList { get; set; }
+
+        [CommandProperty("remove")]
+        [CommandPropertyTrigger(nameof(IsList), false)]
+        [CommandPropertyTrigger(nameof(StyleName), "")]
+        public bool IsRemove { get; set; }
 
         [CommandProperty(IsRequired = true)]
         [DefaultValue("")]
@@ -52,65 +59,78 @@ namespace JSSoft.Terminal.Commands
         {
             if (CommandUtility.GetService<ITerminalGrid>(source) is ITerminalGrid grid)
             {
-                if (this.IsList == true)
+                await grid.InvokeAsync(() =>
                 {
-                    await this.ShowStyleListAsync(grid);
-                }
-                else if (this.StyleName == string.Empty)
-                {
-                    await this.ShowCurrentStyleAsync(grid);
-                }
-                else
-                {
-                    await this.ChangeStyleAsync(grid);
-                }
+                    if (this.IsList == true)
+                    {
+                        this.ShowStyleList(grid);
+                    }
+                    else if (this.IsRemove == true)
+                    {
+                        this.RemoveStyle(grid);
+                    }
+                    else if (this.StyleName == string.Empty)
+                    {
+                        this.ShowCurrentStyle(grid);
+                    }
+                    else
+                    {
+                        this.ChangeStyle(grid);
+                    }
+                });
             }
         }
 
-        private Task ShowStyleListAsync(ITerminalGrid grid)
+        private void ShowStyleList(ITerminalGrid grid)
         {
-            return grid.InvokeAsync(() =>
+            var styles = GetStyles();
+            var styleName = grid.Style != null ? grid.Style.name : string.Empty;
+            foreach (var item in styles.Keys)
             {
-                var styles = GetStyles();
-                foreach (var item in styles.Keys)
-                {
-                    var isCurrent = grid.Style.name == item ? "*" : " ";
-                    this.Out.WriteLine($"{isCurrent} {item}");
-                }
-            });
+                var isCurrent = styleName == item ? "*" : " ";
+                this.Out.WriteLine($"{isCurrent} {item}");
+            }
         }
 
-        private Task ShowCurrentStyleAsync(ITerminalGrid grid)
+        private void RemoveStyle(ITerminalGrid grid)
         {
-            return grid.InvokeAsync(() =>
+            if (grid.Style == null)
+                throw new InvalidOperationException("style is not applied.");
+            grid.Style = null;
+        }
+
+        private void ShowCurrentStyle(ITerminalGrid grid)
+        {
+            var style = grid.Style;
+            if (style != null)
             {
-                var style = grid.Style;
                 this.Out.WriteLine(style.name);
-            });
+            }
+            else
+            {
+                this.Out.WriteLine("style is not applied.");
+            }
         }
 
-        private async Task ChangeStyleAsync(ITerminalGrid grid)
+        private void ChangeStyle(ITerminalGrid grid)
         {
-            var rectangle = await grid.InvokeAsync(() =>
+            var styles = GetStyles();
+            if (styles.ContainsKey(this.StyleName) == true)
             {
-                var styles = GetStyles();
-                if (styles.ContainsKey(this.StyleName) == true)
-                {
-                    grid.Style = styles[this.StyleName];
-                    this.Out.WriteLine($"{this.StyleName} applied.");
-                    return grid.Rectangle;
-                }
-                else
-                {
-                    this.Out.WriteLine($"{this.StyleName} style does not exits.");
-                    return Rect.zero;
-                }
-            });
+                grid.Style = styles[this.StyleName];
+                this.Out.WriteLine($"{this.StyleName} applied.");
+            }
+            else
+            {
+                this.Out.WriteLine($"{this.StyleName} style does not exits.");
+            }
         }
 
         private static IDictionary<string, TerminalStyle> GetStyles()
         {
             var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+            if (resources == null)
+                throw new InvalidOperationException("cannot found StyleResources.");
             var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
             foreach (var item in resources.Styles)
             {

@@ -183,8 +183,9 @@ namespace JSSoft.Communication
             }
         }
 
-        internal async Task LoginAsync(string userID, Guid token)
+        internal async Task LoginAsync(string userID, string password)
         {
+            var token = await this.userService.LoginAsync(userID, password);
             await this.dispatcher.InvokeAsync(() =>
             {
                 this.UserID = userID;
@@ -197,6 +198,7 @@ namespace JSSoft.Communication
 
         internal async Task LogoutAsync()
         {
+            await this.userService.LogoutAsync(this.UserToken);
             await this.dispatcher.InvokeAsync(() =>
             {
                 this.UserID = string.Empty;
@@ -315,14 +317,19 @@ namespace JSSoft.Communication
 
         #region IShell
 
-        public async Task OpenAsync(string host, int port)
+        internal async Task OpenAsync(string host, int port)
         {
             this.serviceContext.Host = host;
             this.serviceContext.Port = port;
             this.Token = await this.serviceContext.OpenAsync();
         }
 
-        public async Task CloseAsync()
+        internal async Task CloseAsync()
+        {
+            await this.serviceContext.CloseAsync(this.Token);
+        }
+
+        internal async Task ExitAsync()
         {
             if (this.serviceContext.IsOpened == true)
             {
