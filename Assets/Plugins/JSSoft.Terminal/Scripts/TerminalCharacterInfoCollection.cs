@@ -86,6 +86,7 @@ namespace JSSoft.Terminal
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
+            Debug.Log($"{nameof(TerminalCharacterInfoCollection)}.{nameof(Update)}: {index}");
             var style = this.grid.Style;
             var font = this.grid.Font;
             var bufferWidth = this.grid.BufferWidth;
@@ -171,6 +172,7 @@ namespace JSSoft.Terminal
         {
             TerminalValidationEvents.Validated += Object_Validated;
             this.text = string.Empty;
+            this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
@@ -200,7 +202,7 @@ namespace JSSoft.Terminal
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            this.UpdateAll();
+            // this.UpdateAll();
         }
 
         private void Grid_Validated(object sender, EventArgs e)

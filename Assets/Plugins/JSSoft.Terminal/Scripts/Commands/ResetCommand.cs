@@ -34,7 +34,7 @@ namespace JSSoft.Terminal.Commands
     {
         protected override async Task OnExecuteAsync(object source)
         {
-            if (source is ITerminal terminal)
+            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
             {
                 await terminal.InvokeAsync(terminal.Reset);
             }

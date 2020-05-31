@@ -31,33 +31,27 @@ namespace JSSoft.Communication.Commands
 {
     class LoginCommand : CommandAsyncBase
     {
-        private readonly Shell shell;
+        private readonly ClientContextHost clientContext;
         private readonly IUserService userService;
 
-        public LoginCommand(Shell shell, IUserService userService)
+        public LoginCommand(ClientContextHost clientContext)
         {
-            this.shell = shell;
-            this.userService = userService;
+            this.clientContext = clientContext;
+            this.userService = clientContext.UserService;
         }
 
         [CommandProperty(IsRequired = true)]
-        public string UserID
-        {
-            get; set;
-        }
+        public string UserID { get; set; }
 
         [CommandProperty(IsRequired = true)]
-        public string Password
-        {
-            get; set;
-        }
+        public string Password { get; set; }
 
-        public override bool IsEnabled => this.shell.UserToken == Guid.Empty;
+        public override bool IsEnabled => this.clientContext.UserToken == Guid.Empty;
 
         protected override async Task OnExecuteAsync(object source)
         {
             var token = await this.userService.LoginAsync(this.UserID, this.Password);
-            await this.shell.LoginAsync(this.UserID, token);
+            await this.clientContext.LoginAsync(this.UserID, token);
         }
     }
 }

@@ -25,28 +25,25 @@ using System.Threading.Tasks;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using System.Runtime.InteropServices;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
     [TestCommand]
     class TestCommand : CommandAsyncBase
     {
-        private readonly Dispatcher dispatcher;
-
-        public TestCommand()
-        {
-            this.dispatcher = Dispatcher.Current;
-        }
-
         protected override async Task OnExecuteAsync(object source)
         {
             await Task.Delay(5000);
-            await this.dispatcher.InvokeAsync(() =>
+            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
             {
-                this.Out.WriteLine($"Linux: {RuntimeInformation.IsOSPlatform(OSPlatform.Linux)}");
-                this.Out.WriteLine($"OSX: {RuntimeInformation.IsOSPlatform(OSPlatform.OSX)}");
-                this.Out.WriteLine($"64bit: {IntPtr.Size == 8}");
-            });
+                await terminal.InvokeAsync(() =>
+                {
+                    terminal.AppendLine($"Linux: {RuntimeInformation.IsOSPlatform(OSPlatform.Linux)}");
+                    terminal.AppendLine($"OSX: {RuntimeInformation.IsOSPlatform(OSPlatform.OSX)}");
+                    terminal.AppendLine($"64bit: {IntPtr.Size == 8}");
+                });
+            }
         }
     }
 }

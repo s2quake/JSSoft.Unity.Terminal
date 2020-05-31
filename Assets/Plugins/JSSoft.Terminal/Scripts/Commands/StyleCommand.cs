@@ -50,29 +50,27 @@ namespace JSSoft.Terminal.Commands
 
         protected override async Task OnExecuteAsync(object source)
         {
-            if (source is ITerminal terminal)
+            if (CommandUtility.GetService<ITerminalGrid>(source) is ITerminalGrid grid)
             {
                 if (this.IsList == true)
                 {
-                    await this.ShowStyleListAsync(terminal);
+                    await this.ShowStyleListAsync(grid);
                 }
                 else if (this.StyleName == string.Empty)
                 {
-                    await this.ShowCurrentStyleAsync(terminal);
+                    await this.ShowCurrentStyleAsync(grid);
                 }
                 else
                 {
-                    await this.ChangeStyleAsync(terminal);
+                    await this.ChangeStyleAsync(grid);
                 }
             }
         }
 
-        private Task ShowStyleListAsync(ITerminal terminal)
+        private Task ShowStyleListAsync(ITerminalGrid grid)
         {
-            return terminal.InvokeAsync(() =>
+            return grid.InvokeAsync(() =>
             {
-                var gameObject = terminal.GameObject;
-                var grid = gameObject.GetComponent<ITerminalGrid>();
                 var styles = GetStyles();
                 foreach (var item in styles.Keys)
                 {
@@ -82,23 +80,19 @@ namespace JSSoft.Terminal.Commands
             });
         }
 
-        private Task ShowCurrentStyleAsync(ITerminal terminal)
+        private Task ShowCurrentStyleAsync(ITerminalGrid grid)
         {
-            return terminal.InvokeAsync(() =>
+            return grid.InvokeAsync(() =>
             {
-                var gameObject = terminal.GameObject;
-                var grid = gameObject.GetComponent<ITerminalGrid>();
                 var style = grid.Style;
                 this.Out.WriteLine(style.name);
             });
         }
 
-        private async Task ChangeStyleAsync(ITerminal terminal)
+        private async Task ChangeStyleAsync(ITerminalGrid grid)
         {
-            var rectangle = await terminal.InvokeAsync(() =>
+            var rectangle = await grid.InvokeAsync(() =>
             {
-                var gameObject = terminal.GameObject;
-                var grid = gameObject.GetComponent<ITerminalGrid>();
                 var styles = GetStyles();
                 if (styles.ContainsKey(this.StyleName) == true)
                 {

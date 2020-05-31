@@ -30,13 +30,11 @@ namespace JSSoft.Communication.Commands
 {
     class OpenCommand : CommandAsyncBase
     {
-        private readonly IServiceContext serviceHost;
-        private readonly Shell shell;
+        private readonly ClientContextHost clientContext;
 
-        public OpenCommand(IServiceContext serviceHost, Shell shell)
+        public OpenCommand(ClientContextHost clientContext)
         {
-            this.serviceHost = serviceHost;
-            this.shell = shell;
+            this.clientContext = clientContext;
         }
 
         [CommandProperty]
@@ -47,13 +45,11 @@ namespace JSSoft.Communication.Commands
         [DefaultValue(ClientContextBase.DefaultPort)]
         public int Port { get; set; }
 
-        public override bool IsEnabled => this.serviceHost.IsOpened == false;
+        public override bool IsEnabled => this.clientContext.IsOpened == false;
 
         protected override async Task OnExecuteAsync(object source)
         {
-            this.serviceHost.Host = this.Host;
-            this.serviceHost.Port = this.Port;
-            this.shell.Token = await this.serviceHost.OpenAsync();
+            await this.clientContext.OpenAsync(this.Host, this.Port);
         }
     }
 }

@@ -22,6 +22,7 @@
 
 using System.ComponentModel;
 using System.Threading.Tasks;
+using JSSoft.Terminal.Tasks;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
@@ -31,32 +32,24 @@ namespace JSSoft.Terminal.Commands
     [TestCommand]
     class WidthCommand : CommandAsyncBase
     {
-        private readonly Dispatcher dispatcher;
-
-        public WidthCommand()
-        {
-            this.dispatcher = Dispatcher.Current;
-        }
-
         [CommandProperty(IsRequired = true)]
         [DefaultValue("")]
-        public int? Value
-        {
-            get; set;
-        }
+        public int? Value { get; set; }
 
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (CommandUtility.GetService<ITerminalGrid>(source) is ITerminalGrid grid)
             {
-                if (source is GameObject gameObject && gameObject.GetComponent<ITerminalGrid>() is ITerminalGrid grid)
+                var terminal = grid.Terminal;
+                var value = this.Value;
+                await terminal.InvokeAsync(() =>
                 {
-                    if (this.Value == null)
-                        this.Out.WriteLine($"width: {grid.BufferWidth}");
+                    if (value == null)
+                        terminal.AppendLine($"width: {grid.BufferWidth}");
                     else
-                        grid.BufferWidth = (int)this.Value;
-                }
-            });
+                        grid.BufferWidth = (int)value;
+                });
+            }
         }
     }
 }

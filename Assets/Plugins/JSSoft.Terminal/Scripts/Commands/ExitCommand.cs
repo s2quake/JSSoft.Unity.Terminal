@@ -39,7 +39,7 @@ namespace JSSoft.Terminal.Commands
 
         protected override async Task OnExecuteAsync(object source)
         {
-            if (source is ITerminal terminal)
+            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
             {
 #if UNITY_EDITOR
                 await terminal.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);

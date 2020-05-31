@@ -35,14 +35,15 @@ namespace JSSoft.Terminal.Commands
 
         protected override async Task OnExecuteAsync(object source)
         {
-            if (source is ITerminal terminal)
+            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
             {
+                var value = this.Value;
                 await terminal.InvokeAsync(() =>
                 {
-                    if (this.Value == null)
-                        this.Out.WriteLine($"Verbose: {terminal.IsVerbose}");
+                    if (value == null)
+                        terminal.AppendLine($"Verbose: {terminal.IsVerbose}");
                     else
-                        terminal.IsVerbose = (bool)this.Value;
+                        terminal.IsVerbose = (bool)value;
                 });
             }
         }

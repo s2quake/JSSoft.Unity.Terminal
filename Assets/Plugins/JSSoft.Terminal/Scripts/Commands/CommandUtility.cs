@@ -21,19 +21,25 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using Ntreev.Library.Commands;
 
-namespace JSSoft.Terminal
+namespace JSSoft.Terminal.Commands
 {
-    public static class ITerminalExtensions
+    public static class CommandUtility
     {
-        public static void AppendLine(this ITerminal terminal, string value)
+        public static object GetService(object source, Type serviceType)
         {
-            terminal.Append(value + Environment.NewLine);
+            if (source is IServiceProvider serviceProvider)
+            {
+                return serviceProvider.GetService(serviceType);
+            }
+            return null;
         }
 
-        public static void AppendLine(this ITerminal terminal)
+        public static T GetService<T>(object source) where T : class
         {
-            terminal.Append(Environment.NewLine);
+            return GetService(source, typeof(T)) as T;
         }
     }
 }

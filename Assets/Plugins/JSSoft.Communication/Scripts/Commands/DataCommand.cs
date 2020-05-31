@@ -30,13 +30,13 @@ namespace JSSoft.Communication.Commands
 {
     class DataCommand : CommandMethodBase
     {
-        private readonly Shell shell;
+        private readonly ClientContextHost clientContext;
         private readonly IDataService dataService;
 
-        public DataCommand(Shell shell, IDataService dataService)
+        public DataCommand(ClientContextHost clientContext)
         {
-            this.shell = shell;
-            this.dataService = dataService;
+            this.clientContext = clientContext;
+            this.dataService = clientContext.DataService;
         }
 
         [CommandMethod]
@@ -45,11 +45,11 @@ namespace JSSoft.Communication.Commands
             return this.dataService.CreateDataBaseAsync(dataBaseName);
         }
 
-        public override bool IsEnabled => this.shell.UserToken != Guid.Empty;
+        public override bool IsEnabled => this.clientContext.UserToken != Guid.Empty;
 
         protected override bool IsMethodEnabled(CommandMethodDescriptor descriptor)
         {
-            return this.shell.UserToken != Guid.Empty;
+            return this.clientContext.UserToken != Guid.Empty;
         }
     }
 }

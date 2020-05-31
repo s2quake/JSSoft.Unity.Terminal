@@ -23,26 +23,25 @@
 using System;
 using System.Threading.Tasks;
 using JSSoft.Communication;
+using JSSoft.Terminal.Commands;
 using Ntreev.Library.Commands;
 
 namespace JSSoft.Communication.Commands
 {
     class CloseCommand : CommandAsyncBase
     {
-        private readonly IServiceContext serviceHost;
-        private readonly Shell shell;
+        private readonly ClientContextHost clientContext;
 
-        public CloseCommand(IServiceContext serviceHost, Shell shell)
+        public CloseCommand(ClientContextHost clientContext)
         {
-            this.serviceHost = serviceHost;
-            this.shell = shell;
+            this.clientContext = clientContext;
         }
 
-        public override bool IsEnabled => this.serviceHost.IsOpened;
+        public override bool IsEnabled => this.clientContext.IsOpened;
 
         protected override Task OnExecuteAsync(object source)
         {
-            return this.serviceHost.CloseAsync(this.shell.Token);
+            return this.clientContext.CloseAsync();
         }
     }
 }

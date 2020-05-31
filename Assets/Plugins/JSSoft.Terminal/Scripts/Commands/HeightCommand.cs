@@ -29,38 +29,31 @@ using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
 using System.Collections.Generic;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
     [TestCommand]
     class HeightCommand : CommandAsyncBase
     {
-        private Dispatcher dispatcher;
-
-        public HeightCommand()
-        {
-            this.dispatcher = Dispatcher.Current;
-        }
-
         [CommandProperty(IsRequired = true)]
         [DefaultValue("")]
-        public int? Value
-        {
-            get; set;
-        }
+        public int? Value { get; set; }
 
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            if (CommandUtility.GetService<ITerminalGrid>(source) is ITerminalGrid grid)
             {
-                if (source is GameObject gameObject && gameObject.GetComponent<ITerminalGrid>() is ITerminalGrid grid)
+                var terminal = grid.Terminal;
+                var value = this.Value;
+                await terminal.InvokeAsync(() =>
                 {
-                    if (this.Value == null)
-                        this.Out.WriteLine($"width: {grid.BufferHeight}");
+                    if (value == null)
+                        terminal.AppendLine($"height: {grid.BufferHeight}");
                     else
-                        grid.BufferHeight = (int)this.Value;
-                }
-            });
+                        grid.BufferHeight = (int)value;
+                });
+            }
         }
     }
 }

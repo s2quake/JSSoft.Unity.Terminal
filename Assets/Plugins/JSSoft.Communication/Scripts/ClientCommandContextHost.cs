@@ -30,18 +30,27 @@ using System.ComponentModel;
 using JSSoft.Terminal.Commands;
 using System.Collections.Generic;
 using Ntreev.Library.Commands;
+using JSSoft.Communication.Commands;
 
 namespace JSSoft.Communication
 {
     public class ClientCommandContextHost : CommandContextHost
     {
+        [SerializeField]
+        private ClientContextHost clientContext;
+
         protected override IEnumerable<ICommand> CollectCommands()
         {
             foreach (var item in base.CollectCommands())
             {
                 yield return item;
             }
-
+            yield return new CloseCommand(this.clientContext);
+            yield return new DataCommand(this.clientContext);
+            yield return new LoginCommand(this.clientContext);
+            yield return new LogoutCommand(this.clientContext);
+            yield return new OpenCommand(this.clientContext);
+            yield return new UserCommand(this.clientContext);
         }
     }
 }
