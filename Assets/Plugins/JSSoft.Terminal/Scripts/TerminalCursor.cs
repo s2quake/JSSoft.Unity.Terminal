@@ -197,7 +197,6 @@ namespace JSSoft.Terminal
                 this.terminalMesh.SetVertex(1, lt1, lt2, lb1, lb2, rect);
                 this.terminalMesh.SetVertex(2, lb2, rb2, lb1, rb1, rect);
                 this.terminalMesh.SetVertex(3, rt2, rt1, rb2, rb1, rect);
-
                 for (var i = 0; i < this.terminalMesh.Count; i++)
                 {
                     this.terminalMesh.SetUV(i, (Vector2.zero, Vector2.one));
@@ -223,7 +222,6 @@ namespace JSSoft.Terminal
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.SetVerticesDirty();
             TerminalEvents.Validated += Terminal_Validated;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalGridEvents.GotFocus += Grid_GotFocus;
@@ -231,8 +229,8 @@ namespace JSSoft.Terminal
             TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalValidationEvents.Validated += Object_Validated;
-            this.isVisible = this.grid != null ? this.grid.IsCursorVisible : true;
             base.color = TerminalGridUtility.GetCursorColor(this.grid);
+            this.UpdateLayout();
         }
 
         protected override void OnDisable()
@@ -272,65 +270,68 @@ namespace JSSoft.Terminal
             }
         }
 
-        protected override void OnRectTransformDimensionsChange()
-        {
-            base.OnRectTransformDimensionsChange();
-        }
-
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (object.Equals(sender, this.grid) == false)
-                return;
-
-            var propertyName = e.PropertyName;
-            if (propertyName == nameof(ITerminalGrid.CursorStyle))
+            if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.style = this.grid.CursorStyle;
-            }
-            else if (propertyName == nameof(ITerminalGrid.CursorThickness))
-            {
-                this.thickness = this.grid.CursorThickness;
-            }
-            else if (propertyName == nameof(ITerminalGrid.IsCursorBlinkable))
-            {
-                this.isBlinkable = this.grid.IsCursorBlinkable;
-            }
-            else if (propertyName == nameof(ITerminalGrid.CursorBlinkDelay))
-            {
-                this.blinkDelay = this.grid.CursorBlinkDelay;
-            }
-            else if (propertyName == nameof(ITerminalGrid.IsCursorVisible))
-            {
-                this.isVisible = this.grid.IsCursorVisible;
-                this.SetVerticesDirty();
-            }
-            else if (propertyName == nameof(ITerminalGrid.CursorPoint))
-            {
-                this.UpdateLayout();
-            }
-            else if (propertyName == nameof(ITerminalGrid.VisibleIndex))
-            {
-                this.UpdateLayout();
-            }
-            else if (propertyName == nameof(ITerminalGrid.Text))
-            {
-                var command = this.Terminal.Command;
-                var position = this.Terminal.CursorPosition;
-                var character = position < command.Length ? command[position] : char.MinValue;
-                if (this.character != character)
+                switch (e.PropertyName)
                 {
-                    this.UpdateLayout();
+                    case nameof(ITerminalGrid.CursorStyle):
+                        {
+                            this.style = this.grid.CursorStyle;
+                            this.SetVerticesDirty();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.CursorThickness):
+                        {
+                            this.thickness = this.grid.CursorThickness;
+                            this.SetVerticesDirty();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.IsCursorBlinkable):
+                        {
+                            this.isBlinkable = this.grid.IsCursorBlinkable;
+                            this.SetVerticesDirty();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.CursorBlinkDelay):
+                        {
+                            this.blinkDelay = this.grid.CursorBlinkDelay;
+                            this.SetVerticesDirty();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.IsCursorVisible):
+                        {
+                            this.isVisible = this.grid.IsCursorVisible;
+                            this.SetVerticesDirty();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.CursorPoint):
+                    case nameof(ITerminalGrid.VisibleIndex):
+                        {
+                            this.UpdateCursorPoint();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.Text):
+                        {
+                            // var command = this.Terminal.Command;
+                            // var position = this.Terminal.CursorPosition;
+                            // var character = position < command.Length ? command[position] : char.MinValue;
+                            // if (this.character != character)
+                            // {
+                            //     this.UpdateLayout();
+                            // }
+                            // this.character = character;
+                        }
+                        break;
                 }
-                this.character = character;
             }
-            this.SetVerticesDirty();
         }
 
         private void Terminal_Validated(object sender, EventArgs e)
         {
             if (sender is Terminal terminal && terminal == this.grid?.Terminal)
             {
-                this.color = this.grid.CursorColor;
                 this.UpdateLayout();
             }
         }
@@ -339,7 +340,6 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.color = this.grid.CursorColor;
                 this.UpdateLayout();
             }
         }
@@ -360,45 +360,56 @@ namespace JSSoft.Terminal
             }
         }
 
-        private async void Grid_Validated(object sender, EventArgs e)
+        private void Grid_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                await Task.Delay(1);
+                // await Task.Delay(1);
                 this.UpdateLayout();
             }
         }
 
-        private async void Object_Validated(object sender, EventArgs e)
+        private void Object_Validated(object sender, EventArgs e)
         {
             if (sender is TerminalStyle style && style == this.grid?.Style)
             {
-                await Task.Delay(1);
+                // await Task.Delay(1);
                 this.UpdateLayout();
             }
+        }
+
+        private void UpdateCursorPoint()
+        {
+            this.cursorLeft = this.grid.CursorPoint.X;
+            this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
+            if (this.grid.GetCell(this.grid.CursorPoint) is TerminalCell cell)
+            {
+                this.volume = Math.Max(cell.Volume, 1);
+            }
+            this.SetVerticesDirty();
         }
 
         private void UpdateLayout()
         {
-            if (this.IsDestroyed() == true)
-                return;
-            var point = this.grid.CursorPoint;
-            this.cursorLeft = this.grid.CursorPoint.X;
-            this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
-            if (this.grid.GetCell(point) is TerminalCell cell)
+            if (this.grid != null)
             {
-                this.volume = Math.Max(cell.Volume, 1);
+                this.cursorLeft = this.grid.CursorPoint.X;
+                this.cursorTop = this.grid.CursorPoint.Y - this.grid.VisibleIndex;
+                if (this.grid.GetCell(this.grid.CursorPoint) is TerminalCell cell)
+                {
+                    this.volume = Math.Max(cell.Volume, 1);
+                }
+                this.isVisible = this.grid.IsCursorVisible;
+                this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.BufferHeight;
+                this.color = TerminalGridUtility.GetCursorColor(this.grid);
+                this.style = this.grid.CursorStyle;
+                this.thickness = this.grid.CursorThickness;
+                this.isBlinkable = this.grid.IsCursorBlinkable;
+                this.blinkDelay = this.grid.CursorBlinkDelay;
+                this.delay = this.grid.CursorBlinkDelay;
+                this.blinkToggle = false;
+                this.SetVerticesDirty();
             }
-            this.isVisible = this.grid.IsCursorVisible;
-            this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.BufferHeight;
-            base.color = TerminalGridUtility.GetCursorColor(this.grid);
-            this.style = this.grid.CursorStyle;
-            this.thickness = this.grid.CursorThickness;
-            this.isBlinkable = this.grid.IsCursorBlinkable;
-            this.blinkDelay = this.grid.CursorBlinkDelay;
-            this.delay = this.grid.CursorBlinkDelay;
-            this.blinkToggle = false;
-            this.SetVerticesDirty();
         }
 
         private GlyphRect GetItemRect()

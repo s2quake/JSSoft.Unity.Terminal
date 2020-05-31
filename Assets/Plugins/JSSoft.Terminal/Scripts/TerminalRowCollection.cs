@@ -186,14 +186,14 @@ namespace JSSoft.Terminal
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalValidationEvents.Validated += Object_Validated;
-            this.text = string.Empty;
+            // this.text = string.Empty;
             this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
             TerminalValidationEvents.Validated -= Object_Validated;
-            this.text = string.Empty;
+            // this.text = string.Empty;
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
