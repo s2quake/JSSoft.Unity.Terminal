@@ -65,6 +65,8 @@ namespace JSSoft.Terminal
         private IKeyBindingCollection keyBindings;
         private ICommandCompletor commandCompletor;
         private IPromptDrawer promptDrawer;
+        [SerializeField]
+        private TerminalDispatcher dispatcher;
 
         private EventHandler<TerminalExecuteEventArgs> executing;
         private EventHandler<TerminalExecutedEventArgs> executed;
@@ -340,6 +342,11 @@ namespace JSSoft.Terminal
             return this.KeyBindings.Process(this, modifiers, keyCode);
         }
 
+        public void SetDispatcher(TerminalDispatcher dispatcher)
+        {
+            this.dispatcher = dispatcher;
+        }
+
         public IKeyBindingCollection KeyBindings
         {
             get => this.keyBindings ?? JSSoft.Terminal.KeyBindings.TerminalKeyBindings.GetDefaultBindings();
@@ -515,6 +522,8 @@ namespace JSSoft.Terminal
                 }
             }
         }
+
+        public override TerminalDispatcher Dispatcher => this.dispatcher;
 
         public override event EventHandler Validated;
 

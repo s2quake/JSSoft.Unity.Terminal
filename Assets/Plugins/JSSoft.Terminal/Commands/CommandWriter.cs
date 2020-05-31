@@ -31,9 +31,9 @@ using Ntreev.Library.Threading;
 using JSSoft.Terminal;
 using UnityEngine;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Terminal.Commands
 {
-    class CommandWriter : StringWriter
+    public class CommandWriter : StringWriter
     {
         private readonly ITerminal terminal;
         private readonly Dispatcher dispatcher;

@@ -49,14 +49,16 @@ namespace JSSoft.Terminal
         public abstract bool IsReadOnly { get; set; }
 
         public abstract bool IsVerbose { get; set; }
-        
+
         public abstract TerminalColor? ForegroundColor { get; set; }
-        
+
         public abstract TerminalColor? BackgroundColor { get; set; }
 
         public abstract ICommandCompletor CommandCompletor { get; set; }
 
         public abstract IPromptDrawer PromptDrawer { get; set; }
+
+        public abstract TerminalDispatcher Dispatcher { get; }
 
         public abstract event EventHandler Validated;
 
@@ -67,7 +69,7 @@ namespace JSSoft.Terminal
         public abstract event PropertyChangedEventHandler PropertyChanged;
 
         public abstract event EventHandler Enabled;
-        
+
         public abstract event EventHandler Disabled;
 
         public abstract void Append(string value);

@@ -107,6 +107,8 @@ namespace JSSoft.Terminal
 
         public abstract IList<TerminalBehaviourBase> BehaviourList { get; }
 
+        public abstract TerminalDispatcher Dispatcher { get; }
+
         public abstract event EventHandler LayoutChanged;
         
         public abstract event NotifyCollectionChangedEventHandler SelectionChanged;

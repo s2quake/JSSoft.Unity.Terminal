@@ -28,18 +28,25 @@ using JSSoft.Terminal;
 using System.Threading.Tasks;
 using System;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Terminal.Commands
 {
     [RequireComponent(typeof(TerminalBase))]
-    class CommandContextHost : MonoBehaviour
+    public class CommandContextHost : MonoBehaviour
     {
         private CommandContext commandContext;
         private TerminalBase terminal;
         private CommandWriter writer;
+        [SerializeField]
+        private string text = "type 'help' to help.";
+
+        public string Text
+        {
+            get => this.text;
+            set => this.text = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
         protected virtual void Awake()
         {
-            
             var commands = new ICommand[]
             {
                 new ResetCommand(),
@@ -56,30 +63,29 @@ namespace JSSoft.Communication.Shells
             this.writer = new CommandWriter(this.terminal);
             this.commandContext.Out = this.writer;
             this.terminal.Reset();
-            this.terminal.AppendLine($"type 'open' to connect server.");
-            this.terminal.AppendLine($"example: open --host [address]");
+            if (this.text != string.Empty)
+                this.terminal.AppendLine(this.text);
             this.terminal.CursorPosition = 0;
-            Debug.Log(1);
         }
 
         protected virtual void OnDisable()
         {
-            Debug.Log(0);
+
         }
 
         private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
         {
             if (sender is ITerminal terminal)
             {
-                await this.RunAsync(terminal.GameObject, e);
+                await this.RunAsync(terminal, e);
             }
         }
 
-        private async Task RunAsync(GameObject gameObject, TerminalExecuteEventArgs e)
+        private async Task RunAsync(ITerminal terminal, TerminalExecuteEventArgs e)
         {
             try
             {
-                await Task.Run(() => commandContext.Execute(gameObject, commandContext.Name + " " + e.Command));
+                await Task.Run(() => commandContext.Execute(terminal, commandContext.Name + " " + e.Command));
                 e.Success();
             }
             catch (System.Reflection.TargetInvocationException ex)

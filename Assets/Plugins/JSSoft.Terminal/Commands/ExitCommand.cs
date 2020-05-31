@@ -20,23 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using Ntreev.Library.Threading;
 using Ntreev.Library.Commands;
+using JSSoft.Communication.Shells;
+using UnityEngine;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Terminal.Commands
 {
-    class CommandContext : CommandContextBase
+    public class ExitCommand : CommandAsyncBase
     {
-        public CommandContext(IEnumerable<ICommand> commands, IEnumerable<ICommandProvider> methods)
-            : base(commands, methods)
+        [CommandProperty(IsRequired = true)]
+        [DefaultValue(0)]
+        public int ExitCode
         {
-            this.Name = "UnityCommand";
-            this.VerifyName = false;
+            get; set;
         }
 
-        public new string[] GetCompletion(string[] items, string find)
+        protected override async Task OnExecuteAsync(object source)
         {
-            return base.GetCompletion(items, find);
+            if (source is ITerminal terminal)
+            {
+#if UNITY_EDITOR
+                await terminal.Dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
+#else
+                await terminal.Dispatcher.InvokeAsync(() => UnityEngine.Application.Quit());
+#endif
+            }
         }
     }
 }

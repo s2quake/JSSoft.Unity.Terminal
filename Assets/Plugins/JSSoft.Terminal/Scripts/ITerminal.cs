@@ -84,6 +84,8 @@ namespace JSSoft.Terminal
 
         GameObject GameObject { get; }
 
+        TerminalDispatcher Dispatcher { get; }
+
         event EventHandler Validated;
 
         event EventHandler<TerminalExecuteEventArgs> Executing;

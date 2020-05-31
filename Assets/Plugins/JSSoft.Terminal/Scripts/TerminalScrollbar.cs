@@ -122,7 +122,6 @@ namespace JSSoft.Terminal
 
         protected virtual void Update()
         {
-            // base.Update();
             if (this.isPointerOn == false && this.PointerOnParam == true)
             {
                 var animationState = this.animator.GetCurrentAnimatorStateInfo(0);
@@ -133,7 +132,7 @@ namespace JSSoft.Terminal
             {
                 this.time -= Time.deltaTime;
             }
-            if (this.animator.isActiveAndEnabled == true)
+            if (this.animator.isActiveAndEnabled == true && Application.isPlaying == true)
             {
                 this.animator.SetFloat("Time", this.time);
             }

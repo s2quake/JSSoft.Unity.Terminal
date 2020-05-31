@@ -130,6 +130,8 @@ namespace JSSoft.Terminal
 
         IList<TerminalBehaviourBase> BehaviourList { get; }
 
+        TerminalDispatcher Dispatcher { get; }
+
         event EventHandler LayoutChanged;
 
         event NotifyCollectionChangedEventHandler SelectionChanged;

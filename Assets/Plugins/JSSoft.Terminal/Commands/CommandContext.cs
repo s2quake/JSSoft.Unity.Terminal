@@ -20,32 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
-using UnityEngine;
-using Ntreev.Library.Threading;
-using Zenject;
-using System.ComponentModel;
+using System.Collections.Generic;
+using Ntreev.Library.Commands;
 
-namespace JSSoft.Communication.Shells
+namespace JSSoft.Terminal.Commands
 {
-    public class DispatcherHost : MonoBehaviour
+    public class CommandContext : CommandContextBase
     {
-        private DispatcherScheduler scheduler;
-
-        public void Awake()
+        public CommandContext(IEnumerable<ICommand> commands, IEnumerable<ICommandProvider> methods)
+            : base(commands, methods)
         {
-            this.scheduler = DispatcherScheduler.Current;
+            this.Name = "UnityCommand";
+            this.VerifyName = false;
         }
 
-        public void Update()
+        public new string[] GetCompletion(string[] items, string find)
         {
-#if UNITY_EDITOR
-            if (Application.isPlaying && this.scheduler != null)
-#endif
-            {
-                this.scheduler.ProcessAll(1000 / 60);
-            }
+            return base.GetCompletion(items, find);
         }
     }
 }

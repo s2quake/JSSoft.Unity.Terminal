@@ -21,38 +21,29 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using Ntreev.Library.Threading;
+using JSSoft.Terminal;
 using Ntreev.Library.Commands;
-using JSSoft.Communication.Shells;
+using Ntreev.Library.Threading;
 using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class ExitCommand : CommandAsyncBase
+    public class ResetCommand : CommandAsyncBase
     {
-        private Dispatcher dispatcher;
-
-        public ExitCommand()
+        public ResetCommand()
         {
-            this.dispatcher = Dispatcher.Current;
-        }
-
-        [CommandProperty(IsRequired = true)]
-        [DefaultValue(0)]
-        public int ExitCode
-        {
-            get; set;
         }
 
         protected override async Task OnExecuteAsync(object source)
         {
-#if UNITY_EDITOR
-            await this.dispatcher.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
-#else
-            await this.dispatcher.InvokeAsync(() => UnityEngine.Application.Quit());
-#endif
+            if (source is ITerminal terminal)
+            {
+                await terminal.Dispatcher.InvokeAsync(() =>
+                {
+                    terminal.Reset();
+                });
+            }
         }
     }
 }

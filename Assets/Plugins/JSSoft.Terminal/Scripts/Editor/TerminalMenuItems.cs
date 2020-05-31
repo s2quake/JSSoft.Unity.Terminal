@@ -135,12 +135,8 @@ namespace JSSoft.Terminal.Editor
 
         private static void CreateTerminal()
         {
-            var canvas = GameObject.FindObjectOfType<Canvas>();
-            if (canvas == null)
-            {
-                EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
-                canvas = GameObject.FindObjectOfType<Canvas>();
-            }
+            var canvas = PrepareCanvas();
+            var dispatcher = PrepareDispatcher();
             var canvasTransform = canvas.transform;
             var pixelRect = canvas.pixelRect;
 
@@ -151,9 +147,10 @@ namespace JSSoft.Terminal.Editor
 
             var terminalGridObj = new GameObject("Terminal", typeof(Terminal)) { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
-            var terminal = terminalGrid.Terminal;
+            var terminal = terminalGrid.GetComponent<Terminal>();
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
+            terminal.SetDispatcher(dispatcher);
             terminalGridObj.AddComponent<TerminalOrientationBehaviour>();
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
@@ -284,6 +281,28 @@ namespace JSSoft.Terminal.Editor
             terminalGrid.BufferHeight = bufferHeight;
             terminal.AppendLine("hello world!");
             terminal.Prompt = "Prompt>";
+        }
+
+        private static Canvas PrepareCanvas()
+        {
+            var canvas = GameObject.FindObjectOfType<Canvas>();
+            if (canvas == null)
+            {
+                EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
+                canvas = GameObject.FindObjectOfType<Canvas>();
+            }
+            return canvas;
+        }
+
+        private static TerminalDispatcher PrepareDispatcher()
+        {
+            var dispatcher = GameObject.FindObjectOfType<TerminalDispatcher>();
+            if (dispatcher == null)
+            {
+                var dispatcherObject = new GameObject(nameof(TerminalDispatcher), typeof(TerminalDispatcher));
+                dispatcher = dispatcherObject.GetComponent<TerminalDispatcher>();
+            }
+            return dispatcher;
         }
     }
 }

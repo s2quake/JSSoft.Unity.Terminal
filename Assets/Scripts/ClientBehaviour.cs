@@ -27,6 +27,7 @@ using UnityEngine;
 using Ntreev.Library.Threading;
 using Zenject;
 using System.ComponentModel;
+using JSSoft.Terminal.Commands;
 
 namespace JSSoft.Communication.Shells
 {

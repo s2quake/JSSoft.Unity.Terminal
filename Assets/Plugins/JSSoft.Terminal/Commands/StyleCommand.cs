@@ -122,19 +122,20 @@ namespace JSSoft.Terminal.Commands
 
         private static IDictionary<string, TerminalStyle> GetStyles()
         {
-            var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
-            var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
-            foreach (var item in resources.Styles)
-            {
-                if (item != null)
-                {
-                    if (item.StyleName != string.Empty)
-                        styles.Add(item.StyleName, item);
-                    else
-                        styles.Add(item.name, item);
-                }
-            }
-            return styles;
+            throw new NotImplementedException();
+            // var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+            // var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
+            // foreach (var item in resources.Styles)
+            // {
+            //     if (item != null)
+            //     {
+            //         if (item.StyleName != string.Empty)
+            //             styles.Add(item.StyleName, item);
+            //         else
+            //             styles.Add(item.name, item);
+            //     }
+            // }
+            // return styles;
         }
     }
 }

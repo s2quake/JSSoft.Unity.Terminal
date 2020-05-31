@@ -668,6 +668,8 @@ namespace JSSoft.Terminal
 
         public override IList<TerminalRange> Selections => this.selections;
 
+        public override TerminalDispatcher Dispatcher => this.terminal?.Dispatcher;
+
         public override event EventHandler LayoutChanged;
 
         public override event NotifyCollectionChangedEventHandler SelectionChanged;
