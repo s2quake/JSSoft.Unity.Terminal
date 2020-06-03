@@ -20,30 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Ntreev.Library.Threading;
-using Ntreev.Library.Commands;
-using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Client
 {
-    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
+    class UserServiceHost : ClientServiceHostBase<IUserService, IUserServiceCallback>
     {
-        private readonly ContextHostBase context;
+        private readonly UserService userService;
 
-        public ExitCommand(ContextHostBase context)
+        public UserServiceHost(UserService userService)
+            : base()
         {
-            this.context = context;    
+            this.userService = userService;
         }
-        
-        protected override async Task OnExecuteAsync(object source)
+
+        protected override IUserServiceCallback CreateCallback(IUserService service)
         {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
+            this.userService.SetUserService(service);
+            return this.userService;
+        }
+
+        protected override void DestroyCallback(IUserServiceCallback callback)
+        {
+            this.userService.SetUserService(null);
         }
     }
 }

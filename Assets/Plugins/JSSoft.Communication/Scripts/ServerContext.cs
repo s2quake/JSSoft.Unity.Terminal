@@ -21,35 +21,27 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
 using JSSoft.Communication;
-using Ntreev.Library.Commands;
+using JSSoft.Communication.Services;
+using JSSoft.Communication.Services.Server;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication
 {
-    class OpenCommand : CommandAsyncBase
+    class ServerContext : ServerContextBase
     {
-        private readonly ClientContextHost clientContext;
-
-        public OpenCommand(ClientContextHost clientContext)
+        public ServerContext(params IServiceHost[] serviceHosts)
+            : base(serviceHosts)
         {
-            this.clientContext = clientContext;
+
         }
 
-        [CommandProperty]
-        [DefaultValue(ClientContextBase.DefaultHost)]
-        public string Host { get; set; }
-
-        [CommandProperty]
-        [DefaultValue(ClientContextBase.DefaultPort)]
-        public int Port { get; set; }
-
-        public override bool IsEnabled => this.clientContext.IsOpened == false;
-
-        protected override async Task OnExecuteAsync(object source)
-        {
-            await this.clientContext.OpenAsync(this.Host, this.Port);
-        }
+        // protected override InstanceBase CreateInstance(Type type)
+        // {
+        //     if (type == typeof(IUserService))
+        //         return new UserServiceInstance();
+        //     else if (type == typeof(IDataService))
+        //         return new DataServiceInstance();
+        //     throw new NotImplementedException();
+        // }
     }
 }

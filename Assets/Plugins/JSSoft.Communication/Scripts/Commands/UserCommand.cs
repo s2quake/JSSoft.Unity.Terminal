@@ -30,43 +30,43 @@ namespace JSSoft.Communication.Commands
 {
     class UserCommand : CommandMethodBase
     {
-        private readonly ClientContextHost clientContext;
+        private readonly ContextHostBase context;
         private readonly IUserService userService;
 
-        public UserCommand(ClientContextHost clientContext)
+        public UserCommand(ContextHostBase context)
         {
-            this.clientContext = clientContext;
-            this.userService = clientContext.UserService;
+            this.context = context;
+            this.userService = context.UserService;
         }
 
         [CommandMethod]
         public Task CreateAsync(string userID, string password, Authority authority = Authority.Member)
         {
-            return this.userService.CreateAsync(this.clientContext.UserToken, userID, password, Authority.Admin);
+            return this.userService.CreateAsync(this.context.UserToken, userID, password, Authority.Admin);
         }
 
         [CommandMethod]
         public Task DeleteAsync(string userID)
         {
-            return this.userService.DeleteAsync(this.clientContext.UserToken, userID);
+            return this.userService.DeleteAsync(this.context.UserToken, userID);
         }
 
         [CommandMethod]
         public Task RenameAsync(string userName)
         {
-            return this.userService.RenameAsync(this.clientContext.UserToken, userName);
+            return this.userService.RenameAsync(this.context.UserToken, userName);
         }
 
         [CommandMethod]
         public Task AuthorityAsync(string userID, Authority authority)
         {
-            return this.userService.SetAuthorityAsync(this.clientContext.UserToken, userID, authority);
+            return this.userService.SetAuthorityAsync(this.context.UserToken, userID, authority);
         }
 
         [CommandMethod]
         public async Task InfoAsync(string userID)
         {
-            var (userName, authority) = await this.userService.GetInfoAsync(this.clientContext.UserToken, userID);
+            var (userName, authority) = await this.userService.GetInfoAsync(this.context.UserToken, userID);
             this.Out.WriteLine($"UseName: {userName}");
             this.Out.WriteLine($"Authority: {authority}");
         }
@@ -74,7 +74,7 @@ namespace JSSoft.Communication.Commands
         [CommandMethod]
         public async Task ListAsync()
         {
-            var items = await this.userService.GetUsersAsync(this.clientContext.UserToken);
+            var items = await this.userService.GetUsersAsync(this.context.UserToken);
             foreach (var item in items)
             {
                 this.Out.WriteLine(item);
@@ -84,14 +84,14 @@ namespace JSSoft.Communication.Commands
         [CommandMethod]
         public Task SendMessageAsync(string userID, string message)
         {
-            return this.userService.SendMessageAsync(this.clientContext.UserToken, userID, message);
+            return this.userService.SendMessageAsync(this.context.UserToken, userID, message);
         }
 
-        public override bool IsEnabled => this.clientContext.UserToken != Guid.Empty;
+        public override bool IsEnabled => this.context.UserToken != Guid.Empty;
 
         protected override bool IsMethodEnabled(CommandMethodDescriptor descriptor)
         {
-            return this.clientContext.UserToken != Guid.Empty;
+            return this.context.UserToken != Guid.Empty;
         }
     }
 }

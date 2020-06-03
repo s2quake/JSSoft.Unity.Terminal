@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -20,30 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Ntreev.Library.Threading;
-using Ntreev.Library.Commands;
-using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
-
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Server
 {
-    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
+    class DataServiceHost : ServerServiceHostBase<IDataService>
     {
-        private readonly ContextHostBase context;
-
-        public ExitCommand(ContextHostBase context)
-        {
-            this.context = context;    
-        }
+        private DataService dataService;
         
-        protected override async Task OnExecuteAsync(object source)
+        public DataServiceHost(DataService dataService)
         {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
+            this.dataService = dataService;
+        }
+
+        protected override IDataService CreateService()
+        {
+            return this.dataService;
+        }
+
+        protected override void DestroyService(IDataService service)
+        {
+            if (service is DataService dataService)
+            {
+                dataService.Dispose();
+            }
         }
     }
 }

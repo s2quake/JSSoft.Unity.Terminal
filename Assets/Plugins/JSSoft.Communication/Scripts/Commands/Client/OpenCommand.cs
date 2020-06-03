@@ -20,28 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using JSSoft.Communication;
+using Ntreev.Library.Commands;
 
-namespace JSSoft.Communication.Services
+namespace JSSoft.Communication.Commands.Client
 {
-    class UserServiceHost : ClientServiceHostBase<IUserService, IUserServiceCallback>
+    class OpenCommand : CommandAsyncBase
     {
-        private readonly UserService userService;
+        private readonly ClientContextHost context;
 
-        public UserServiceHost(UserService userService)
-            : base()
+        public OpenCommand(ClientContextHost context)
         {
-            this.userService = userService;
+            this.context = context;
         }
 
-        protected override IUserServiceCallback CreateCallback(IUserService service)
-        {
-            this.userService.SetUserService(service);
-            return this.userService;
-        }
+        [CommandProperty]
+        [DefaultValue(ClientContextBase.DefaultHost)]
+        public string Host { get; set; }
 
-        protected override void DestroyCallback(IUserServiceCallback callback)
+        [CommandProperty]
+        [DefaultValue(ClientContextBase.DefaultPort)]
+        public int Port { get; set; }
+
+        public override bool IsEnabled => this.context.IsOpened == false;
+
+        protected override async Task OnExecuteAsync(object source)
         {
-            this.userService.SetUserService(null);
+            await this.context.OpenAsync(this.Host, this.Port);
         }
     }
 }

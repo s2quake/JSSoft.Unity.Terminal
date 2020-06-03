@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -20,30 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using Ntreev.Library.Threading;
-using Ntreev.Library.Commands;
-using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
-
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Server
 {
-    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
+    class UserServiceHost : ServerServiceHostBase<IUserService, IUserServiceCallback>
     {
-        private readonly ContextHostBase context;
+        private UserService userService;
 
-        public ExitCommand(ContextHostBase context)
+        public UserServiceHost(UserService userService)
         {
-            this.context = context;    
+            this.userService = userService;
         }
-        
-        protected override async Task OnExecuteAsync(object source)
+
+        protected override IUserService CreateService(IUserServiceCallback callback)
         {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
+            this.userService.SetCallback(callback);
+            return this.userService;
+        }
+
+        protected override void DestroyService(IUserService service)
+        {
+            userService.Dispose();
         }
     }
 }

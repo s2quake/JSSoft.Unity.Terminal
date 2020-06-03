@@ -21,29 +21,22 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using Ntreev.Library.Threading;
-using Ntreev.Library.Commands;
-using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Client
 {
-    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
+    class DataService : IDataService
     {
-        private readonly ContextHostBase context;
+        private IDataService dataService;
 
-        public ExitCommand(ContextHostBase context)
+        public Task<DateTime> CreateDataBaseAsync(string dataBaseName)
         {
-            this.context = context;    
+            return this.dataService.CreateDataBaseAsync(dataBaseName);
         }
-        
-        protected override async Task OnExecuteAsync(object source)
+
+        public void SetDataService(IDataService dataService)
         {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
+            this.dataService = dataService;
         }
     }
 }

@@ -24,7 +24,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace JSSoft.Communication.Services
+namespace JSSoft.Communication.Services.Client
 {
     class UserServiceInstance : InstanceBase, IUserService
     {

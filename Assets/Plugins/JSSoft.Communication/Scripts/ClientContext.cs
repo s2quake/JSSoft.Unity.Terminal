@@ -23,6 +23,7 @@
 using System;
 using JSSoft.Communication;
 using JSSoft.Communication.Services;
+using JSSoft.Communication.Services.Client;
 
 namespace JSSoft.Communication
 {

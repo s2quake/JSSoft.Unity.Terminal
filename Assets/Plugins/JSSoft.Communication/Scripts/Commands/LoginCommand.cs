@@ -31,13 +31,13 @@ namespace JSSoft.Communication.Commands
 {
     class LoginCommand : CommandAsyncBase
     {
-        private readonly ClientContextHost clientContext;
+        private readonly ContextHostBase contex;
         private readonly IUserService userService;
 
-        public LoginCommand(ClientContextHost clientContext)
+        public LoginCommand(ContextHostBase contex)
         {
-            this.clientContext = clientContext;
-            this.userService = clientContext.UserService;
+            this.contex = contex;
+            this.userService = contex.UserService;
         }
 
         [CommandProperty(IsRequired = true)]
@@ -46,11 +46,11 @@ namespace JSSoft.Communication.Commands
         [CommandProperty(IsRequired = true)]
         public string Password { get; set; }
 
-        public override bool IsEnabled => this.clientContext.UserToken == Guid.Empty;
+        public override bool IsEnabled => this.contex.UserToken == Guid.Empty;
 
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.clientContext.LoginAsync(this.UserID, this.Password);
+            await this.contex.LoginAsync(this.UserID, this.Password);
         }
     }
 }

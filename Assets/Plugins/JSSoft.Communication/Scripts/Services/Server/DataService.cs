@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -21,27 +21,38 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using JSSoft.Communication;
-using JSSoft.Terminal.Commands;
-using Ntreev.Library.Commands;
+using Ntreev.Library.Threading;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Server
 {
-    class CloseCommand : CommandAsyncBase
+    class DataService : IDataService
     {
-        private readonly ClientContextHost clientContext;
+        private readonly HashSet<string> dataBases = new HashSet<string>();
 
-        public CloseCommand(ClientContextHost clientContext)
+        public DataService()
         {
-            this.clientContext = clientContext;
+            this.Dispatcher = new Dispatcher(this);
         }
 
-        public override bool IsEnabled => this.clientContext.IsOpened;
-
-        protected override Task OnExecuteAsync(object source)
+        public Task<DateTime> CreateDataBaseAsync(string dataBaseName)
         {
-            return this.clientContext.CloseAsync();
+            return this.Dispatcher.InvokeAsync(() =>
+            {
+                if (this.dataBases.Contains(dataBaseName) == true)
+                    throw new ArgumentNullException(nameof(dataBaseName));
+                this.dataBases.Add(dataBaseName);
+                return DateTime.UtcNow;
+            });
+        }
+
+        public Dispatcher Dispatcher { get; private set; }
+
+        public void Dispose()
+        {
+            this.Dispatcher.Dispose();
+            this.Dispatcher = null;
         }
     }
 }

@@ -26,25 +26,24 @@ using JSSoft.Terminal;
 using UnityEngine;
 using Ntreev.Library.Threading;
 using JSSoft.Communication.Services;
-using JSSoft.Communication.Services.Client;
+using JSSoft.Communication.Services.Server;
 using System.Text.RegularExpressions;
 
 namespace JSSoft.Communication
 {
-    public class ClientContextHost : ContextHostBase
+    public class ServerContextHost : ContextHostBase
     {
-        private readonly Settings settings;
         private readonly UserService userService;
         private readonly DataService dataService;
-        private readonly ClientContext serviceContext;
+        private readonly ServerContext serviceContext;
         private readonly INotifyUserService userServiceNotification;
 
-        public ClientContextHost()
+        public ServerContextHost()
         {
-            this.settings = Settings.CreateFromCommandLine();
+            // this.settings = Settings.CreateFromCommandLine();
             this.userService = new UserService();
             this.dataService = new DataService();
-            this.serviceContext = new ClientContext(new UserServiceHost(this.userService), new DataServiceHost(this.dataService));
+            this.serviceContext = new ServerContext(new UserServiceHost(this.userService), new DataServiceHost(this.dataService));
             this.userServiceNotification = this.userService;
         }
 
@@ -56,18 +55,32 @@ namespace JSSoft.Communication
 
         public override INotifyUserService UserServiceNotification => this.userService;
 
-        public override bool IsServer => false;
-    
-        internal async Task OpenAsync(string host, int port)
+        public override bool IsServer => true;
+
+        public async void Start()
         {
-            this.serviceContext.Host = host;
-            this.serviceContext.Port = port;
             this.Token = await this.serviceContext.OpenAsync();
         }
 
-        internal async Task CloseAsync()
-        {
-            await this.serviceContext.CloseAsync(this.Token);
-        }
-}
+        // internal async Task OpenAsync(string host, int port)
+        // {
+        //     this.serviceContext.Host = host;
+        //     this.serviceContext.Port = port;
+        //     this.Token = await this.serviceContext.OpenAsync();
+        // }
+
+        // internal async Task CloseAsync()
+        // {
+        //     await this.serviceContext.CloseAsync(this.Token);
+        // }
+
+        // internal async Task ExitAsync()
+        // {
+        //     if (this.serviceContext.IsOpened == true)
+        //     {
+        //         this.serviceContext.Closed -= ServiceContext_Closed;
+        //         await this.serviceContext.CloseAsync(this.Token);
+        //     }
+        // }
+    }
 }

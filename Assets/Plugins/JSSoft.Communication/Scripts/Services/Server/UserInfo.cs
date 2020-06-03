@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 // 
 // Copyright (c) 2019 Jeesu Choi
 // 
@@ -21,22 +21,19 @@
 // SOFTWARE.
 
 using System;
-using System.Threading.Tasks;
 
-namespace JSSoft.Communication.Services
+namespace JSSoft.Communication.Services.Server
 {
-    class DataService : IDataService
+    class UserInfo
     {
-        private IDataService dataService;
+        public string UserID { get; set; }
 
-        public Task<DateTime> CreateDataBaseAsync(string dataBaseName)
-        {
-            return this.dataService.CreateDataBaseAsync(dataBaseName);
-        }
+        public string UserName { get; set; }
 
-        public void SetDataService(IDataService dataService)
-        {
-            this.dataService = dataService;
-        }
+        public string Password { get; set; }
+
+        public Authority Authority { get; set; }
+
+        public Guid Token { get; set; }
     }
 }

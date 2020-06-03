@@ -20,27 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using UnityEngine;
+using JSSoft.Terminal.Commands;
+using System.Collections.Generic;
+using Ntreev.Library.Commands;
+using JSSoft.Communication.Commands;
 
-namespace JSSoft.Communication.Services
+namespace JSSoft.Communication
 {
-    class DataServiceHost : ClientServiceHostBase<IDataService>
+    public class ServerCommandContextHost : CommandContextHost
     {
-        private readonly DataService dataService;
+        [SerializeField]
+        private ServerContextHost serverContext = null;
 
-        public DataServiceHost(DataService dataService)
-            : base()
+        protected override IEnumerable<ICommand> CollectCommands()
         {
-            this.dataService = dataService;
-        }
-
-        protected override void OnServiceCreated(IDataService service)
-        {
-            this.dataService.SetDataService(service);
-        }
-
-        protected override void OnServiceDestroyed()
-        {
-            this.dataService.SetDataService(null);
+            foreach (var item in base.CollectCommands())
+            {
+                if (item is JSSoft.Terminal.Commands.ExitCommand)
+                {
+                    yield return new JSSoft.Communication.Commands.ExitCommand(this.serverContext);
+                    continue;
+                }
+                yield return item;
+            }
+            yield return new DataCommand(this.serverContext);
+            yield return new LoginCommand(this.serverContext);
+            yield return new LogoutCommand(this.serverContext);
+            yield return new UserCommand(this.serverContext);
         }
     }
 }

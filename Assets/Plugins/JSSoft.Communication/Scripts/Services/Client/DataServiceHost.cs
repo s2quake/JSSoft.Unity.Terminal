@@ -20,44 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using JSSoft.Communication;
-using Ntreev.Library.Commands;
-using UnityEngine;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services.Client
 {
-    public class Settings
+    class DataServiceHost : ClientServiceHostBase<IDataService>
     {
-        [CommandProperty]
-        [DefaultValue(ServiceContextBase.DefaultPort)]
-        public int Port
+        private readonly DataService dataService;
+
+        public DataServiceHost(DataService dataService)
+            : base()
         {
-            get; set;
+            this.dataService = dataService;
         }
 
-        [CommandProperty]
-        [DefaultValue(ServiceContextBase.DefaultHost)]
-        public string Host
+        protected override void OnServiceCreated(IDataService service)
         {
-            get; set;
+            this.dataService.SetDataService(service);
         }
 
-        [CommandProperty]
-        public bool Verbose
+        protected override void OnServiceDestroyed()
         {
-            get; set;
-        }
-
-        public static Settings CreateFromCommandLine()
-        {
-            var settings = new Settings();
-            //var parser = new CommandLineParser(settings);
-            //parser.Parse("", CommandParsingTypes.OmitCommandName);
-            settings.Host = "localhost";
-            settings.Port = 4004;
-            return settings;
+            this.dataService.SetDataService(null);
         }
     }
 }

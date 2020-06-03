@@ -23,7 +23,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace JSSoft.Communication.Services
+namespace JSSoft.Communication.Services.Client
 {
     class UserService : IUserService, IUserServiceCallback, INotifyUserService
     {

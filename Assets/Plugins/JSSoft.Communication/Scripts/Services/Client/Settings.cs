@@ -22,28 +22,42 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
-using Ntreev.Library.Threading;
+using JSSoft.Communication;
 using Ntreev.Library.Commands;
 using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Client
 {
-    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
+    public class Settings
     {
-        private readonly ContextHostBase context;
-
-        public ExitCommand(ContextHostBase context)
+        [CommandProperty]
+        [DefaultValue(ServiceContextBase.DefaultPort)]
+        public int Port
         {
-            this.context = context;    
+            get; set;
         }
-        
-        protected override async Task OnExecuteAsync(object source)
+
+        [CommandProperty]
+        [DefaultValue(ServiceContextBase.DefaultHost)]
+        public string Host
         {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
+            get; set;
+        }
+
+        [CommandProperty]
+        public bool Verbose
+        {
+            get; set;
+        }
+
+        public static Settings CreateFromCommandLine()
+        {
+            var settings = new Settings();
+            //var parser = new CommandLineParser(settings);
+            //parser.Parse("", CommandParsingTypes.OmitCommandName);
+            settings.Host = "localhost";
+            settings.Port = 4004;
+            return settings;
         }
     }
 }

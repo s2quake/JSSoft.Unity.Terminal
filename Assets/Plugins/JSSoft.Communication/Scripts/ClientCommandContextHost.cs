@@ -25,6 +25,7 @@ using JSSoft.Terminal.Commands;
 using System.Collections.Generic;
 using Ntreev.Library.Commands;
 using JSSoft.Communication.Commands;
+using JSSoft.Communication.Commands.Client;
 
 namespace JSSoft.Communication
 {

@@ -31,20 +31,18 @@ namespace JSSoft.Communication.Commands
 {
     class LogoutCommand : CommandAsyncBase
     {
-        private readonly ClientContextHost clientContext;
+        private readonly ContextHostBase context;
 
-        public LogoutCommand(ClientContextHost clientContext)
+        public LogoutCommand(ContextHostBase context)
         {
-            this.clientContext = clientContext;
+            this.context = context;
         }
 
-        public override bool IsEnabled => this.clientContext.UserToken != Guid.Empty;
+        public override bool IsEnabled => this.context.UserToken != Guid.Empty;
 
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.clientContext.LogoutAsync();
-            // await this.userService.LogoutAsync(this.shell.UserToken);
-            // await this.shell.LogoutAsync();
+            await this.context.LogoutAsync();
         }
     }
 }
