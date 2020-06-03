@@ -236,6 +236,10 @@ namespace JSSoft.Terminal
 
         public List<TerminalBehaviourBase> BehaviourList => this.behaviourList;
 
+        public event EventHandler Enabled;
+
+        public event EventHandler Disabled;
+
         public event EventHandler Validated;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -250,6 +254,11 @@ namespace JSSoft.Terminal
 
         }
 
+        protected virtual void Start()
+        {
+
+        }
+
         protected virtual void OnDestroy()
         {
 
@@ -258,11 +267,23 @@ namespace JSSoft.Terminal
         protected virtual void OnEnable()
         {
             TerminalValidationEvents.Register(this);
+            this.OnEnabled(EventArgs.Empty);
         }
 
         protected virtual void OnDisable()
         {
+            this.OnDisabled(EventArgs.Empty);
             TerminalValidationEvents.Unregister(this);
+        }
+
+        protected virtual void OnEnabled(EventArgs e)
+        {
+            this.Enabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnDisabled(EventArgs e)
+        {
+            this.Disabled?.Invoke(this, e);
         }
 
         protected virtual void OnValidated(EventArgs e)

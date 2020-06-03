@@ -75,18 +75,14 @@ namespace JSSoft.Communication
 
         public void Awake()
         {
-
             this.serviceContext.Opened += ServiceContext_Opened;
             this.serviceContext.Closed += ServiceContext_Closed;
             this.userServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
             this.userServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
             this.userServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
-            // this.terminal = terminal;
             this.dispatcher = Dispatcher.Current;
             this.terminal.PromptDrawer = this;
-            // this.terminal.CommandCompletor = this;
             this.terminal.Prompt = ">";
-            // this.Title = "Server";
         }
 
         public void Start()

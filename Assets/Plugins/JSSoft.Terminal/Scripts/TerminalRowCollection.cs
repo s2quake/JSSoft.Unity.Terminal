@@ -50,7 +50,6 @@ namespace JSSoft.Terminal
             this.grid.Enabled += Grid_Enabled;
             this.grid.Disabled += Grid_Disabled;
             this.grid.PropertyChanged += Grid_PropertyChanged;
-            this.grid.LayoutChanged += Grid_LayoutChanged;
             this.grid.Validated += Grid_Validated;
             this.characterInfos = characterInfos;
         }
@@ -86,7 +85,6 @@ namespace JSSoft.Terminal
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
-            // Debug.Log($"{nameof(TerminalRowCollection)}.{nameof(Update)}: {index}");
             var font = this.grid.Font;
             var style = this.grid.Style;
             var bufferWidth = this.grid.BufferWidth;
@@ -186,14 +184,15 @@ namespace JSSoft.Terminal
         private void Grid_Enabled(object sender, EventArgs e)
         {
             TerminalValidationEvents.Validated += Object_Validated;
-            // this.text = string.Empty;
-            this.Update();
+            TerminalValidationEvents.Enabled += Object_Enabled;
+            this.UpdateAll();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
             TerminalValidationEvents.Validated -= Object_Validated;
-            // this.text = string.Empty;
+            TerminalValidationEvents.Enabled -= Object_Enabled;
+            this.Update();
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -211,11 +210,6 @@ namespace JSSoft.Terminal
             }
         }
 
-        private void Grid_LayoutChanged(object sender, EventArgs e)
-        {
-            // this.UpdateAll();
-        }
-
         private void Grid_Validated(object sender, EventArgs e)
         {
             this.Update();
@@ -230,6 +224,19 @@ namespace JSSoft.Terminal
                     break;
                 case TerminalColorPalette palette when this.grid.ColorPalette == palette:
                     this.Update();
+                    break;
+                case TerminalFont font when this.font == font:
+                    this.UpdateAll();
+                    break;
+            }
+        }
+
+        private void Object_Enabled(object sender, EventArgs e)
+        {
+            switch (sender)
+            {
+                case TerminalFont font when this.font == font:
+                    this.UpdateAll();
                     break;
             }
         }

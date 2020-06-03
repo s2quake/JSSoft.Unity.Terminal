@@ -89,8 +89,11 @@ namespace JSSoft.Terminal
             get => this.height;
             set
             {
-                this.height = value;
-                this.InvokePropertyChangedEvent(nameof(Height));
+                if (this.height != value)
+                {
+                    this.height = value;
+                    this.InvokePropertyChangedEvent(nameof(Height));
+                }
             }
         }
 
@@ -99,10 +102,17 @@ namespace JSSoft.Terminal
             get => this.width;
             set
             {
-                this.width = value;
-                this.InvokePropertyChangedEvent(nameof(Width));
+                if (this.width != value)
+                {
+                    this.width = value;
+                    this.InvokePropertyChangedEvent(nameof(Width));
+                }
             }
         }
+
+        public event EventHandler Enabled;
+
+        public event EventHandler Disabled;
 
         public event EventHandler Validated;
 
@@ -117,10 +127,12 @@ namespace JSSoft.Terminal
 
         protected virtual void Awake()
         {
+            
         }
 
         protected virtual void OnDestroy()
         {
+            
         }
 
         protected virtual void OnEnable()
@@ -129,12 +141,24 @@ namespace JSSoft.Terminal
             this.UpdateTextures();
             TerminalValidationEvents.Register(this);
             TerminalValidationEvents.Validated += Object_Validated;
+            this.OnEnabled(EventArgs.Empty);
         }
 
         protected virtual void OnDisable()
         {
             TerminalValidationEvents.Validated -= Object_Validated;
+            this.OnDisabled(EventArgs.Empty);
             TerminalValidationEvents.Unregister(this);
+        }
+
+        protected virtual void OnEnabled(EventArgs e)
+        {
+            this.Enabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnDisabled(EventArgs e)
+        {
+            this.Disabled?.Invoke(this, e);
         }
 
         protected virtual void OnValidated(EventArgs e)

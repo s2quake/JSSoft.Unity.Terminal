@@ -27,6 +27,10 @@ namespace JSSoft.Terminal
 {
     public interface INotifyValidated : INotifyPropertyChanged
     {
+        event EventHandler Enabled;
+
+        event EventHandler Disabled;
+
         event EventHandler Validated;
     }
 }

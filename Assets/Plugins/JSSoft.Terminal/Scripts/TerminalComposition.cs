@@ -174,6 +174,10 @@ namespace JSSoft.Terminal
 
         public TerminalFont Font => this.grid?.Font;
 
+        public event EventHandler Enabled;
+
+        public event EventHandler Disabled;
+
         public event EventHandler Validated;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -190,23 +194,45 @@ namespace JSSoft.Terminal
         }
 #endif
 
+        protected override void Start()
+        {
+
+        }
+
+        protected override void OnDestroy()
+        {
+
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
+            this.UpdateColor();
+            TerminalValidationEvents.Register(this);
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
-            TerminalValidationEvents.Register(this);
-            this.UpdateColor();
+            this.OnEnabled(EventArgs.Empty);
         }
 
         protected override void OnDisable()
         {
-            TerminalValidationEvents.Unregister(this);
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
             base.OnDisable();
+            this.OnDisabled(EventArgs.Empty);
+            TerminalValidationEvents.Unregister(this);
+        }
+
+        protected virtual void OnEnabled(EventArgs e)
+        {
+            this.Enabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnDisabled(EventArgs e)
+        {
+            this.Disabled?.Invoke(this, e);
         }
 
         protected virtual void OnValidated(EventArgs e)

@@ -106,23 +106,12 @@ namespace JSSoft.Terminal
             base.OnDisable();
         }
 
-        protected override void Start()
-        {
-            this.SetVerticesDirty();
-        }
-
-        protected override void OnDestroy()
-        {
-
-        }
-
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (object.Equals(sender, this.grid) == false)
                 return;
 
-            var propertyName = e.PropertyName;
-            switch (propertyName)
+            switch (e.PropertyName)
             {
                 case nameof(ITerminalGrid.VisibleIndex):
                 case nameof(ITerminalGrid.Text):

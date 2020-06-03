@@ -186,6 +186,7 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.command, this.command.Remove(this.cursorPosition, 1), nameof(Command));
                 this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.inputText = this.command;
                 this.notifier.End();
             }
         }
@@ -199,6 +200,7 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                 this.notifier.SetField(ref this.cursorPosition, this.cursorPosition - 1, nameof(CursorPosition));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.inputText = this.command;
                 this.notifier.End();
             }
         }
@@ -208,10 +210,11 @@ namespace JSSoft.Terminal
             if (this.historyIndex + 1 < this.histories.Count)
             {
                 this.notifier.Begin();
+                this.notifier.SetField(ref this.command, this.histories[this.historyIndex + 1], nameof(Command));
                 this.notifier.SetField(ref this.promptText, this.prompt + this.inputText, nameof(PromptText));
                 this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
-                this.inputText = this.command = this.histories[this.historyIndex + 1];
+                this.inputText = this.command;
                 this.historyIndex++;
                 this.notifier.End();
             }
@@ -219,19 +222,22 @@ namespace JSSoft.Terminal
 
         public override void PrevHistory()
         {
+            Debug.Log(123);
             if (this.historyIndex > 0)
             {
                 this.notifier.Begin();
-                this.notifier.SetField(ref this.promptText, this.prompt + this.inputText, nameof(PromptText));
+                this.notifier.SetField(ref this.command, this.histories[this.historyIndex - 1], nameof(Command));
+                this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                 this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
-                this.inputText = this.command = this.histories[this.historyIndex - 1];
+                this.inputText = this.command;
                 this.historyIndex--;
                 this.notifier.End();
             }
             else if (this.histories.Count == 1)
             {
                 this.notifier.Begin();
+                this.notifier.SetField(ref this.command, this.histories[0], nameof(Command));
                 this.notifier.SetField(ref this.promptText, this.prompt + this.inputText, nameof(PromptText));
                 this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
@@ -747,14 +753,6 @@ namespace JSSoft.Terminal
         }
 
         #region ITerminal
-
-        // void ITerminal.Reset() => this.ResetOutput();
-
-        // public override string Prompt
-        // {
-        //     get => this.Prompt;
-        //     set => this.Prompt = value;
-        // }
 
         public override event EventHandler<TerminalExecuteEventArgs> Executing
         {
