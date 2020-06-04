@@ -40,7 +40,6 @@ namespace JSSoft.Communication
 
         public ServerContextHost()
         {
-            // this.settings = Settings.CreateFromCommandLine();
             this.userService = new UserService();
             this.dataService = new DataService();
             this.serviceContext = new ServerContext(new UserServiceHost(this.userService), new DataServiceHost(this.dataService));
@@ -57,30 +56,14 @@ namespace JSSoft.Communication
 
         public override bool IsServer => true;
 
-        public async void Start()
+        internal async Task OpenAsync()
         {
             this.Token = await this.serviceContext.OpenAsync();
         }
 
-        // internal async Task OpenAsync(string host, int port)
-        // {
-        //     this.serviceContext.Host = host;
-        //     this.serviceContext.Port = port;
-        //     this.Token = await this.serviceContext.OpenAsync();
-        // }
-
-        // internal async Task CloseAsync()
-        // {
-        //     await this.serviceContext.CloseAsync(this.Token);
-        // }
-
-        // internal async Task ExitAsync()
-        // {
-        //     if (this.serviceContext.IsOpened == true)
-        //     {
-        //         this.serviceContext.Closed -= ServiceContext_Closed;
-        //         await this.serviceContext.CloseAsync(this.Token);
-        //     }
-        // }
+        internal async Task CloseAsync()
+        {
+            await this.serviceContext.CloseAsync(this.Token);
+        }
     }
 }

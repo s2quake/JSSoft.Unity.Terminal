@@ -212,7 +212,10 @@ namespace JSSoft.Terminal
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            this.Update();
+            if (this.grid.IsActive() == true)
+            {
+                this.Update();
+            }
         }
 
         private void Object_Validated(object sender, EventArgs e)

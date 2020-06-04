@@ -30,8 +30,8 @@ using UnityEngine;
 
 namespace JSSoft.Communication.Editor
 {
-    [CustomEditor(typeof(TerminalLogRedirector))]
-    public class TerminalLogRedirectorEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TerminalLogReceiver))]
+    public class TerminalLogReceiverEditor : UnityEditor.Editor
     {
         private static readonly string[] colors;
         private SerializedProperty logTypeProperty;
@@ -40,7 +40,7 @@ namespace JSSoft.Communication.Editor
         private SerializedProperty foregroundColorProperty;
         private SerializedProperty backgroundColorProperty;
 
-        static TerminalLogRedirectorEditor()
+        static TerminalLogReceiverEditor()
         {
             var colorList = new List<string>();
             foreach (var item in Enum.GetNames(typeof(TerminalColor)))

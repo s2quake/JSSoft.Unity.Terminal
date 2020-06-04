@@ -92,6 +92,7 @@ namespace JSSoft.Terminal
         {
             base.OnEnable();
             TerminalEvents.Validated += Terminal_Validated;
+            TerminalEvents.Enabled += Terminal_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.Validated += Grid_Validated;
             TerminalValidationEvents.Validated += Object_Validated;
@@ -100,6 +101,7 @@ namespace JSSoft.Terminal
         protected override void OnDisable()
         {
             TerminalEvents.Validated -= Terminal_Validated;
+            TerminalEvents.Enabled -= Terminal_Enabled;
             TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
@@ -138,6 +140,14 @@ namespace JSSoft.Terminal
             if (sender is Terminal terminal && terminal == this.grid.Terminal)
             {
                 this.SetVerticesDirty();
+            }
+        }
+
+        private void Terminal_Enabled(object sender, EventArgs e)
+        {
+            if (sender is Terminal terminal && terminal == this.grid.Terminal)
+            {
+                // this.SetVerticesDirty();
             }
         }
 

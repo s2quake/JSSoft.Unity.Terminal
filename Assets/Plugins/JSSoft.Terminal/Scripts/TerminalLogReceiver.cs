@@ -27,7 +27,7 @@ using UnityEngine;
 namespace JSSoft.Communication
 {
     [RequireComponent(typeof(TerminalBase))]
-    class TerminalLogRedirector : MonoBehaviour
+    class TerminalLogReceiver : MonoBehaviour
     {
         private TerminalBase terminal;
         [SerializeField]
@@ -42,7 +42,7 @@ namespace JSSoft.Communication
         private TerminalColor backgroundColor;
         private Dispatcher dispatcher;
 
-        public TerminalLogRedirector()
+        public TerminalLogReceiver()
         {
         }
 

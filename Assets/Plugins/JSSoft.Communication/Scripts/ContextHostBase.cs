@@ -35,12 +35,6 @@ namespace JSSoft.Communication
         [SerializeField]
         protected TerminalBase terminal;
 
-        // private readonly IUserService userService;
-        // private readonly IDataService dataService;
-        // private readonly IServiceContext serviceContext;
-        // private readonly INotifyUserService userServiceNotification;
-        private Dispatcher dispatcher;
-
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
         {
@@ -62,7 +56,6 @@ namespace JSSoft.Communication
 
         public abstract INotifyUserService UserServiceNotification { get; }
 
-
         public Guid Token { get; protected set; }
 
         public Guid UserToken { get; protected set; }
@@ -75,31 +68,12 @@ namespace JSSoft.Communication
 
         public abstract bool IsServer { get; }
 
-        protected virtual void Awake()
-        {
-            this.ServiceContext.Opened += ServiceContext_Opened;
-            this.ServiceContext.Closed += ServiceContext_Closed;
-            this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
-            this.UserServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
-            this.UserServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
-            this.dispatcher = Dispatcher.Current;
-            this.terminal.PromptDrawer = this;
-            this.terminal.Prompt = ">";
-        }
+        public TerminalDispatcher Dispatcher => this.terminal.Dispatcher;
 
-        protected async void OnDestroy()
-        {
-            if (this.ServiceContext.IsOpened == true)
-            {
-                this.ServiceContext.Closed -= ServiceContext_Closed;
-                await this.ServiceContext.CloseAsync(this.Token);
-            }
-        }
-
-        public async Task LoginAsync(string userID, string password)
+        internal async Task LoginAsync(string userID, string password)
         {
             var token = await this.UserService.LoginAsync(userID, password);
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 this.UserID = userID;
                 this.UserToken = token;
@@ -109,10 +83,10 @@ namespace JSSoft.Communication
             });
         }
 
-        public async Task LogoutAsync()
+        internal async Task LogoutAsync()
         {
             await this.UserService.LogoutAsync(this.UserToken);
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 this.UserID = string.Empty;
                 this.UserToken = Guid.Empty;
@@ -120,9 +94,29 @@ namespace JSSoft.Communication
             });
         }
 
+        protected virtual void Awake()
+        {
+            this.ServiceContext.Opened += ServiceContext_Opened;
+            this.ServiceContext.Closed += ServiceContext_Closed;
+            this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
+            this.UserServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
+            this.UserServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
+            this.terminal.PromptDrawer = this;
+            this.terminal.Prompt = ">";
+        }
+
+        protected virtual async void OnDestroy()
+        {
+            if (this.ServiceContext.IsOpened == true)
+            {
+                this.ServiceContext.Closed -= ServiceContext_Closed;
+                await this.ServiceContext.CloseAsync(this.Token);
+            }
+        }
+
         private void UpdatePrompt()
         {
-            this.dispatcher.VerifyAccess();
+            this.Dispatcher.VerifyAccess();
             if (this.IsOpened == true)
             {
                 if (this.UserID != string.Empty)
@@ -156,7 +150,7 @@ namespace JSSoft.Communication
 
         private async void ServiceContext_Opened(object sender, EventArgs e)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 this.IsOpened = true;
                 this.UpdatePrompt();
@@ -182,7 +176,7 @@ namespace JSSoft.Communication
 
         private async void ServiceContext_Closed(object sender, EventArgs e)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 this.IsOpened = false;
                 this.UpdatePrompt();
@@ -195,7 +189,7 @@ namespace JSSoft.Communication
 
         private async void UserServiceNotification_LoggedIn(object sender, UserEventArgs e)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 this.terminal.AppendLine($"User logged in: {e.UserID}");
             });
@@ -203,7 +197,7 @@ namespace JSSoft.Communication
 
         private async void UserServiceNotification_LoggedOut(object sender, UserEventArgs e)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 this.terminal.AppendLine($"User logged out: {e.UserID}");
             });
@@ -211,7 +205,7 @@ namespace JSSoft.Communication
 
         private async void userServiceNotification_MessageReceived(object sender, UserMessageEventArgs e)
         {
-            await this.dispatcher.InvokeAsync(() =>
+            await this.Dispatcher.InvokeAsync(() =>
             {
                 if (e.Sender == this.UserID)
                 {

@@ -222,7 +222,6 @@ namespace JSSoft.Terminal
 
         public override void PrevHistory()
         {
-            Debug.Log(123);
             if (this.historyIndex > 0)
             {
                 this.notifier.Begin();

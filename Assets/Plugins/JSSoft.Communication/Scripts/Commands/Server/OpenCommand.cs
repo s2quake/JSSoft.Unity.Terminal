@@ -21,18 +21,27 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
 using JSSoft.Communication;
-using JSSoft.Communication.Services;
-using JSSoft.Communication.Services.Server;
+using Ntreev.Library.Commands;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Commands.Server
 {
-    class ServerContext : ServerContextBase
+    class OpenCommand : CommandAsyncBase
     {
-        public ServerContext(params IServiceHost[] serviceHosts)
-            : base(serviceHosts)
-        {
+        private readonly ServerContextHost serverContext;
 
+        public OpenCommand(ServerContextHost serverContext)
+        {
+            this.serverContext = serverContext;
+        }
+
+        public override bool IsEnabled => this.serverContext.IsOpened == false;
+
+        protected override async Task OnExecuteAsync(object source)
+        {
+            await this.serverContext.OpenAsync();
         }
     }
 }

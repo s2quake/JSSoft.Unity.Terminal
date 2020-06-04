@@ -45,11 +45,11 @@ namespace JSSoft.Communication
                 }
                 yield return item;
             }
+            yield return new OpenCommand(this.clientContext);
             yield return new CloseCommand(this.clientContext);
             yield return new DataCommand(this.clientContext);
             yield return new LoginCommand(this.clientContext);
             yield return new LogoutCommand(this.clientContext);
-            yield return new OpenCommand(this.clientContext);
             yield return new UserCommand(this.clientContext);
         }
     }

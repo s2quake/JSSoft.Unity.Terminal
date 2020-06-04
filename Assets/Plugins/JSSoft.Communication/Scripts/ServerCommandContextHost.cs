@@ -25,6 +25,7 @@ using JSSoft.Terminal.Commands;
 using System.Collections.Generic;
 using Ntreev.Library.Commands;
 using JSSoft.Communication.Commands;
+using JSSoft.Communication.Commands.Server;
 
 namespace JSSoft.Communication
 {
@@ -44,6 +45,8 @@ namespace JSSoft.Communication
                 }
                 yield return item;
             }
+            yield return new OpenCommand(this.serverContext);
+            yield return new CloseCommand(this.serverContext);
             yield return new DataCommand(this.serverContext);
             yield return new LoginCommand(this.serverContext);
             yield return new LogoutCommand(this.serverContext);
