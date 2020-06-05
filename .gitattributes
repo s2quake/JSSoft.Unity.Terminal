@@ -1,2 +1,0 @@
-Assets/Plugins/JSSoft.Communication/libgrpc_csharp_ext.so filter=lfs diff=lfs merge=lfs -text
-Assets/Plugins/JSSoft.Communication/libgrpc.a filter=lfs diff=lfs merge=lfs -text
