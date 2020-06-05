@@ -23,34 +23,33 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using JSSoft.Communication.Services;
 using JSSoft.Communication;
 using Ntreev.Library.Commands;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Commands.Client
 {
-    class LoginCommand : CommandAsyncBase
+    class OpenCommand : CommandAsyncBase
     {
-        private readonly ContextHostBase contex;
-        private readonly IUserService userService;
+        private readonly ClientContextHost context;
 
-        public LoginCommand(ContextHostBase contex)
+        public OpenCommand(ClientContextHost context)
         {
-            this.contex = contex;
-            this.userService = contex.UserService;
+            this.context = context;
         }
 
-        [CommandProperty(IsRequired = true)]
-        public string UserID { get; set; }
+        [CommandProperty]
+        [DefaultValue(ClientContextBase.DefaultHost)]
+        public string Host { get; set; }
 
-        [CommandProperty(IsRequired = true)]
-        public string Password { get; set; }
+        [CommandProperty]
+        [DefaultValue(ClientContextBase.DefaultPort)]
+        public int Port { get; set; }
 
-        public override bool IsEnabled => this.contex.UserToken == Guid.Empty;
+        public override bool IsEnabled => this.context.IsOpened == false;
 
         protected override async Task OnExecuteAsync(object source)
         {
-            await this.contex.LoginAsync(this.UserID, this.Password);
+            await this.context.OpenAsync(this.Host, this.Port);
         }
     }
 }

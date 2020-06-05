@@ -20,17 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using JSSoft.Communication;
-using JSSoft.Communication.Services;
-using JSSoft.Communication.Services.Server;
+using Ntreev.Library.Threading;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services
 {
-    class ServerContext : ServerContextBase
+    class DebugLogger : JSSoft.Communication.Logging.ILogger
     {
-        public ServerContext(params IServiceHost[] serviceHosts)
-            : base(serviceHosts)
+        public void Debug(object message)
+        {
+            UnityEngine.Debug.Log(message);
+        }
+
+        public void Info(object message)
+        {
+            UnityEngine.Debug.Log(message);
+        }
+
+        public void Error(object message)
+        {
+
+        }
+
+        public void Warn(object message)
+        {
+
+        }
+
+        public void Fatal(object message)
         {
 
         }

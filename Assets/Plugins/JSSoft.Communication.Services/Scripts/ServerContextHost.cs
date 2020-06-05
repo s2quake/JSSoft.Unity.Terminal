@@ -29,7 +29,7 @@ using JSSoft.Communication.Services;
 using JSSoft.Communication.Services.Server;
 using System.Text.RegularExpressions;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services
 {
     public class ServerContextHost : ContextHostBase
     {

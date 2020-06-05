@@ -63,6 +63,6 @@ crashlytics-build.properties
 /ios
 /osx.app
 libgrpc_csharp_ext.dylib
-Assets/Plugins/JSSoft.Communication/libgrpc.a
-Assets/Plugins/JSSoft.Communication/libgrpc_csharp_ext.a
-Assets/Plugins/JSSoft.Communication/libgrpc_csharp_ext.so
+Assets/Plugins/JSSoft.Communication.Services/libgrpc.a
+Assets/Plugins/JSSoft.Communication.Services/libgrpc_csharp_ext.a
+Assets/Plugins/JSSoft.Communication.Services/libgrpc_csharp_ext.so

@@ -21,27 +21,28 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
+using JSSoft.Communication.Services;
 using JSSoft.Communication;
-using JSSoft.Terminal.Commands;
 using Ntreev.Library.Commands;
 
-namespace JSSoft.Communication.Commands.Server
+namespace JSSoft.Communication.Services.Commands
 {
-    class CloseCommand : CommandAsyncBase
+    class LogoutCommand : CommandAsyncBase
     {
-        private readonly ServerContextHost serverContext;
+        private readonly ContextHostBase context;
 
-        public CloseCommand(ServerContextHost serverContext)
+        public LogoutCommand(ContextHostBase context)
         {
-            this.serverContext = serverContext;
+            this.context = context;
         }
 
-        public override bool IsEnabled => this.serverContext.IsOpened;
+        public override bool IsEnabled => this.context.UserToken != Guid.Empty;
 
-        protected override Task OnExecuteAsync(object source)
+        protected override async Task OnExecuteAsync(object source)
         {
-            return this.serverContext.CloseAsync();
+            await this.context.LogoutAsync();
         }
     }
 }

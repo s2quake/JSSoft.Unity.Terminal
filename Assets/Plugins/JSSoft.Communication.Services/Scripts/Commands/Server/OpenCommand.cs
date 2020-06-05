@@ -20,37 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using UnityEngine;
-using JSSoft.Terminal.Commands;
-using System.Collections.Generic;
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using JSSoft.Communication;
 using Ntreev.Library.Commands;
-using JSSoft.Communication.Commands;
-using JSSoft.Communication.Commands.Server;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services.Commands.Server
 {
-    public class ServerCommandContextHost : CommandContextHost
+    class OpenCommand : CommandAsyncBase
     {
-        [SerializeField]
-        private ServerContextHost serverContext = null;
+        private readonly ServerContextHost serverContext;
 
-        protected override IEnumerable<ICommand> CollectCommands()
+        public OpenCommand(ServerContextHost serverContext)
         {
-            foreach (var item in base.CollectCommands())
-            {
-                if (item is JSSoft.Terminal.Commands.ExitCommand)
-                {
-                    yield return new JSSoft.Communication.Commands.ExitCommand(this.serverContext);
-                    continue;
-                }
-                yield return item;
-            }
-            yield return new OpenCommand(this.serverContext);
-            yield return new CloseCommand(this.serverContext);
-            yield return new DataCommand(this.serverContext);
-            yield return new LoginCommand(this.serverContext);
-            yield return new LogoutCommand(this.serverContext);
-            yield return new UserCommand(this.serverContext);
+            this.serverContext = serverContext;
+        }
+
+        public override bool IsEnabled => this.serverContext.IsOpened == false;
+
+        protected override async Task OnExecuteAsync(object source)
+        {
+            await this.serverContext.OpenAsync();
         }
     }
 }

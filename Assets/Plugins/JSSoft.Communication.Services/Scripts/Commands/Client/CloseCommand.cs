@@ -21,29 +21,27 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
 using System.Threading.Tasks;
-using Ntreev.Library.Threading;
+using JSSoft.Communication;
+using JSSoft.Terminal.Commands;
 using Ntreev.Library.Commands;
-using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Commands.Client
 {
-    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
+    class CloseCommand : CommandAsyncBase
     {
-        private readonly ContextHostBase context;
+        private readonly ClientContextHost clientContext;
 
-        public ExitCommand(ContextHostBase context)
+        public CloseCommand(ClientContextHost clientContext)
         {
-            this.context = context;    
+            this.clientContext = clientContext;
         }
-        
-        protected override async Task OnExecuteAsync(object source)
+
+        public override bool IsEnabled => this.clientContext.IsOpened;
+
+        protected override Task OnExecuteAsync(object source)
         {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
+            return this.clientContext.CloseAsync();
         }
     }
 }

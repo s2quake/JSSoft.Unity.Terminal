@@ -142,7 +142,7 @@ namespace JSSoft.Terminal
                 this.CursorPosition++;
         }
 
-        public override void Reset()
+        public override void ResetOutput()
         {
             this.notifier.Begin();
             this.notifier.SetField(ref this.outputText, string.Empty, nameof(OutputText));

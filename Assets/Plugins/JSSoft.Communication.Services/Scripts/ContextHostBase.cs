@@ -25,10 +25,9 @@ using System.Threading.Tasks;
 using JSSoft.Terminal;
 using UnityEngine;
 using Ntreev.Library.Threading;
-using JSSoft.Communication.Services;
 using System.Text.RegularExpressions;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services
 {
     public abstract class ContextHostBase : MonoBehaviour, IPromptDrawer
     {
@@ -39,7 +38,8 @@ namespace JSSoft.Communication
         static void OnRuntimeMethodLoad()
         {
 #if UNITY_STANDALONE
-            Screen.SetResolution(1050, 660, false);
+            // Screen.SetResolution(1050, 660, false);
+            Screen.SetResolution(1920, 1080, false);
 #endif
         }
 

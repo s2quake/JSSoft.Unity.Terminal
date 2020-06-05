@@ -64,7 +64,7 @@ namespace JSSoft.Terminal.Commands
             this.grid = this.GetComponent<TerminalGridBase>();
             this.terminal = this.GetComponent<TerminalBase>();
             this.terminal.CommandCompletor = this;
-            this.terminal.Reset();
+            this.terminal.ResetOutput();
             if (this.text != string.Empty)
                 this.terminal.AppendLine(this.text);
             this.terminal.CursorPosition = 0;

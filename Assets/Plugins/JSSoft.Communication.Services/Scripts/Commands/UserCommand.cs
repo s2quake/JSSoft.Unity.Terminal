@@ -26,7 +26,7 @@ using System.Threading.Tasks;
 using JSSoft.Communication.Services;
 using JSSoft.Communication;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Commands
 {
     class UserCommand : CommandMethodBase
     {

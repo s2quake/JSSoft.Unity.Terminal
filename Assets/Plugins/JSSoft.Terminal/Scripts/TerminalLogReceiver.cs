@@ -24,7 +24,7 @@ using Ntreev.Library.Threading;
 using JSSoft.Terminal;
 using UnityEngine;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services
 {
     [RequireComponent(typeof(TerminalBase))]
     class TerminalLogReceiver : MonoBehaviour

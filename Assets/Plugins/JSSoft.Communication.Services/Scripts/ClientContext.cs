@@ -20,35 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Ntreev.Library.Threading;
+using System;
+using JSSoft.Communication;
+using JSSoft.Communication.Services.Client;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services
 {
-    class DebugLogger : JSSoft.Communication.Logging.ILogger
+    class ClientContext : ClientContextBase
     {
-        public void Debug(object message)
-        {
-            UnityEngine.Debug.Log(message);
-        }
-
-        public void Info(object message)
-        {
-            UnityEngine.Debug.Log(message);
-        }
-
-        public void Error(object message)
+        public ClientContext(params IServiceHost[] serviceHosts)
+            : base(serviceHosts)
         {
 
         }
 
-        public void Warn(object message)
+        protected override InstanceBase CreateInstance(Type type)
         {
-
-        }
-
-        public void Fatal(object message)
-        {
-
+            if (type == typeof(IUserService))
+                return new UserServiceInstance();
+            else if (type == typeof(IDataService))
+                return new DataServiceInstance();
+            throw new NotImplementedException();
         }
     }
 }

@@ -20,29 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using JSSoft.Communication.Services;
-using JSSoft.Communication;
+using UnityEngine;
+using JSSoft.Terminal.Commands;
+using System.Collections.Generic;
 using Ntreev.Library.Commands;
+using JSSoft.Communication.Services.Commands;
+using JSSoft.Communication.Services.Commands.Client;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services
 {
-    class LogoutCommand : CommandAsyncBase
+    public class ClientCommandContextHost : CommandContextHost
     {
-        private readonly ContextHostBase context;
+        [SerializeField]
+        private ClientContextHost clientContext = null;
 
-        public LogoutCommand(ContextHostBase context)
+        protected override IEnumerable<ICommand> CollectCommands()
         {
-            this.context = context;
-        }
-
-        public override bool IsEnabled => this.context.UserToken != Guid.Empty;
-
-        protected override async Task OnExecuteAsync(object source)
-        {
-            await this.context.LogoutAsync();
+            foreach (var item in base.CollectCommands())
+            {
+                if (item is JSSoft.Terminal.Commands.ExitCommand)
+                {
+                    yield return new JSSoft.Communication.Services.Commands.ExitCommand(this.clientContext);
+                    continue;
+                }
+                yield return item;
+            }
+            yield return new OpenCommand(this.clientContext);
+            yield return new CloseCommand(this.clientContext);
+            yield return new DataCommand(this.clientContext);
+            yield return new LoginCommand(this.clientContext);
+            yield return new LogoutCommand(this.clientContext);
+            yield return new UserCommand(this.clientContext);
         }
     }
 }

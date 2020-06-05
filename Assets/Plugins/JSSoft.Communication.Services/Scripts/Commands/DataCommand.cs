@@ -21,27 +21,35 @@
 // SOFTWARE.
 
 using System;
-using JSSoft.Communication;
+using Ntreev.Library.Commands;
+using System.Threading.Tasks;
 using JSSoft.Communication.Services;
-using JSSoft.Communication.Services.Client;
+using JSSoft.Communication;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services.Commands
 {
-    class ClientContext : ClientContextBase
+    class DataCommand : CommandMethodBase
     {
-        public ClientContext(params IServiceHost[] serviceHosts)
-            : base(serviceHosts)
-        {
+        private readonly ContextHostBase context;
+        private readonly IDataService dataService;
 
+        public DataCommand(ContextHostBase context)
+        {
+            this.context = context;
+            this.dataService = context.DataService;
         }
 
-        protected override InstanceBase CreateInstance(Type type)
+        [CommandMethod]
+        public Task CreateAsync(string dataBaseName)
         {
-            if (type == typeof(IUserService))
-                return new UserServiceInstance();
-            else if (type == typeof(IDataService))
-                return new DataServiceInstance();
-            throw new NotImplementedException();
+            return this.dataService.CreateDataBaseAsync(dataBaseName);
+        }
+
+        public override bool IsEnabled => this.context.UserToken != Guid.Empty;
+
+        protected override bool IsMethodEnabled(CommandMethodDescriptor descriptor)
+        {
+            return this.context.UserToken != Guid.Empty;
         }
     }
 }

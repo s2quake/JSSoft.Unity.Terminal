@@ -21,35 +21,29 @@
 // SOFTWARE.
 
 using System;
-using Ntreev.Library.Commands;
+using System.ComponentModel;
 using System.Threading.Tasks;
-using JSSoft.Communication.Services;
-using JSSoft.Communication;
+using Ntreev.Library.Threading;
+using Ntreev.Library.Commands;
+using UnityEngine;
+using System.Threading;
+using JSSoft.Terminal.Tasks;
 
-namespace JSSoft.Communication.Commands
+namespace JSSoft.Communication.Services.Commands
 {
-    class DataCommand : CommandMethodBase
+    class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
     {
         private readonly ContextHostBase context;
-        private readonly IDataService dataService;
 
-        public DataCommand(ContextHostBase context)
+        public ExitCommand(ContextHostBase context)
         {
-            this.context = context;
-            this.dataService = context.DataService;
+            this.context = context;    
         }
-
-        [CommandMethod]
-        public Task CreateAsync(string dataBaseName)
+        
+        protected override async Task OnExecuteAsync(object source)
         {
-            return this.dataService.CreateDataBaseAsync(dataBaseName);
-        }
-
-        public override bool IsEnabled => this.context.UserToken != Guid.Empty;
-
-        protected override bool IsMethodEnabled(CommandMethodDescriptor descriptor)
-        {
-            return this.context.UserToken != Guid.Empty;
+            await this.context.ExitAsync();
+            await base.OnExecuteAsync(source);
         }
     }
 }

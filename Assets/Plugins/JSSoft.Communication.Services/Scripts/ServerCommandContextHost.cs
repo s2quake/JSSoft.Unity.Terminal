@@ -24,15 +24,15 @@ using UnityEngine;
 using JSSoft.Terminal.Commands;
 using System.Collections.Generic;
 using Ntreev.Library.Commands;
-using JSSoft.Communication.Commands;
-using JSSoft.Communication.Commands.Client;
+using JSSoft.Communication.Services.Commands;
+using JSSoft.Communication.Services.Commands.Server;
 
-namespace JSSoft.Communication
+namespace JSSoft.Communication.Services
 {
-    public class ClientCommandContextHost : CommandContextHost
+    public class ServerCommandContextHost : CommandContextHost
     {
         [SerializeField]
-        private ClientContextHost clientContext = null;
+        private ServerContextHost serverContext = null;
 
         protected override IEnumerable<ICommand> CollectCommands()
         {
@@ -40,17 +40,17 @@ namespace JSSoft.Communication
             {
                 if (item is JSSoft.Terminal.Commands.ExitCommand)
                 {
-                    yield return new JSSoft.Communication.Commands.ExitCommand(this.clientContext);
+                    yield return new JSSoft.Communication.Services.Commands.ExitCommand(this.serverContext);
                     continue;
                 }
                 yield return item;
             }
-            yield return new OpenCommand(this.clientContext);
-            yield return new CloseCommand(this.clientContext);
-            yield return new DataCommand(this.clientContext);
-            yield return new LoginCommand(this.clientContext);
-            yield return new LogoutCommand(this.clientContext);
-            yield return new UserCommand(this.clientContext);
+            yield return new OpenCommand(this.serverContext);
+            yield return new CloseCommand(this.serverContext);
+            yield return new DataCommand(this.serverContext);
+            yield return new LoginCommand(this.serverContext);
+            yield return new LogoutCommand(this.serverContext);
+            yield return new UserCommand(this.serverContext);
         }
     }
 }
