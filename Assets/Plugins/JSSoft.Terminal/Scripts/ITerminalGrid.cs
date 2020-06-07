@@ -100,6 +100,8 @@ namespace JSSoft.Terminal
 
         TerminalThickness Padding { get; set; }
 
+        TerminalThickness Margin { get; set; }
+
         TerminalPoint CursorPoint { get; set; }
 
         IList<TerminalRange> Selections { get; }

@@ -50,6 +50,7 @@ namespace JSSoft.Terminal.Editor
         private SerializedProperty maxBufferHeightProperty;
         private SerializedProperty horizontalAlignmentProperty;
         private SerializedProperty verticalAlignmentProperty;
+        private SerializedProperty marginProperty;
 
         private bool isDebug = false;
 
@@ -76,6 +77,7 @@ namespace JSSoft.Terminal.Editor
             this.maxBufferHeightProperty = this.serializedObject.FindProperty("maxBufferHeight");
             this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
             this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
+            this.marginProperty = this.serializedObject.FindProperty("margin");
         }
 
         public override void OnInspectorGUI()
@@ -119,6 +121,7 @@ namespace JSSoft.Terminal.Editor
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
             EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
+            EditorGUILayout.PropertyField(this.marginProperty, true);
             this.serializedObject.ApplyModifiedProperties();
             if (EditorGUI.EndChangeCheck())
             {
@@ -145,6 +148,11 @@ namespace JSSoft.Terminal.Editor
                 grid.BufferHeight--;
             }
             GUILayout.EndHorizontal();
+
+            if (GUILayout.Button("Test"))
+            {
+                grid.SetLayoutDirty();
+            }
 
             this.serializedObject.ApplyModifiedProperties();
         }

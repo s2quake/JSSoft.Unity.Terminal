@@ -112,39 +112,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!21 &5068968
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI/Default
-  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Floats:
-    - _ColorMask: 15
-    - _Stencil: 0
-    - _StencilComp: 8
-    - _StencilOp: 0
-    - _StencilReadMask: 255
-    - _StencilWriteMask: 255
-    - _UseUIAlphaClip: 0
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!21 &67434715
 Material:
   serializedVersion: 6
@@ -456,8 +423,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 345290494}
   m_HandleRect: {fileID: 353414698}
   m_Direction: 3
-  m_Value: 1
-  m_Size: 0.5555556
+  m_Value: 0
+  m_Size: 0.14925373
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -780,7 +747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b63dcc9cc6a754418b2801f19b419509, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 5068968}
+  m_Material: {fileID: 1659550509}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1112,7 +1079,7 @@ MonoBehaviour:
       m_Calls: []
   grid: {fileID: 1048693632}
   cursorLeft: 7
-  cursorTop: 24
+  cursorTop: 19
   isVisible: 1
   isFocused: 0
   style: 0
@@ -1344,7 +1311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c415f35e84da14295a91ee33f09b6077, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2051224382}
+  m_Material: {fileID: 849636829}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
@@ -1358,6 +1325,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 836816232}
   m_CullTransparentMesh: 0
+--- !u!21 &849636829
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Unlit/Color
+  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs: []
+    m_Floats: []
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &907098903
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,7 +1440,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1048693630}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1463,10 +1452,10 @@ RectTransform:
   m_Father: {fileID: 1416929030}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -876, y: 654}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 400}
+  m_SizeDelta: {x: 524, y: 524}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1048693632
 MonoBehaviour:
@@ -1487,83 +1476,54 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
-  text: "[\uBE0C\uB9AC\uD551] \uC11C\uC6B8 \uB9AC\uCE58\uC6E8\uC774 \uB204\uC801 \uD655\uC9C4\uC790
-    42\uBA85\u2026\"\uBC00\uD3D0 \uACF5\uAC04\uC11C \uB178\uB798\"\n\uC720\uC601\uADDC
-    \uAE30\uC790 ykyou@sbs.co.kr\n\uC791\uC131 2020.06.06 14:57 \uC218\uC815 2020.06.06
-    16:26 \uC870\uD68C 1,784\n\uC11C\uC6B8 \uAD00\uC545\uAD6C \uC18C\uC7AC \uAC74\uAC15\uC6A9\uD488
-    \uBC29\uBB38\uD310\uB9E4\uC5C5\uCCB4\uC778 '\uB9AC\uCE58\uC6E8\uC774'\uC5D0 \uC774\uC5B4
-    \uC591\uCC9C\uAD6C\uC758 \uD0C1\uAD6C\uC7A5\uC5D0\uC11C\uB3C4 \uD655\uC9C4\uC790\uAC00
-    \uBB34\uB354\uAE30\uB85C \uBC1C\uACAC\uB418\uB294 \uB4F1 \uC218\uB3C4\uAD8C\uC744
-    \uC911\uC2EC\uC73C\uB85C \uCF54\uB85C\uB09819\uAC00 \uD655\uC0B0\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.\n\n\uD2B9\uD788
-    \uB9AC\uCE58\uC6E8\uC774 \uAD00\uB828 \uD655\uC9C4\uC790\uC758 \uB300\uBD80\uBD84\uC740
-    \uCE58\uBA85\uB960\uC774 \uB192\uC740 60\uB300 \uC774\uC0C1\uC758 \uACE0\uC704\uD5D8\uAD70\uC778
-    \uAC83\uC73C\uB85C \uB098\uD0C0\uB098 \uBC29\uC5ED\uB2F9\uAD6D\uC5D0 \uBE44\uC0C1\uC774
-    \uAC78\uB838\uC2B5\uB2C8\uB2E4.\n\n\uC911\uC559\uBC29\uC5ED\uB300\uCC45\uBCF8\uBD80(\uBC29\uB300\uBCF8)\uB294
-    6\uC77C \uB0AE 12\uC2DC \uAE30\uC900\uC73C\uB85C \uB9AC\uCE58\uC6E8\uC774 \uAD00\uB828
-    \uD655\uC9C4\uC790\uAC00 \uC804\uB0A0 \uB300\uBE44 13\uBA85 \uB298\uC5B4 42\uBA85\uC774
-    \uB410\uB2E4\uACE0 \uBC1D\uD614\uC2B5\uB2C8\uB2E4.\n\n\uC9C0\uC5ED\uBCC4\uB85C\uB294
-    \uC11C\uC6B8 26\uBA85, \uACBD\uAE30 8\uBA85, \uC778\uCC9C 6\uBA85, \uCDA9\uB0A8
-    2\uBA85\uC785\uB2C8\uB2E4.\n\n\uD655\uC9C4\uC790\uB294 \uB300\uBD80\uBD84 \uACE0\uB839\uCE35\uC778
-    \uAC83\uC73C\uB85C \uC54C\uB824\uC84C\uC2B5\uB2C8\uB2E4.\n\n\uAD6D\uB0B4 \uCF54\uB85C\uB09819
-    \uCE58\uBA85\uB960\uC740 \uC774\uB0A0 0\uC2DC \uAE30\uC900 2.33%\uB85C, 50\uB300
-    \uC774\uD558\uC5D0\uC11C\uB294 \uCE58\uBA85\uB960\uC774 1% \uBBF8\uB9CC\uC774\uC9C0\uB9CC
-    60\uB300 2.66%, 70\uB300 10.67%, 80\uB300 \uC774\uC0C1 26.63% \uB4F1 \uACE0\uB839\uCE35\uC77C\uC218\uB85D
-    \uCE58\uBA85\uB960\uC774 \uAE09\uC99D\uD569\uB2C8\uB2E4.\n\n\uC815\uC740\uACBD
-    \uBC29\uB300\uBCF8\uBD80\uC7A5\uC740 \uCDA9\uBD81 \uC624\uC1A1 \uC9C8\uBCD1\uAD00\uB9AC\uBCF8\uBD80\uC5D0\uC11C
-    \uC5F4\uB9B0 \uC815\uB840 \uBE0C\uB9AC\uD551\uC5D0\uC11C \"\uBC29\uBB38\uD310\uB9E4
-    \uD589\uC0AC\uC640 \uAD00\uB828\uD55C \uC870\uC0AC \uACB0\uACFC \uD658\uAE30\uAC00
-    \uBD88\uB7C9\uD55C \uBC00\uD3D0\uB41C \uD658\uACBD\uC5D0\uC11C \uB2E4\uC218\uC758
-    \uBC29\uBB38\uC790\uAC00 \uBC00\uC9D1\uD558\uAC8C \uBAA8\uC5EC\uC11C \uB178\uB798\uD558\uACE0
-    \uC74C\uC2DD\uC744 \uBA39\uC740 \uAC83\uC744 \uD655\uC778\uD588\uB2E4\"\uBA74\uC11C
-    \"\uC774\uB7F0 \uBC00\uD3D0\uB41C \uACF5\uAC04\uC5D0\uC11C \uB2E4\uC218\uAC00
-    \uBC00\uC9D1\uD574 \uB178\uB798, \uC2DD\uC0AC \uB4F1\uC758 \uD65C\uB3D9\uC744
-    \uD558\uB294 \uACF3\uC5D0\uC11C\uB294 \uAC10\uC5FC \uC804\uD30C\uAC00 \uC27D\uAC8C
-    \uC77C\uC5B4\uB098\uAE30 \uB54C\uBB38\uC5D0 \uAD00\uB828 \uD65C\uB3D9\uC744 \uC790\uC81C\uD574\uC57C
-    \uD55C\uB2E4\"\uACE0 \uB2F9\uBD80\uD588\uC2B5\uB2C8\uB2E4.\n\n\uC11C\uC6B8 \uC591\uCC9C\uAD6C\uC758
-    \uD0C1\uAD6C\uC7A5\uC744 \uD1B5\uD55C \uD655\uC9C4\uC790\uB3C4 \uC99D\uAC00\uD558\uACE0
-    \uC788\uC2B5\uB2C8\uB2E4.\n\n\uC9C0\uB09C 4\uC77C 50\uB300 \uB0A8\uC131\uC774
-    \uD655\uC9C4\uB41C \uD6C4 \uD604\uC7AC\uAE4C\uC9C0 \uCD1D 17\uBA85\uC774 \uBC1C\uACAC\uB410\uC2B5\uB2C8\uB2E4.\n\n\uC774\uD0DC\uC6D0
-    \uD074\uB7FD\uACFC \uACBD\uAE30 \uBD80\uCC9C \uCFE0\uD321\uBB3C\uB958\uC13C\uD130,
-    \uC218\uB3C4\uAD8C \uAC1C\uCC99\uAD50\uD68C \uC9D1\uB2E8\uBC1C\uBCD1\uACFC \uAD00\uB828\uD574\uC11C\uB3C4
-    \uCD94\uAC00 \uAC10\uC5FC\uC774 \uC787\uB530\uB790\uC2B5\uB2C8\uB2E4.\n\n\uC774\uD0DC\uC6D0
-    \uD074\uB7FD \uAD00\uB828 \uD655\uC9C4\uC790\uB294 \uC804\uB0A0 \uB300\uBE44 1\uBA85\uC774
-    \uC99D\uAC00\uD574 \uCD1D 273\uBA85\uC73C\uB85C \uB298\uC5B4\uB0AC\uACE0, \uCFE0\uD321\uBB3C\uB958\uC13C\uD130
-    \uAD00\uB828 \uD655\uC9C4\uC790\uB294 \uC804\uB0A0 \uB300\uBE44 6\uBA85\uC774
-    \uC99D\uAC00\uD574 \uB204\uC801 \uD655\uC9C4\uC790\uB294 130\uBA85\uC774 \uB410\uC2B5\uB2C8\uB2E4.\n\n\uC218\uB3C4\uAD8C
-    \uAC1C\uCC99\uAD50\uD68C\uC5D0\uC11C\uB294 4\uBA85\uC774 \uCD94\uAC00\uB85C \uB098\uC640
-    \uB204\uC801 \uD655\uC9C4\uC790\uB294 80\uBA85\uC73C\uB85C \uC9D1\uACC4\uB410\uC2B5\uB2C8\uB2E4.\n\n\uC774
-    \uBC16\uC5D0 \uACBD\uAE30 \uC6A9\uC778\uC2DC \uD070\uB098\uBB34\uAD50\uD68C\uC5D0\uC11C\uB3C4
-    13\uBA85\uC758 \uD655\uC9C4\uC790\uAC00 \uB098\uC654\uC2B5\uB2C8\uB2E4.\n\n\uBC29\uB300\uBCF8\uC740
-    \uD604\uC7AC \uAC10\uC5FC\uACBD\uB85C\uC640 \uC811\uCD09\uC790\uC5D0 \uB300\uD55C
-    \uC870\uC0AC\uB97C \uC9C4\uD589 \uC911\uC785\uB2C8\uB2E4.\n\n\uC11C\uC6B8 \uAC15\uB0A8\uAD6C
-    \uC0BC\uC131\uD654\uC7AC \uC601\uC5C5\uC810\uACFC \uAD00\uB828\uD574\uC11C\uB294
-    \uCD1D 4\uBA85\uC758 \uD655\uC9C4\uC790\uAC00 \uBC1C\uC0DD\uD588\uACE0, \uACBD\uAE30
-    \uAD11\uC8FC\uC2DC \uD589\uBCF5\uD55C \uC694\uC591\uC6D0\uC5D0\uC11C\uB294 \uC9C0\uAE08\uAE4C\uC9C0
-    \uC694\uC591\uBCF4\uD638\uC0AC 2\uBA85\uACFC \uC785\uC18C\uC790 5\uBA85, \uC0AC\uD68C\uBCF5\uC9C0\uC0AC
-    1\uBA85 \uB4F1 \uCD1D 8\uBA85\uC774 \uD655\uC9C4\uB410\uC2B5\uB2C8\uB2E4.\n\n\uACBD\uBD81
-    \uAD6C\uBBF8\uC2DC \uC5D8\uB9BC\uAD50\uD68C\uC758 \uACBD\uC6B0\uB294 \uC811\uCD09\uC790
-    \uACA9\uB9AC\uD574\uC81C \uAC80\uC0AC\uC5D0\uC11C 1\uBA85\uC774 \uCD94\uAC00\uB85C
-    \uD655\uC9C4\uB3FC \uB204\uC801 \uD655\uC9C4\uC790\uB294 10\uBA85\uC73C\uB85C
-    \uB298\uC5C8\uC2B5\uB2C8\uB2E4.\n\n\uC815 \uBCF8\uBD80\uC7A5\uC740 \"\uCD5C\uADFC
-    \uC911\xB7\uC18C\uADDC\uBAA8 \uAD50\uD68C\uC5D0\uC11C \uD655\uC9C4\uC790\uAC00
-    \uB9CE\uC774 \uBC1C\uC0DD\uD558\uACE0 \uC788\uB294\uB370 \uC774\uB7F0 \uAD50\uD68C\uB97C
-    \uC870\uC0AC\uD55C \uACB0\uACFC \uC9C0\uD558\uAC70\uB098 \uD658\uAE30\uAC00 \uC81C\uB300\uB85C
-    \uB418\uC9C0 \uC54A\uB294 \uB4F1 \uBC00\uD3D0\uB41C \uD658\uACBD\uC774\uC5C8\uACE0
-    \uCC2C\uC1A1, \uC2DD\uC0AC, \uB2E4\uACFC \uB4F1 \uCE68\uBC29\uC6B8(\uBE44\uB9D0)\uC774
-    \uB9CE\uC774 \uC804\uD30C\uB420 \uC218 \uC788\uB294 \uD65C\uB3D9\uC774 \uB9CE\uC558\uB2E4.
-    \uB9C8\uC2A4\uD06C \uCC29\uC6A9 \uAC19\uC740 \uC0DD\uD65C\uBC29\uC5ED \uC218\uCE59\uB3C4
-    \uC798 \uC9C0\uCF1C\uC9C0\uC9C0 \uC54A\uC558\uB2E4\"\uBA74\uC11C \"\uC885\uAD50\uC2DC\uC124\uC758
-    \uC18C\uBAA8\uC784\uC740 \uCDE8\uC18C\xB7\uC5F0\uAE30\uD558\uAC70\uB098 \uB418\uB3C4\uB85D
-    \uBE44\uB300\uBA74\uC73C\uB85C \uC804\uD658\uD574 \uB2EC\uB77C\"\uACE0 \uB2F9\uBD80\uD588\uC2B5\uB2C8\uB2E4.
-    \ \nPrompt>"
+  text: "// MIT License\n// \n// Copyright (c) 2019 Jeesu Choi\n// \n// Permission
+    is hereby granted, free of charge, to any person obtaining a copy\n// of this
+    software and associated documentation files (the \"Software\"), to deal\n// in
+    the Software without restriction, including without limitation the rights\n//
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n//
+    copies of the Software, and to permit persons to whom the Software is\n// furnished
+    to do so, subject to the following conditions:\n// \n// The above copyright notice
+    and this permission notice shall be included in all\n// copies or substantial
+    portions of the Software.\n// \n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR\n// IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    WARRANTIES OF MERCHANTABILITY,\n// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE\n// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER\n// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM,\n// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE\n// SOFTWARE.\n\nusing System;\nusing System.Collections.Generic;\nusing
+    System.ComponentModel;\n\nnamespace JSSoft.Terminal\n{\n    public static class
+    TerminalEvents\n    {\n        private static readonly HashSet<ITerminal> terminals
+    = new HashSet<ITerminal>();\n\n        public static void Register(ITerminal terminal)\n
+    \       {\n            if (terminal == null)\n                throw new ArgumentNullException(nameof(terminal));\n
+    \           if (terminals.Contains(terminal) == true)\n                throw new
+    ArgumentException($\"{nameof(terminal)} is already exists.\");\n            terminals.Add(terminal);\n
+    \           terminal.Validated += Terminal_Validated;\n            terminal.Enabled
+    += Terminal_Enabled;\n            terminal.Disabled += Terminal_Disabled;\n            terminal.PropertyChanged
+    += Terminal_PropertyChanged;\n        }\n\n        public static void Unregister(ITerminal
+    terminal)\n        {\n            if (terminal == null)\n                throw
+    new ArgumentNullException(nameof(terminal));\n            if (terminals.Contains(terminal)
+    == false)\n                throw new ArgumentException($\"{nameof(terminal)} does
+    not exists.\");\n            terminal.Validated -= Terminal_Validated;\n            terminal.Enabled
+    -= Terminal_Enabled;\n            terminal.Disabled -= Terminal_Disabled;\n            terminal.PropertyChanged
+    -= Terminal_PropertyChanged;\n            terminals.Remove(terminal);\n        }\n\n
+    \       public static event EventHandler Validated;\n\n        public static event
+    EventHandler Enabled;\n\n        public static event EventHandler Disabled;\n\n
+    \       public static event PropertyChangedEventHandler PropertyChanged;\n\n        private
+    static void Terminal_Validated(object sender, EventArgs e)\n        {\n            Validated?.Invoke(sender,
+    e);\n        }\n\n        private static void Terminal_PropertyChanged(object
+    sender, PropertyChangedEventArgs e)\n        {\n            PropertyChanged?.Invoke(sender,
+    e);\n        }\n\n        private static void Terminal_Enabled(object sender,
+    EventArgs e)\n        {\n            Enabled?.Invoke(sender, e);\n        }\n\n
+    \       private static void Terminal_Disabled(object sender, EventArgs e)\n        {\n
+    \           Disabled?.Invoke(sender, e);\n        }\n    }\n}\nPrompt>"
   backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
   foregroundColor: {r: 1, g: 1, b: 1, a: 1}
   selectionColor: {r: 0.19215687, g: 0.30980393, b: 0.5058824, a: 1}
   cursorColor: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
   colorPalette: {fileID: 0}
-  visibleIndex: 20
-  bufferWidth: 80
-  bufferHeight: 25
+  visibleIndex: 0
+  bufferWidth: 40
+  bufferHeight: 20
   maxBufferHeight: 500
   cursorStyle: 0
   cursorThickness: 2
@@ -1573,7 +1533,7 @@ MonoBehaviour:
   behaviourList: []
   cursorPoint:
     x: 7
-    y: 44
+    y: 133
   isCursorVisible: 1
   compositionString: 
   padding:
@@ -1581,8 +1541,13 @@ MonoBehaviour:
     top: 2
     right: 2
     bottom: 2
+  margin:
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
   style: {fileID: 11400000, guid: 0440d0970d55d4777a51e0e9fc28933c, type: 2}
-  horizontalAlignment: 3
+  horizontalAlignment: 0
   verticalAlignment: 0
 --- !u!114 &1048693633
 MonoBehaviour:
@@ -1619,75 +1584,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fac32324f888247949e70e0eb77d3791, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outputText: "[\uBE0C\uB9AC\uD551] \uC11C\uC6B8 \uB9AC\uCE58\uC6E8\uC774 \uB204\uC801
-    \uD655\uC9C4\uC790 42\uBA85\u2026\"\uBC00\uD3D0 \uACF5\uAC04\uC11C \uB178\uB798\"\n\uC720\uC601\uADDC
-    \uAE30\uC790 ykyou@sbs.co.kr\n\uC791\uC131 2020.06.06 14:57 \uC218\uC815 2020.06.06
-    16:26 \uC870\uD68C 1,784\n\uC11C\uC6B8 \uAD00\uC545\uAD6C \uC18C\uC7AC \uAC74\uAC15\uC6A9\uD488
-    \uBC29\uBB38\uD310\uB9E4\uC5C5\uCCB4\uC778 '\uB9AC\uCE58\uC6E8\uC774'\uC5D0 \uC774\uC5B4
-    \uC591\uCC9C\uAD6C\uC758 \uD0C1\uAD6C\uC7A5\uC5D0\uC11C\uB3C4 \uD655\uC9C4\uC790\uAC00
-    \uBB34\uB354\uAE30\uB85C \uBC1C\uACAC\uB418\uB294 \uB4F1 \uC218\uB3C4\uAD8C\uC744
-    \uC911\uC2EC\uC73C\uB85C \uCF54\uB85C\uB09819\uAC00 \uD655\uC0B0\uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4.\n\n\uD2B9\uD788
-    \uB9AC\uCE58\uC6E8\uC774 \uAD00\uB828 \uD655\uC9C4\uC790\uC758 \uB300\uBD80\uBD84\uC740
-    \uCE58\uBA85\uB960\uC774 \uB192\uC740 60\uB300 \uC774\uC0C1\uC758 \uACE0\uC704\uD5D8\uAD70\uC778
-    \uAC83\uC73C\uB85C \uB098\uD0C0\uB098 \uBC29\uC5ED\uB2F9\uAD6D\uC5D0 \uBE44\uC0C1\uC774
-    \uAC78\uB838\uC2B5\uB2C8\uB2E4.\n\n\uC911\uC559\uBC29\uC5ED\uB300\uCC45\uBCF8\uBD80(\uBC29\uB300\uBCF8)\uB294
-    6\uC77C \uB0AE 12\uC2DC \uAE30\uC900\uC73C\uB85C \uB9AC\uCE58\uC6E8\uC774 \uAD00\uB828
-    \uD655\uC9C4\uC790\uAC00 \uC804\uB0A0 \uB300\uBE44 13\uBA85 \uB298\uC5B4 42\uBA85\uC774
-    \uB410\uB2E4\uACE0 \uBC1D\uD614\uC2B5\uB2C8\uB2E4.\n\n\uC9C0\uC5ED\uBCC4\uB85C\uB294
-    \uC11C\uC6B8 26\uBA85, \uACBD\uAE30 8\uBA85, \uC778\uCC9C 6\uBA85, \uCDA9\uB0A8
-    2\uBA85\uC785\uB2C8\uB2E4.\n\n\uD655\uC9C4\uC790\uB294 \uB300\uBD80\uBD84 \uACE0\uB839\uCE35\uC778
-    \uAC83\uC73C\uB85C \uC54C\uB824\uC84C\uC2B5\uB2C8\uB2E4.\n\n\uAD6D\uB0B4 \uCF54\uB85C\uB09819
-    \uCE58\uBA85\uB960\uC740 \uC774\uB0A0 0\uC2DC \uAE30\uC900 2.33%\uB85C, 50\uB300
-    \uC774\uD558\uC5D0\uC11C\uB294 \uCE58\uBA85\uB960\uC774 1% \uBBF8\uB9CC\uC774\uC9C0\uB9CC
-    60\uB300 2.66%, 70\uB300 10.67%, 80\uB300 \uC774\uC0C1 26.63% \uB4F1 \uACE0\uB839\uCE35\uC77C\uC218\uB85D
-    \uCE58\uBA85\uB960\uC774 \uAE09\uC99D\uD569\uB2C8\uB2E4.\n\n\uC815\uC740\uACBD
-    \uBC29\uB300\uBCF8\uBD80\uC7A5\uC740 \uCDA9\uBD81 \uC624\uC1A1 \uC9C8\uBCD1\uAD00\uB9AC\uBCF8\uBD80\uC5D0\uC11C
-    \uC5F4\uB9B0 \uC815\uB840 \uBE0C\uB9AC\uD551\uC5D0\uC11C \"\uBC29\uBB38\uD310\uB9E4
-    \uD589\uC0AC\uC640 \uAD00\uB828\uD55C \uC870\uC0AC \uACB0\uACFC \uD658\uAE30\uAC00
-    \uBD88\uB7C9\uD55C \uBC00\uD3D0\uB41C \uD658\uACBD\uC5D0\uC11C \uB2E4\uC218\uC758
-    \uBC29\uBB38\uC790\uAC00 \uBC00\uC9D1\uD558\uAC8C \uBAA8\uC5EC\uC11C \uB178\uB798\uD558\uACE0
-    \uC74C\uC2DD\uC744 \uBA39\uC740 \uAC83\uC744 \uD655\uC778\uD588\uB2E4\"\uBA74\uC11C
-    \"\uC774\uB7F0 \uBC00\uD3D0\uB41C \uACF5\uAC04\uC5D0\uC11C \uB2E4\uC218\uAC00
-    \uBC00\uC9D1\uD574 \uB178\uB798, \uC2DD\uC0AC \uB4F1\uC758 \uD65C\uB3D9\uC744
-    \uD558\uB294 \uACF3\uC5D0\uC11C\uB294 \uAC10\uC5FC \uC804\uD30C\uAC00 \uC27D\uAC8C
-    \uC77C\uC5B4\uB098\uAE30 \uB54C\uBB38\uC5D0 \uAD00\uB828 \uD65C\uB3D9\uC744 \uC790\uC81C\uD574\uC57C
-    \uD55C\uB2E4\"\uACE0 \uB2F9\uBD80\uD588\uC2B5\uB2C8\uB2E4.\n\n\uC11C\uC6B8 \uC591\uCC9C\uAD6C\uC758
-    \uD0C1\uAD6C\uC7A5\uC744 \uD1B5\uD55C \uD655\uC9C4\uC790\uB3C4 \uC99D\uAC00\uD558\uACE0
-    \uC788\uC2B5\uB2C8\uB2E4.\n\n\uC9C0\uB09C 4\uC77C 50\uB300 \uB0A8\uC131\uC774
-    \uD655\uC9C4\uB41C \uD6C4 \uD604\uC7AC\uAE4C\uC9C0 \uCD1D 17\uBA85\uC774 \uBC1C\uACAC\uB410\uC2B5\uB2C8\uB2E4.\n\n\uC774\uD0DC\uC6D0
-    \uD074\uB7FD\uACFC \uACBD\uAE30 \uBD80\uCC9C \uCFE0\uD321\uBB3C\uB958\uC13C\uD130,
-    \uC218\uB3C4\uAD8C \uAC1C\uCC99\uAD50\uD68C \uC9D1\uB2E8\uBC1C\uBCD1\uACFC \uAD00\uB828\uD574\uC11C\uB3C4
-    \uCD94\uAC00 \uAC10\uC5FC\uC774 \uC787\uB530\uB790\uC2B5\uB2C8\uB2E4.\n\n\uC774\uD0DC\uC6D0
-    \uD074\uB7FD \uAD00\uB828 \uD655\uC9C4\uC790\uB294 \uC804\uB0A0 \uB300\uBE44 1\uBA85\uC774
-    \uC99D\uAC00\uD574 \uCD1D 273\uBA85\uC73C\uB85C \uB298\uC5B4\uB0AC\uACE0, \uCFE0\uD321\uBB3C\uB958\uC13C\uD130
-    \uAD00\uB828 \uD655\uC9C4\uC790\uB294 \uC804\uB0A0 \uB300\uBE44 6\uBA85\uC774
-    \uC99D\uAC00\uD574 \uB204\uC801 \uD655\uC9C4\uC790\uB294 130\uBA85\uC774 \uB410\uC2B5\uB2C8\uB2E4.\n\n\uC218\uB3C4\uAD8C
-    \uAC1C\uCC99\uAD50\uD68C\uC5D0\uC11C\uB294 4\uBA85\uC774 \uCD94\uAC00\uB85C \uB098\uC640
-    \uB204\uC801 \uD655\uC9C4\uC790\uB294 80\uBA85\uC73C\uB85C \uC9D1\uACC4\uB410\uC2B5\uB2C8\uB2E4.\n\n\uC774
-    \uBC16\uC5D0 \uACBD\uAE30 \uC6A9\uC778\uC2DC \uD070\uB098\uBB34\uAD50\uD68C\uC5D0\uC11C\uB3C4
-    13\uBA85\uC758 \uD655\uC9C4\uC790\uAC00 \uB098\uC654\uC2B5\uB2C8\uB2E4.\n\n\uBC29\uB300\uBCF8\uC740
-    \uD604\uC7AC \uAC10\uC5FC\uACBD\uB85C\uC640 \uC811\uCD09\uC790\uC5D0 \uB300\uD55C
-    \uC870\uC0AC\uB97C \uC9C4\uD589 \uC911\uC785\uB2C8\uB2E4.\n\n\uC11C\uC6B8 \uAC15\uB0A8\uAD6C
-    \uC0BC\uC131\uD654\uC7AC \uC601\uC5C5\uC810\uACFC \uAD00\uB828\uD574\uC11C\uB294
-    \uCD1D 4\uBA85\uC758 \uD655\uC9C4\uC790\uAC00 \uBC1C\uC0DD\uD588\uACE0, \uACBD\uAE30
-    \uAD11\uC8FC\uC2DC \uD589\uBCF5\uD55C \uC694\uC591\uC6D0\uC5D0\uC11C\uB294 \uC9C0\uAE08\uAE4C\uC9C0
-    \uC694\uC591\uBCF4\uD638\uC0AC 2\uBA85\uACFC \uC785\uC18C\uC790 5\uBA85, \uC0AC\uD68C\uBCF5\uC9C0\uC0AC
-    1\uBA85 \uB4F1 \uCD1D 8\uBA85\uC774 \uD655\uC9C4\uB410\uC2B5\uB2C8\uB2E4.\n\n\uACBD\uBD81
-    \uAD6C\uBBF8\uC2DC \uC5D8\uB9BC\uAD50\uD68C\uC758 \uACBD\uC6B0\uB294 \uC811\uCD09\uC790
-    \uACA9\uB9AC\uD574\uC81C \uAC80\uC0AC\uC5D0\uC11C 1\uBA85\uC774 \uCD94\uAC00\uB85C
-    \uD655\uC9C4\uB3FC \uB204\uC801 \uD655\uC9C4\uC790\uB294 10\uBA85\uC73C\uB85C
-    \uB298\uC5C8\uC2B5\uB2C8\uB2E4.\n\n\uC815 \uBCF8\uBD80\uC7A5\uC740 \"\uCD5C\uADFC
-    \uC911\xB7\uC18C\uADDC\uBAA8 \uAD50\uD68C\uC5D0\uC11C \uD655\uC9C4\uC790\uAC00
-    \uB9CE\uC774 \uBC1C\uC0DD\uD558\uACE0 \uC788\uB294\uB370 \uC774\uB7F0 \uAD50\uD68C\uB97C
-    \uC870\uC0AC\uD55C \uACB0\uACFC \uC9C0\uD558\uAC70\uB098 \uD658\uAE30\uAC00 \uC81C\uB300\uB85C
-    \uB418\uC9C0 \uC54A\uB294 \uB4F1 \uBC00\uD3D0\uB41C \uD658\uACBD\uC774\uC5C8\uACE0
-    \uCC2C\uC1A1, \uC2DD\uC0AC, \uB2E4\uACFC \uB4F1 \uCE68\uBC29\uC6B8(\uBE44\uB9D0)\uC774
-    \uB9CE\uC774 \uC804\uD30C\uB420 \uC218 \uC788\uB294 \uD65C\uB3D9\uC774 \uB9CE\uC558\uB2E4.
-    \uB9C8\uC2A4\uD06C \uCC29\uC6A9 \uAC19\uC740 \uC0DD\uD65C\uBC29\uC5ED \uC218\uCE59\uB3C4
-    \uC798 \uC9C0\uCF1C\uC9C0\uC9C0 \uC54A\uC558\uB2E4\"\uBA74\uC11C \"\uC885\uAD50\uC2DC\uC124\uC758
-    \uC18C\uBAA8\uC784\uC740 \uCDE8\uC18C\xB7\uC5F0\uAE30\uD558\uAC70\uB098 \uB418\uB3C4\uB85D
-    \uBE44\uB300\uBA74\uC73C\uB85C \uC804\uD658\uD574 \uB2EC\uB77C\"\uACE0 \uB2F9\uBD80\uD588\uC2B5\uB2C8\uB2E4.
-    \ "
+  outputText: "// MIT License\n// \n// Copyright (c) 2019 Jeesu Choi\n// \n// Permission
+    is hereby granted, free of charge, to any person obtaining a copy\n// of this
+    software and associated documentation files (the \"Software\"), to deal\n// in
+    the Software without restriction, including without limitation the rights\n//
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell\n//
+    copies of the Software, and to permit persons to whom the Software is\n// furnished
+    to do so, subject to the following conditions:\n// \n// The above copyright notice
+    and this permission notice shall be included in all\n// copies or substantial
+    portions of the Software.\n// \n// THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT
+    WARRANTY OF ANY KIND, EXPRESS OR\n// IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+    WARRANTIES OF MERCHANTABILITY,\n// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+    IN NO EVENT SHALL THE\n// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+    DAMAGES OR OTHER\n// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+    ARISING FROM,\n// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE\n// SOFTWARE.\n\nusing System;\nusing System.Collections.Generic;\nusing
+    System.ComponentModel;\n\nnamespace JSSoft.Terminal\n{\n    public static class
+    TerminalEvents\n    {\n        private static readonly HashSet<ITerminal> terminals
+    = new HashSet<ITerminal>();\n\n        public static void Register(ITerminal terminal)\n
+    \       {\n            if (terminal == null)\n                throw new ArgumentNullException(nameof(terminal));\n
+    \           if (terminals.Contains(terminal) == true)\n                throw new
+    ArgumentException($\"{nameof(terminal)} is already exists.\");\n            terminals.Add(terminal);\n
+    \           terminal.Validated += Terminal_Validated;\n            terminal.Enabled
+    += Terminal_Enabled;\n            terminal.Disabled += Terminal_Disabled;\n            terminal.PropertyChanged
+    += Terminal_PropertyChanged;\n        }\n\n        public static void Unregister(ITerminal
+    terminal)\n        {\n            if (terminal == null)\n                throw
+    new ArgumentNullException(nameof(terminal));\n            if (terminals.Contains(terminal)
+    == false)\n                throw new ArgumentException($\"{nameof(terminal)} does
+    not exists.\");\n            terminal.Validated -= Terminal_Validated;\n            terminal.Enabled
+    -= Terminal_Enabled;\n            terminal.Disabled -= Terminal_Disabled;\n            terminal.PropertyChanged
+    -= Terminal_PropertyChanged;\n            terminals.Remove(terminal);\n        }\n\n
+    \       public static event EventHandler Validated;\n\n        public static event
+    EventHandler Enabled;\n\n        public static event EventHandler Disabled;\n\n
+    \       public static event PropertyChangedEventHandler PropertyChanged;\n\n        private
+    static void Terminal_Validated(object sender, EventArgs e)\n        {\n            Validated?.Invoke(sender,
+    e);\n        }\n\n        private static void Terminal_PropertyChanged(object
+    sender, PropertyChangedEventArgs e)\n        {\n            PropertyChanged?.Invoke(sender,
+    e);\n        }\n\n        private static void Terminal_Enabled(object sender,
+    EventArgs e)\n        {\n            Enabled?.Invoke(sender, e);\n        }\n\n
+    \       private static void Terminal_Disabled(object sender, EventArgs e)\n        {\n
+    \           Disabled?.Invoke(sender, e);\n        }\n    }\n}\n"
   prompt: Prompt>
   command: 
   isReadOnly: 0
@@ -2162,6 +2098,39 @@ Material:
     - _UseUIAlphaClip: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+--- !u!21 &1659550509
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI/Default
+  m_Shader: {fileID: 10770, guid: 0000000000000000f000000000000000, type: 0}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _ColorMask: 15
+    - _Stencil: 0
+    - _StencilComp: 8
+    - _StencilOp: 0
+    - _StencilReadMask: 255
+    - _StencilWriteMask: 255
+    - _UseUIAlphaClip: 0
+    m_Colors:
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!21 &1684216767
 Material:
   serializedVersion: 6
@@ -2325,7 +2294,7 @@ MonoBehaviour:
     bottom: 0
   grid: {fileID: 1048693632}
   columnIndex: 7
-  rowIndex: 24
+  rowIndex: 133
 --- !u!1 &1996685716
 GameObject:
   m_ObjectHideFlags: 0
@@ -2447,28 +2416,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &2051224382
-Material:
-  serializedVersion: 6
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit/Color
-  m_Shader: {fileID: 10755, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs: []
-    m_Floats: []
-    m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &2094409742
 GameObject:
   m_ObjectHideFlags: 0

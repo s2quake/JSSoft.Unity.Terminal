@@ -98,7 +98,7 @@ namespace JSSoft.Terminal
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
             ArrayUtility.Resize(ref this.items, text.Length);
-            Debug.Log($"update: {index}, {text.Length}, {this.isEnabled}");
+            // Debug.Log($"update: {index}, {text.Length}, {this.isEnabled}");
             while (index < text.Length)
             {
                 var characterInfo = new TerminalCharacterInfo();

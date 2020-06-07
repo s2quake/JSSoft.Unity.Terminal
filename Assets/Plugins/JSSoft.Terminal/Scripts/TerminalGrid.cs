@@ -102,6 +102,8 @@ namespace JSSoft.Terminal
         [SerializeField]
         private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
+        private TerminalThickness margin = new TerminalThickness(0);
+        [SerializeField]
         private TerminalStyle style;
         [SerializeField]
         private HorizontalAlignment horizontalAlignment;
@@ -125,6 +127,7 @@ namespace JSSoft.Terminal
         private int cursorVolume;
         private int actualBufferWidth;
         private int actualBufferHeight;
+        private Vector2 size;
 
         public TerminalGrid()
         {
@@ -542,6 +545,19 @@ namespace JSSoft.Terminal
             }
         }
 
+        public override TerminalThickness Margin
+        {
+            get => this.margin;
+            set
+            {
+                if (this.margin != value)
+                {
+                    this.margin = value;
+                    this.InvokePropertyChangedEvent(nameof(Margin));
+                }
+            }
+        }
+
         public override TerminalStyle Style
         {
             get => this.style;
@@ -703,17 +719,55 @@ namespace JSSoft.Terminal
 
         internal void UpdateLayout()
         {
-            var pos = Vector2.zero;
             var pivot = RectTransformUtility.GetPivot(this.horizontalAlignment, this.verticalAlignment);
-            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment);
+            var pos = TerminalGridUtility.GetActualPos(this, this.horizontalAlignment, this.verticalAlignment);
             var size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
+            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment, size);
             var (min, max) = RectTransformUtility.GetAnchor(this.horizontalAlignment, this.verticalAlignment);
-            this.isLayoutUpdate = false;
+            // this.isLayoutUpdate = false;
+            // var margin = this.margin;
+            // if (this.horizontalAlignment == HorizontalAlignment.Left)
+            // {
+            //     pos.x += margin.Left;
+            // }
+            // else if (this.horizontalAlignment == HorizontalAlignment.Center)
+            // {
+            //     pos.x += margin.Left;
+            //     pos.x -= margin.Right;
+            // }
+            // else if (this.horizontalAlignment == HorizontalAlignment.Right)
+            // {
+            //     pos.x -= margin.Right;
+            // }
+            // else if (this.horizontalAlignment == HorizontalAlignment.Stretch)
+            // {
+            //     pos.x += margin.Left;
+            //     // size.x -= (margin.Left + margin.Right);
+            // }
+            // if (this.verticalAlignment == VerticalAlignment.Top)
+            // {
+            //     pos.y -= margin.Top;
+            // }
+            // else if (this.verticalAlignment == VerticalAlignment.Center)
+            // {
+            //     pos.y -= margin.Top;
+            //     pos.y += margin.Bottom;
+            // }
+            // else if (this.verticalAlignment == VerticalAlignment.Bottom)
+            // {
+            //     pos.y += margin.Bottom;
+            // }
+            // else if (this.verticalAlignment == VerticalAlignment.Stretch)
+            // {
+            //     pos.y += margin.Bottom;
+            //     // size.y -= (margin.Top + margin.Bottom);
+            // }
             this.isLayoutUpdating = true;
             this.rectTransform.anchorMin = min;
             this.rectTransform.anchorMax = max;
             this.rectTransform.pivot = pivot;
             this.rectTransform.anchoredPosition = pos;
+            // Debug.Log(pos);
             this.UpdateRectangle(bufferSize);
             this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
             this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
@@ -724,7 +778,7 @@ namespace JSSoft.Terminal
             this.isLayoutUpdating = false;
             this.UpdateVisibleIndex();
             this.OnLayoutChanged(EventArgs.Empty);
-            Debug.Log($"OnLayoutChanged: {this.verticalAlignment}");
+            // Debug.Log($"OnLayoutChanged: {this.verticalAlignment}");
         }
 
         protected virtual void OnLayoutChanged(EventArgs e)
@@ -773,33 +827,50 @@ namespace JSSoft.Terminal
             this.UpdateBufferSize();
             this.UpdateVisibleIndex();
             this.OnValidated(EventArgs.Empty);
-            Debug.Log("OnValidated");
+            // Debug.Log("OnValidated");
         }
 #endif
 
+        // protected virtual void Update()
+        // {
+        //     Debug.Log(Screen.width);
+        // }
+
+        // public override void OnRebuildRequested()
+        // {
+        //     base.OnRebuildRequested();
+        //     Debug.Log("OnRebuildRequested");
+        // }
+
+        // public override void Rebuild(CanvasUpdate update)
+        // {
+        //     base.Rebuild(update);
+        //     Debug.Log($"Rebuild: {update}");
+        // }
+
+        // public override void GraphicUpdateComplete()
+        // {
+        //     base.GraphicUpdateComplete();
+        //     Debug.Log("GraphicUpdateComplete");
+        //     // this.UpdateLayout();
+        // }
+
+        // protected override void OnTransformParentChanged()
+        // {
+        //     base.OnTransformParentChanged();
+        //     Debug.Log("OnTransformParentChanged");
+        // }
+
         protected override void OnRectTransformDimensionsChange()
         {
-            // Debug.Log("OnRectTransformDimensionsChange");
-            this.terminal = this.GetComponent<Terminal>();
+            // Debug.Log($"OnRectTransformDimensionsChange: {this.isLayoutUpdate}, {this.isLayoutUpdating}");
+            // this.terminal = this.GetComponent<Terminal>();
             base.OnRectTransformDimensionsChange();
-            if (this.isLayoutUpdate == true)
+            if (this.isLayoutUpdating == false && this.isLayoutUpdate == false)
             {
-                this.UpdateLayout();
-            }
-            else if (this.isLayoutUpdating == false)
-            {
-                var horzAlign = RectTransformUtility.GetHorizontalAlignment(this.rectTransform);
-                var vertAlign = RectTransformUtility.GetVerticalAlignment(this.rectTransform);
-                if ((horzAlign != null && vertAlign != null))
-                {
-                    if (this.horizontalAlignment != horzAlign.Value || this.verticalAlignment != vertAlign.Value)
-                    {
-                        this.horizontalAlignment = horzAlign.Value;
-                        this.verticalAlignment = vertAlign.Value;
-                        this.isLayoutUpdate = true;
-                        this.SetLayoutDirty();
-                    }
-                }
+                this.isLayoutUpdate = true;
+                Debug.Log(1);
+                this.Invoke(nameof(OnRectTransformDimensionsChanged), float.Epsilon);
             }
         }
 
@@ -809,6 +880,7 @@ namespace JSSoft.Terminal
             this.inputHandler = InputHandlerInstances.DefaultHandler;
             this.inputHandler.Attach(this);
             this.isLayoutUpdate = true;
+            this.size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
             // this.rectTransform.hideFlags |= HideFlags.HideInInspector;
         }
 
@@ -821,7 +893,7 @@ namespace JSSoft.Terminal
             TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
-            Debug.Log("OnEnabled");
+            // Debug.Log("OnEnabled");
         }
 
         protected override void OnDisable()
@@ -833,7 +905,7 @@ namespace JSSoft.Terminal
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
             TerminalGridEvents.Unregister(this);
-            Debug.Log("OnDisabled");
+            // Debug.Log("OnDisabled");
         }
 
         protected override void OnDestroy()
@@ -941,9 +1013,31 @@ namespace JSSoft.Terminal
 
         private void UpdateBufferSize()
         {
-            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment);
+            var size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
+            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment, size);
             this.actualBufferWidth = (int)bufferSize.x;
             this.actualBufferHeight = (int)bufferSize.y;
+        }
+
+        private void OnRectTransformDimensionsChanged()
+        {
+            // Debug.Log("OnRectTransformDimensionsChanged");
+            var horzAlign = RectTransformUtility.GetHorizontalAlignment(this.rectTransform);
+            var vertAlign = RectTransformUtility.GetVerticalAlignment(this.rectTransform);
+            if ((horzAlign != null && vertAlign != null))
+            {
+                var size = TerminalGridUtility.GetActualSize(this, horzAlign.Value, vertAlign.Value);
+                // Debug.Log($"{this.size} -> {size}");
+                if (this.horizontalAlignment != horzAlign.Value || this.verticalAlignment != vertAlign.Value || this.size != size)
+                {
+                    this.horizontalAlignment = horzAlign.Value;
+                    this.verticalAlignment = vertAlign.Value;
+                    this.size = size;
+                    // Debug.Log($"{this.horizontalAlignment}, {this.verticalAlignment}");
+                    this.UpdateLayout();
+                }
+            }
+            this.isLayoutUpdate = false;
         }
 
         private void Terminal_Validated(object sender, EventArgs e)
@@ -957,7 +1051,7 @@ namespace JSSoft.Terminal
                 this.UpdateVisibleIndex();
                 this.CursorPoint = this.IndexToPoint(index);
                 this.Selections.Clear();
-                this.ScrollToCursor();
+                // this.ScrollToCursor();
             }
         }
 
@@ -1170,7 +1264,7 @@ namespace JSSoft.Terminal
                 this.IsScrolling = false;
             }
         }
-        private System.Random r = new System.Random();
+
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
             if (this.PopEvents() is IList<Event> events)
@@ -1185,13 +1279,6 @@ namespace JSSoft.Terminal
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
-                        var k = r.Next(0, 10);
-                        // if (k < 3)
-                        //     Debug.LogWarning($"{modifiers} + {keyCode}: {item.character}");
-                        // else if (k < 9)
-                        //     Debug.LogError($"{modifiers} + {keyCode}: {item.character}");
-                        // else
-                        //     Debug.Log($"{modifiers} + {keyCode}: {item.character}");
                         if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
                             continue;
                         if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
@@ -1207,12 +1294,6 @@ namespace JSSoft.Terminal
             }
             this.InputHandler.Update(this, eventData);
         }
-
-        // ITerminal ITerminalGrid.Terminal => this.terminal;
-
-        // IList<TerminalRange> ITerminalGrid.Selections => this.Selections;
-
-        // GameObject ITerminalGrid.GameObject => this.gameObject;
 
         #endregion
     }
