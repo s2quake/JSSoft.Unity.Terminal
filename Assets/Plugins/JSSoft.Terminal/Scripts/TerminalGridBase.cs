@@ -55,6 +55,10 @@ namespace JSSoft.Terminal
 
         public abstract int MaxBufferHeight { get; set; }
 
+        public abstract int ActualBufferWidth { get; }
+
+        public abstract int ActualBufferHeight { get; }
+
         public abstract IReadOnlyList<ITerminalRow> Rows { get; }
 
         public abstract IReadOnlyList<TerminalCharacterInfo> CharacterInfos { get; }
@@ -66,15 +70,15 @@ namespace JSSoft.Terminal
         public abstract int MaximumVisibleIndex { get; }
 
         public abstract Color BackgroundColor { get; set; }
-        
+
         public abstract Color ForegroundColor { get; set; }
-        
+
         public abstract Color SelectionColor { get; set; }
-        
+
         public abstract Color CursorColor { get; set; }
-        
+
         public abstract TerminalThickness Padding { get; set; }
-        
+
         public abstract TerminalPoint CursorPoint { get; set; }
 
         public abstract IList<TerminalRange> Selections { get; }
@@ -82,27 +86,27 @@ namespace JSSoft.Terminal
         public abstract Rect Rectangle { get; }
 
         public abstract bool IsCursorVisible { get; set; }
-        
+
         public abstract TerminalRange SelectingRange { get; set; }
-        
+
         public abstract string CompositionString { get; set; }
 
         public abstract TerminalStyle Style { get; set; }
-        
+
         public abstract TerminalCursorStyle CursorStyle { get; set; }
-        
+
         public abstract int CursorThickness { get; set; }
-        
+
         public abstract bool IsCursorBlinkable { get; set; }
-        
+
         public abstract float CursorBlinkDelay { get; set; }
-        
+
         public abstract bool IsScrollForwardEnabled { get; set; }
-        
+
         public abstract bool IsScrolling { get; set; }
-        
+
         public abstract IKeyBindingCollection KeyBindings { get; set; }
-        
+
         public abstract IInputHandler InputHandler { get; set; }
 
         public abstract IList<TerminalBehaviourBase> BehaviourList { get; }
@@ -110,19 +114,19 @@ namespace JSSoft.Terminal
         public abstract TerminalDispatcher Dispatcher { get; }
 
         public abstract event EventHandler LayoutChanged;
-        
+
         public abstract event NotifyCollectionChangedEventHandler SelectionChanged;
-        
+
         public abstract event EventHandler GotFocus;
-        
+
         public abstract event EventHandler LostFocus;
-        
+
         public abstract event EventHandler Validated;
-        
+
         public abstract event PropertyChangedEventHandler PropertyChanged;
-        
+
         public abstract event EventHandler Enabled;
-        
+
         public abstract event EventHandler Disabled;
 
         public abstract void Copy();

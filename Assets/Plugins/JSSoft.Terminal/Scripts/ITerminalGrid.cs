@@ -76,6 +76,10 @@ namespace JSSoft.Terminal
 
         int MaxBufferHeight { get; set; }
 
+        int ActualBufferWidth { get; }
+
+        int ActualBufferHeight { get; }
+
         IReadOnlyList<ITerminalRow> Rows { get; }
 
         IReadOnlyList<TerminalCharacterInfo> CharacterInfos { get; }

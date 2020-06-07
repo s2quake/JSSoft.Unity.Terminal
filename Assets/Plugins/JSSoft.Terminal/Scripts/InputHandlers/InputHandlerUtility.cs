@@ -85,13 +85,13 @@ namespace JSSoft.Terminal.InputHandlers
                     if (text.Length == end - 1)
                     {
                         var p2 = grid.IndexToPoint(end - 1);
-                        p2.X = grid.BufferWidth;
+                        p2.X = grid.ActualBufferWidth;
                         range.EndPoint = p2;
                     }
                     else if (text[end - 1] == '\n')
                     {
                         var p2 = grid.IndexToPoint(end - 1);
-                        p2.X = grid.BufferWidth;
+                        p2.X = grid.ActualBufferWidth;
                         range.EndPoint = p2;
                     }
                     else
@@ -106,7 +106,7 @@ namespace JSSoft.Terminal.InputHandlers
                 var lastPoint = grid.CharacterInfos.Last().Point;
                 beginPoint.Y = lastPoint.Y - beginPoint.Y;
                 if (beginPoint.X < 0)
-                    beginPoint.X = grid.BufferWidth;
+                    beginPoint.X = grid.ActualBufferWidth;
                 range.BeginPoint = beginPoint;
             }
             if (rangeInfo.End is TerminalPoint endPoint)
@@ -114,7 +114,7 @@ namespace JSSoft.Terminal.InputHandlers
                 var lastPoint = grid.CharacterInfos.Last().Point;
                 endPoint.Y = lastPoint.Y - endPoint.Y;
                 if (endPoint.X < 0)
-                    endPoint.X = grid.BufferWidth;
+                    endPoint.X = grid.ActualBufferWidth;
                 range.EndPoint = endPoint;
             }
             return range;

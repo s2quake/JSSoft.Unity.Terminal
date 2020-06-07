@@ -75,8 +75,8 @@ namespace JSSoft.Terminal
             var columnIndex = this.composition.ColumnIndex;
             var rowIndex = this.composition.RowIndex;
             var grid = this.composition.Grid;
-            var bufferWidth = grid != null ? grid.BufferWidth : 0;
-            var bufferHeight = grid != null ? grid.BufferHeight : 0;
+            var bufferWidth = grid != null ? grid.ActualBufferWidth : 0;
+            var bufferHeight = grid != null ? grid.ActualBufferHeight : 0;
             var font = composition.Font;
             var offset = composition.Offset;
             var backgroundMargin = composition.BackgroundMargin;

@@ -56,7 +56,7 @@ namespace JSSoft.Terminal
             if (grid != null)
             {
                 var topIndex = grid.VisibleIndex;
-                var bottomIndex = topIndex + grid.BufferHeight;
+                var bottomIndex = topIndex + grid.ActualBufferHeight;
                 for (var i = topIndex; i < bottomIndex; i++)
                 {
                     var row = grid.Rows[i];
@@ -75,7 +75,7 @@ namespace JSSoft.Terminal
             {
                 if (cursorTop >= grid.Rows.Count)
                     throw new ArgumentOutOfRangeException(nameof(cursorTop));
-                if (cursorLeft >= grid.BufferWidth)
+                if (cursorLeft >= grid.ActualBufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(cursorLeft));
                 return grid.Rows[cursorTop].Cells[cursorLeft];
             }
@@ -196,6 +196,47 @@ namespace JSSoft.Terminal
             if (grid == null)
                 return TerminalGrid.DefaultForegroundColor;
             return grid.ForegroundColor;
+        }
+
+        public static Vector2 GetActualBufferSize(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign)
+        {
+            var bufferSize = new Vector2(grid.BufferWidth, grid.BufferHeight);
+            var gameObject = grid.GameObject;
+            var rectTransform = gameObject.GetComponent<RectTransform>();
+            var parentSize = RectTransformUtility.GetParentSize(rectTransform);
+            var padding = grid.Padding;
+            if (horzAlign == HorizontalAlignment.Stretch)
+            {
+                var itemWidth = GetItemWidth(grid);
+                bufferSize.x = (int)(parentSize.x - (padding.Left + padding.Right)) / itemWidth;
+            }
+            if (vertAlign == VerticalAlignment.Stretch)
+            {
+                var itemHeight = GetItemHeight(grid);
+                bufferSize.y = (int)(parentSize.y - (padding.Top + padding.Bottom)) / itemHeight;
+            }
+            return bufferSize;
+        }
+
+        public static Vector2 GetActualSize(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign)
+        {
+            var gameObject = grid.GameObject;
+            var rectTransform = gameObject.GetComponent<RectTransform>();
+            var size = RectTransformUtility.GetParentSize(rectTransform);
+            var itemWidth = GetItemWidth(grid);
+            var itemHeight = GetItemHeight(grid);
+            var padding = grid.Padding;
+            var bufferWidth = grid.BufferWidth;
+            var bufferHeight = grid.BufferHeight;
+            if (horzAlign != HorizontalAlignment.Stretch)
+            {
+                size.x = bufferWidth * itemWidth + padding.Left + padding.Right;
+            }
+            if (vertAlign != VerticalAlignment.Stretch)
+            {
+                size.y = bufferHeight * itemHeight + padding.Top + padding.Bottom;
+            }
+            return size;
         }
     }
 }

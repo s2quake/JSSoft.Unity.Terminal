@@ -41,6 +41,7 @@ namespace JSSoft.Terminal
         private int bufferWidth;
         private int bufferHeight;
         private int maxBufferHeight;
+        private bool isEnabled;
         private IReadOnlyList<TerminalFontDescriptor> descriptors;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
@@ -50,6 +51,7 @@ namespace JSSoft.Terminal
             this.grid.Disabled += Grid_Disabled;
             this.grid.PropertyChanged += Grid_PropertyChanged;
             this.grid.Validated += Grid_Validated;
+            this.grid.LayoutChanged += Grid_LayoutChanged;
         }
 
         public void UpdateAll()
@@ -67,9 +69,9 @@ namespace JSSoft.Terminal
                     return 0;
                 if (this.style != this.grid.Style)
                     return 0;
-                if (this.bufferWidth != grid.BufferWidth)
+                if (this.bufferWidth != grid.ActualBufferWidth)
                     return 0;
-                if (this.bufferHeight != grid.BufferHeight)
+                if (this.bufferHeight != grid.ActualBufferHeight)
                     return 0;
                 if (this.maxBufferHeight != grid.MaxBufferHeight)
                     return 0;
@@ -83,17 +85,20 @@ namespace JSSoft.Terminal
 
         public void Update(int index)
         {
+            if (this.isEnabled == false)
+                return;
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
             var style = this.grid.Style;
             var font = this.grid.Font;
-            var bufferWidth = this.grid.BufferWidth;
-            var bufferHeight = this.grid.BufferHeight;
+            var bufferWidth = this.grid.ActualBufferWidth;
+            var bufferHeight = this.grid.ActualBufferHeight;
             var maxBufferHeight = this.grid.MaxBufferHeight;
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
             ArrayUtility.Resize(ref this.items, text.Length);
+            Debug.Log($"update: {index}, {text.Length}, {this.isEnabled}");
             while (index < text.Length)
             {
                 var characterInfo = new TerminalCharacterInfo();
@@ -169,13 +174,15 @@ namespace JSSoft.Terminal
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
+            this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
-            this.UpdateAll();
+            this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
+            this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
             this.Update();
@@ -205,6 +212,11 @@ namespace JSSoft.Terminal
             {
                 this.Update();
             }
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            this.Update();
         }
 
         private void Object_Validated(object sender, EventArgs e)

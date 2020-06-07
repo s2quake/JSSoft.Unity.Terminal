@@ -29,9 +29,6 @@ using UnityEngine.EventSystems;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using JSSoft.Terminal.InputHandlers;
-#if UNITY_EDITOR
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Assembly-CSharp-Editor")]
-#endif
 
 namespace JSSoft.Terminal
 {
@@ -106,19 +103,28 @@ namespace JSSoft.Terminal
         private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
         private TerminalStyle style;
+        [SerializeField]
+        private HorizontalAlignment horizontalAlignment;
+        [SerializeField]
+        private VerticalAlignment verticalAlignment;
 
         private readonly TerminalRowCollection rows;
         private readonly TerminalCharacterInfoCollection characterInfos;
         private readonly TerminalGridSelection selections;
+        private readonly PropertyNotifier notifier;
 
         private IInputHandler inputHandler;
         private Terminal terminal;
         private bool isFocused;
+        private bool isLayoutUpdating;
+        private bool isLayoutUpdate;
         private TerminalRange selectingRange = TerminalRange.Empty;
         private float scrollPos;
         private Rect rectangle;
         private IKeyBindingCollection keyBindings;
         private int cursorVolume;
+        private int actualBufferWidth;
+        private int actualBufferHeight;
 
         public TerminalGrid()
         {
@@ -126,6 +132,7 @@ namespace JSSoft.Terminal
             this.rows = new TerminalRowCollection(this, this.characterInfos);
             this.selections = new TerminalGridSelection(this);
             this.selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
+            this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
         }
 
         public override Vector2 WorldToGrid(Vector2 position, Camera camera)
@@ -147,7 +154,7 @@ namespace JSSoft.Terminal
             position.y -= padding.Top;
             var x = (int)(position.x / itemWidth);
             var y = (int)(position.y / itemHeight);
-            if (x >= this.BufferWidth || y >= this.rows.Count)
+            if (x >= this.ActualBufferWidth || y >= this.rows.Count)
                 return TerminalPoint.Invalid;
             return new TerminalPoint(x, y);
         }
@@ -168,7 +175,7 @@ namespace JSSoft.Terminal
 
         public override int PointToIndex(TerminalPoint point)
         {
-            if (point.Y >= 0 && point.Y < this.rows.Count && point.X >= 0 && point.X < this.BufferWidth)
+            if (point.Y >= 0 && point.Y < this.rows.Count && point.X >= 0 && point.X < this.ActualBufferWidth)
             {
                 return this.rows[point.Y].Cells[point.X].TextIndex;
             }
@@ -207,22 +214,16 @@ namespace JSSoft.Terminal
 
         public override void ScrollToTop()
         {
-            // if (this.VisibleIndex > this.MinimumVisibleIndex)
-            {
-                this.IsScrolling = true;
-                this.VisibleIndex = this.MinimumVisibleIndex;
-                this.IsScrolling = false;
-            }
+            this.IsScrolling = true;
+            this.VisibleIndex = this.MinimumVisibleIndex;
+            this.IsScrolling = false;
         }
 
         public override void ScrollToBottom()
         {
-            // if (this.VisibleIndex > this.MaximumVisibleIndex)
-            {
-                this.IsScrolling = true;
-                this.VisibleIndex = this.MaximumVisibleIndex;
-                this.IsScrolling = false;
-            }
+            this.IsScrolling = true;
+            this.VisibleIndex = this.MaximumVisibleIndex;
+            this.IsScrolling = false;
         }
 
         public override void ScrollToCursor()
@@ -239,12 +240,12 @@ namespace JSSoft.Terminal
 
         public override void PageUp()
         {
-            this.Scroll(-this.BufferHeight);
+            this.Scroll(-this.ActualBufferHeight);
         }
 
         public override void PageDown()
         {
-            this.Scroll(this.BufferHeight);
+            this.Scroll(this.ActualBufferHeight);
         }
 
         public override void LineUp()
@@ -275,7 +276,7 @@ namespace JSSoft.Terminal
                 var range = this.Selections.First();
                 var p1 = range.BeginPoint;
                 var p2 = range.EndPoint;
-                var capacity = p1.DistanceOf(p2, this.BufferWidth);
+                var capacity = p1.DistanceOf(p2, this.ActualBufferWidth);
                 var list = new List<char>(capacity);
                 var i1 = this.PointToIndex(p1);
                 var i2 = this.PointToIndex(p2);
@@ -298,7 +299,7 @@ namespace JSSoft.Terminal
         public override void SelectAll()
         {
             var p1 = new TerminalPoint(0, 0);
-            var p2 = new TerminalPoint(this.BufferWidth, this.rows.Count);
+            var p2 = new TerminalPoint(this.ActualBufferWidth, this.rows.Count);
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
@@ -348,10 +349,10 @@ namespace JSSoft.Terminal
                 if (this.font != value)
                 {
                     this.font = value;
-                    this.UpdateLayout();
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
                     this.InvokePropertyChangedEvent(nameof(Font));
+                    this.SetLayoutDirty();
                 }
             }
         }
@@ -366,10 +367,10 @@ namespace JSSoft.Terminal
                 if (this.bufferWidth != value)
                 {
                     this.bufferWidth = value;
-                    this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferWidth));
                     this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
                     this.UpdateVisibleIndex();
+                    this.SetLayoutDirty();
                 }
             }
         }
@@ -384,10 +385,10 @@ namespace JSSoft.Terminal
                 if (this.bufferHeight != value)
                 {
                     this.bufferHeight = value;
-                    this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(BufferHeight));
                     this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
                     this.UpdateVisibleIndex();
+                    this.SetLayoutDirty();
                 }
             }
         }
@@ -402,11 +403,15 @@ namespace JSSoft.Terminal
                 if (this.maxBufferHeight != value)
                 {
                     this.maxBufferHeight = value;
-                    this.UpdateLayout(true);
                     this.InvokePropertyChangedEvent(nameof(MaxBufferHeight));
+                    this.SetLayoutDirty();
                 }
             }
         }
+
+        public override int ActualBufferWidth => this.actualBufferWidth;
+
+        public override int ActualBufferHeight => this.actualBufferHeight;
 
         public override IReadOnlyList<ITerminalRow> Rows => this.rows;
 
@@ -436,12 +441,12 @@ namespace JSSoft.Terminal
             get
             {
                 if (this.IsScrollForwardEnabled == false)
-                    return Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
-                return Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.BufferHeight;
+                    return Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.ActualBufferHeight);
+                return Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.ActualBufferHeight;
             }
         }
 
-        public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
+        public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.ActualBufferHeight);
 
         public override Color BackgroundColor
         {
@@ -546,8 +551,8 @@ namespace JSSoft.Terminal
                 {
                     this.style = value;
                     this.UpdateColor();
-                    this.UpdateLayout();
                     this.InvokePropertyChangedEvent(nameof(Style));
+                    this.SetLayoutDirty();
                 }
             }
         }
@@ -696,6 +701,32 @@ namespace JSSoft.Terminal
             return row.Cells[point.X];
         }
 
+        internal void UpdateLayout()
+        {
+            var pos = Vector2.zero;
+            var pivot = RectTransformUtility.GetPivot(this.horizontalAlignment, this.verticalAlignment);
+            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment);
+            var size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
+            var (min, max) = RectTransformUtility.GetAnchor(this.horizontalAlignment, this.verticalAlignment);
+            this.isLayoutUpdate = false;
+            this.isLayoutUpdating = true;
+            this.rectTransform.anchorMin = min;
+            this.rectTransform.anchorMax = max;
+            this.rectTransform.pivot = pivot;
+            this.rectTransform.anchoredPosition = pos;
+            this.UpdateRectangle(bufferSize);
+            this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+            this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.actualBufferWidth, (int)bufferSize.x, nameof(ActualBufferWidth));
+            this.notifier.SetField(ref this.actualBufferHeight, (int)bufferSize.y, nameof(ActualBufferHeight));
+            this.notifier.End();
+            this.isLayoutUpdating = false;
+            this.UpdateVisibleIndex();
+            this.OnLayoutChanged(EventArgs.Empty);
+            Debug.Log($"OnLayoutChanged: {this.verticalAlignment}");
+        }
+
         protected virtual void OnLayoutChanged(EventArgs e)
         {
             this.LayoutChanged?.Invoke(this, EventArgs.Empty);
@@ -738,18 +769,38 @@ namespace JSSoft.Terminal
             this.terminal = this.GetComponent<Terminal>();
             this.ValidateValue();
             this.UpdateColor();
-            this.UpdateLayout();
             this.UpdateCursorPoint();
-            this.ScrollToCursor();
+            this.UpdateBufferSize();
+            this.UpdateVisibleIndex();
             this.OnValidated(EventArgs.Empty);
+            Debug.Log("OnValidated");
         }
 #endif
 
         protected override void OnRectTransformDimensionsChange()
         {
-            base.OnRectTransformDimensionsChange();
+            // Debug.Log("OnRectTransformDimensionsChange");
             this.terminal = this.GetComponent<Terminal>();
-            this.OnLayoutChanged(EventArgs.Empty);
+            base.OnRectTransformDimensionsChange();
+            if (this.isLayoutUpdate == true)
+            {
+                this.UpdateLayout();
+            }
+            else if (this.isLayoutUpdating == false)
+            {
+                var horzAlign = RectTransformUtility.GetHorizontalAlignment(this.rectTransform);
+                var vertAlign = RectTransformUtility.GetVerticalAlignment(this.rectTransform);
+                if ((horzAlign != null && vertAlign != null))
+                {
+                    if (this.horizontalAlignment != horzAlign.Value || this.verticalAlignment != vertAlign.Value)
+                    {
+                        this.horizontalAlignment = horzAlign.Value;
+                        this.verticalAlignment = vertAlign.Value;
+                        this.isLayoutUpdate = true;
+                        this.SetLayoutDirty();
+                    }
+                }
+            }
         }
 
         protected override void Awake()
@@ -757,20 +808,20 @@ namespace JSSoft.Terminal
             base.Awake();
             this.inputHandler = InputHandlerInstances.DefaultHandler;
             this.inputHandler.Attach(this);
+            this.isLayoutUpdate = true;
+            // this.rectTransform.hideFlags |= HideFlags.HideInInspector;
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
-            this.UpdateLayout(true);
-            this.ScrollToTop();
-            this.ScrollToCursor();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
+            Debug.Log("OnEnabled");
         }
 
         protected override void OnDisable()
@@ -782,6 +833,7 @@ namespace JSSoft.Terminal
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
             TerminalGridEvents.Unregister(this);
+            Debug.Log("OnDisabled");
         }
 
         protected override void OnDestroy()
@@ -842,33 +894,19 @@ namespace JSSoft.Terminal
             }
         }
 
-        private void UpdateLayout()
-        {
-            this.UpdateLayout(false);
-        }
-
-        private void UpdateLayout(bool force)
+        private void UpdateRectangle(Vector2 bufferSize)
         {
             var rect = this.GetComponent<RectTransform>().rect;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
             var actualWidth = (int)(rect.width / itemWidth);
             var actualHeight = (int)(rect.height / itemHeight);
-            var rectWidth = this.BufferWidth * itemWidth + this.Padding.Left + this.Padding.Right;
-            var rectHeight = this.BufferHeight * itemHeight + this.Padding.Top + this.Padding.Bottom;
+            var rectWidth = bufferSize.x * itemWidth + this.Padding.Left + this.Padding.Right;
+            var rectHeight = bufferSize.y * itemHeight + this.Padding.Top + this.Padding.Bottom;
             this.rectangle.x = 0;
             this.rectangle.y = 0;
             this.rectangle.width = rectWidth;
             this.rectangle.height = rectHeight;
-            if (force == true)
-                this.UpdateRectTransform();
-            else
-                this.Invoke(nameof(UpdateRectTransform), float.Epsilon);
-        }
-
-        private void UpdateRectTransform()
-        {
-            this.rectTransform.sizeDelta = this.rectangle.size;
         }
 
         private void UpdateVisibleIndex()
@@ -891,12 +929,21 @@ namespace JSSoft.Terminal
         {
             var x = this.cursorPoint.X;
             var y = this.cursorPoint.Y;
-            var maxBufferHeight = Math.Max(this.BufferHeight, this.rows.Count);
-            x = Math.Min(x, this.BufferWidth - 1);
+            var bufferHeight = this.actualBufferHeight;
+            var rowCount = this.rows.Count;
+            var maxBufferHeight = Math.Max(bufferHeight, rowCount);
+            x = Math.Min(x, bufferHeight - 1);
             x = Math.Max(x, 0);
             y = Math.Min(y, maxBufferHeight - 1);
             y = Math.Max(y, 0);
             this.cursorPoint = new TerminalPoint(x, y);
+        }
+
+        private void UpdateBufferSize()
+        {
+            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment);
+            this.actualBufferWidth = (int)bufferSize.x;
+            this.actualBufferHeight = (int)bufferSize.y;
         }
 
         private void Terminal_Validated(object sender, EventArgs e)
@@ -960,22 +1007,48 @@ namespace JSSoft.Terminal
             switch (sender)
             {
                 case TerminalFont font when font == this.font:
-                    this.UpdateLayout();
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
+                    this.SetLayoutDirty();
                     break;
                 case TerminalFontDescriptor descriptor when this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true:
-                    this.UpdateLayout();
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
+                    this.SetLayoutDirty();
                     break;
                 case TerminalStyle style when style == this.style:
                     this.UpdateColor();
-                    this.UpdateLayout();
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
+                    this.SetLayoutDirty();
                     break;
             }
+        }
+
+        private Vector2 GetParentSize()
+        {
+            if (this.rectTransform.parent is RectTransform parent)
+            {
+                return parent.sizeDelta;
+            }
+            return new Vector2(Screen.width, Screen.height);
+        }
+
+        private Vector2 CalculateBufferSize()
+        {
+            var bufferSize = new Vector2(this.bufferWidth, this.bufferHeight);
+            var parentSize = this.GetParentSize();
+            if (this.horizontalAlignment == HorizontalAlignment.Stretch)
+            {
+                var itemWidth = TerminalGridUtility.GetItemWidth(this);
+                bufferSize.x = (int)(parentSize.x - (this.padding.Left + this.padding.Right)) / itemWidth;
+            }
+            if (this.verticalAlignment == VerticalAlignment.Stretch)
+            {
+                var itemHeight = TerminalGridUtility.GetItemHeight(this);
+                bufferSize.y = (int)(parentSize.y - (this.padding.Top + this.padding.Bottom)) / itemHeight;
+            }
+            return new Vector2(this.bufferWidth, this.bufferHeight);
         }
 
         private IEnumerable<TerminalCell> GetCells(TerminalPoint p1, TerminalPoint p2)
@@ -985,10 +1058,10 @@ namespace JSSoft.Terminal
             var y = s1.Y;
             for (; y <= s2.Y; y++)
             {
-                var bufferWidth = y == s2.Y ? s2.X : this.BufferWidth;
-                if (bufferWidth >= this.BufferWidth)
+                var bufferWidth = y == s2.Y ? s2.X : this.ActualBufferWidth;
+                if (bufferWidth >= this.ActualBufferWidth)
                 {
-                    bufferWidth = this.BufferWidth - 1;
+                    bufferWidth = this.ActualBufferWidth - 1;
                 }
                 for (; x <= bufferWidth; x++)
                 {

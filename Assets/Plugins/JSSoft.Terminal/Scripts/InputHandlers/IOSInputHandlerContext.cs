@@ -218,8 +218,8 @@ namespace JSSoft.Terminal.InputHandlers
             this.orientationBehaviour = this.Grid.GameObject.GetComponent<TerminalOrientationBehaviour>();
             this.orientationBehaviour.Changed.AddListener(OrientationBehaviour_Changed);
             this.isPortrait = TerminalOrientationBehaviour.IsPortait(Screen.orientation);
-            this.bufferWidth = this.Grid.BufferWidth;
-            this.bufferHeight = this.Grid.BufferHeight;
+            this.bufferWidth = this.Grid.ActualBufferWidth;
+            this.bufferHeight = this.Grid.ActualBufferHeight;
         }
 
         public override void Detach(ITerminalGrid grid)
@@ -429,8 +429,8 @@ namespace JSSoft.Terminal.InputHandlers
                 }
                 if (this.keyboard.IsOpened == true)
                     this.Grid.SetPosition(this.gridPosition);
-                this.Grid.BufferWidth = bufferWidth;
-                this.Grid.BufferHeight = bufferHeight;
+                // this.Grid.BufferWidth = bufferWidth;
+                // this.Grid.BufferHeight = bufferHeight;
                 if (this.keyboard.IsOpened == true)
                     this.AdjustPosition(this.keyboard.Area);
             }

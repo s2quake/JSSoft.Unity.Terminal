@@ -186,7 +186,7 @@ namespace JSSoft.Terminal
         {
             var gameObject = this.gameObject;
             var grid = this.grid;
-            var isActive = grid.MaxBufferHeight >= grid.BufferHeight;
+            var isActive = grid.MaxBufferHeight >= grid.ActualBufferHeight;
             if (this.enabled != isActive)
             {
                 this.enabled = isActive;
@@ -206,8 +206,8 @@ namespace JSSoft.Terminal
 
         private async void UpdateScrollbarSize()
         {
-            var size1 = (float)this.grid.BufferHeight;
-            var size2 = (float)this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex + this.grid.BufferHeight;
+            var size1 = (float)this.grid.ActualBufferHeight;
+            var size2 = (float)this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex + this.grid.ActualBufferHeight;
             var size = size1 / size2;
             if (Application.isPlaying == false)
                 await Task.Delay(1);

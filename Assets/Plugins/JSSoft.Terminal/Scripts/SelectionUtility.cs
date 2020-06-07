@@ -38,7 +38,7 @@ namespace JSSoft.Terminal
             var row2 = cell2.Row;
             var isEnabled1 = IsEnabled(cell1);
             var isEnabled2 = IsEnabled(cell2);
-            var bufferWidth = grid.BufferWidth;
+            var bufferWidth = grid.ActualBufferWidth;
             var gap = 5;
             if (isEnabled1 == true && isEnabled2 == false)
             {
@@ -90,7 +90,7 @@ namespace JSSoft.Terminal
 
         public static TerminalPoint LastPoint(ITerminalRow row, bool isCursor)
         {
-            var bufferWidth = row.Grid.BufferWidth;
+            var bufferWidth = row.Grid.ActualBufferWidth;
             var index = row.Index;
             var point = new TerminalPoint(bufferWidth, index);
             if (row.Text != string.Empty)
@@ -154,13 +154,13 @@ namespace JSSoft.Terminal
                 var p1 = grid.CharacterInfos[match1.Index].Point;
                 var p2 = grid.CharacterInfos[match2.Index].Point;
                 var p3 = new TerminalPoint(0, p1.Y);
-                var p4 = new TerminalPoint(grid.BufferWidth, p2.Y);
+                var p4 = new TerminalPoint(grid.ActualBufferWidth, p2.Y);
                 return new TerminalRange(p3, p4);
             }
             else
             {
                 var p1 = new TerminalPoint(0, point.Y);
-                var p2 = new TerminalPoint(grid.BufferWidth, point.Y);
+                var p2 = new TerminalPoint(grid.ActualBufferWidth, point.Y);
                 return new TerminalRange(p1, p2);
             }
         }
@@ -190,7 +190,7 @@ namespace JSSoft.Terminal
         private static TerminalRange SelectWordOfEmptyRow(ITerminalGrid grid, ITerminalRow row)
         {
             var p1 = new TerminalPoint(0, row.Index);
-            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
+            var p2 = new TerminalPoint(grid.ActualBufferWidth, row.Index);
             return new TerminalRange(p1, p2);
         }
 
@@ -199,7 +199,7 @@ namespace JSSoft.Terminal
             var row = cell.Row;
             var cells = row.Cells;
             var p1 = LastPoint(row, true);
-            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
+            var p2 = new TerminalPoint(grid.ActualBufferWidth, row.Index);
             return new TerminalRange(p1, p2);
         }
 

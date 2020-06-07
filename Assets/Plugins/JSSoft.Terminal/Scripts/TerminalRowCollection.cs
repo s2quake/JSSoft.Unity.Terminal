@@ -43,6 +43,7 @@ namespace JSSoft.Terminal
         private int updateIndex;
         private int minimumIndex;
         private int maximumIndex;
+        private bool isEnabled;
 
         public TerminalRowCollection(TerminalGrid grid, TerminalCharacterInfoCollection characterInfos)
         {
@@ -51,6 +52,7 @@ namespace JSSoft.Terminal
             this.grid.Disabled += Grid_Disabled;
             this.grid.PropertyChanged += Grid_PropertyChanged;
             this.grid.Validated += Grid_Validated;
+            this.grid.LayoutChanged += Grid_LayoutChanged;
             this.characterInfos = characterInfos;
         }
 
@@ -69,9 +71,9 @@ namespace JSSoft.Terminal
                     return 0;
                 if (this.style != this.grid.Style)
                     return 0;
-                if (this.bufferWidth != grid.BufferWidth)
+                if (this.bufferWidth != grid.ActualBufferWidth)
                     return 0;
-                if (this.bufferHeight != grid.BufferHeight)
+                if (this.bufferHeight != grid.ActualBufferHeight)
                     return 0;
                 if (this.maxBufferHeight != grid.MaxBufferHeight)
                     return 0;
@@ -82,18 +84,21 @@ namespace JSSoft.Terminal
 
         public void Update(int index)
         {
+            if (this.isEnabled == false)
+                return;
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
             var font = this.grid.Font;
             var style = this.grid.Style;
-            var bufferWidth = this.grid.BufferWidth;
-            var bufferHeight = this.grid.BufferHeight;
+            var bufferWidth = this.grid.ActualBufferWidth;
+            var bufferHeight = this.grid.ActualBufferHeight;
             var maxBufferHeight = this.grid.MaxBufferHeight;
             var volume = this.characterInfos.Volume;
             var dic = new Dictionary<int, int>(bufferHeight);
             var maximumIndex = this.MaximumIndex;
             this.Resize(bufferWidth, Math.Max(volume.Bottom, maxBufferHeight));
+
             for (var i = index; i < text.Length; i++)
             {
                 var characterInfo = this.characterInfos[i];
@@ -127,6 +132,7 @@ namespace JSSoft.Terminal
             this.updateIndex = text.Length;
             this.minimumIndex = Math.Max(0, maximumIndex - maxBufferHeight);
             this.maximumIndex = maximumIndex;
+            // Debug.Log($"update rows: {index}, {text.Length}");
         }
 
         public TerminalRow Prepare(int index)
@@ -183,13 +189,15 @@ namespace JSSoft.Terminal
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
+            this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
-            this.UpdateAll();
+            this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
+            this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
             this.Update();
@@ -216,6 +224,11 @@ namespace JSSoft.Terminal
             {
                 this.Update();
             }
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            this.Update();
         }
 
         private void Object_Validated(object sender, EventArgs e)

@@ -48,6 +48,8 @@ namespace JSSoft.Terminal.Editor
         private SerializedProperty bufferWidthProperty;
         private SerializedProperty bufferHeightProperty;
         private SerializedProperty maxBufferHeightProperty;
+        private SerializedProperty horizontalAlignmentProperty;
+        private SerializedProperty verticalAlignmentProperty;
 
         private bool isDebug = false;
 
@@ -72,10 +74,13 @@ namespace JSSoft.Terminal.Editor
             this.bufferWidthProperty = this.serializedObject.FindProperty("bufferWidth");
             this.bufferHeightProperty = this.serializedObject.FindProperty("bufferHeight");
             this.maxBufferHeightProperty = this.serializedObject.FindProperty("maxBufferHeight");
+            this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
+            this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
         }
 
         public override void OnInspectorGUI()
         {
+            var grid = this.target as TerminalGrid;
             this.isDebug = GUILayout.Toggle(this.isDebug, "Debug Mode");
             if (isDebug == true)
             {
@@ -111,30 +116,35 @@ namespace JSSoft.Terminal.Editor
             EditorGUILayout.PropertyField(this.bufferWidthProperty);
             EditorGUILayout.PropertyField(this.bufferHeightProperty);
             EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
-
-            if (this.target is TerminalGrid grid)
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
+            EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
+            this.serializedObject.ApplyModifiedProperties();
+            if (EditorGUI.EndChangeCheck())
             {
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("expand width"))
-                {
-                    grid.BufferWidth++;
-                }
-                if (GUILayout.Button("collapse width"))
-                {
-                    grid.BufferWidth--;
-                }
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                if (GUILayout.Button("expand height"))
-                {
-                    grid.BufferHeight++;
-                }
-                if (GUILayout.Button("collapse height"))
-                {
-                    grid.BufferHeight--;
-                }
-                GUILayout.EndHorizontal();
+                grid?.UpdateLayout();
             }
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("expand width"))
+            {
+                grid.BufferWidth++;
+            }
+            if (GUILayout.Button("collapse width"))
+            {
+                grid.BufferWidth--;
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("expand height"))
+            {
+                grid.BufferHeight++;
+            }
+            if (GUILayout.Button("collapse height"))
+            {
+                grid.BufferHeight--;
+            }
+            GUILayout.EndHorizontal();
 
             this.serializedObject.ApplyModifiedProperties();
         }

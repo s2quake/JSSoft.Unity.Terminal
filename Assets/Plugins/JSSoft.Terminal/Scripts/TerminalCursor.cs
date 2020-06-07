@@ -75,7 +75,7 @@ namespace JSSoft.Terminal
             get => this.cursorLeft;
             set
             {
-                if (value < 0 || value >= this.BufferWidth)
+                if (value < 0 || value >= this.ActualBufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.cursorLeft = value;
                 this.SetVerticesDirty();
@@ -87,7 +87,7 @@ namespace JSSoft.Terminal
             get => this.cursorTop;
             set
             {
-                if (value < 0 || value >= this.BufferHeight)
+                if (value < 0 || value >= this.ActualBufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 this.cursorTop = value;
                 this.SetVerticesDirty();
@@ -211,9 +211,9 @@ namespace JSSoft.Terminal
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.cursorLeft = Math.Min(this.BufferWidth - 1, this.cursorLeft);
+            this.cursorLeft = Math.Min(this.ActualBufferWidth - 1, this.cursorLeft);
             this.cursorLeft = Math.Max(0, this.cursorLeft);
-            this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
+            this.cursorTop = Math.Min(this.ActualBufferHeight - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
             this.SetVerticesDirty();
         }
@@ -400,7 +400,7 @@ namespace JSSoft.Terminal
                     this.volume = Math.Max(cell.Volume, 1);
                 }
                 this.isVisible = this.grid.IsCursorVisible;
-                this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.BufferHeight;
+                this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.ActualBufferHeight;
                 this.color = TerminalGridUtility.GetCursorColor(this.grid);
                 this.style = this.grid.CursorStyle;
                 this.thickness = this.grid.CursorThickness;
@@ -433,8 +433,8 @@ namespace JSSoft.Terminal
             throw new NotImplementedException();
         }
 
-        private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
+        private int ActualBufferWidth => this.grid != null ? this.grid.ActualBufferWidth : 0;
 
-        private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
+        private int ActualBufferHeight => this.grid != null ? this.grid.ActualBufferHeight : 0;
     }
 }
