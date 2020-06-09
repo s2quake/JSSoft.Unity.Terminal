@@ -42,7 +42,7 @@ namespace JSSoft.Terminal
         private int bufferHeight;
         private int maxBufferHeight;
         private TerminalThickness padding;
-        private bool isEnabled;
+        // private bool isEnabled;
         private IReadOnlyList<TerminalFontDescriptor> descriptors;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
@@ -99,7 +99,7 @@ namespace JSSoft.Terminal
             var bufferHeight = this.grid.ActualBufferHeight;
             var maxBufferHeight = this.grid.MaxBufferHeight;
             var padding = this.grid.Padding;
-            var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
+            var point = this.text.Length > 0 ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
             ArrayUtility.Resize(ref this.items, text.Length);
             // Debug.Log($"update: {index}, {text.Length}, {this.isEnabled}");
@@ -113,10 +113,11 @@ namespace JSSoft.Terminal
                 {
                     volume = 0;
                 }
-                if ((point.X >= bufferWidth && volume > 0) || point.X + volume > bufferWidth)
+                if ((point.X >= bufferWidth && volume > 0) || (point.X + volume > bufferWidth))
                 {
                     point.X = 0;
-                    point.Y++;
+                    if (index > 0)
+                        point.Y++;
                 }
                 characterInfo.Character = character;
                 characterInfo.Volume = volume;
@@ -179,7 +180,7 @@ namespace JSSoft.Terminal
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
-            this.isEnabled = true;
+            // this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
             // this.Update();
@@ -187,7 +188,7 @@ namespace JSSoft.Terminal
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
-            this.isEnabled = false;
+            // this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
             // this.Update();

@@ -136,6 +136,7 @@ namespace JSSoft.Terminal.Editor
         private static void CreateTerminal()
         {
             var canvas = PrepareCanvas();
+            var parentRect = PrepareParent();
             var dispatcher = PrepareDispatcher();
             var canvasTransform = canvas.transform;
             var pixelRect = canvas.pixelRect;
@@ -154,7 +155,7 @@ namespace JSSoft.Terminal.Editor
             terminalGridObj.AddComponent<TerminalOrientationBehaviour>();
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
-            terminalGridRect.SetParent(canvasTransform);
+            terminalGridRect.SetParent(parentRect);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
             terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
             terminalGridRect.pivot = new Vector2(0.5f, 0.5f);
@@ -294,6 +295,15 @@ namespace JSSoft.Terminal.Editor
                 canvas = GameObject.FindObjectOfType<Canvas>();
             }
             return canvas;
+        }
+
+        private static RectTransform PrepareParent()
+        {
+            if (Selection.activeTransform is RectTransform rectTransform)
+            {
+                return rectTransform;
+            }
+            return GameObject.FindObjectOfType<Canvas>().GetComponent<RectTransform>();
         }
 
         private static TerminalDispatcher PrepareDispatcher()

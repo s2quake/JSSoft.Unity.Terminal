@@ -44,7 +44,7 @@ namespace JSSoft.Terminal
         private int updateIndex;
         private int minimumIndex;
         private int maximumIndex;
-        private bool isEnabled;
+        // private bool isEnabled;
 
         public TerminalRowCollection(TerminalGrid grid, TerminalCharacterInfoCollection characterInfos)
         {
@@ -194,7 +194,7 @@ namespace JSSoft.Terminal
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
-            this.isEnabled = true;
+            // this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
             // this.Update();
@@ -202,7 +202,7 @@ namespace JSSoft.Terminal
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
-            this.isEnabled = false;
+            // this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
             // this.Update();
