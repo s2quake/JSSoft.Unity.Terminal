@@ -66,7 +66,7 @@ namespace JSSoft.Terminal
 
         bool IsFocused { get; }
 
-        string Text { get; set; }
+        string Text { get; }
 
         TerminalFont Font { get; set; }
 

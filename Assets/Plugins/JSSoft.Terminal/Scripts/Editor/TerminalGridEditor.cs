@@ -37,7 +37,6 @@ namespace JSSoft.Terminal.Editor
         private SerializedProperty selectionColorProperty;
         private SerializedProperty cursorColorProperty;
         private SerializedProperty colorPaletteProperty;
-        private SerializedProperty paddingProperty;
         private SerializedProperty cursorStyleProperty;
         private SerializedProperty cursorThicknessProperty;
         private SerializedProperty isCursorBlinkableProperty;
@@ -50,6 +49,7 @@ namespace JSSoft.Terminal.Editor
         private SerializedProperty maxBufferHeightProperty;
         private SerializedProperty horizontalAlignmentProperty;
         private SerializedProperty verticalAlignmentProperty;
+        private SerializedProperty paddingProperty;
         private SerializedProperty marginProperty;
 
         private bool isDebug = false;
@@ -64,7 +64,6 @@ namespace JSSoft.Terminal.Editor
             this.selectionColorProperty = this.serializedObject.FindProperty("selectionColor");
             this.cursorColorProperty = this.serializedObject.FindProperty("cursorColor");
             this.colorPaletteProperty = this.serializedObject.FindProperty("colorPalette");
-            this.paddingProperty = this.serializedObject.FindProperty("padding");
             this.cursorStyleProperty = this.serializedObject.FindProperty("cursorStyle");
             this.cursorThicknessProperty = this.serializedObject.FindProperty("cursorThickness");
             this.isCursorBlinkableProperty = this.serializedObject.FindProperty("isCursorBlinkable");
@@ -77,6 +76,7 @@ namespace JSSoft.Terminal.Editor
             this.maxBufferHeightProperty = this.serializedObject.FindProperty("maxBufferHeight");
             this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
             this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
+            this.paddingProperty = this.serializedObject.FindProperty("padding");
             this.marginProperty = this.serializedObject.FindProperty("margin");
         }
 
@@ -105,7 +105,6 @@ namespace JSSoft.Terminal.Editor
             EditorGUILayout.PropertyField(this.selectionColorProperty);
             EditorGUILayout.PropertyField(this.cursorColorProperty);
             EditorGUILayout.PropertyField(this.colorPaletteProperty);
-            EditorGUILayout.PropertyField(this.paddingProperty, true);
             EditorGUILayout.PropertyField(this.cursorStyleProperty);
             EditorGUILayout.PropertyField(this.cursorThicknessProperty);
             EditorGUILayout.PropertyField(this.isCursorBlinkableProperty);
@@ -115,17 +114,18 @@ namespace JSSoft.Terminal.Editor
             GUI.enabled = true;
 
             GUILayout.Space(10);
+            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(this.bufferWidthProperty);
             EditorGUILayout.PropertyField(this.bufferHeightProperty);
             EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
-            EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
             EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
+            EditorGUILayout.PropertyField(this.paddingProperty, true);
             EditorGUILayout.PropertyField(this.marginProperty, true);
             this.serializedObject.ApplyModifiedProperties();
             if (EditorGUI.EndChangeCheck())
             {
-                grid?.UpdateLayout();
+                // grid?.UpdateLayout();
             }
 
             GUILayout.BeginHorizontal();

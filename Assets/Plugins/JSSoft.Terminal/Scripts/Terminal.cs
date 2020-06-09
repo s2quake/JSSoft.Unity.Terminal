@@ -565,11 +565,14 @@ namespace JSSoft.Terminal
 
         protected override void OnEnable()
         {
+            // Debug.Log("terminal.enable");
             base.OnEnable();
             this.inputText = this.command;
             this.promptText = this.prompt + this.command;
             this.text = this.outputText + this.Delimiter + this.promptText;
             this.cursorPosition = this.command.Length;
+            ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
+            ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
             TerminalEvents.Register(this);
             this.OnEnabled(EventArgs.Empty);
         }

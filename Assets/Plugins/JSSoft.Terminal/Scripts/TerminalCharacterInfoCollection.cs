@@ -41,6 +41,7 @@ namespace JSSoft.Terminal
         private int bufferWidth;
         private int bufferHeight;
         private int maxBufferHeight;
+        private TerminalThickness padding;
         private bool isEnabled;
         private IReadOnlyList<TerminalFontDescriptor> descriptors;
 
@@ -75,6 +76,8 @@ namespace JSSoft.Terminal
                     return 0;
                 if (this.maxBufferHeight != grid.MaxBufferHeight)
                     return 0;
+                if (this.padding != grid.Padding)
+                    return 0;
                 var text = this.grid.Text + char.MinValue;
                 var index = GetIndex(this.text, text);
                 if (index >= this.items.Length)
@@ -85,8 +88,8 @@ namespace JSSoft.Terminal
 
         public void Update(int index)
         {
-            if (this.isEnabled == false)
-                return;
+            // if (this.isEnabled == false)
+            //     return;
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
@@ -95,6 +98,7 @@ namespace JSSoft.Terminal
             var bufferWidth = this.grid.ActualBufferWidth;
             var bufferHeight = this.grid.ActualBufferHeight;
             var maxBufferHeight = this.grid.MaxBufferHeight;
+            var padding = this.grid.Padding;
             var point = this.items.Any() ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
             ArrayUtility.Resize(ref this.items, text.Length);
@@ -138,6 +142,7 @@ namespace JSSoft.Terminal
             this.bufferWidth = bufferWidth;
             this.bufferHeight = bufferHeight;
             this.maxBufferHeight = maxBufferHeight;
+            this.padding = padding;
         }
 
         public static int GetIndex(string text1, string text2)
@@ -177,7 +182,7 @@ namespace JSSoft.Terminal
             this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
-            this.Update();
+            // this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
@@ -185,7 +190,7 @@ namespace JSSoft.Terminal
             this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
-            this.Update();
+            // this.Update();
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -200,7 +205,7 @@ namespace JSSoft.Terminal
                     break;
                 case nameof(ITerminalGrid.Text):
                     {
-                        this.Update();
+                        // this.Update();
                     }
                     break;
             }
@@ -210,13 +215,13 @@ namespace JSSoft.Terminal
         {
             if (this.grid.IsActive() == true)
             {
-                this.Update();
+                // this.Update();
             }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            this.Update();
+            // this.Update();
         }
 
         private void Object_Validated(object sender, EventArgs e)

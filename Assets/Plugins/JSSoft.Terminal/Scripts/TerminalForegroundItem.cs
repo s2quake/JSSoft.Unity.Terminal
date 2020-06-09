@@ -90,11 +90,13 @@ namespace JSSoft.Terminal
 
         protected override void OnEnable()
         {
+            // Debug.Log("foregrounditem.enable");
             base.OnEnable();
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.Enabled += Terminal_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.Validated += Grid_Validated;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
         }
 
@@ -103,6 +105,7 @@ namespace JSSoft.Terminal
             TerminalEvents.Validated -= Terminal_Validated;
             TerminalEvents.Enabled -= Terminal_Enabled;
             TerminalGridEvents.Validated -= Grid_Validated;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
             base.OnDisable();
@@ -156,6 +159,14 @@ namespace JSSoft.Terminal
             if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.color = TerminalGridUtility.GetForegroundColor(this.grid);
+                this.SetVerticesDirty();
+            }
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && grid == this.grid)
+            {
                 this.SetVerticesDirty();
             }
         }

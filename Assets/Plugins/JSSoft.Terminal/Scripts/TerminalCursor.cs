@@ -364,7 +364,6 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                // await Task.Delay(1);
                 this.UpdateLayout();
             }
         }

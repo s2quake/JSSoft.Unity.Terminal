@@ -41,7 +41,7 @@ namespace JSSoft.Terminal.Commands
                 await terminal.InvokeAsync(() =>
                 {
                     if (value == null)
-                        terminal.AppendLine($"Verbose: {terminal.IsVerbose}");
+                        terminal.AppendLine($"Verbose: {$"{terminal.IsVerbose}".ToLower()}");
                     else
                         terminal.IsVerbose = (bool)value;
                 });

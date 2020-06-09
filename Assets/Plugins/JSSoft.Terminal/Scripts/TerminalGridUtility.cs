@@ -198,6 +198,16 @@ namespace JSSoft.Terminal
             return grid.ForegroundColor;
         }
 
+        public static int GetVisibleIndex(ITerminalGrid grid)
+        {
+            var visibleIndex = grid.VisibleIndex;
+            var minimumVisibleIndex = grid.MinimumVisibleIndex;
+            var maximumVisibleIndex = grid.MaximumVisibleIndex;
+            visibleIndex = Math.Max(visibleIndex, minimumVisibleIndex);
+            visibleIndex = Math.Min(visibleIndex, maximumVisibleIndex);
+            return visibleIndex;
+        }
+
         public static Vector2 GetActualBufferSize(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign, Vector2 size)
         {
             var bufferSize = new Vector2(grid.BufferWidth, grid.BufferHeight);

@@ -44,8 +44,8 @@ namespace JSSoft.Terminal
         private Color cursorColor = TerminalGrid.DefaultCursorColor;
         [SerializeField]
         private TerminalColorPalette colorPallete;
-        [SerializeField]
-        private TerminalThickness padding = new TerminalThickness(2);
+        // [SerializeField]
+        // private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
         private TerminalCursorStyle cursorStyle;
         [SerializeField]
@@ -152,18 +152,18 @@ namespace JSSoft.Terminal
             }
         }
 
-        public TerminalThickness Padding
-        {
-            get => this.padding;
-            set
-            {
-                if (this.padding != value)
-                {
-                    this.padding = value;
-                    this.InvokePropertyChangedEvent(nameof(Padding));
-                }
-            }
-        }
+        // public TerminalThickness Padding
+        // {
+        //     get => this.padding;
+        //     set
+        //     {
+        //         if (this.padding != value)
+        //         {
+        //             this.padding = value;
+        //             this.InvokePropertyChangedEvent(nameof(Padding));
+        //         }
+        //     }
+        // }
 
         public TerminalCursorStyle CursorStyle
         {

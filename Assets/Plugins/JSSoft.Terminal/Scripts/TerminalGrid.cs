@@ -143,7 +143,8 @@ namespace JSSoft.Terminal
             var pixelRect = this.canvas.pixelRect;
             var localPosition = new Vector2(position.x, pixelRect.height - position.y);
             var rect = this.GetRect();
-            return localPosition - rect.position;
+            var y = TerminalGridUtility.GetItemHeight(this) * this.visibleIndex;
+            return localPosition - rect.position + new Vector2(0, y);
         }
 
         public override TerminalPoint Intersect(Vector2 position)
@@ -235,9 +236,9 @@ namespace JSSoft.Terminal
             {
                 this.VisibleIndex = this.CursorPoint.Y;
             }
-            if (this.CursorPoint.Y >= this.VisibleIndex + this.bufferHeight)
+            if (this.CursorPoint.Y >= this.VisibleIndex + this.ActualBufferHeight)
             {
-                this.VisibleIndex = this.CursorPoint.Y - this.bufferHeight + 1;
+                this.VisibleIndex = this.CursorPoint.Y - this.ActualBufferHeight + 1;
             }
         }
 
@@ -332,16 +333,7 @@ namespace JSSoft.Terminal
         public override string Text
         {
             get => this.text;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-                if (this.text != value)
-                {
-                    this.text = value;
-                    this.InvokePropertyChangedEvent(nameof(Text));
-                }
-            }
+
         }
 
         public override TerminalFont Font
@@ -430,7 +422,6 @@ namespace JSSoft.Terminal
                 if (this.visibleIndex != value)
                 {
                     this.visibleIndex = value;
-                    this.UpdateVisibleIndex();
                     this.scrollPos = this.visibleIndex;
                     this.InvokePropertyChangedEvent(nameof(VisibleIndex));
                 }
@@ -534,7 +525,7 @@ namespace JSSoft.Terminal
 
         public override TerminalThickness Padding
         {
-            get => this.style != null ? this.style.Padding : this.padding;
+            get => this.padding;
             set
             {
                 if (this.padding != value)
@@ -707,6 +698,17 @@ namespace JSSoft.Terminal
 
         public override event PropertyChangedEventHandler PropertyChanged;
 
+        internal void SetText(string value)
+        {
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
+            if (this.text != value)
+            {
+                this.text = value;
+                this.InvokePropertyChangedEvent(nameof(Text));
+            }
+        }
+
         internal TerminalCell GetCell(TerminalPoint point)
         {
             if (point.Y < 0 || point.Y >= this.rows.Count)
@@ -719,66 +721,34 @@ namespace JSSoft.Terminal
 
         internal void UpdateLayout()
         {
+            var cursorIndex = this.terminal.CursorIndex;
             var pivot = RectTransformUtility.GetPivot(this.horizontalAlignment, this.verticalAlignment);
             var pos = TerminalGridUtility.GetActualPos(this, this.horizontalAlignment, this.verticalAlignment);
             var size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
             var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment, size);
             var (min, max) = RectTransformUtility.GetAnchor(this.horizontalAlignment, this.verticalAlignment);
-            // this.isLayoutUpdate = false;
-            // var margin = this.margin;
-            // if (this.horizontalAlignment == HorizontalAlignment.Left)
-            // {
-            //     pos.x += margin.Left;
-            // }
-            // else if (this.horizontalAlignment == HorizontalAlignment.Center)
-            // {
-            //     pos.x += margin.Left;
-            //     pos.x -= margin.Right;
-            // }
-            // else if (this.horizontalAlignment == HorizontalAlignment.Right)
-            // {
-            //     pos.x -= margin.Right;
-            // }
-            // else if (this.horizontalAlignment == HorizontalAlignment.Stretch)
-            // {
-            //     pos.x += margin.Left;
-            //     // size.x -= (margin.Left + margin.Right);
-            // }
-            // if (this.verticalAlignment == VerticalAlignment.Top)
-            // {
-            //     pos.y -= margin.Top;
-            // }
-            // else if (this.verticalAlignment == VerticalAlignment.Center)
-            // {
-            //     pos.y -= margin.Top;
-            //     pos.y += margin.Bottom;
-            // }
-            // else if (this.verticalAlignment == VerticalAlignment.Bottom)
-            // {
-            //     pos.y += margin.Bottom;
-            // }
-            // else if (this.verticalAlignment == VerticalAlignment.Stretch)
-            // {
-            //     pos.y += margin.Bottom;
-            //     // size.y -= (margin.Top + margin.Bottom);
-            // }
+            // Debug.Log(size);
+            // Debug.Log(bufferSize);
             this.isLayoutUpdating = true;
             this.rectTransform.anchorMin = min;
             this.rectTransform.anchorMax = max;
             this.rectTransform.pivot = pivot;
             this.rectTransform.anchoredPosition = pos;
-            // Debug.Log(pos);
             this.UpdateRectangle(bufferSize);
             this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
             this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
             this.notifier.Begin();
             this.notifier.SetField(ref this.actualBufferWidth, (int)bufferSize.x, nameof(ActualBufferWidth));
             this.notifier.SetField(ref this.actualBufferHeight, (int)bufferSize.y, nameof(ActualBufferHeight));
-            this.notifier.End();
+            // this.notifier.SetField(ref this.maxBufferHeight, Math.Max(this.actualBufferHeight, this.maxBufferHeight), nameof(MaxBufferHeight));
+            this.size = size;
             this.isLayoutUpdating = false;
-            this.UpdateVisibleIndex();
+            this.characterInfos.Update();
+            this.rows.Update();
+            this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(cursorIndex), nameof(CursorPoint));
+            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+            this.notifier.End();
             this.OnLayoutChanged(EventArgs.Empty);
-            // Debug.Log($"OnLayoutChanged: {this.verticalAlignment}");
         }
 
         protected virtual void OnLayoutChanged(EventArgs e)
@@ -821,56 +791,31 @@ namespace JSSoft.Terminal
         {
             base.OnValidate();
             this.terminal = this.GetComponent<Terminal>();
-            this.ValidateValue();
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+            this.notifier.End();
             this.UpdateColor();
-            this.UpdateCursorPoint();
-            this.UpdateBufferSize();
-            this.UpdateVisibleIndex();
+            this.Invoke(nameof(UpdateLayout), float.Epsilon);
+            // this.UpdateLayout();
             this.OnValidated(EventArgs.Empty);
             // Debug.Log("OnValidated");
         }
 #endif
 
-        // protected virtual void Update()
-        // {
-        //     Debug.Log(Screen.width);
-        // }
-
-        // public override void OnRebuildRequested()
-        // {
-        //     base.OnRebuildRequested();
-        //     Debug.Log("OnRebuildRequested");
-        // }
-
-        // public override void Rebuild(CanvasUpdate update)
-        // {
-        //     base.Rebuild(update);
-        //     Debug.Log($"Rebuild: {update}");
-        // }
-
-        // public override void GraphicUpdateComplete()
-        // {
-        //     base.GraphicUpdateComplete();
-        //     Debug.Log("GraphicUpdateComplete");
-        //     // this.UpdateLayout();
-        // }
-
-        // protected override void OnTransformParentChanged()
-        // {
-        //     base.OnTransformParentChanged();
-        //     Debug.Log("OnTransformParentChanged");
-        // }
-
         protected override void OnRectTransformDimensionsChange()
         {
             // Debug.Log($"OnRectTransformDimensionsChange: {this.isLayoutUpdate}, {this.isLayoutUpdating}");
             // this.terminal = this.GetComponent<Terminal>();
+
+            // Debug.Log(this.IsActive());
             base.OnRectTransformDimensionsChange();
-            if (this.isLayoutUpdating == false && this.isLayoutUpdate == false)
+            if (this.IsActive() == true)
             {
-                this.isLayoutUpdate = true;
-                Debug.Log(1);
-                this.Invoke(nameof(OnRectTransformDimensionsChanged), float.Epsilon);
+                if (this.isLayoutUpdating == false && this.isLayoutUpdate == false)
+                {
+                    this.isLayoutUpdate = true;
+                    this.Invoke(nameof(OnRectTransformDimensionsChanged), float.Epsilon);
+                }
             }
         }
 
@@ -879,21 +824,24 @@ namespace JSSoft.Terminal
             base.Awake();
             this.inputHandler = InputHandlerInstances.DefaultHandler;
             this.inputHandler.Attach(this);
-            this.isLayoutUpdate = true;
-            this.size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
+            // this.isLayoutUpdate = true;
+            // this.size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
             // this.rectTransform.hideFlags |= HideFlags.HideInInspector;
         }
 
         protected override void OnEnable()
         {
+            // Debug.Log("grid.enable");
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
+            this.text = this.terminal.Text;
+            this.UpdateLayout();
+            this.ScrollToCursor();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
-            // Debug.Log("OnEnabled");
         }
 
         protected override void OnDisable()
@@ -905,7 +853,6 @@ namespace JSSoft.Terminal
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
             TerminalGridEvents.Unregister(this);
-            // Debug.Log("OnDisabled");
         }
 
         protected override void OnDestroy()
@@ -969,12 +916,13 @@ namespace JSSoft.Terminal
         private void UpdateRectangle(Vector2 bufferSize)
         {
             var rect = this.GetComponent<RectTransform>().rect;
+            var padding = this.padding;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
             var actualWidth = (int)(rect.width / itemWidth);
             var actualHeight = (int)(rect.height / itemHeight);
-            var rectWidth = bufferSize.x * itemWidth + this.Padding.Left + this.Padding.Right;
-            var rectHeight = bufferSize.y * itemHeight + this.Padding.Top + this.Padding.Bottom;
+            var rectWidth = bufferSize.x * itemWidth + padding.Left + padding.Right;
+            var rectHeight = bufferSize.y * itemHeight + padding.Top + padding.Bottom;
             this.rectangle.x = 0;
             this.rectangle.y = 0;
             this.rectangle.width = rectWidth;
@@ -1001,39 +949,29 @@ namespace JSSoft.Terminal
         {
             var x = this.cursorPoint.X;
             var y = this.cursorPoint.Y;
+            var bufferWidth = this.actualBufferWidth;
             var bufferHeight = this.actualBufferHeight;
             var rowCount = this.rows.Count;
             var maxBufferHeight = Math.Max(bufferHeight, rowCount);
-            x = Math.Min(x, bufferHeight - 1);
+            x = Math.Min(x, bufferWidth - 1);
             x = Math.Max(x, 0);
             y = Math.Min(y, maxBufferHeight - 1);
             y = Math.Max(y, 0);
             this.cursorPoint = new TerminalPoint(x, y);
         }
 
-        private void UpdateBufferSize()
-        {
-            var size = TerminalGridUtility.GetActualSize(this, this.horizontalAlignment, this.verticalAlignment);
-            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, this.horizontalAlignment, this.verticalAlignment, size);
-            this.actualBufferWidth = (int)bufferSize.x;
-            this.actualBufferHeight = (int)bufferSize.y;
-        }
-
         private void OnRectTransformDimensionsChanged()
         {
-            // Debug.Log("OnRectTransformDimensionsChanged");
             var horzAlign = RectTransformUtility.GetHorizontalAlignment(this.rectTransform);
             var vertAlign = RectTransformUtility.GetVerticalAlignment(this.rectTransform);
             if ((horzAlign != null && vertAlign != null))
             {
                 var size = TerminalGridUtility.GetActualSize(this, horzAlign.Value, vertAlign.Value);
-                // Debug.Log($"{this.size} -> {size}");
                 if (this.horizontalAlignment != horzAlign.Value || this.verticalAlignment != vertAlign.Value || this.size != size)
                 {
                     this.horizontalAlignment = horzAlign.Value;
                     this.verticalAlignment = vertAlign.Value;
                     this.size = size;
-                    // Debug.Log($"{this.horizontalAlignment}, {this.verticalAlignment}");
                     this.UpdateLayout();
                 }
             }
@@ -1044,12 +982,14 @@ namespace JSSoft.Terminal
         {
             if (sender is Terminal terminal && terminal == this.terminal)
             {
-                var index = this.terminal.CursorIndex;
-                this.text = this.terminal.Text;
+                var cursorIndex = this.terminal.CursorIndex;
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
                 this.characterInfos.Update();
                 this.rows.Update();
-                this.UpdateVisibleIndex();
-                this.CursorPoint = this.IndexToPoint(index);
+                this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(cursorIndex), nameof(CursorPoint));
+                this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                this.notifier.End();
                 this.Selections.Clear();
                 // this.ScrollToCursor();
             }
@@ -1063,27 +1003,36 @@ namespace JSSoft.Terminal
                 {
                     case nameof(Terminal.OutputText):
                         {
-                            this.Text = this.terminal.Text;
-                            this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
+                            this.notifier.Begin();
+                            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+                            this.characterInfos.Update();
+                            this.rows.Update();
+                            this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
+                            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                            this.notifier.End();
                             this.Selections.Clear();
-                            this.UpdateVisibleIndex(true);
                         }
                         break;
                     case nameof(Terminal.PromptText):
                         {
-                            this.Text = this.terminal.Text;
-                            this.CursorPoint = this.IndexToPoint(this.terminal.CursorIndex);
+                            this.notifier.Begin();
+                            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+                            this.characterInfos.Update();
+                            this.rows.Update();
+                            this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
+                            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                            this.notifier.End();
                             this.Selections.Clear();
-                            this.UpdateVisibleIndex(true);
                             this.ScrollToCursor();
                         }
                         break;
                     case nameof(Terminal.CursorPosition):
                         {
-                            var index = this.terminal.CursorIndex;
-                            this.CursorPoint = this.IndexToPoint(index);
+                            this.notifier.Begin();
+                            this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
+                            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                            this.notifier.End();
                             this.Selections.Clear();
-                            this.UpdateVisibleIndex(true);
                             this.ScrollToCursor();
                         }
                         break;
