@@ -39,7 +39,7 @@ namespace JSSoft.Communication.Services
         {
 #if UNITY_STANDALONE
             // Screen.SetResolution(1050, 660, false);
-            Screen.SetResolution(1920, 1080, false);
+            Screen.SetResolution(2304, 1440, true);
 #endif
         }
 

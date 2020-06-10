@@ -50,7 +50,7 @@ namespace JSSoft.Terminal.Editor
         private SerializedProperty horizontalAlignmentProperty;
         private SerializedProperty verticalAlignmentProperty;
         private SerializedProperty paddingProperty;
-        private SerializedProperty marginProperty;
+        // private SerializedProperty marginProperty;
 
         private bool isDebug = false;
 
@@ -77,7 +77,7 @@ namespace JSSoft.Terminal.Editor
             this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
             this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
             this.paddingProperty = this.serializedObject.FindProperty("padding");
-            this.marginProperty = this.serializedObject.FindProperty("margin");
+            // this.marginProperty = this.serializedObject.FindProperty("margin");
         }
 
         public override void OnInspectorGUI()
@@ -121,7 +121,7 @@ namespace JSSoft.Terminal.Editor
             EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
             EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
             EditorGUILayout.PropertyField(this.paddingProperty, true);
-            EditorGUILayout.PropertyField(this.marginProperty, true);
+            // EditorGUILayout.PropertyField(this.marginProperty, true);
             this.serializedObject.ApplyModifiedProperties();
             if (EditorGUI.EndChangeCheck())
             {

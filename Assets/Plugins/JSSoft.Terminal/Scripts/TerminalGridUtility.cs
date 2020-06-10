@@ -236,7 +236,7 @@ namespace JSSoft.Terminal
             var itemWidth = GetItemWidth(grid);
             var itemHeight = GetItemHeight(grid);
             var padding = grid.Padding;
-            var margin = grid.Margin;
+            // var margin = grid.Margin;
             var bufferWidth = grid.BufferWidth;
             var bufferHeight = grid.BufferHeight;
             if (horzAlign != HorizontalAlignment.Stretch)
@@ -245,7 +245,7 @@ namespace JSSoft.Terminal
             }
             else
             {
-                size.x -= (margin.Left + margin.Right);
+                // size.x -= (margin.Left + margin.Right);
             }
             if (vertAlign != VerticalAlignment.Stretch)
             {
@@ -253,7 +253,7 @@ namespace JSSoft.Terminal
             }
             else
             {
-                size.y -= (margin.Top + margin.Bottom);
+                // size.y -= (margin.Top + margin.Bottom);
             }
             return size;
         }
@@ -261,43 +261,41 @@ namespace JSSoft.Terminal
         public static Vector2 GetActualPos(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign)
         {
             var pos = Vector2.zero;
-            var margin = grid.Margin;
-            if (horzAlign == HorizontalAlignment.Left)
-            {
-                pos.x += margin.Left;
-            }
-            else if (horzAlign == HorizontalAlignment.Center)
-            {
-                pos.x += margin.Left;
-                pos.x -= margin.Right;
-            }
-            else if (horzAlign == HorizontalAlignment.Right)
-            {
-                pos.x -= margin.Right;
-            }
-            else if (horzAlign == HorizontalAlignment.Stretch)
-            {
-                pos.x += margin.Left;
-                // size.x -= (margin.Left + margin.Right);
-            }
-            if (vertAlign == VerticalAlignment.Top)
-            {
-                pos.y -= margin.Top;
-            }
-            else if (vertAlign == VerticalAlignment.Center)
-            {
-                pos.y -= margin.Top;
-                pos.y += margin.Bottom;
-            }
-            else if (vertAlign == VerticalAlignment.Bottom)
-            {
-                pos.y += margin.Bottom;
-            }
-            else if (vertAlign == VerticalAlignment.Stretch)
-            {
-                pos.y += margin.Bottom;
-                // size.y -= (margin.Top + margin.Bottom);
-            }
+            // var margin = grid.Margin;
+            // if (horzAlign == HorizontalAlignment.Left)
+            // {
+            //     pos.x += margin.Left;
+            // }
+            // else if (horzAlign == HorizontalAlignment.Center)
+            // {
+            //     pos.x += margin.Left;
+            //     pos.x -= margin.Right;
+            // }
+            // else if (horzAlign == HorizontalAlignment.Right)
+            // {
+            //     pos.x -= margin.Right;
+            // }
+            // else if (horzAlign == HorizontalAlignment.Stretch)
+            // {
+            //     pos.x += margin.Left;
+            // }
+            // if (vertAlign == VerticalAlignment.Top)
+            // {
+            //     pos.y -= margin.Top;
+            // }
+            // else if (vertAlign == VerticalAlignment.Center)
+            // {
+            //     pos.y -= margin.Top;
+            //     pos.y += margin.Bottom;
+            // }
+            // else if (vertAlign == VerticalAlignment.Bottom)
+            // {
+            //     pos.y += margin.Bottom;
+            // }
+            // else if (vertAlign == VerticalAlignment.Stretch)
+            // {
+            //     pos.y += margin.Bottom;
+            // }
             return pos;
         }
     }

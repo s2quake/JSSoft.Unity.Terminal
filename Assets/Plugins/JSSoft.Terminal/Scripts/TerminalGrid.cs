@@ -101,8 +101,8 @@ namespace JSSoft.Terminal
         private string compositionString = string.Empty;
         [SerializeField]
         private TerminalThickness padding = new TerminalThickness(2);
-        [SerializeField]
-        private TerminalThickness margin = new TerminalThickness(0);
+        // [SerializeField]
+        // private TerminalThickness margin = new TerminalThickness(0);
         [SerializeField]
         private TerminalStyle style;
         [SerializeField]
@@ -536,18 +536,18 @@ namespace JSSoft.Terminal
             }
         }
 
-        public override TerminalThickness Margin
-        {
-            get => this.margin;
-            set
-            {
-                if (this.margin != value)
-                {
-                    this.margin = value;
-                    this.InvokePropertyChangedEvent(nameof(Margin));
-                }
-            }
-        }
+        // public override TerminalThickness Margin
+        // {
+        //     get => this.margin;
+        //     set
+        //     {
+        //         if (this.margin != value)
+        //         {
+        //             this.margin = value;
+        //             this.InvokePropertyChangedEvent(nameof(Margin));
+        //         }
+        //     }
+        // }
 
         public override TerminalStyle Style
         {
@@ -730,13 +730,13 @@ namespace JSSoft.Terminal
             // Debug.Log(size);
             // Debug.Log(bufferSize);
             this.isLayoutUpdating = true;
-            this.rectTransform.anchorMin = min;
-            this.rectTransform.anchorMax = max;
-            this.rectTransform.pivot = pivot;
-            this.rectTransform.anchoredPosition = pos;
+            // this.rectTransform.anchorMin = min;
+            // this.rectTransform.anchorMax = max;
+            // this.rectTransform.pivot = pivot;
+            // this.rectTransform.anchoredPosition = pos;
             this.UpdateRectangle(bufferSize);
-            this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
-            this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
+            // this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
+            // this.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
             this.notifier.Begin();
             this.notifier.SetField(ref this.actualBufferWidth, (int)bufferSize.x, nameof(ActualBufferWidth));
             this.notifier.SetField(ref this.actualBufferHeight, (int)bufferSize.y, nameof(ActualBufferHeight));
@@ -809,13 +809,15 @@ namespace JSSoft.Terminal
 
             // Debug.Log(this.IsActive());
             base.OnRectTransformDimensionsChange();
+            
             if (this.IsActive() == true)
             {
-                if (this.isLayoutUpdating == false && this.isLayoutUpdate == false)
-                {
-                    this.isLayoutUpdate = true;
-                    this.Invoke(nameof(OnRectTransformDimensionsChanged), float.Epsilon);
-                }
+                this.UpdateLayout();
+                // if (this.isLayoutUpdating == false && this.isLayoutUpdate == false)
+                // {
+                //     this.isLayoutUpdate = true;
+                //     this.Invoke(nameof(UpdateLayout), float.Epsilon);
+                // }
             }
         }
 
