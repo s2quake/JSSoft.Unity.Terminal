@@ -223,6 +223,11 @@ namespace JSSoft.Communication.Services.Server
         {
             this.callback = callback;
             this.Dispatcher = new Dispatcher(this);
+            foreach (var item in this.userByID.Keys)
+            {
+                this.userByID[item].Token = Guid.Empty;
+            }
+            this.userByToken.Clear();
         }
 
         protected virtual void OnCreated(UserEventArgs e)

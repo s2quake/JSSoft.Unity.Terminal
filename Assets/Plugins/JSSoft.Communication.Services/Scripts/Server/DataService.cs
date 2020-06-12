@@ -33,7 +33,7 @@ namespace JSSoft.Communication.Services.Server
 
         public DataService()
         {
-            this.Dispatcher = new Dispatcher(this);
+
         }
 
         public Task<DateTime> CreateDataBaseAsync(string dataBaseName)
@@ -48,6 +48,11 @@ namespace JSSoft.Communication.Services.Server
         }
 
         public Dispatcher Dispatcher { get; private set; }
+
+        public void Initialize()
+        {
+            this.Dispatcher = new Dispatcher(this);
+        }
 
         public void Dispose()
         {
