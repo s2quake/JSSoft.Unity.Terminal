@@ -265,7 +265,11 @@ namespace JSSoft.Terminal.InputHandlers
             var newTime = Time.time;
             var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
             eventData.useDragThreshold = false;
-            this.Focus();
+            if (this.Grid.IsFocused == false)
+            {
+                this.Focus();
+                return true;
+            }
             this.downPosition = newPosition;
             this.downPoint = newPoint1;
             this.downCount = downCount;

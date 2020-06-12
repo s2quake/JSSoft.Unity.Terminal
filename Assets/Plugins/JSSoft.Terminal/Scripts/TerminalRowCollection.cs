@@ -44,7 +44,6 @@ namespace JSSoft.Terminal
         private int updateIndex;
         private int minimumIndex;
         private int maximumIndex;
-        // private bool isEnabled;
 
         public TerminalRowCollection(TerminalGrid grid, TerminalCharacterInfoCollection characterInfos)
         {
@@ -87,8 +86,6 @@ namespace JSSoft.Terminal
 
         public void Update(int index)
         {
-            // if (this.isEnabled == false)
-            //     return;
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
@@ -102,7 +99,6 @@ namespace JSSoft.Terminal
             var dic = new Dictionary<int, int>(bufferHeight);
             var maximumIndex = this.MaximumIndex;
             this.Resize(bufferWidth, Math.Max(volume.Bottom, maxBufferHeight));
-
             for (var i = index; i < text.Length; i++)
             {
                 var characterInfo = this.characterInfos[i];
@@ -137,7 +133,6 @@ namespace JSSoft.Terminal
             this.updateIndex = text.Length;
             this.minimumIndex = Math.Max(0, maximumIndex - maxBufferHeight);
             this.maximumIndex = maximumIndex;
-            // Debug.Log($"update rows: {index}, {text.Length}");
         }
 
         public TerminalRow Prepare(int index)
@@ -194,18 +189,14 @@ namespace JSSoft.Terminal
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
-            // this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
-            // this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
-            // this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
-            // this.Update();
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)

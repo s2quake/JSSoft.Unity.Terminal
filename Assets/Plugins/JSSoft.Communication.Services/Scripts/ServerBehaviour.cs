@@ -20,16 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-namespace JSSoft.Terminal
+using UnityEngine;
+using JSSoft.Terminal.Commands;
+using System.Collections.Generic;
+using Ntreev.Library.Commands;
+using System.Threading.Tasks;
+
+namespace JSSoft.Communication.Services
 {
-    public enum HorizontalAlignment
+    [RequireComponent(typeof(ServerContextHost))]
+    public class ServerBehaviour : MonoBehaviour
     {
-        Left,
+        private ServerContextHost serverContextHost;
 
-        Center,
-
-        Right,
-        
-        Stretch,
+        protected virtual async Task OnEnable()
+        {
+            this.serverContextHost = this.GetComponent<ServerContextHost>();
+            await this.serverContextHost.OpenAsync();
+        }
     }
 }

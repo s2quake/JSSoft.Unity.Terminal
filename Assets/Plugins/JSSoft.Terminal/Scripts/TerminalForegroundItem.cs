@@ -79,7 +79,6 @@ namespace JSSoft.Terminal
                 this.terminalMesh.SetColor(index, TerminalCell.GetForegroundColor(item));
                 index++;
             }
-            this.material.color = base.color;
             this.terminalMesh.Fill(vh);
         }
 
@@ -90,7 +89,6 @@ namespace JSSoft.Terminal
 
         protected override void OnEnable()
         {
-            // Debug.Log("foregrounditem.enable");
             base.OnEnable();
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.Enabled += Terminal_Enabled;
@@ -132,6 +130,7 @@ namespace JSSoft.Terminal
                         {
                             this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                             this.SetVerticesDirty();
+                            Debug.Log(this.grid);
                         }
                     }
                     break;
@@ -150,7 +149,6 @@ namespace JSSoft.Terminal
         {
             if (sender is Terminal terminal && terminal == this.grid.Terminal)
             {
-                // this.SetVerticesDirty();
             }
         }
 
@@ -159,7 +157,10 @@ namespace JSSoft.Terminal
             if (sender is TerminalGrid grid && grid == this.grid)
             {
                 this.color = TerminalGridUtility.GetForegroundColor(this.grid);
+                this.material.color = this.color;
                 this.SetVerticesDirty();
+                this.SetMaterialDirty();
+                // Debug.Log(this.grid);
             }
         }
 
@@ -178,6 +179,7 @@ namespace JSSoft.Terminal
                 case TerminalStyle style when this.grid?.Style:
                     this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                     this.SetVerticesDirty();
+                    Debug.Log(this.grid);
                     break;
                 case TerminalColorPalette palette when this.grid?.ColorPalette:
                     this.SetVerticesDirty();

@@ -45,7 +45,7 @@ namespace JSSoft.Communication.Services.Server
                 Authority = Authority.Admin,
             });
 
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 20; i++)
             {
                 var user = new UserInfo()
                 {
@@ -118,7 +118,6 @@ namespace JSSoft.Communication.Services.Server
             {
                 this.ValidateUser(token);
                 this.ValidateUser(userID);
-
                 var user = this.userByID[userID];
                 return user.Token != Guid.Empty;
             });
@@ -132,6 +131,8 @@ namespace JSSoft.Communication.Services.Server
 
                 var token = Guid.NewGuid();
                 var user = this.userByID[userID];
+                if (user.Token != Guid.Empty)
+                    throw new InvalidOperationException("is already logged in.");
                 user.Token = token;
                 this.userByToken.Add(token, user);
                 this.callback.OnLoggedIn(userID);

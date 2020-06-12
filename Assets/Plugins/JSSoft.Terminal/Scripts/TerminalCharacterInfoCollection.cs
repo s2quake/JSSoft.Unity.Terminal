@@ -42,7 +42,6 @@ namespace JSSoft.Terminal
         private int bufferHeight;
         private int maxBufferHeight;
         private TerminalThickness padding;
-        // private bool isEnabled;
         private IReadOnlyList<TerminalFontDescriptor> descriptors;
 
         public TerminalCharacterInfoCollection(TerminalGrid grid)
@@ -88,8 +87,6 @@ namespace JSSoft.Terminal
 
         public void Update(int index)
         {
-            // if (this.isEnabled == false)
-            //     return;
             var text = this.grid.Text + char.MinValue;
             if (index >= text.Length)
                 return;
@@ -102,7 +99,6 @@ namespace JSSoft.Terminal
             var point = this.text.Length > 0 ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
             ArrayUtility.Resize(ref this.items, text.Length);
-            // Debug.Log($"update: {index}, {text.Length}");
             while (index < text.Length)
             {
                 var characterInfo = new TerminalCharacterInfo();
@@ -180,18 +176,14 @@ namespace JSSoft.Terminal
 
         private void Grid_Enabled(object sender, EventArgs e)
         {
-            // this.isEnabled = true;
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
-            // this.Update();
         }
 
         private void Grid_Disabled(object sender, EventArgs e)
         {
-            // this.isEnabled = false;
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
-            // this.Update();
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -214,15 +206,12 @@ namespace JSSoft.Terminal
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            if (this.grid.IsActive() == true)
-            {
-                // this.Update();
-            }
+
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-            // this.Update();
+            
         }
 
         private void Object_Validated(object sender, EventArgs e)

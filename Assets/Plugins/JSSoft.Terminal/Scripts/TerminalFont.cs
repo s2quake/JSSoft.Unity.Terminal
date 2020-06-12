@@ -142,7 +142,6 @@ namespace JSSoft.Terminal
             TerminalValidationEvents.Register(this);
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
-            // Debug.Log("TerminalFont OnEnable");
         }
 
         protected virtual void OnDisable()

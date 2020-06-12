@@ -565,7 +565,6 @@ namespace JSSoft.Terminal
 
         protected override void OnEnable()
         {
-            // Debug.Log("terminal.enable");
             base.OnEnable();
             this.inputText = this.command;
             this.promptText = this.prompt + this.command;

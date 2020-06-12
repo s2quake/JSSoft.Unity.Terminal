@@ -29,7 +29,7 @@ using System.Text.RegularExpressions;
 
 namespace JSSoft.Communication.Services
 {
-    public abstract class ContextHostBase : MonoBehaviour, IPromptDrawer
+    public abstract class ServiceContextHost : MonoBehaviour, IPromptDrawer
     {
         [SerializeField]
         protected TerminalBase terminal;
@@ -38,12 +38,11 @@ namespace JSSoft.Communication.Services
         static void OnRuntimeMethodLoad()
         {
 #if UNITY_STANDALONE
-            // Screen.SetResolution(1050, 660, false);
             Screen.SetResolution(2304, 1440, true);
 #endif
         }
 
-        static ContextHostBase()
+        static ServiceContextHost()
         {
             JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
         }
@@ -70,6 +69,10 @@ namespace JSSoft.Communication.Services
 
         public TerminalDispatcher Dispatcher => this.terminal.Dispatcher;
 
+        public EventHandler Opened;
+
+        public EventHandler Closed;
+
         internal async Task LoginAsync(string userID, string password)
         {
             var token = await this.UserService.LoginAsync(userID, password);
@@ -78,6 +81,7 @@ namespace JSSoft.Communication.Services
                 this.UserID = userID;
                 this.UserToken = token;
                 this.UpdatePrompt();
+                this.terminal.AppendLine($"User logged in: {userID}");
                 this.terminal.AppendLine("type 'help user' to execute user command.");
                 this.terminal.AppendLine();
             });
@@ -85,12 +89,14 @@ namespace JSSoft.Communication.Services
 
         internal async Task LogoutAsync()
         {
+            var userID = this.UserID;
             await this.UserService.LogoutAsync(this.UserToken);
             await this.Dispatcher.InvokeAsync(() =>
             {
                 this.UserID = string.Empty;
                 this.UserToken = Guid.Empty;
                 this.UpdatePrompt();
+                this.terminal.AppendLine($"User logged out: {userID}");
             });
         }
 
@@ -98,8 +104,8 @@ namespace JSSoft.Communication.Services
         {
             this.ServiceContext.Opened += ServiceContext_Opened;
             this.ServiceContext.Closed += ServiceContext_Closed;
-            this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
-            this.UserServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
+            // this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
+            // this.UserServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
             this.UserServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
             this.terminal.PromptDrawer = this;
             this.terminal.Prompt = ">";
@@ -112,6 +118,26 @@ namespace JSSoft.Communication.Services
                 this.ServiceContext.Closed -= ServiceContext_Closed;
                 await this.ServiceContext.CloseAsync(this.Token);
             }
+        }
+
+        protected virtual void OnEnable()
+        {
+            ServiceContextHostEvents.Register(this);
+        }
+
+        protected virtual void OnDisable()
+        {
+            ServiceContextHostEvents.Unregister(this);
+        }
+
+        protected virtual void OnOpened(EventArgs e)
+        {
+            this.Opened?.Invoke(this, e);
+        }
+
+        protected virtual void OnClosed(EventArgs e)
+        {
+            this.Closed?.Invoke(this, e);
         }
 
         private void UpdatePrompt()
@@ -171,6 +197,7 @@ namespace JSSoft.Communication.Services
                 this.terminal.AppendLine();
                 this.terminal.AppendLine("type 'login admin admin' to login.");
                 this.terminal.AppendLine();
+                this.OnOpened(EventArgs.Empty);
             });
         }
 
@@ -184,6 +211,7 @@ namespace JSSoft.Communication.Services
                 this.terminal.AppendLine("Server is disconnected.");
                 this.terminal.AppendLine("type 'open' to connect server.");
                 this.terminal.AppendLine();
+                this.OnClosed(EventArgs.Empty);
             });
         }
 

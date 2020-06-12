@@ -49,10 +49,6 @@ namespace JSSoft.Terminal
 
         public abstract TerminalFont Font { get; set; }
 
-        public abstract int BufferWidth { get; set; }
-
-        public abstract int BufferHeight { get; set; }
-
         public abstract int MaxBufferHeight { get; set; }
 
         public abstract int ActualBufferWidth { get; }

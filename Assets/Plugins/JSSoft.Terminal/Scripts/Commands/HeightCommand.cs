@@ -48,10 +48,10 @@ namespace JSSoft.Terminal.Commands
                 var value = this.Value;
                 await terminal.InvokeAsync(() =>
                 {
-                    if (value == null)
-                        terminal.AppendLine($"height: {grid.BufferHeight}");
-                    else
-                        grid.BufferHeight = (int)value;
+                    // if (value == null)
+                    //     terminal.AppendLine($"height: {grid.BufferHeight}");
+                    // else
+                    //     grid.BufferHeight = (int)value;
                 });
             }
         }

@@ -44,10 +44,10 @@ namespace JSSoft.Terminal.Commands
                 var value = this.Value;
                 await terminal.InvokeAsync(() =>
                 {
-                    if (value == null)
-                        terminal.AppendLine($"width: {grid.BufferWidth}");
-                    else
-                        grid.BufferWidth = (int)value;
+                    // if (value == null)
+                    //     terminal.AppendLine($"width: {grid.BufferWidth}");
+                    // else
+                    //     grid.BufferWidth = (int)value;
                 });
             }
         }

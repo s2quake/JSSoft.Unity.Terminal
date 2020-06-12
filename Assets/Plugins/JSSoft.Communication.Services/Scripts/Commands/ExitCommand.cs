@@ -33,9 +33,9 @@ namespace JSSoft.Communication.Services.Commands
 {
     class ExitCommand : JSSoft.Terminal.Commands.ExitCommand
     {
-        private readonly ContextHostBase context;
+        private readonly ServiceContextHost context;
 
-        public ExitCommand(ContextHostBase context)
+        public ExitCommand(ServiceContextHost context)
         {
             this.context = context;    
         }

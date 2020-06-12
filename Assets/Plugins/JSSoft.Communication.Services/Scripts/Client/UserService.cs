@@ -31,51 +31,61 @@ namespace JSSoft.Communication.Services.Client
 
         public Task CreateAsync(Guid token, string userID, string password, Authority authority)
         {
+            this.Validate();
             return this.userService.CreateAsync(token, userID, password, authority);
         }
 
         public Task DeleteAsync(Guid token, string userID)
         {
+            this.Validate();
             return this.userService.DeleteAsync(token, userID);
         }
 
         public Task<(string userName, Authority authority)> GetInfoAsync(Guid token, string userID)
         {
+            this.Validate();
             return this.userService.GetInfoAsync(token, userID);
         }
 
         public Task<string[]> GetUsersAsync(Guid token)
         {
+            this.Validate();
             return this.userService.GetUsersAsync(token);
         }
 
         public Task<bool> IsOnlineAsync(Guid token, string userID)
         {
+            this.Validate();
             return this.userService.IsOnlineAsync(token, userID);
         }
 
         public Task<Guid> LoginAsync(string userID, string password)
         {
+            this.Validate();
             return this.userService.LoginAsync(userID, password);
         }
 
         public Task LogoutAsync(Guid token)
         {
+            this.Validate();
             return this.userService.LogoutAsync(token);
         }
 
         public Task RenameAsync(Guid token, string userName)
         {
+            this.Validate();
             return this.userService.RenameAsync(token, userName);
         }
 
         public Task SendMessageAsync(Guid token, string userID, string message)
         {
+            this.Validate();
             return this.userService.SendMessageAsync(token, userID, message);
         }
 
         public Task SetAuthorityAsync(Guid token, string userID, Authority authority)
         {
+            this.Validate();
             return this.userService.SetAuthorityAsync(token, userID, authority);
         }
 
@@ -107,7 +117,7 @@ namespace JSSoft.Communication.Services.Client
         {
             this.Deleted?.Invoke(this, e);
         }
-        
+
         protected virtual void OnLoggedIn(UserEventArgs e)
         {
             this.LoggedIn?.Invoke(this, e);
@@ -131,6 +141,12 @@ namespace JSSoft.Communication.Services.Client
         protected virtual void OnAuthorityChanged(UserAuthorityEventArgs e)
         {
             this.AuthorityChanged?.Invoke(this, e);
+        }
+
+        private void Validate()
+        {
+            if (this.userService == null)
+                throw new InvalidOperationException("service not open.");
         }
 
         #region IUserServiceCallback

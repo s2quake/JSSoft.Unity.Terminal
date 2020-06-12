@@ -208,95 +208,17 @@ namespace JSSoft.Terminal
             return visibleIndex;
         }
 
-        public static Vector2 GetActualBufferSize(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign, Vector2 size)
+        public static Vector2 GetActualBufferSize(ITerminalGrid grid, Vector2 size)
         {
-            var bufferSize = new Vector2(grid.BufferWidth, grid.BufferHeight);
+            var bufferSize = Vector2.zero;
             var gameObject = grid.GameObject;
             var rectTransform = gameObject.GetComponent<RectTransform>();
-            // var parentSize = RectTransformUtility.GetParentSize(rectTransform);
             var padding = grid.Padding;
-            if (horzAlign == HorizontalAlignment.Stretch)
-            {
-                var itemWidth = GetItemWidth(grid);
-                bufferSize.x = (int)(size.x - (padding.Left + padding.Right)) / itemWidth;
-            }
-            if (vertAlign == VerticalAlignment.Stretch)
-            {
-                var itemHeight = GetItemHeight(grid);
-                bufferSize.y = (int)(size.y - (padding.Top + padding.Bottom)) / itemHeight;
-            }
-            return bufferSize;
-        }
-
-        public static Vector2 GetActualSize(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign)
-        {
-            var gameObject = grid.GameObject;
-            var rectTransform = gameObject.GetComponent<RectTransform>();
-            var size = RectTransformUtility.GetParentSize(rectTransform);
             var itemWidth = GetItemWidth(grid);
             var itemHeight = GetItemHeight(grid);
-            var padding = grid.Padding;
-            // var margin = grid.Margin;
-            var bufferWidth = grid.BufferWidth;
-            var bufferHeight = grid.BufferHeight;
-            if (horzAlign != HorizontalAlignment.Stretch)
-            {
-                size.x = bufferWidth * itemWidth + padding.Left + padding.Right;
-            }
-            else
-            {
-                // size.x -= (margin.Left + margin.Right);
-            }
-            if (vertAlign != VerticalAlignment.Stretch)
-            {
-                size.y = bufferHeight * itemHeight + padding.Top + padding.Bottom;
-            }
-            else
-            {
-                // size.y -= (margin.Top + margin.Bottom);
-            }
-            return size;
-        }
-
-        public static Vector2 GetActualPos(ITerminalGrid grid, HorizontalAlignment horzAlign, VerticalAlignment vertAlign)
-        {
-            var pos = Vector2.zero;
-            // var margin = grid.Margin;
-            // if (horzAlign == HorizontalAlignment.Left)
-            // {
-            //     pos.x += margin.Left;
-            // }
-            // else if (horzAlign == HorizontalAlignment.Center)
-            // {
-            //     pos.x += margin.Left;
-            //     pos.x -= margin.Right;
-            // }
-            // else if (horzAlign == HorizontalAlignment.Right)
-            // {
-            //     pos.x -= margin.Right;
-            // }
-            // else if (horzAlign == HorizontalAlignment.Stretch)
-            // {
-            //     pos.x += margin.Left;
-            // }
-            // if (vertAlign == VerticalAlignment.Top)
-            // {
-            //     pos.y -= margin.Top;
-            // }
-            // else if (vertAlign == VerticalAlignment.Center)
-            // {
-            //     pos.y -= margin.Top;
-            //     pos.y += margin.Bottom;
-            // }
-            // else if (vertAlign == VerticalAlignment.Bottom)
-            // {
-            //     pos.y += margin.Bottom;
-            // }
-            // else if (vertAlign == VerticalAlignment.Stretch)
-            // {
-            //     pos.y += margin.Bottom;
-            // }
-            return pos;
+            bufferSize.x = (int)(size.x - (padding.Left + padding.Right)) / itemWidth;
+            bufferSize.y = (int)(size.y - (padding.Top + padding.Bottom)) / itemHeight;
+            return bufferSize;
         }
     }
 }

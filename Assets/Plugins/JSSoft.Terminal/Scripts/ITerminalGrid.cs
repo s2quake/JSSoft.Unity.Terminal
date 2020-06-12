@@ -70,10 +70,6 @@ namespace JSSoft.Terminal
 
         TerminalFont Font { get; set; }
 
-        int BufferWidth { get; set; }
-
-        int BufferHeight { get; set; }
-
         int MaxBufferHeight { get; set; }
 
         int ActualBufferWidth { get; }
@@ -99,8 +95,6 @@ namespace JSSoft.Terminal
         Color CursorColor { get; set; }
 
         TerminalThickness Padding { get; set; }
-
-        // TerminalThickness Margin { get; set; }
 
         TerminalPoint CursorPoint { get; set; }
 

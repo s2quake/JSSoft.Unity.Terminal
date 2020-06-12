@@ -31,10 +31,10 @@ namespace JSSoft.Communication.Services.Commands
 {
     class LoginCommand : CommandAsyncBase
     {
-        private readonly ContextHostBase contex;
+        private readonly ServiceContextHost contex;
         private readonly IUserService userService;
 
-        public LoginCommand(ContextHostBase contex)
+        public LoginCommand(ServiceContextHost contex)
         {
             this.contex = contex;
             this.userService = contex.UserService;

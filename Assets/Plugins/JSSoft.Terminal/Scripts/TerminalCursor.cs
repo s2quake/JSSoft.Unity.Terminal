@@ -203,7 +203,7 @@ namespace JSSoft.Terminal
                     this.terminalMesh.SetColor(i, TerminalColors.Gray);
                 }
             }
-            this.material.color = base.color;
+            // this.material.color = base.color;
             this.terminalMesh.Fill(vh);
         }
 
@@ -322,6 +322,11 @@ namespace JSSoft.Terminal
                             //     this.UpdateLayout();
                             // }
                             // this.character = character;
+                        }
+                        break;
+                    case nameof(ITerminalGrid.Style):
+                        {
+                            this.UpdateLayout();
                         }
                         break;
                 }

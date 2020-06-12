@@ -37,7 +37,6 @@ namespace JSSoft.Terminal.Commands
         private CommandContext commandContext;
         private TerminalBase terminal;
         private TerminalGridBase grid;
-        private CommandWriter writer;
         [TextArea(5, 10)]
         [SerializeField]
         private string text = "type 'help' to help.";
@@ -69,8 +68,7 @@ namespace JSSoft.Terminal.Commands
                 this.terminal.AppendLine(this.text);
             this.terminal.CursorPosition = 0;
             this.terminal.Executing += Terminal_Executing;
-            this.writer = new CommandWriter(this.terminal);
-            this.commandContext.Out = this.writer;
+            this.commandContext.Out = new CommandWriter(this.terminal);
         }
 
         protected virtual void OnDisable()

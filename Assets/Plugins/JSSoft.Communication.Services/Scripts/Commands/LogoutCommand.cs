@@ -31,9 +31,9 @@ namespace JSSoft.Communication.Services.Commands
 {
     class LogoutCommand : CommandAsyncBase
     {
-        private readonly ContextHostBase context;
+        private readonly ServiceContextHost context;
 
-        public LogoutCommand(ContextHostBase context)
+        public LogoutCommand(ServiceContextHost context)
         {
             this.context = context;
         }

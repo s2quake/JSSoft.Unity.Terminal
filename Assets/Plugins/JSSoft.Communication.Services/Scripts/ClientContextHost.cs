@@ -31,7 +31,7 @@ using System.Text.RegularExpressions;
 
 namespace JSSoft.Communication.Services
 {
-    public class ClientContextHost : ContextHostBase
+    public class ClientContextHost : ServiceContextHost
     {
         private readonly Settings settings;
         private readonly UserService userService;

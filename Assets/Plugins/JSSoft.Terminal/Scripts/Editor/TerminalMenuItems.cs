@@ -274,12 +274,12 @@ namespace JSSoft.Terminal.Editor
 
             scrollbar.handleRect = handleRect;
 
-            var padding = terminalGrid.Padding;
-            var bufferWidth = (int)((pixelRect.width - (padding.Left + padding.Right)) / font.Width);
-            var bufferHeight = (int)((pixelRect.height - (padding.Top + padding.Bottom)) / font.Height);
+            // var padding = terminalGrid.Padding;
+            // var bufferWidth = (int)((pixelRect.width - (padding.Left + padding.Right)) / font.Width);
+            // var bufferHeight = (int)((pixelRect.height - (padding.Top + padding.Bottom)) / font.Height);
             terminalGrid.Font = font;
-            terminalGrid.BufferWidth = bufferWidth;
-            terminalGrid.BufferHeight = bufferHeight;
+            // terminalGrid.BufferWidth = bufferWidth;
+            // terminalGrid.BufferHeight = bufferHeight;
             terminal.AppendLine("hello world!");
             terminal.Prompt = "Prompt>";
 

@@ -44,11 +44,11 @@ namespace JSSoft.Terminal.Editor
         private SerializedProperty isScrollForwardEnabledProperty;
         private SerializedProperty behaviourListProperty;
 
-        private SerializedProperty bufferWidthProperty;
-        private SerializedProperty bufferHeightProperty;
+        // private SerializedProperty bufferWidthProperty;
+        // private SerializedProperty bufferHeightProperty;
         private SerializedProperty maxBufferHeightProperty;
-        private SerializedProperty horizontalAlignmentProperty;
-        private SerializedProperty verticalAlignmentProperty;
+        // private SerializedProperty horizontalAlignmentProperty;
+        // private SerializedProperty verticalAlignmentProperty;
         private SerializedProperty paddingProperty;
         // private SerializedProperty marginProperty;
 
@@ -71,11 +71,11 @@ namespace JSSoft.Terminal.Editor
             this.isScrollForwardEnabledProperty = this.serializedObject.FindProperty("isScrollForwardEnabled");
             this.behaviourListProperty = this.serializedObject.FindProperty("behaviourList");
 
-            this.bufferWidthProperty = this.serializedObject.FindProperty("bufferWidth");
-            this.bufferHeightProperty = this.serializedObject.FindProperty("bufferHeight");
+            // this.bufferWidthProperty = this.serializedObject.FindProperty("bufferWidth");
+            // this.bufferHeightProperty = this.serializedObject.FindProperty("bufferHeight");
             this.maxBufferHeightProperty = this.serializedObject.FindProperty("maxBufferHeight");
-            this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
-            this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
+            // this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
+            // this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
             this.paddingProperty = this.serializedObject.FindProperty("padding");
             // this.marginProperty = this.serializedObject.FindProperty("margin");
         }
@@ -115,11 +115,11 @@ namespace JSSoft.Terminal.Editor
 
             GUILayout.Space(10);
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(this.bufferWidthProperty);
-            EditorGUILayout.PropertyField(this.bufferHeightProperty);
+            // EditorGUILayout.PropertyField(this.bufferWidthProperty);
+            // EditorGUILayout.PropertyField(this.bufferHeightProperty);
             EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
-            EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
-            EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
+            // EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
+            // EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
             EditorGUILayout.PropertyField(this.paddingProperty, true);
             // EditorGUILayout.PropertyField(this.marginProperty, true);
             this.serializedObject.ApplyModifiedProperties();
@@ -128,31 +128,31 @@ namespace JSSoft.Terminal.Editor
                 // grid?.UpdateLayout();
             }
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("expand width"))
-            {
-                grid.BufferWidth++;
-            }
-            if (GUILayout.Button("collapse width"))
-            {
-                grid.BufferWidth--;
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("expand height"))
-            {
-                grid.BufferHeight++;
-            }
-            if (GUILayout.Button("collapse height"))
-            {
-                grid.BufferHeight--;
-            }
-            GUILayout.EndHorizontal();
+            // GUILayout.BeginHorizontal();
+            // if (GUILayout.Button("expand width"))
+            // {
+            //     grid.BufferWidth++;
+            // }
+            // if (GUILayout.Button("collapse width"))
+            // {
+            //     grid.BufferWidth--;
+            // }
+            // GUILayout.EndHorizontal();
+            // GUILayout.BeginHorizontal();
+            // if (GUILayout.Button("expand height"))
+            // {
+            //     grid.BufferHeight++;
+            // }
+            // if (GUILayout.Button("collapse height"))
+            // {
+            //     grid.BufferHeight--;
+            // }
+            // GUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Test"))
-            {
-                grid.SetLayoutDirty();
-            }
+            // if (GUILayout.Button("Test"))
+            // {
+            //     grid.SetLayoutDirty();
+            // }
 
             this.serializedObject.ApplyModifiedProperties();
         }

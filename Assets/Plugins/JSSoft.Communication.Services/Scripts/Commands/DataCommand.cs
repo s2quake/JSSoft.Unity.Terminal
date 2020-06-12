@@ -30,10 +30,10 @@ namespace JSSoft.Communication.Services.Commands
 {
     class DataCommand : CommandMethodBase
     {
-        private readonly ContextHostBase context;
+        private readonly ServiceContextHost context;
         private readonly IDataService dataService;
 
-        public DataCommand(ContextHostBase context)
+        public DataCommand(ServiceContextHost context)
         {
             this.context = context;
             this.dataService = context.DataService;

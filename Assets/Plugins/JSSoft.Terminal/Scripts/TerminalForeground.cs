@@ -122,7 +122,7 @@ namespace JSSoft.Terminal
                     var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
                     var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
                     var transform = foregroundItem.rectTransform;
-                    foregroundItem.material = new Material(Graphic.defaultGraphicMaterial);
+                    foregroundItem.material = new Material(Shader.Find("UI/Default"));
                     foregroundItem.Texture = texture;
                     foregroundItem.Grid = this.grid;
                     transform.SetParent(this.transform);

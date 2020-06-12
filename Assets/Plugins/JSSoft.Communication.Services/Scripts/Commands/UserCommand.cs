@@ -30,10 +30,10 @@ namespace JSSoft.Communication.Services.Commands
 {
     class UserCommand : CommandMethodBase
     {
-        private readonly ContextHostBase context;
+        private readonly ServiceContextHost context;
         private readonly IUserService userService;
 
-        public UserCommand(ContextHostBase context)
+        public UserCommand(ServiceContextHost context)
         {
             this.context = context;
             this.userService = context.UserService;
