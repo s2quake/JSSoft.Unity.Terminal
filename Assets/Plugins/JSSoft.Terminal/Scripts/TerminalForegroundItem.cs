@@ -128,7 +128,6 @@ namespace JSSoft.Terminal
                     {
                         if (this.IsDestroyed() == false)
                         {
-                            this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                             this.SetVerticesDirty();
                             Debug.Log(this.grid);
                         }
@@ -156,11 +155,7 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.color = TerminalGridUtility.GetForegroundColor(this.grid);
-                this.material.color = this.color;
                 this.SetVerticesDirty();
-                this.SetMaterialDirty();
-                // Debug.Log(this.grid);
             }
         }
 
@@ -177,7 +172,6 @@ namespace JSSoft.Terminal
             switch (sender)
             {
                 case TerminalStyle style when this.grid?.Style:
-                    this.color = TerminalGridUtility.GetForegroundColor(this.grid);
                     this.SetVerticesDirty();
                     Debug.Log(this.grid);
                     break;

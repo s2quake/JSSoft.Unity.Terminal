@@ -39,7 +39,7 @@ namespace JSSoft.Communication.Services
 
         static ClientBehaviour()
         {
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 100; i++)
             {
                 users.Enqueue($"user{i}");
             }
@@ -72,7 +72,7 @@ namespace JSSoft.Communication.Services
             {
                 this.clientContextHost = this.GetComponent<ClientContextHost>();
                 await this.clientContextHost.OpenAsync("localhost", 4004);
-                // await this.clientContextHost.LoginAsync(this.userID, "12234");
+                await this.clientContextHost.LoginAsync(this.userID, "1234");
             }
         }
     }

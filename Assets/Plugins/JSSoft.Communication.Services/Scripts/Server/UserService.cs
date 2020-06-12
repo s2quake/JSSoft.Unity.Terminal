@@ -45,7 +45,7 @@ namespace JSSoft.Communication.Services.Server
                 Authority = Authority.Admin,
             });
 
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var user = new UserInfo()
                 {

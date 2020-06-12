@@ -294,11 +294,7 @@ namespace JSSoft.Terminal
 
         public override bool IsFocused => this.isFocused;
 
-        public override string Text
-        {
-            get => this.text;
-
-        }
+        public override string Text=> this.text;
 
         public override TerminalFont Font
         {

@@ -65,7 +65,6 @@ namespace JSSoft.Terminal
                     this.terminalMesh.SetColor(index, selectionColor);
                 index++;
             }
-            this.material.color = base.color;
             this.terminalMesh.Fill(vh);
         }
 
