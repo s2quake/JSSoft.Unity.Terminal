@@ -29,7 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
-    class TerminalCursor : MaskableGraphic
+    public class TerminalCursor : MaskableGraphic
     {
         [SerializeField]
         private TerminalGrid grid = null;
@@ -203,7 +203,6 @@ namespace JSSoft.Terminal
                     this.terminalMesh.SetColor(i, TerminalColors.Gray);
                 }
             }
-            // this.material.color = base.color;
             this.terminalMesh.Fill(vh);
         }
 

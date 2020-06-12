@@ -31,7 +31,7 @@ using UnityEngine.EventSystems;
 namespace JSSoft.Terminal
 {
     [ExecuteAlways]
-    class Terminal : TerminalBase, IPromptDrawer, ICommandCompletor, INotifyValidated
+    public class Terminal : TerminalBase, IPromptDrawer, ICommandCompletor, INotifyValidated
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();

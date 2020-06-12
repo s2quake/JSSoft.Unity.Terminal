@@ -33,10 +33,13 @@ namespace JSSoft.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    class TerminalForeground : UIBehaviour
+    public class TerminalForeground : UIBehaviour
     {
         [SerializeField]
         private TerminalGrid grid = null;
+        [SerializeField]
+        [HideInInspector]
+        private string itemType;
 
         public TerminalForeground()
         {
@@ -47,6 +50,12 @@ namespace JSSoft.Terminal
         {
             get => this.grid;
             set => this.grid = value;
+        }
+
+        internal string ItemType
+        {
+            get => this.itemType;
+            set => this.itemType = value;
         }
 
         protected override void OnEnable()
@@ -119,7 +128,7 @@ namespace JSSoft.Terminal
                 }
                 else
                 {
-                    var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
+                    var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", this.ForegroungItemType);
                     var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
                     var transform = foregroundItem.rectTransform;
                     foregroundItem.material = new Material(Shader.Find("UI/Default"));
@@ -137,6 +146,18 @@ namespace JSSoft.Terminal
             foreach (var item in items)
             {
                 GameObject.DestroyImmediate(item.gameObject);
+            }
+        }
+
+        private Type ForegroungItemType
+        {
+            get
+            {
+                if (this.itemType == null)
+                {
+                    return Type.GetType(this.itemType);
+                }
+                return typeof(TerminalForegroundItem);
             }
         }
     }

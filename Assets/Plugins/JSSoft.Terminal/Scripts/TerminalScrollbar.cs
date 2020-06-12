@@ -31,7 +31,7 @@ using System.ComponentModel;
 namespace JSSoft.Terminal
 {
     [RequireComponent(typeof(Animator))]
-    internal class TerminalScrollbar : Scrollbar
+    public class TerminalScrollbar : Scrollbar
     {
         private const string pointerOnParam = "PointerOn";
 

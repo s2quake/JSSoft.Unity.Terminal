@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +32,16 @@ namespace JSSoft.Terminal.Editor
 {
     static class TerminalMeniItems
     {
+        private static Func<Type, Type> typeResolver;
+
+        public static Func<Type, Type> TypeResolver
+        {
+            get => typeResolver ?? defaultTypeResolver;
+            set => typeResolver = value;
+        }
+
+        private static readonly Func<Type, Type> defaultTypeResolver = new Func<Type, Type>((type) => type);
+
         [MenuItem("Terminal/Create Font Descriptor")]
         private static void CreateFontDescriptor()
         {
@@ -145,9 +157,23 @@ namespace JSSoft.Terminal.Editor
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
             var font = AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Terminal/Fonts/NanumGothicCoding.asset", typeof(TerminalFont)) as TerminalFont;
             var controller = AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Terminal/Animations/TerminalScrollbar/TerminalScrollbar.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+            var types = new List<Type>()
+            {
+                { typeof(Terminal) },
+                { typeof(TerminalGrid) },
+                { typeof(TerminalBackground) },
+                { typeof(TerminalForeground) },
+                { typeof(TerminalForegroundItem) },
+                { typeof(TerminalComposition) },
+                { typeof(TerminalCompositionBackground) },
+                { typeof(TerminalCompositionForeground) },
+                { typeof(TerminalCursor) },
+                { typeof(TerminalScrollbar) },
+            };
+            var typeByType = CollectTypes(types);
 
-            var terminalGridObj = new GameObject("Terminal", typeof(Terminal)) { layer = canvas.gameObject.layer };
-            var terminalGrid = terminalGridObj.AddComponent<TerminalGrid>();
+            var terminalGridObj = new GameObject(nameof(Terminal), typeByType[typeof(Terminal)]) { layer = canvas.gameObject.layer };
+            var terminalGrid = terminalGridObj.AddComponent(typeByType[typeof(TerminalGrid)]) as TerminalGrid;
             var terminal = terminalGrid.GetComponent<Terminal>();
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
@@ -156,13 +182,15 @@ namespace JSSoft.Terminal.Editor
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
             terminalGridRect.SetParent(parentRect);
+            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parentRect.rect.width);
+            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parentRect.rect.height);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
             terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
             terminalGridRect.pivot = new Vector2(0.5f, 0.5f);
             terminalGridRect.localPosition = Vector3.zero;
 
-            var backgroundObj = new GameObject("TerminalBackground") { layer = canvas.gameObject.layer };
-            var background = backgroundObj.AddComponent<TerminalBackground>();
+            var backgroundObj = new GameObject(nameof(TerminalBackground)) { layer = canvas.gameObject.layer };
+            var background = backgroundObj.AddComponent(typeByType[typeof(TerminalBackground)]) as TerminalBackground;
             var backgroundRect = background.rectTransform;
             background.material = new Material(Graphic.defaultGraphicMaterial);
             background.Grid = terminalGrid;
@@ -173,8 +201,8 @@ namespace JSSoft.Terminal.Editor
             backgroundRect.offsetMin = Vector2.zero;
             backgroundRect.offsetMax = Vector2.zero;
 
-            var cursorObj = new GameObject("TerminalCursor") { layer = canvas.gameObject.layer };
-            var cursor = cursorObj.AddComponent<TerminalCursor>();
+            var cursorObj = new GameObject(nameof(TerminalCursor)) { layer = canvas.gameObject.layer };
+            var cursor = cursorObj.AddComponent(typeByType[typeof(TerminalCursor)]) as TerminalCursor;
             var cursorRect = cursor.rectTransform;
             cursor.material = new Material(Graphic.defaultGraphicMaterial);
             cursor.Grid = terminalGrid;
@@ -185,10 +213,11 @@ namespace JSSoft.Terminal.Editor
             cursorRect.offsetMin = Vector2.zero;
             cursorRect.offsetMax = Vector2.zero;
 
-            var foregroundObj = new GameObject("TerminalForeground") { layer = canvas.gameObject.layer };
-            var foreground = foregroundObj.AddComponent<TerminalForeground>();
+            var foregroundObj = new GameObject(nameof(TerminalForeground)) { layer = canvas.gameObject.layer };
+            var foreground = foregroundObj.AddComponent(typeByType[typeof(TerminalForeground)]) as TerminalForeground;
             var foregroundRect = foregroundObj.GetComponent<RectTransform>();
             foreground.Grid = terminalGrid;
+            foreground.ItemType = typeByType[typeof(TerminalForegroundItem)].AssemblyQualifiedName;
             foregroundRect.SetParent(terminalGridRect);
             foregroundRect.anchorMin = Vector3.zero;
             foregroundRect.anchorMax = Vector3.one;
@@ -196,8 +225,8 @@ namespace JSSoft.Terminal.Editor
             foregroundRect.offsetMin = Vector2.zero;
             foregroundRect.offsetMax = Vector2.zero;
 
-            var compositionObj = new GameObject("TerminalComposition") { layer = canvas.gameObject.layer };
-            var composition = compositionObj.AddComponent<TerminalComposition>();
+            var compositionObj = new GameObject(nameof(TerminalComposition)) { layer = canvas.gameObject.layer };
+            var composition = compositionObj.AddComponent(typeByType[typeof(TerminalComposition)]) as TerminalComposition;
             var compositionRect = composition.GetComponent<RectTransform>();
             composition.Grid = terminalGrid;
             composition.ForegroundColor = TerminalGrid.DefaultForegroundColor;
@@ -209,7 +238,7 @@ namespace JSSoft.Terminal.Editor
             compositionRect.offsetMax = Vector2.zero;
 
             var compositionBackgroundObj = new GameObject("Background") { layer = canvas.gameObject.layer };
-            var compositionBackground = compositionBackgroundObj.AddComponent<TerminalCompositionBackground>();
+            var compositionBackground = compositionBackgroundObj.AddComponent(typeByType[typeof(TerminalCompositionBackground)]) as TerminalCompositionBackground;
             var compositionBackgroundRect = compositionBackground.rectTransform;
             compositionBackgroundRect.SetParent(compositionRect);
             compositionBackgroundRect.anchorMin = Vector3.zero;
@@ -219,7 +248,7 @@ namespace JSSoft.Terminal.Editor
             compositionBackgroundRect.offsetMax = Vector2.zero;
 
             var compositionForegroundObj = new GameObject("Foreground") { layer = canvas.gameObject.layer };
-            var compositionForeground = compositionForegroundObj.AddComponent<TerminalCompositionForeground>();
+            var compositionForeground = compositionForegroundObj.AddComponent(typeByType[typeof(TerminalCompositionForeground)]) as TerminalCompositionForeground;
             var compositionForegroundRect = compositionForeground.rectTransform;
             compositionForegroundRect.SetParent(compositionRect);
             compositionForegroundRect.anchorMin = Vector3.zero;
@@ -228,7 +257,7 @@ namespace JSSoft.Terminal.Editor
             compositionForegroundRect.offsetMin = Vector2.zero;
             compositionForegroundRect.offsetMax = Vector2.zero;
 
-            var scrollbarObj = new GameObject("TerminalScrollbar", typeof(Image), typeof(TerminalScrollbar)) { layer = canvas.gameObject.layer };
+            var scrollbarObj = new GameObject(nameof(TerminalScrollbar), typeof(Image), typeByType[typeof(TerminalScrollbar)]) { layer = canvas.gameObject.layer };
             var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();
             var animator = scrollbarObj.GetComponent<Animator>();
             var scrollbarImage = scrollbarObj.GetComponent<Image>();
@@ -274,12 +303,7 @@ namespace JSSoft.Terminal.Editor
 
             scrollbar.handleRect = handleRect;
 
-            // var padding = terminalGrid.Padding;
-            // var bufferWidth = (int)((pixelRect.width - (padding.Left + padding.Right)) / font.Width);
-            // var bufferHeight = (int)((pixelRect.height - (padding.Top + padding.Bottom)) / font.Height);
             terminalGrid.Font = font;
-            // terminalGrid.BufferWidth = bufferWidth;
-            // terminalGrid.BufferHeight = bufferHeight;
             terminal.AppendLine("hello world!");
             terminal.Prompt = "Prompt>";
 
@@ -315,6 +339,19 @@ namespace JSSoft.Terminal.Editor
                 dispatcher = dispatcherObject.GetComponent<TerminalDispatcher>();
             }
             return dispatcher;
+        }
+
+        private static IDictionary<Type, Type> CollectTypes(IEnumerable<Type> types)
+        {
+            var typeByType = new Dictionary<Type, Type>(types.Count());
+            foreach (var item in types)
+            {
+                var type = TypeResolver(item);
+                if (type != item && type.IsSubclassOf(item) == false)
+                    throw new InvalidOperationException($"'{type}' is not subclass of '{item}'");
+                typeByType.Add(item, type);
+            }
+            return typeByType;
         }
     }
 }

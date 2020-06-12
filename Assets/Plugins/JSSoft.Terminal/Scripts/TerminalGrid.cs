@@ -17,7 +17,7 @@ namespace JSSoft.Terminal
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    class TerminalGrid : TerminalGridBase,
+    public class TerminalGrid : TerminalGridBase,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,

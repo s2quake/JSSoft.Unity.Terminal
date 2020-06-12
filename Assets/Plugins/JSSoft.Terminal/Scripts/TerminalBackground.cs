@@ -29,7 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
-    class TerminalBackground : MaskableGraphic
+    public class TerminalBackground : MaskableGraphic
     {
         [SerializeField]
         private TerminalGrid grid = null;

@@ -29,7 +29,7 @@ using UnityEngine.UI;
 namespace JSSoft.Terminal
 {
     [ExecuteAlways]
-    class TerminalCompositionForeground : MaskableGraphic
+    public class TerminalCompositionForeground : MaskableGraphic
     {
         private readonly TerminalMesh terminalMesh = new TerminalMesh();
         private TerminalComposition composition;
