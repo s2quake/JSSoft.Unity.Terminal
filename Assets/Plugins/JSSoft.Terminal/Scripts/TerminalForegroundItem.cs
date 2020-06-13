@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
@@ -30,12 +31,13 @@ namespace JSSoft.Terminal
 {
     class TerminalForegroundItem : MaskableGraphic
     {
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
+        private readonly HashSet<ITerminalCell> cells = new HashSet<ITerminalCell>();
         [SerializeField]
+
         private TerminalGrid grid = null;
         [SerializeField]
         private Texture2D texture;
-
-        private TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalForegroundItem()
         {
@@ -58,6 +60,13 @@ namespace JSSoft.Terminal
             internal set => this.texture = value;
         }
 
+        internal void AddCell(ITerminalCell cell)
+        {
+            if (this.cells.Any() == false)
+                this.SetVerticesDirty();
+            this.cells.Add(cell);
+        }
+
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -69,10 +78,10 @@ namespace JSSoft.Terminal
         {
             base.OnPopulateMesh(vh);
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture == this.texture);
+            // var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture == this.texture);
             var index = 0;
-            this.terminalMesh.Count = visibleCells.Count();
-            foreach (var item in visibleCells)
+            this.terminalMesh.Count = this.cells.Count;
+            foreach (var item in this.cells)
             {
                 this.terminalMesh.SetVertex(index, item.ForegroundRect, rect);
                 this.terminalMesh.SetUV(index, item.ForegroundUV);
@@ -80,11 +89,7 @@ namespace JSSoft.Terminal
                 index++;
             }
             this.terminalMesh.Fill(vh);
-        }
-
-        protected override void OnRectTransformDimensionsChange()
-        {
-            base.OnRectTransformDimensionsChange();
+            this.cells.Clear();
         }
 
         protected override void OnEnable()
@@ -120,17 +125,16 @@ namespace JSSoft.Terminal
                 case nameof(ITerminalGrid.Text):
                 case nameof(ITerminalGrid.SelectingRange):
                     {
-                        if (this.IsDestroyed() == false)
-                            this.SetVerticesDirty();
+                        // if (this.IsDestroyed() == false)
+                        //     this.SetVerticesDirty();
                     }
                     break;
                 case nameof(ITerminalGrid.Style):
                     {
-                        if (this.IsDestroyed() == false)
-                        {
-                            this.SetVerticesDirty();
-                            Debug.Log(this.grid);
-                        }
+                        // if (this.IsDestroyed() == false)
+                        // {
+                        //     this.SetVerticesDirty();
+                        // }
                     }
                     break;
             }
@@ -140,7 +144,7 @@ namespace JSSoft.Terminal
         {
             if (sender is Terminal terminal && terminal == this.grid.Terminal)
             {
-                this.SetVerticesDirty();
+                // this.SetVerticesDirty();
             }
         }
 
@@ -155,7 +159,7 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.SetVerticesDirty();
+                // this.SetVerticesDirty();
             }
         }
 
@@ -163,7 +167,7 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.SetVerticesDirty();
+                // this.SetVerticesDirty();
             }
         }
 
@@ -172,11 +176,10 @@ namespace JSSoft.Terminal
             switch (sender)
             {
                 case TerminalStyle style when this.grid?.Style:
-                    this.SetVerticesDirty();
-                    Debug.Log(this.grid);
+                    // this.SetVerticesDirty();
                     break;
                 case TerminalColorPalette palette when this.grid?.ColorPalette:
-                    this.SetVerticesDirty();
+                    // this.SetVerticesDirty();
                     break;
             }
         }
