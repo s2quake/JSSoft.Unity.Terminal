@@ -20,14 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.Threading.Tasks;
-using JSSoft.Terminal;
-using UnityEngine;
-using Ntreev.Library.Threading;
-using JSSoft.Communication.Services;
 using JSSoft.Communication.Services.Client;
-using System.Text.RegularExpressions;
 
 namespace JSSoft.Communication.Services
 {

@@ -21,9 +21,6 @@
 // SOFTWARE.
 
 using UnityEngine;
-using JSSoft.Terminal.Commands;
-using System.Collections.Generic;
-using Ntreev.Library.Commands;
 using System.Threading.Tasks;
 
 namespace JSSoft.Communication.Services

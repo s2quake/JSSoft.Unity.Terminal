@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using Ntreev.Library.Commands;
 using System.Threading.Tasks;
 using System;
+using System.Timers;
 
 namespace JSSoft.Communication.Services
 {
@@ -35,7 +36,9 @@ namespace JSSoft.Communication.Services
         private static readonly Queue<string> users = new Queue<string>();
         private ServerContextHost serverContextHost;
         private ClientContextHost clientContextHost;
+        private IUserService userService;
         private string userID = string.Empty;
+        private Timer timer = new Timer(1000);
 
         static ClientBehaviour()
         {
@@ -43,6 +46,11 @@ namespace JSSoft.Communication.Services
             {
                 users.Enqueue($"user{i}");
             }
+        }
+
+        public ClientBehaviour()
+        {
+
         }
 
         protected virtual void Awake()
@@ -59,11 +67,13 @@ namespace JSSoft.Communication.Services
         protected virtual void OnEnable()
         {
             ServiceContextHostEvents.Opened += ServiceContextHost_Opened;
+            ServiceContextHostEvents.Closed += ServiceContextHost_Closed;
         }
 
         protected virtual void OnDisable()
         {
             ServiceContextHostEvents.Opened -= ServiceContextHost_Opened;
+            ServiceContextHostEvents.Closed -= ServiceContextHost_Closed;
         }
 
         private async void ServiceContextHost_Opened(object sender, EventArgs e)
@@ -72,8 +82,37 @@ namespace JSSoft.Communication.Services
             {
                 this.clientContextHost = this.GetComponent<ClientContextHost>();
                 await this.clientContextHost.OpenAsync("localhost", 4004);
-                // await this.clientContextHost.LoginAsync(this.userID, "12234");
+                await this.clientContextHost.LoginAsync(this.userID, "1234");
+                this.userService = this.clientContextHost.UserService;
+                this.timer.Elapsed += Timer_Elapsed;
+                this.timer.Start();
             }
+        }
+
+        private void ServiceContextHost_Closed(object sender, EventArgs e)
+        {
+            if (sender is ServerContextHost serverContext)
+            {
+                this.userService = null;
+                this.timer.Elapsed -= Timer_Elapsed;
+                this.timer.Stop();
+            }
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            var userID = $"user{(int)(UnityEngine.Random.value * 20)}";
+            // Debug.Log(userID);
+            // var isOnline = false;
+            // if (this.userService != null && userID != this.userID)
+            // {
+            //     isOnline = await this.userService.IsOnlineAsync(this.clientContextHost.UserToken, userID);
+            // }
+
+            // if (this.userService != null && isOnline == true)
+            // {
+            //     await this.userService.SendMessageAsync(this.clientContextHost.UserToken, userID, $"{UnityEngine.Random.value}");
+            // }
         }
     }
 }
