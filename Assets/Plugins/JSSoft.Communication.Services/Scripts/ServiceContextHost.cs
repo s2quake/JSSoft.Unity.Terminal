@@ -37,8 +37,10 @@ namespace JSSoft.Communication.Services
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
         {
-#if UNITY_STANDALONE
+#if UNITY_STANDALONE_OSX
             Screen.SetResolution(2304, 1440, true);
+#elif UNITY_STANDALONE_WIN
+            Screen.SetResolution(3840, 2160, true);
 #endif
         }
 

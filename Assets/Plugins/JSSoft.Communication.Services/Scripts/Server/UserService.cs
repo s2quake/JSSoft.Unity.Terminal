@@ -45,7 +45,7 @@ namespace JSSoft.Communication.Services.Server
                 Authority = Authority.Admin,
             });
 
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var user = new UserInfo()
                 {
@@ -223,6 +223,11 @@ namespace JSSoft.Communication.Services.Server
         {
             this.callback = callback;
             this.Dispatcher = new Dispatcher(this);
+            foreach (var item in this.userByID.Keys)
+            {
+                this.userByID[item].Token = Guid.Empty;
+            }
+            this.userByToken.Clear();
         }
 
         protected virtual void OnCreated(UserEventArgs e)

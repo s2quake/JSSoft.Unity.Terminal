@@ -42,7 +42,7 @@ namespace JSSoft.Communication.Services
 
         static ClientBehaviour()
         {
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < 100; i++)
             {
                 users.Enqueue($"user{i}");
             }

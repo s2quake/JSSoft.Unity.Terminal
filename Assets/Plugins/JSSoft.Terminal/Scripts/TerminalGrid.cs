@@ -17,7 +17,7 @@ namespace JSSoft.Terminal
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    class TerminalGrid : TerminalGridBase,
+    public class TerminalGrid : TerminalGridBase,
         IBeginDragHandler,
         IDragHandler,
         IEndDragHandler,
@@ -294,11 +294,7 @@ namespace JSSoft.Terminal
 
         public override bool IsFocused => this.isFocused;
 
-        public override string Text
-        {
-            get => this.text;
-
-        }
+        public override string Text=> this.text;
 
         public override TerminalFont Font
         {

@@ -218,6 +218,7 @@ namespace JSSoft.Terminal
             var itemHeight = GetItemHeight(grid);
             bufferSize.x = (int)(size.x - (padding.Left + padding.Right)) / itemWidth;
             bufferSize.y = (int)(size.y - (padding.Top + padding.Bottom)) / itemHeight;
+            bufferSize.y = Math.Min(grid.MaxBufferHeight, bufferSize.y);
             return bufferSize;
         }
     }

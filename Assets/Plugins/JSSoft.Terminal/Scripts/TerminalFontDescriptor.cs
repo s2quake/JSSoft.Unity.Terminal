@@ -47,6 +47,7 @@ namespace JSSoft.Terminal
         private Texture2D[] textures = new Texture2D[] { };
         [SerializeField]
         private int width;
+
         private Dictionary<char, CharInfo> charInfoByID = new Dictionary<char, CharInfo>();
 
         public bool Contains(char character)
@@ -62,7 +63,17 @@ namespace JSSoft.Terminal
 
         public int Width => this.width;
 
-        public IReadOnlyDictionary<char, CharInfo> CharInfos => this.charInfoByID;
+        public IReadOnlyDictionary<char, CharInfo> CharInfos
+        {
+            get
+            {
+                if (this.charInfoByID.Count != this.charInfos.Length)
+                {
+                    this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
+                }
+                return this.charInfoByID;
+            }
+        }
 
         public event EventHandler Enabled;
 

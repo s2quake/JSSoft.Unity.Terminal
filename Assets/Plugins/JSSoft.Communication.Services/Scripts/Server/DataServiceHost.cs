@@ -33,6 +33,7 @@ namespace JSSoft.Communication.Services.Server
 
         protected override IDataService CreateService()
         {
+            this.dataService.Initialize();
             return this.dataService;
         }
 

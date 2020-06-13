@@ -33,10 +33,15 @@ namespace JSSoft.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    class TerminalForeground : UIBehaviour
+    public class TerminalForeground : UIBehaviour
     {
+        private readonly Dictionary<Texture2D, TerminalForegroundItem> itemByTexture = new Dictionary<Texture2D, TerminalForegroundItem>();
+
         [SerializeField]
         private TerminalGrid grid = null;
+        [SerializeField]
+        [HideInInspector]
+        private string itemType;
 
         public TerminalForeground()
         {
@@ -49,18 +54,32 @@ namespace JSSoft.Terminal
             set => this.grid = value;
         }
 
+        internal string ItemType
+        {
+            get => this.itemType;
+            set => this.itemType = value;
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
+            TerminalEvents.Validated += Terminal_Validated;
+            TerminalEvents.Enabled += Terminal_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.Validated += Grid_Validated;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
+            TerminalValidationEvents.Validated += Object_Validated;
         }
 
         protected override void OnDisable()
         {
-            base.OnDisable();
-            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalEvents.Validated -= Terminal_Validated;
+            TerminalEvents.Enabled -= Terminal_Enabled;
             TerminalGridEvents.Validated -= Grid_Validated;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
+            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalValidationEvents.Validated -= Object_Validated;
+            base.OnDisable();
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -73,6 +92,16 @@ namespace JSSoft.Terminal
                     case nameof(ITerminalGrid.Style):
                         {
                             this.RefreshChilds();
+                            //     this.SetVerticesDirty();
+                        }
+                        break;
+                    case nameof(ITerminalGrid.VisibleIndex):
+                    case nameof(ITerminalGrid.Text):
+                    case nameof(ITerminalGrid.SelectingRange):
+                        {
+                            // if (this.IsDestroyed() == false)
+                            //     this.SetVerticesDirty();
+                            this.UpdateForegroundItem();
                         }
                         break;
                 }
@@ -85,6 +114,50 @@ namespace JSSoft.Terminal
             {
                 await Task.Delay(1);
                 this.RefreshChilds();
+            }
+        }
+
+        private void Terminal_Validated(object sender, EventArgs e)
+        {
+            if (sender is Terminal terminal && terminal == this.grid.Terminal)
+            {
+                // this.SetVerticesDirty();
+            }
+        }
+
+        private void Terminal_Enabled(object sender, EventArgs e)
+        {
+            if (sender is Terminal terminal && terminal == this.grid.Terminal)
+            {
+            }
+        }
+
+        // private void Grid_Validated(object sender, EventArgs e)
+        // {
+        //     if (sender is TerminalGrid grid && grid == this.grid)
+        //     {
+        //         this.SetVerticesDirty();
+        //     }
+        // }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && grid == this.grid)
+            {
+                // this.SetVerticesDirty();
+            }
+        }
+
+        private void Object_Validated(object sender, EventArgs e)
+        {
+            switch (sender)
+            {
+                case TerminalStyle style when this.grid?.Style:
+                    // this.SetVerticesDirty();
+                    break;
+                case TerminalColorPalette palette when this.grid?.ColorPalette:
+                    // this.SetVerticesDirty();
+                    break;
             }
         }
 
@@ -119,7 +192,7 @@ namespace JSSoft.Terminal
                 }
                 else
                 {
-                    var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", typeof(TerminalForegroundItem));
+                    var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", this.ForegroungItemType);
                     var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
                     var transform = foregroundItem.rectTransform;
                     foregroundItem.material = new Material(Shader.Find("UI/Default"));
@@ -137,6 +210,34 @@ namespace JSSoft.Terminal
             foreach (var item in items)
             {
                 GameObject.DestroyImmediate(item.gameObject);
+            }
+
+            this.itemByTexture.Clear();
+            foreach (var item in this.Items)
+            {
+                this.itemByTexture.Add(item.Texture, item);
+            }
+        }
+
+        private void UpdateForegroundItem()
+        {
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
+            foreach (var item in visibleCells)
+            {
+                var foregrounItem = this.itemByTexture[item.Texture];
+                foregrounItem.AddCell(item);
+            }
+        }
+
+        private Type ForegroungItemType
+        {
+            get
+            {
+                if (this.itemType == null)
+                {
+                    return Type.GetType(this.itemType);
+                }
+                return typeof(TerminalForegroundItem);
             }
         }
     }
