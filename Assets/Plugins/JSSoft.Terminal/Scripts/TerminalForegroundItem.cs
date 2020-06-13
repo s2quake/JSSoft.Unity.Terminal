@@ -78,7 +78,6 @@ namespace JSSoft.Terminal
         {
             base.OnPopulateMesh(vh);
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
-            // var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture == this.texture);
             var index = 0;
             this.terminalMesh.Count = this.cells.Count;
             foreach (var item in this.cells)
@@ -90,98 +89,6 @@ namespace JSSoft.Terminal
             }
             this.terminalMesh.Fill(vh);
             this.cells.Clear();
-        }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            TerminalEvents.Validated += Terminal_Validated;
-            TerminalEvents.Enabled += Terminal_Enabled;
-            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
-            TerminalGridEvents.Validated += Grid_Validated;
-            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
-            TerminalValidationEvents.Validated += Object_Validated;
-        }
-
-        protected override void OnDisable()
-        {
-            TerminalEvents.Validated -= Terminal_Validated;
-            TerminalEvents.Enabled -= Terminal_Enabled;
-            TerminalGridEvents.Validated -= Grid_Validated;
-            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
-            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
-            TerminalValidationEvents.Validated -= Object_Validated;
-            base.OnDisable();
-        }
-
-        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (object.Equals(sender, this.grid) == false)
-                return;
-
-            switch (e.PropertyName)
-            {
-                case nameof(ITerminalGrid.VisibleIndex):
-                case nameof(ITerminalGrid.Text):
-                case nameof(ITerminalGrid.SelectingRange):
-                    {
-                        // if (this.IsDestroyed() == false)
-                        //     this.SetVerticesDirty();
-                    }
-                    break;
-                case nameof(ITerminalGrid.Style):
-                    {
-                        // if (this.IsDestroyed() == false)
-                        // {
-                        //     this.SetVerticesDirty();
-                        // }
-                    }
-                    break;
-            }
-        }
-
-        private void Terminal_Validated(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.grid.Terminal)
-            {
-                // this.SetVerticesDirty();
-            }
-        }
-
-        private void Terminal_Enabled(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.grid.Terminal)
-            {
-            }
-        }
-
-        private void Grid_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && grid == this.grid)
-            {
-                // this.SetVerticesDirty();
-            }
-        }
-
-        private void Grid_LayoutChanged(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && grid == this.grid)
-            {
-                // this.SetVerticesDirty();
-            }
-        }
-
-        private void Object_Validated(object sender, EventArgs e)
-        {
-            switch (sender)
-            {
-                case TerminalStyle style when this.grid?.Style:
-                    // this.SetVerticesDirty();
-                    break;
-                case TerminalColorPalette palette when this.grid?.ColorPalette:
-                    // this.SetVerticesDirty();
-                    break;
-            }
         }
     }
 }

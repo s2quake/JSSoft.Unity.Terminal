@@ -63,12 +63,14 @@ namespace JSSoft.Terminal
         protected override void OnEnable()
         {
             base.OnEnable();
+            this.CollectChilds();
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.Enabled += Terminal_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
+            this.UpdateForegroundItem();
         }
 
         protected override void OnDisable()
@@ -92,15 +94,13 @@ namespace JSSoft.Terminal
                     case nameof(ITerminalGrid.Style):
                         {
                             this.RefreshChilds();
-                            //     this.SetVerticesDirty();
+                            this.UpdateForegroundItem();
                         }
                         break;
                     case nameof(ITerminalGrid.VisibleIndex):
                     case nameof(ITerminalGrid.Text):
                     case nameof(ITerminalGrid.SelectingRange):
                         {
-                            // if (this.IsDestroyed() == false)
-                            //     this.SetVerticesDirty();
                             this.UpdateForegroundItem();
                         }
                         break;
@@ -121,7 +121,7 @@ namespace JSSoft.Terminal
         {
             if (sender is Terminal terminal && terminal == this.grid.Terminal)
             {
-                // this.SetVerticesDirty();
+                this.UpdateForegroundItem();
             }
         }
 
@@ -132,19 +132,11 @@ namespace JSSoft.Terminal
             }
         }
 
-        // private void Grid_Validated(object sender, EventArgs e)
-        // {
-        //     if (sender is TerminalGrid grid && grid == this.grid)
-        //     {
-        //         this.SetVerticesDirty();
-        //     }
-        // }
-
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                // this.SetVerticesDirty();
+                this.UpdateForegroundItem();
             }
         }
 
@@ -153,10 +145,14 @@ namespace JSSoft.Terminal
             switch (sender)
             {
                 case TerminalStyle style when this.grid?.Style:
-                    // this.SetVerticesDirty();
+                    {
+                        this.UpdateForegroundItem();
+                    }
                     break;
                 case TerminalColorPalette palette when this.grid?.ColorPalette:
-                    // this.SetVerticesDirty();
+                    {
+                        this.UpdateForegroundItem();
+                    }
                     break;
             }
         }
@@ -212,6 +208,11 @@ namespace JSSoft.Terminal
                 GameObject.DestroyImmediate(item.gameObject);
             }
 
+            this.CollectChilds();
+        }
+
+        private void CollectChilds()
+        {
             this.itemByTexture.Clear();
             foreach (var item in this.Items)
             {
@@ -224,8 +225,11 @@ namespace JSSoft.Terminal
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
             foreach (var item in visibleCells)
             {
-                var foregrounItem = this.itemByTexture[item.Texture];
-                foregrounItem.AddCell(item);
+                if (this.itemByTexture.ContainsKey(item.Texture) == true)
+                {
+                    var foregrounItem = this.itemByTexture[item.Texture];
+                    foregrounItem.AddCell(item);
+                }
             }
         }
 
