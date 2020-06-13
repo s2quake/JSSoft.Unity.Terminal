@@ -46,7 +46,7 @@ namespace JSSoft.Communication.Services
 
         static ServiceContextHost()
         {
-            JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
+            // JSSoft.Communication.Logging.LogUtility.Logger = new DebugLogger();
         }
 
         public abstract IUserService UserService { get; }
