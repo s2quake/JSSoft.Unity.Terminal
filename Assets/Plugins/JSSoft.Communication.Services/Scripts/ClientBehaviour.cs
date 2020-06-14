@@ -26,26 +26,30 @@ using System.Collections.Generic;
 using Ntreev.Library.Commands;
 using System.Threading.Tasks;
 using System;
-using System.Timers;
+using System.Threading;
+using Ntreev.Library.Random;
 
 namespace JSSoft.Communication.Services
 {
     [RequireComponent(typeof(ClientContextHost))]
     public class ClientBehaviour : MonoBehaviour
     {
-        private static readonly Queue<string> users = new Queue<string>();
+        private static readonly List<string> unusedUsers;
+        private static readonly List<string> usedUsers;
         private ServerContextHost serverContextHost;
         private ClientContextHost clientContextHost;
         private IUserService userService;
         private string userID = string.Empty;
-        private Timer timer = new Timer(1000);
+        private Timer timer;
 
         static ClientBehaviour()
         {
-            for (var i = 0; i < 100; i++)
+            unusedUsers = new List<string>(Server.UserService.MaxUserCount);
+            for (var i = 0; i < unusedUsers.Capacity; i++)
             {
-                users.Enqueue($"user{i}");
+                unusedUsers.Add($"user{i}");
             }
+            usedUsers = new List<string>(Server.UserService.MaxUserCount);
         }
 
         public ClientBehaviour()
@@ -55,12 +59,16 @@ namespace JSSoft.Communication.Services
 
         protected virtual void Awake()
         {
-            this.userID = users.Dequeue();
+            var userID = unusedUsers.Random();
+            unusedUsers.Remove(userID);
+            usedUsers.Add(userID);
+            this.userID = userID;
         }
 
         protected virtual void OnDestroy()
         {
-            users.Enqueue(this.userID);
+            usedUsers.Remove(this.userID);
+            unusedUsers.Add(this.userID);
             this.userID = string.Empty;
         }
 
@@ -72,6 +80,8 @@ namespace JSSoft.Communication.Services
 
         protected virtual void OnDisable()
         {
+            this.timer?.Dispose();
+            this.timer = null;
             ServiceContextHostEvents.Opened -= ServiceContextHost_Opened;
             ServiceContextHostEvents.Closed -= ServiceContextHost_Closed;
         }
@@ -84,8 +94,8 @@ namespace JSSoft.Communication.Services
                 await this.clientContextHost.OpenAsync("localhost", 4004);
                 await this.clientContextHost.LoginAsync(this.userID, "1234");
                 this.userService = this.clientContextHost.UserService;
-                this.timer.Elapsed += Timer_Elapsed;
-                this.timer.Start();
+                this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(100, 200), RandomUtility.Next(100, 1000));
+                // Debug.Log("timer created");
             }
         }
 
@@ -94,25 +104,22 @@ namespace JSSoft.Communication.Services
             if (sender is ServerContextHost serverContext)
             {
                 this.userService = null;
-                this.timer.Elapsed -= Timer_Elapsed;
-                this.timer.Stop();
+                this.timer.Dispose();
+                this.timer = null;
             }
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void Timer_Elapsed(object state)
         {
-            var userID = $"user{(int)(UnityEngine.Random.value * 20)}";
-            // Debug.Log(userID);
-            // var isOnline = false;
-            // if (this.userService != null && userID != this.userID)
-            // {
-            //     isOnline = await this.userService.IsOnlineAsync(this.clientContextHost.UserToken, userID);
-            // }
-
-            // if (this.userService != null && isOnline == true)
-            // {
-            //     await this.userService.SendMessageAsync(this.clientContextHost.UserToken, userID, $"{UnityEngine.Random.value}");
-            // }
+            var userID = usedUsers.RandomOrDefault(item => this.userID != item);
+            if (userID != null)
+            {
+                var token = this.clientContextHost.UserToken;
+                if (await this.userService.IsOnlineAsync(token, userID) == true)
+                {
+                    await this.userService.SendMessageAsync(token, userID, RandomUtility.NextString());
+                }
+            }
         }
     }
 }

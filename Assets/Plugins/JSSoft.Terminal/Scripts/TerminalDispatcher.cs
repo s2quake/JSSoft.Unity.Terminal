@@ -92,7 +92,7 @@ namespace JSSoft.Terminal
             if (Application.isPlaying && this.scheduler != null)
 #endif
             {
-                this.scheduler.ProcessAll(1000 / 60);
+                this.scheduler.ProcessAll();
             }
         }
 

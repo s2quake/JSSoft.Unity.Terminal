@@ -30,6 +30,8 @@ namespace JSSoft.Communication.Services.Server
 {
     class UserService : IUserService, INotifyUserService
     {
+        internal static readonly int MaxUserCount = 100;
+
         private readonly Dictionary<string, UserInfo> userByID = new Dictionary<string, UserInfo>();
         private readonly Dictionary<Guid, UserInfo> userByToken = new Dictionary<Guid, UserInfo>();
 
@@ -45,7 +47,7 @@ namespace JSSoft.Communication.Services.Server
                 Authority = Authority.Admin,
             });
 
-            for (var i = 0; i < 100; i++)
+            for (var i = 0; i < MaxUserCount; i++)
             {
                 var user = new UserInfo()
                 {

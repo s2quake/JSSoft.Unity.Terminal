@@ -424,6 +424,7 @@ namespace JSSoft.Terminal
             {
                 this.volume = Math.Max(cell.Volume, 1);
             }
+            this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.ActualBufferHeight;
             this.SetVerticesDirty();
         }
 

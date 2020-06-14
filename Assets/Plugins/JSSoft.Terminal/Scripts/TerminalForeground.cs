@@ -124,12 +124,16 @@ namespace JSSoft.Terminal
             this.cellList.Clear();
             foreach (var item in visibleCells)
             {
-                if (itemByTexture.ContainsKey(item.Texture) == true)
-                {
-                    var foregrounItem = itemByTexture[item.Texture];
-                    foregrounItem.SetVerticesDirty();
-                }
+                // if (itemByTexture.ContainsKey(item.Texture) == true)
+                // {
+                //     var foregrounItem = itemByTexture[item.Texture];
+                //     foregrounItem.SetVerticesDirty();
+                // }
                 this.cellList.Add(item);
+            }
+            foreach (var item in this.Items)
+            {
+                item.SetVerticesDirty();
             }
         }
 
