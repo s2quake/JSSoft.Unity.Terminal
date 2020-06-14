@@ -85,6 +85,7 @@ namespace JSSoft.Terminal
             TerminalValidationEvents.Validated += Object_Validated;
             TerminalValidationEvents.Enabled += Object_Enabled;
             this.CollectChilds();
+            this.Invoke(nameof(SetDirty), float.Epsilon);
         }
 
         protected override void OnDisable()
@@ -99,6 +100,11 @@ namespace JSSoft.Terminal
             TerminalValidationEvents.Enabled -= Object_Enabled;
             this.text = string.Empty;
             base.OnDisable();
+        }
+
+        private void SetDirty()
+        {
+            this.SetDirty(true);
         }
 
         private void SetDirty(bool force)

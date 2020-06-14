@@ -32,6 +32,7 @@ using System.Collections.Generic;
 namespace JSSoft.Terminal.Commands
 {
     [RequireComponent(typeof(TerminalBase))]
+    [DisallowMultipleComponent]
     public class CommandContextHost : MonoBehaviour, ICommandCompletor, IServiceProvider
     {
         private CommandContext commandContext;

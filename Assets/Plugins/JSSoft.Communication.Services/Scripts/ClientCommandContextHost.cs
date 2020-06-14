@@ -29,7 +29,6 @@ using JSSoft.Communication.Services.Commands.Client;
 
 namespace JSSoft.Communication.Services
 {
-    [DisallowMultipleComponent]
     public class ClientCommandContextHost : CommandContextHost
     {
         [SerializeField]

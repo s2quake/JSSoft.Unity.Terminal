@@ -8,7 +8,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.ComponentModel;
 using System.Collections.Specialized;
-using JSSoft.Terminal.InputHandlers;
 
 namespace JSSoft.Terminal
 {

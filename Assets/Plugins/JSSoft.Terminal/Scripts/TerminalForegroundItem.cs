@@ -76,6 +76,7 @@ namespace JSSoft.Terminal
                 var visibleCells = this.foreground.GetCells(this.texture);
                 this.terminalMesh.SetVertices(visibleCells, rect);
                 this.terminalMesh.Fill(vh);
+                Debug.Log($"OnPopulateMesh: {visibleCells.Count()} {this.texture.GetHashCode()}");
             }
         }
     }
