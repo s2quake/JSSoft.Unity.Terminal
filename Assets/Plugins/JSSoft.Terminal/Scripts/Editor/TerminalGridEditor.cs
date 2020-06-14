@@ -29,60 +29,48 @@ namespace JSSoft.Terminal.Editor
     [CustomEditor(typeof(TerminalGrid))]
     public class TerminalGridEditor : UnityEditor.Editor
     {
-        private SerializedProperty styleProperty;
-
-        private SerializedProperty fontProperty;
-        private SerializedProperty backgroundColorProperty;
-        private SerializedProperty foregroundColorProperty;
-        private SerializedProperty selectionColorProperty;
-        private SerializedProperty cursorColorProperty;
-        private SerializedProperty colorPaletteProperty;
-        private SerializedProperty cursorStyleProperty;
-        private SerializedProperty cursorThicknessProperty;
-        private SerializedProperty isCursorBlinkableProperty;
-        private SerializedProperty cursorBlinkDelayProperty;
-        private SerializedProperty isScrollForwardEnabledProperty;
-        private SerializedProperty behaviourListProperty;
-
-        // private SerializedProperty bufferWidthProperty;
-        // private SerializedProperty bufferHeightProperty;
-        private SerializedProperty maxBufferHeightProperty;
-        // private SerializedProperty horizontalAlignmentProperty;
-        // private SerializedProperty verticalAlignmentProperty;
-        private SerializedProperty paddingProperty;
-        // private SerializedProperty marginProperty;
-
+        private PropertyNotifier notifier;
         private bool isDebug = false;
 
         public void OnEnable()
         {
-            this.styleProperty = this.serializedObject.FindProperty("style");
+            this.notifier = new PropertyNotifier(this.serializedObject, this.InvokeEvent);
+            this.notifier.Add("style", nameof(TerminalGrid.Style));
+            this.notifier.Add("font", nameof(TerminalGrid.Font));
+            this.notifier.Add("backgroundColor", nameof(TerminalGrid.BackgroundColor));
+            this.notifier.Add("foregroundColor", nameof(TerminalGrid.ForegroundColor));
+            this.notifier.Add("selectionColor", nameof(TerminalGrid.SelectionColor));
+            this.notifier.Add("cursorColor", nameof(TerminalGrid.CursorColor));
+            this.notifier.Add("colorPalette", nameof(TerminalGrid.ColorPalette));
+            this.notifier.Add("cursorStyle", nameof(TerminalGrid.CursorStyle));
+            this.notifier.Add("cursorThickness", nameof(TerminalGrid.CursorThickness));
+            this.notifier.Add("isCursorBlinkable", nameof(TerminalGrid.IsCursorBlinkable));
+            this.notifier.Add("cursorBlinkDelay", nameof(TerminalGrid.CursorBlinkDelay));
+            this.notifier.Add("isScrollForwardEnabled", nameof(TerminalGrid.IsScrollForwardEnabled));
+            this.notifier.Add("behaviourList", string.Empty);
+            this.notifier.Add("maxBufferHeight", nameof(TerminalGrid.MaxBufferHeight));
+            this.notifier.Add("padding", nameof(TerminalGrid.Padding), true);
+        }
 
-            this.fontProperty = this.serializedObject.FindProperty("font");
-            this.backgroundColorProperty = this.serializedObject.FindProperty("backgroundColor");
-            this.foregroundColorProperty = this.serializedObject.FindProperty("foregroundColor");
-            this.selectionColorProperty = this.serializedObject.FindProperty("selectionColor");
-            this.cursorColorProperty = this.serializedObject.FindProperty("cursorColor");
-            this.colorPaletteProperty = this.serializedObject.FindProperty("colorPalette");
-            this.cursorStyleProperty = this.serializedObject.FindProperty("cursorStyle");
-            this.cursorThicknessProperty = this.serializedObject.FindProperty("cursorThickness");
-            this.isCursorBlinkableProperty = this.serializedObject.FindProperty("isCursorBlinkable");
-            this.cursorBlinkDelayProperty = this.serializedObject.FindProperty("cursorBlinkDelay");
-            this.isScrollForwardEnabledProperty = this.serializedObject.FindProperty("isScrollForwardEnabled");
-            this.behaviourListProperty = this.serializedObject.FindProperty("behaviourList");
+        public void OnDisable()
+        {
+            this.notifier = null;
+        }
 
-            // this.bufferWidthProperty = this.serializedObject.FindProperty("bufferWidth");
-            // this.bufferHeightProperty = this.serializedObject.FindProperty("bufferHeight");
-            this.maxBufferHeightProperty = this.serializedObject.FindProperty("maxBufferHeight");
-            // this.horizontalAlignmentProperty = this.serializedObject.FindProperty("horizontalAlignment");
-            // this.verticalAlignmentProperty = this.serializedObject.FindProperty("verticalAlignment");
-            this.paddingProperty = this.serializedObject.FindProperty("padding");
-            // this.marginProperty = this.serializedObject.FindProperty("margin");
+        private void InvokeEvent(string[] propertyNames)
+        {
+            if (this.target is TerminalGrid grid)
+            {
+                foreach (var item in propertyNames)
+                {
+                    grid.InvokePropertyChangedEvent(item);
+                }
+            }
         }
 
         public override void OnInspectorGUI()
         {
-            var grid = this.target as TerminalGrid;
+            var styleProperty = this.notifier.GetProperty("style");
             this.isDebug = GUILayout.Toggle(this.isDebug, "Debug Mode");
             if (isDebug == true)
             {
@@ -90,71 +78,32 @@ namespace JSSoft.Terminal.Editor
                 return;
             }
 
-            this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.styleProperty);
+            this.notifier.Begin();
+            this.notifier.PropertyField("style");
             GUILayout.Space(10);
-
-            if (this.styleProperty.objectReferenceValue != null)
+            if (styleProperty.objectReferenceValue != null)
             {
                 EditorGUILayout.HelpBox("Property cannot be changed when style is applied.", MessageType.Info);
             }
-            GUI.enabled = this.styleProperty.objectReferenceValue == null;
-            EditorGUILayout.PropertyField(this.fontProperty);
-            EditorGUILayout.PropertyField(this.backgroundColorProperty);
-            EditorGUILayout.PropertyField(this.foregroundColorProperty);
-            EditorGUILayout.PropertyField(this.selectionColorProperty);
-            EditorGUILayout.PropertyField(this.cursorColorProperty);
-            EditorGUILayout.PropertyField(this.colorPaletteProperty);
-            EditorGUILayout.PropertyField(this.cursorStyleProperty);
-            EditorGUILayout.PropertyField(this.cursorThicknessProperty);
-            EditorGUILayout.PropertyField(this.isCursorBlinkableProperty);
-            EditorGUILayout.PropertyField(this.cursorBlinkDelayProperty);
-            EditorGUILayout.PropertyField(this.isScrollForwardEnabledProperty);
-            EditorGUILayout.PropertyField(this.behaviourListProperty, true);
+            GUI.enabled = styleProperty.objectReferenceValue == null;
+            this.notifier.PropertyField("font");
+            this.notifier.PropertyField("backgroundColor");
+            this.notifier.PropertyField("foregroundColor");
+            this.notifier.PropertyField("selectionColor");
+            this.notifier.PropertyField("cursorColor");
+            this.notifier.PropertyField("colorPalette");
+            this.notifier.PropertyField("cursorStyle");
+            this.notifier.PropertyField("cursorThickness");
+            this.notifier.PropertyField("isCursorBlinkable");
+            this.notifier.PropertyField("cursorBlinkDelay");
+            this.notifier.PropertyField("isScrollForwardEnabled");
+            this.notifier.PropertyField("behaviourList");
             GUI.enabled = true;
 
             GUILayout.Space(10);
-            EditorGUI.BeginChangeCheck();
-            // EditorGUILayout.PropertyField(this.bufferWidthProperty);
-            // EditorGUILayout.PropertyField(this.bufferHeightProperty);
-            EditorGUILayout.PropertyField(this.maxBufferHeightProperty);
-            // EditorGUILayout.PropertyField(this.horizontalAlignmentProperty);
-            // EditorGUILayout.PropertyField(this.verticalAlignmentProperty);
-            EditorGUILayout.PropertyField(this.paddingProperty, true);
-            // EditorGUILayout.PropertyField(this.marginProperty, true);
-            this.serializedObject.ApplyModifiedProperties();
-            if (EditorGUI.EndChangeCheck())
-            {
-                // grid?.UpdateLayout();
-            }
-
-            // GUILayout.BeginHorizontal();
-            // if (GUILayout.Button("expand width"))
-            // {
-            //     grid.BufferWidth++;
-            // }
-            // if (GUILayout.Button("collapse width"))
-            // {
-            //     grid.BufferWidth--;
-            // }
-            // GUILayout.EndHorizontal();
-            // GUILayout.BeginHorizontal();
-            // if (GUILayout.Button("expand height"))
-            // {
-            //     grid.BufferHeight++;
-            // }
-            // if (GUILayout.Button("collapse height"))
-            // {
-            //     grid.BufferHeight--;
-            // }
-            // GUILayout.EndHorizontal();
-
-            // if (GUILayout.Button("Test"))
-            // {
-            //     grid.SetLayoutDirty();
-            // }
-
-            this.serializedObject.ApplyModifiedProperties();
+            this.notifier.PropertyField("maxBufferHeight");
+            this.notifier.PropertyField("padding");
+            this.notifier.End();
         }
     }
 }

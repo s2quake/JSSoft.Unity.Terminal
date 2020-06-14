@@ -197,6 +197,7 @@ namespace JSSoft.Terminal
         {
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
+            this.text = string.Empty;
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -209,17 +210,17 @@ namespace JSSoft.Terminal
                     this.UpdateAll();
                     break;
                 case nameof(ITerminalGrid.Text):
-                    // this.Update();
+                    this.Update();
                     break;
             }
         }
 
         private void Grid_Validated(object sender, EventArgs e)
         {
-            if (this.grid.IsActive() == true)
-            {
-                // this.Update();
-            }
+            // if (this.grid.IsActive() == true)
+            // {
+            //     this.Update();
+            // }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)

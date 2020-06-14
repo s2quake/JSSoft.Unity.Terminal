@@ -182,8 +182,8 @@ namespace JSSoft.Terminal.Editor
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
             terminalGridRect.SetParent(parentRect);
-            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parentRect.rect.width);
-            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parentRect.rect.height);
+            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parentRect.rect.width);
+            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parentRect.rect.height);
             terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
             terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
             terminalGridRect.pivot = new Vector2(0.5f, 0.5f);
@@ -240,6 +240,7 @@ namespace JSSoft.Terminal.Editor
             var compositionBackgroundObj = new GameObject("Background") { layer = canvas.gameObject.layer };
             var compositionBackground = compositionBackgroundObj.AddComponent(typeByType[typeof(TerminalCompositionBackground)]) as TerminalCompositionBackground;
             var compositionBackgroundRect = compositionBackground.rectTransform;
+            compositionBackground.Composition = composition;
             compositionBackgroundRect.SetParent(compositionRect);
             compositionBackgroundRect.anchorMin = Vector3.zero;
             compositionBackgroundRect.anchorMax = Vector3.one;
@@ -250,6 +251,7 @@ namespace JSSoft.Terminal.Editor
             var compositionForegroundObj = new GameObject("Foreground") { layer = canvas.gameObject.layer };
             var compositionForeground = compositionForegroundObj.AddComponent(typeByType[typeof(TerminalCompositionForeground)]) as TerminalCompositionForeground;
             var compositionForegroundRect = compositionForeground.rectTransform;
+            compositionForeground.Composition = composition;
             compositionForegroundRect.SetParent(compositionRect);
             compositionForegroundRect.anchorMin = Vector3.zero;
             compositionForegroundRect.anchorMax = Vector3.one;

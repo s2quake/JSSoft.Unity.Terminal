@@ -393,6 +393,7 @@ namespace JSSoft.Terminal
 
         public bool IsExecuting => this.isExecuting;
 
+        [FieldName(nameof(isReadOnly))]
         public override bool IsReadOnly
         {
             get => this.isReadOnly;
@@ -406,6 +407,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(isVerbose))]
         public override bool IsVerbose
         {
             get => this.isVerbose;
@@ -439,7 +441,23 @@ namespace JSSoft.Terminal
 
         public override string Text => this.text;
 
-        public override string OutputText => this.outputText;
+        [FieldName(nameof(outputText))]
+        public override string OutputText
+        {
+            get => this.outputText;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                if (this.outputText != value)
+                {
+                    this.notifier.Begin();
+                    this.notifier.SetField(ref this.outputText, value, nameof(OutputText));
+                    this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                    this.notifier.End();
+                }
+            }
+        }
 
         public override string Delimiter
         {
@@ -456,6 +474,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(prompt))]
         public override string Prompt
         {
             get => this.prompt;
@@ -480,6 +499,7 @@ namespace JSSoft.Terminal
 
         public override string PromptText => this.promptText;
 
+        [FieldName(nameof(command))]
         public override string Command
         {
             get => this.command;
@@ -528,6 +548,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(dispatcher))]
         public override TerminalDispatcher Dispatcher => this.dispatcher;
 
         public override event EventHandler Validated;
@@ -537,6 +558,39 @@ namespace JSSoft.Terminal
         public override event EventHandler Enabled;
 
         public override event EventHandler Disabled;
+
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
+        internal TerminalColor? GetForegroundColor(int index)
+        {
+            if (index < this.outputText.Length && index < this.foregroundColors.Length)
+            {
+                return this.foregroundColors[index];
+            }
+            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
+            if (promptIndex >= 0 && promptIndex < this.promptForegroundColors.Length)
+            {
+                return this.promptForegroundColors[promptIndex];
+            }
+            return null;
+        }
+
+        internal TerminalColor? GetBackgroundColor(int index)
+        {
+            if (index < this.outputText.Length && index < this.backgroundColors.Length)
+            {
+                return this.backgroundColors[index];
+            }
+            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
+            if (promptIndex >= 0 && promptIndex < this.promptBackgroundColors.Length)
+            {
+                return this.promptBackgroundColors[promptIndex];
+            }
+            return null;
+        }
 
         protected virtual void OnValidated(EventArgs e)
         {
@@ -692,11 +746,6 @@ namespace JSSoft.Terminal
             this.notifier.End();
         }
 
-        private void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         private IEnumerable<string> GetDependencyProperties(string propertyName)
         {
             switch (propertyName)
@@ -723,34 +772,6 @@ namespace JSSoft.Terminal
                 this.executing.Invoke(this, eventArgs);
             else
                 action(null);
-        }
-
-        internal TerminalColor? GetForegroundColor(int index)
-        {
-            if (index < this.outputText.Length && index < this.foregroundColors.Length)
-            {
-                return this.foregroundColors[index];
-            }
-            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
-            if (promptIndex >= 0 && promptIndex < this.promptForegroundColors.Length)
-            {
-                return this.promptForegroundColors[promptIndex];
-            }
-            return null;
-        }
-
-        internal TerminalColor? GetBackgroundColor(int index)
-        {
-            if (index < this.outputText.Length && index < this.backgroundColors.Length)
-            {
-                return this.backgroundColors[index];
-            }
-            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
-            if (promptIndex >= 0 && promptIndex < this.promptBackgroundColors.Length)
-            {
-                return this.promptBackgroundColors[promptIndex];
-            }
-            return null;
         }
 
         #region ITerminal

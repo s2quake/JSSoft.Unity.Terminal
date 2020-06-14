@@ -30,7 +30,7 @@ namespace JSSoft.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    class TerminalComposition : UIBehaviour, INotifyValidated
+    public class TerminalComposition : UIBehaviour, INotifyValidated
     {
         private static readonly int[] backgroundTriangles = new int[6] { 0, 1, 2, 2, 3, 0 };
         private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
@@ -65,11 +65,12 @@ namespace JSSoft.Terminal
                 if (this.grid != value)
                 {
                     this.grid = value;
-                    this.InvokePropertyChanged(nameof(Grid));
+                    this.InvokePropertyChangedEvent(nameof(Grid));
                 }
             }
         }
 
+        [FieldName(nameof(text))]
         public string Text
         {
             get => this.text;
@@ -80,11 +81,12 @@ namespace JSSoft.Terminal
                 if (this.text != value)
                 {
                     this.text = value;
-                    this.InvokePropertyChanged(nameof(Text));
+                    this.InvokePropertyChangedEvent(nameof(Text));
                 }
             }
         }
 
+        [FieldName(nameof(columnIndex))]
         public int ColumnIndex
         {
             get => this.columnIndex;
@@ -95,11 +97,12 @@ namespace JSSoft.Terminal
                 if (this.columnIndex != value)
                 {
                     this.columnIndex = value;
-                    this.InvokePropertyChanged(nameof(ColumnIndex));
+                    this.InvokePropertyChangedEvent(nameof(ColumnIndex));
                 }
             }
         }
 
+        [FieldName(nameof(rowIndex))]
         public int RowIndex
         {
             get => this.rowIndex;
@@ -110,11 +113,12 @@ namespace JSSoft.Terminal
                 if (this.rowIndex != value)
                 {
                     this.rowIndex = value;
-                    this.InvokePropertyChanged(nameof(RowIndex));
+                    this.InvokePropertyChangedEvent(nameof(RowIndex));
                 }
             }
         }
 
+        [FieldName(nameof(foregroundColor))]
         public Color ForegroundColor
         {
             get => this.foregroundColor;
@@ -123,11 +127,12 @@ namespace JSSoft.Terminal
                 if (this.foregroundColor != value)
                 {
                     this.foregroundColor = value;
-                    this.InvokePropertyChanged(nameof(ForegroundColor));
+                    this.InvokePropertyChangedEvent(nameof(ForegroundColor));
                 }
             }
         }
 
+        [FieldName(nameof(backgroundColor))]
         public Color BackgroundColor
         {
             get => this.backgroundColor;
@@ -136,11 +141,12 @@ namespace JSSoft.Terminal
                 if (this.backgroundColor != value)
                 {
                     this.backgroundColor = value;
-                    this.InvokePropertyChanged(nameof(BackgroundColor));
+                    this.InvokePropertyChangedEvent(nameof(BackgroundColor));
                 }
             }
         }
 
+        [FieldName(nameof(foregroundMargin))]
         public TerminalThickness ForegroundMargin
         {
             get => this.foregroundMargin;
@@ -149,11 +155,12 @@ namespace JSSoft.Terminal
                 if (this.foregroundMargin != value)
                 {
                     this.foregroundMargin = value;
-                    this.InvokePropertyChanged(nameof(ForegroundMargin));
+                    this.InvokePropertyChangedEvent(nameof(ForegroundMargin));
                 }
             }
         }
 
+        [FieldName(nameof(backgroundMargin))]
         public TerminalThickness BackgroundMargin
         {
             get => this.backgroundMargin;
@@ -162,15 +169,12 @@ namespace JSSoft.Terminal
                 if (this.backgroundMargin != value)
                 {
                     this.backgroundMargin = value;
-                    this.InvokePropertyChanged(nameof(BackgroundMargin));
+                    this.InvokePropertyChangedEvent(nameof(BackgroundMargin));
                 }
             }
         }
 
-        public Vector2 Offset
-        {
-            get; set;
-        } = new Vector2(0, 0);
+        public Vector2 Offset { get; set; } = Vector2.zero;
 
         public TerminalFont Font => this.grid?.Font;
 
@@ -181,6 +185,11 @@ namespace JSSoft.Terminal
         public event EventHandler Validated;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
 
 #if UNITY_EDITOR
         protected override void OnValidate()
@@ -294,11 +303,6 @@ namespace JSSoft.Terminal
             {
                 this.foregroundColor = this.grid.ForegroundColor;
             }
-        }
-
-        private void InvokePropertyChanged(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private int ActualBufferWidth => this.grid != null ? this.grid.ActualBufferWidth : 0;

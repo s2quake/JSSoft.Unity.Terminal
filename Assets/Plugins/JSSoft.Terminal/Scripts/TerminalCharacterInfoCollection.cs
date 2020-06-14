@@ -184,6 +184,7 @@ namespace JSSoft.Terminal
         {
             TerminalValidationEvents.Validated -= Object_Validated;
             TerminalValidationEvents.Enabled -= Object_Enabled;
+            this.text = string.Empty;
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -198,7 +199,7 @@ namespace JSSoft.Terminal
                     break;
                 case nameof(ITerminalGrid.Text):
                     {
-                        // this.Update();
+                        this.Update();
                     }
                     break;
             }

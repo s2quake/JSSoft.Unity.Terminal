@@ -26,20 +26,21 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    [CustomEditor(typeof(Terminal))]
-    public class TerminalEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TerminalComposition))]
+    public class TerminalCompositionEditor : UnityEditor.Editor
     {
         private PropertyNotifier notifier;
 
         public void OnEnable()
         {
             this.notifier = new PropertyNotifier(this.serializedObject, this.InvokeEvent);
-            this.notifier.Add(nameof(Terminal.OutputText));
-            this.notifier.Add(nameof(Terminal.Prompt));
-            this.notifier.Add(nameof(Terminal.Command));
-            this.notifier.Add(nameof(Terminal.IsReadOnly));
-            this.notifier.Add(nameof(Terminal.IsVerbose));
-            this.notifier.Add(nameof(Terminal.Dispatcher));
+            this.notifier.Add(nameof(TerminalComposition.Text));
+            this.notifier.Add(nameof(TerminalComposition.ForegroundColor));
+            this.notifier.Add(nameof(TerminalComposition.BackgroundColor));
+            this.notifier.Add(nameof(TerminalComposition.ForegroundMargin), true);
+            this.notifier.Add(nameof(TerminalComposition.BackgroundMargin), true);
+            this.notifier.Add(nameof(TerminalComposition.ColumnIndex));
+            this.notifier.Add(nameof(TerminalComposition.RowIndex));
         }
 
         public void OnDisable()
@@ -56,11 +57,11 @@ namespace JSSoft.Terminal.Editor
 
         private void InvokeEvent(string[] propertyNames)
         {
-            if (this.target is Terminal terminal)
+            if (this.target is TerminalComposition composition)
             {
                 foreach (var item in propertyNames)
                 {
-                    terminal.InvokePropertyChangedEvent(item);
+                    composition.InvokePropertyChangedEvent(item);
                 }
             }
         }

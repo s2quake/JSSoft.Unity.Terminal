@@ -35,13 +35,17 @@ namespace JSSoft.Terminal
     [RequireComponent(typeof(RectTransform))]
     public class TerminalForeground : UIBehaviour
     {
-        private readonly Dictionary<Texture2D, TerminalForegroundItem> itemByTexture = new Dictionary<Texture2D, TerminalForegroundItem>();
-
         [SerializeField]
         private TerminalGrid grid = null;
         [SerializeField]
         [HideInInspector]
         private string itemType;
+
+        private readonly List<ITerminalCell> cellList = new List<ITerminalCell>();
+        private readonly Dictionary<Texture2D, TerminalForegroundItem> itemByTexture = new Dictionary<Texture2D, TerminalForegroundItem>();
+
+        private int visibleIndex;
+        private string text = string.Empty;
 
         public TerminalForeground()
         {
@@ -54,6 +58,15 @@ namespace JSSoft.Terminal
             set => this.grid = value;
         }
 
+        internal IEnumerable<ITerminalCell> GetCells(Texture2D texture)
+        {
+            foreach (var item in this.cellList)
+            {
+                if (item.Texture == texture)
+                    yield return item;
+            }
+        }
+
         internal string ItemType
         {
             get => this.itemType;
@@ -63,14 +76,15 @@ namespace JSSoft.Terminal
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.CollectChilds();
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.Enabled += Terminal_Enabled;
+            TerminalGridEvents.Enabled += Grid_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
-            this.UpdateForegroundItem();
+            TerminalValidationEvents.Enabled += Object_Enabled;
+            this.CollectChilds();
         }
 
         protected override void OnDisable()
@@ -78,10 +92,47 @@ namespace JSSoft.Terminal
             TerminalEvents.Validated -= Terminal_Validated;
             TerminalEvents.Enabled -= Terminal_Enabled;
             TerminalGridEvents.Validated -= Grid_Validated;
+            TerminalGridEvents.Enabled -= Grid_Enabled;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
+            TerminalValidationEvents.Enabled -= Object_Enabled;
+            this.text = string.Empty;
             base.OnDisable();
+        }
+
+        private void SetDirty(bool force)
+        {
+            if (this.text != this.grid.Text || this.visibleIndex != this.grid.VisibleIndex || force == true)
+            {
+                this.UpdateCellList();
+                this.text = this.grid.Text;
+                this.visibleIndex = this.grid.VisibleIndex;
+            }
+        }
+
+        private void UpdateCellList()
+        {
+            var itemByTexture = this.Items.ToDictionary(item => item.Texture);
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
+            this.cellList.Clear();
+            foreach (var item in visibleCells)
+            {
+                if (itemByTexture.ContainsKey(item.Texture) == true)
+                {
+                    var foregrounItem = itemByTexture[item.Texture];
+                    foregrounItem.SetVerticesDirty();
+                }
+                this.cellList.Add(item);
+            }
+        }
+
+        private void Grid_Enabled(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && grid == this.grid)
+            {
+                this.SetDirty(true);
+            }
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -94,34 +145,32 @@ namespace JSSoft.Terminal
                     case nameof(ITerminalGrid.Style):
                         {
                             this.RefreshChilds();
-                            this.UpdateForegroundItem();
                         }
                         break;
                     case nameof(ITerminalGrid.VisibleIndex):
                     case nameof(ITerminalGrid.Text):
                     case nameof(ITerminalGrid.SelectingRange):
                         {
-                            this.UpdateForegroundItem();
+                            this.SetDirty(false);
                         }
                         break;
                 }
             }
         }
 
-        private async void Grid_Validated(object sender, EventArgs e)
+        private void Grid_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalGrid grid && grid == this.grid)
-            {
-                await Task.Delay(1);
-                this.RefreshChilds();
-            }
+            // if (sender is TerminalGrid grid && grid == this.grid)
+            // {
+            //     await Task.Delay(1);
+            //     this.RefreshChilds();
+            // }
         }
 
         private void Terminal_Validated(object sender, EventArgs e)
         {
             if (sender is Terminal terminal && terminal == this.grid.Terminal)
             {
-                this.UpdateForegroundItem();
             }
         }
 
@@ -136,7 +185,7 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.UpdateForegroundItem();
+                this.SetDirty(true);
             }
         }
 
@@ -146,14 +195,72 @@ namespace JSSoft.Terminal
             {
                 case TerminalStyle style when this.grid?.Style:
                     {
-                        this.UpdateForegroundItem();
+                        this.SetDirty(true);
                     }
                     break;
                 case TerminalColorPalette palette when this.grid?.ColorPalette:
                     {
-                        this.UpdateForegroundItem();
+                        this.SetDirty(true);
                     }
                     break;
+            }
+        }
+
+        private void Object_Enabled(object sender, EventArgs e)
+        {
+            switch (sender)
+            {
+                case TerminalStyle style when this.grid?.Font:
+                    {
+                        // this.SetDirty(true);
+                    }
+                    break;
+            }
+        }
+
+        private void RefreshChilds()
+        {
+            var font = this.grid.Font;
+            var itemByTexture = this.Items.ToDictionary(item => item.Texture);
+            var textures = font != null ? font.Textures : new Texture2D[] { };
+            for (var i = 0; i < textures.Length; i++)
+            {
+                var texture = textures[i];
+                if (itemByTexture.ContainsKey(texture) == true)
+                {
+                    itemByTexture.Remove(texture);
+                }
+                else
+                {
+                    var gameObject = new GameObject($"Item{i}", this.ForegroungItemType);
+                    var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
+                    var transform = foregroundItem.rectTransform;
+                    foregroundItem.material = new Material(Shader.Find("UI/Default"));
+                    foregroundItem.Texture = texture;
+                    foregroundItem.Grid = this.grid;
+                    foregroundItem.Foreground = this;
+                    transform.SetParent(this.transform);
+                    transform.anchorMin = Vector3.zero;
+                    transform.anchorMax = Vector3.one;
+                    transform.offsetMin = Vector3.zero;
+                    transform.offsetMax = Vector3.zero;
+                }
+            }
+            var items = itemByTexture.Values.ToArray();
+            foreach (var item in items)
+            {
+                GameObject.DestroyImmediate(item.gameObject);
+            }
+            this.CollectChilds();
+            this.SetDirty(true);
+        }
+
+        private void CollectChilds()
+        {
+            this.itemByTexture.Clear();
+            foreach (var item in this.Items)
+            {
+                this.itemByTexture.Add(item.Texture, item);
             }
         }
 
@@ -168,67 +275,6 @@ namespace JSSoft.Terminal
                     {
                         yield return component;
                     }
-                }
-            }
-        }
-
-        private void RefreshChilds()
-        {
-            if (this.IsDestroyed() == true)
-                return;
-            var font = this.grid.Font;
-            var itemByTexture = this.Items.ToDictionary(item => item.Texture);
-            var textures = font != null ? font.Textures : new Texture2D[] { };
-            for (var i = 0; i < textures.Length; i++)
-            {
-                var texture = textures[i];
-                if (itemByTexture.ContainsKey(texture) == true)
-                {
-                    itemByTexture.Remove(texture);
-                }
-                else
-                {
-                    var gameObject = new GameObject($"{nameof(TerminalForegroundItem)}{i}", this.ForegroungItemType);
-                    var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
-                    var transform = foregroundItem.rectTransform;
-                    foregroundItem.material = new Material(Shader.Find("UI/Default"));
-                    foregroundItem.Texture = texture;
-                    foregroundItem.Grid = this.grid;
-                    transform.SetParent(this.transform);
-                    transform.anchorMin = Vector3.zero;
-                    transform.anchorMax = Vector3.one;
-                    transform.offsetMin = Vector3.zero;
-                    transform.offsetMax = Vector3.zero;
-                }
-            }
-
-            var items = itemByTexture.Values.ToArray();
-            foreach (var item in items)
-            {
-                GameObject.DestroyImmediate(item.gameObject);
-            }
-
-            this.CollectChilds();
-        }
-
-        private void CollectChilds()
-        {
-            this.itemByTexture.Clear();
-            foreach (var item in this.Items)
-            {
-                this.itemByTexture.Add(item.Texture, item);
-            }
-        }
-
-        private void UpdateForegroundItem()
-        {
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
-            foreach (var item in visibleCells)
-            {
-                if (this.itemByTexture.ContainsKey(item.Texture) == true)
-                {
-                    var foregrounItem = this.itemByTexture[item.Texture];
-                    foregrounItem.AddCell(item);
                 }
             }
         }

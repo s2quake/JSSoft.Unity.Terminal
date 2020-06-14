@@ -29,7 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
-    public class TerminalCursor : MaskableGraphic
+    public class TerminalCursor : MaskableGraphic, INotifyValidated
     {
         [SerializeField]
         private TerminalGrid grid = null;
@@ -56,7 +56,6 @@ namespace JSSoft.Terminal
         private int volume = 1;
         private float delay;
         private bool blinkToggle;
-        private char character;
         private bool isInView = true;
 
         public TerminalCursor()
@@ -67,9 +66,14 @@ namespace JSSoft.Terminal
         public TerminalGrid Grid
         {
             get => this.grid;
-            set => this.grid = value;
+            internal set
+            {
+                this.grid = value ?? throw new ArgumentNullException(nameof(value));
+                this.UpdateProperty();
+            }
         }
 
+        [FieldName(nameof(cursorLeft))]
         public int CursorLeft
         {
             get => this.cursorLeft;
@@ -77,11 +81,16 @@ namespace JSSoft.Terminal
             {
                 if (value < 0 || value >= this.ActualBufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorLeft = value;
-                this.SetVerticesDirty();
+                if (this.cursorLeft != value)
+                {
+                    this.cursorLeft = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(CursorLeft));
+                }
             }
         }
 
+        [FieldName(nameof(cursorTop))]
         public int CursorTop
         {
             get => this.cursorTop;
@@ -89,41 +98,61 @@ namespace JSSoft.Terminal
             {
                 if (value < 0 || value >= this.ActualBufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.cursorTop = value;
-                this.SetVerticesDirty();
+                if (this.cursorTop != value)
+                {
+                    this.cursorTop = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(CursorTop));
+                }
             }
         }
 
+        [FieldName(nameof(isVisible))]
         public bool IsVisible
         {
             get => this.isVisible;
             set
             {
-                this.isVisible = value;
-                this.SetVerticesDirty();
+                if (this.isVisible != value)
+                {
+                    this.isVisible = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(IsVisible));
+                }
             }
         }
 
+        [FieldName(nameof(isFocused))]
         public bool IsFocused
         {
             get => this.isFocused;
             set
             {
-                this.isFocused = value;
-                this.SetVerticesDirty();
+                if (this.isFocused != value)
+                {
+                    this.isFocused = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(IsFocused));
+                }
             }
         }
 
+        [FieldName(nameof(style))]
         public TerminalCursorStyle Style
         {
             get => this.style;
             set
             {
-                this.style = value;
-                this.SetVerticesDirty();
+                if (this.style != value)
+                {
+                    this.style = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(Style));
+                }
             }
         }
 
+        [FieldName(nameof(thickness))]
         public int Thickness
         {
             get => this.thickness;
@@ -131,21 +160,31 @@ namespace JSSoft.Terminal
             {
                 if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.thickness = value;
-                this.SetVerticesDirty();
+                if (this.thickness != value)
+                {
+                    this.thickness = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(Thickness));
+                }
             }
         }
 
+        [FieldName(nameof(isBlinkable))]
         public bool IsBlinkable
         {
             get => this.isBlinkable;
             set
             {
-                this.isBlinkable = value;
-                this.SetVerticesDirty();
+                if (this.isBlinkable != value)
+                {
+                    this.isBlinkable = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(IsBlinkable));
+                }
             }
         }
 
+        [FieldName(nameof(blinkDelay))]
         public float BlinkDelay
         {
             get => this.blinkDelay;
@@ -153,12 +192,29 @@ namespace JSSoft.Terminal
             {
                 if (value < 0.0f)
                     throw new ArgumentOutOfRangeException(nameof(value));
-                this.blinkDelay = value;
-                this.SetVerticesDirty();
+                if (this.blinkDelay != value)
+                {
+                    this.blinkDelay = value;
+                    this.SetVerticesDirty();
+                    this.InvokePropertyChangedEvent(nameof(BlinkDelay));
+                }
             }
         }
 
         public TerminalBase Terminal => this.grid?.Terminal;
+
+        public event EventHandler Enabled;
+
+        public event EventHandler Disabled;
+
+        public event EventHandler Validated;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
@@ -200,7 +256,7 @@ namespace JSSoft.Terminal
                 for (var i = 0; i < this.terminalMesh.Count; i++)
                 {
                     this.terminalMesh.SetUV(i, (Vector2.zero, Vector2.one));
-                    this.terminalMesh.SetColor(i, TerminalColors.Gray);
+                    this.terminalMesh.SetColor(i, base.color);
                 }
             }
             this.terminalMesh.Fill(vh);
@@ -214,34 +270,30 @@ namespace JSSoft.Terminal
             this.cursorLeft = Math.Max(0, this.cursorLeft);
             this.cursorTop = Math.Min(this.ActualBufferHeight - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
-            this.SetVerticesDirty();
         }
 #endif
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalEvents.Validated += Terminal_Validated;
+            this.UpdateProperty();
+            TerminalValidationEvents.Register(this);
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalGridEvents.GotFocus += Grid_GotFocus;
             TerminalGridEvents.LostFocus += Grid_LostFocus;
-            TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
-            TerminalValidationEvents.Validated += Object_Validated;
-            base.color = TerminalGridUtility.GetCursorColor(this.grid);
-            this.UpdateLayout();
+            this.OnEnabled(EventArgs.Empty);
         }
 
         protected override void OnDisable()
         {
-            base.OnDisable();
-            TerminalEvents.Validated -= Terminal_Validated;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.GotFocus -= Grid_GotFocus;
             TerminalGridEvents.LostFocus -= Grid_LostFocus;
-            TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
-            TerminalValidationEvents.Validated -= Object_Validated;
+            base.OnDisable();
+            this.OnDisabled(EventArgs.Empty);
+            TerminalValidationEvents.Unregister(this);
         }
 
         protected override void Start()
@@ -267,6 +319,26 @@ namespace JSSoft.Terminal
                     this.SetVerticesDirty();
                 }
             }
+        }
+
+        protected virtual void OnEnabled(EventArgs e)
+        {
+            this.Enabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnDisabled(EventArgs e)
+        {
+            this.Disabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnValidated(EventArgs e)
+        {
+            this.Validated?.Invoke(this, e);
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -311,32 +383,12 @@ namespace JSSoft.Terminal
                             this.UpdateCursorPoint();
                         }
                         break;
-                    case nameof(ITerminalGrid.Text):
-                        {
-                            // var command = this.Terminal.Command;
-                            // var position = this.Terminal.CursorPosition;
-                            // var character = position < command.Length ? command[position] : char.MinValue;
-                            // if (this.character != character)
-                            // {
-                            //     this.UpdateLayout();
-                            // }
-                            // this.character = character;
-                        }
-                        break;
                     case nameof(ITerminalGrid.Style):
                         {
-                            this.UpdateLayout();
+                            this.UpdateProperty();
                         }
                         break;
                 }
-            }
-        }
-
-        private void Terminal_Validated(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.grid?.Terminal)
-            {
-                this.UpdateLayout();
             }
         }
 
@@ -344,7 +396,7 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.UpdateLayout();
+                this.UpdateProperty();
             }
         }
 
@@ -364,23 +416,6 @@ namespace JSSoft.Terminal
             }
         }
 
-        private void Grid_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && grid == this.grid)
-            {
-                this.UpdateLayout();
-            }
-        }
-
-        private void Object_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalStyle style && style == this.grid?.Style)
-            {
-                // await Task.Delay(1);
-                this.UpdateLayout();
-            }
-        }
-
         private void UpdateCursorPoint()
         {
             this.cursorLeft = this.grid.CursorPoint.X;
@@ -392,7 +427,7 @@ namespace JSSoft.Terminal
             this.SetVerticesDirty();
         }
 
-        private void UpdateLayout()
+        private void UpdateProperty()
         {
             if (this.grid != null)
             {
@@ -404,7 +439,7 @@ namespace JSSoft.Terminal
                 }
                 this.isVisible = this.grid.IsCursorVisible;
                 this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.ActualBufferHeight;
-                this.color = TerminalGridUtility.GetCursorColor(this.grid);
+                this.color = this.grid.CursorColor;
                 this.style = this.grid.CursorStyle;
                 this.thickness = this.grid.CursorThickness;
                 this.isBlinkable = this.grid.IsCursorBlinkable;

@@ -31,13 +31,14 @@ namespace JSSoft.Terminal
 {
     class TerminalForegroundItem : MaskableGraphic
     {
-        private readonly TerminalMesh terminalMesh = new TerminalMesh();
-        private readonly HashSet<ITerminalCell> cells = new HashSet<ITerminalCell>();
         [SerializeField]
-
         private TerminalGrid grid = null;
         [SerializeField]
+        private TerminalForeground foreground = null;
+        [SerializeField]
         private Texture2D texture;
+
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalForegroundItem()
         {
@@ -51,44 +52,31 @@ namespace JSSoft.Terminal
         public TerminalGrid Grid
         {
             get => this.grid;
-            internal set => this.grid = value;
+            internal set => this.grid = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         public Texture2D Texture
         {
             get => this.texture;
-            internal set => this.texture = value;
+            internal set => this.texture = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        internal void AddCell(ITerminalCell cell)
+        public TerminalForeground Foreground
         {
-            if (this.cells.Any() == false)
-                this.SetVerticesDirty();
-            this.cells.Add(cell);
+            get => this.foreground;
+            internal set => this.foreground = value ?? throw new ArgumentNullException(nameof(value));
         }
-
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-        }
-#endif
 
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
-            var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
-            var index = 0;
-            this.terminalMesh.Count = this.cells.Count;
-            foreach (var item in this.cells)
+            if (this.foreground != null)
             {
-                this.terminalMesh.SetVertex(index, item.ForegroundRect, rect);
-                this.terminalMesh.SetUV(index, item.ForegroundUV);
-                this.terminalMesh.SetColor(index, TerminalCell.GetForegroundColor(item));
-                index++;
+                var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
+                var visibleCells = this.foreground.GetCells(this.texture);
+                this.terminalMesh.SetVertices(visibleCells, rect);
+                this.terminalMesh.Fill(vh);
             }
-            this.terminalMesh.Fill(vh);
-            this.cells.Clear();
         }
     }
 }

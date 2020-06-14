@@ -26,43 +26,12 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    [CustomEditor(typeof(Terminal))]
-    public class TerminalEditor : UnityEditor.Editor
+    public struct PropertyInfo
     {
-        private PropertyNotifier notifier;
+        public SerializedProperty Property { get; set; }
 
-        public void OnEnable()
-        {
-            this.notifier = new PropertyNotifier(this.serializedObject, this.InvokeEvent);
-            this.notifier.Add(nameof(Terminal.OutputText));
-            this.notifier.Add(nameof(Terminal.Prompt));
-            this.notifier.Add(nameof(Terminal.Command));
-            this.notifier.Add(nameof(Terminal.IsReadOnly));
-            this.notifier.Add(nameof(Terminal.IsVerbose));
-            this.notifier.Add(nameof(Terminal.Dispatcher));
-        }
+        public string Name { get; set; }
 
-        public void OnDisable()
-        {
-            this.notifier = null;
-        }
-
-        public override void OnInspectorGUI()
-        {
-            this.notifier.Begin();
-            this.notifier.PropertyFieldAll();
-            this.notifier.End();
-        }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
-            if (this.target is Terminal terminal)
-            {
-                foreach (var item in propertyNames)
-                {
-                    terminal.InvokePropertyChangedEvent(item);
-                }
-            }
-        }
+        public bool IncludeChildren { get; set; }
     }
 }

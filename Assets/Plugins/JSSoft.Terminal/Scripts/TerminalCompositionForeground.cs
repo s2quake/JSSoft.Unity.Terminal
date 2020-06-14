@@ -31,8 +31,10 @@ namespace JSSoft.Terminal
     [ExecuteAlways]
     public class TerminalCompositionForeground : MaskableGraphic
     {
-        private readonly TerminalMesh terminalMesh = new TerminalMesh();
+        [SerializeField]
         private TerminalComposition composition;
+
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
         private Texture texture;
 
         public TerminalCompositionForeground()
@@ -42,26 +44,32 @@ namespace JSSoft.Terminal
 
         public TerminalGrid Grid => this.composition?.Grid;
 
+        public TerminalComposition Composition
+        {
+            get => this.composition;
+            internal set
+            {
+                this.composition = value ?? throw new ArgumentNullException(nameof(value));
+                this.color = this.composition.ForegroundColor;
+            }
+        }
+
         public override Texture mainTexture => this.texture;
 
         protected override void OnEnable()
         {
             base.OnEnable();
             base.material = new Material(Shader.Find("UI/Default"));
-            this.composition = this.GetComponentInParent<TerminalComposition>();
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
-            TerminalValidationEvents.Validated += Composition_Validated;
             TerminalValidationEvents.PropertyChanged += Composition_PropertyChanged;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            this.composition = null;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
-            TerminalValidationEvents.Validated -= Composition_Validated;
             TerminalValidationEvents.PropertyChanged -= Composition_PropertyChanged;
         }
 
@@ -82,8 +90,7 @@ namespace JSSoft.Terminal
             var bufferHeight = grid != null ? grid.ActualBufferHeight : 0;
             var font = composition.Font;
             var offset = composition.Offset;
-            var backgroundMargin = composition.BackgroundMargin;
-
+            var foregroundMargin = composition.ForegroundMargin;
             if (columnIndex < bufferWidth && rowIndex < bufferHeight && text != string.Empty)
             {
                 var rect = TerminalGridUtility.TransformRect(grid, this.rectTransform.rect, false);
@@ -96,14 +103,13 @@ namespace JSSoft.Terminal
                 var padding = TerminalGridUtility.GetPadding(grid);
                 var bx = columnIndex * itemWidth + padding.Left + (int)offset.x;
                 var by = rowIndex * itemHeight + padding.Top + (int)offset.y;
-                var foregroundRect = FontUtility.GetForegroundRect(font, character, bx, by);
+                var foregroundRect = FontUtility.GetForegroundRect(font, character, bx, by) + foregroundMargin;
                 var uv = FontUtility.GetUV(font, character);
                 this.texture = texture;
                 this.terminalMesh.Count = 1;
                 this.terminalMesh.SetVertex(0, foregroundRect, rect);
                 this.terminalMesh.SetUV(0, uv);
-                this.terminalMesh.SetColor(0, base.color);
-                this.material.color = base.color;
+                this.terminalMesh.SetColor(0, this.color);
                 this.terminalMesh.Fill(vh);
             }
             else
@@ -114,38 +120,28 @@ namespace JSSoft.Terminal
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid && grid == this.Grid)
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(ITerminalGrid.VisibleIndex):
-                    case nameof(ITerminalGrid.CursorPoint):
-                        {
-                            this.SetVerticesDirty();
-                        }
-                        break;
-                    case nameof(ITerminalGrid.CompositionString):
-                        {
-                            this.SetVerticesDirty();
-                            this.SetMaterialDirty();
-                        }
-                        break;
-                }
-            }
+            // if (sender is TerminalGrid grid && grid == this.Grid)
+            // {
+            //     switch (e.PropertyName)
+            //     {
+            //         case nameof(ITerminalGrid.VisibleIndex):
+            //         case nameof(ITerminalGrid.CursorPoint):
+            //             {
+            //                 this.SetVerticesDirty();
+            //             }
+            //             break;
+            //         case nameof(ITerminalGrid.CompositionString):
+            //             {
+            //                 this.SetVerticesDirty();
+            //                 this.SetMaterialDirty();
+            //             }
+            //             break;
+            //     }
+            // }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-
-        }
-
-        private void Composition_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalComposition composition && composition == this.composition)
-            {
-                this.SetVerticesDirty();
-                this.SetMaterialDirty();
-            }
         }
 
         private void Composition_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -155,13 +151,13 @@ namespace JSSoft.Terminal
                 switch (e.PropertyName)
                 {
                     case nameof(TerminalComposition.ForegroundColor):
-                    case nameof(TerminalComposition.ForegroundMargin):
-                    case nameof(TerminalComposition.Text):
                         {
+                            this.color = this.composition.ForegroundColor;
                             this.SetVerticesDirty();
-                            this.SetMaterialDirty();
                         }
                         break;
+                    case nameof(TerminalComposition.ForegroundMargin):
+                    case nameof(TerminalComposition.Text):
                     case nameof(TerminalComposition.ColumnIndex):
                     case nameof(TerminalComposition.RowIndex):
                         {

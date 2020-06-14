@@ -22,9 +22,11 @@
 
 using System.Threading.Tasks;
 using JSSoft.Communication.Services.Client;
+using UnityEngine;
 
 namespace JSSoft.Communication.Services
 {
+    [DisallowMultipleComponent]
     public class ClientContextHost : ServiceContextHost
     {
         private readonly Settings settings;

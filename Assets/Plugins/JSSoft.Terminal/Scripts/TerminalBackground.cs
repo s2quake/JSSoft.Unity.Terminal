@@ -44,7 +44,7 @@ namespace JSSoft.Terminal
         public TerminalGrid Grid
         {
             get => this.grid;
-            set => this.grid = value;
+            internal set => this.grid = value;
         }
 
         protected override void OnPopulateMesh(VertexHelper vh)
@@ -68,28 +68,9 @@ namespace JSSoft.Terminal
             this.terminalMesh.Fill(vh);
         }
 
-
-        protected override void OnTransformParentChanged()
-        {
-            base.OnTransformParentChanged();
-        }
-
-        protected override void OnRectTransformDimensionsChange()
-        {
-            base.OnRectTransformDimensionsChange();
-            this.SetVerticesDirty();
-        }
-
-        protected override void OnCanvasHierarchyChanged()
-        {
-            base.OnCanvasHierarchyChanged();
-        }
-
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalEvents.Validated += Terminal_Validated;
-            TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.SelectionChanged += Grid_SelectionChanged;
@@ -98,8 +79,6 @@ namespace JSSoft.Terminal
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalEvents.Validated -= Terminal_Validated;
-            TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalGridEvents.SelectionChanged -= Grid_SelectionChanged;
@@ -112,22 +91,6 @@ namespace JSSoft.Terminal
             return TerminalGridUtility.IsSelecting(this.grid, cell);
         }
 
-        private void Terminal_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && grid == this.grid)
-            {
-                this.SetVerticesDirty();
-            }
-        }
-
-        private void Grid_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalGrid grid && grid == this.grid)
-            {
-                this.SetAllDirty();
-            }
-        }
-
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid && grid == this.grid)
@@ -138,21 +101,21 @@ namespace JSSoft.Terminal
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (object.Equals(sender, this.grid) == false)
-                return;
+            if (sender is TerminalGrid grid && grid == this.grid)
+            {
+                switch (e.PropertyName)
+                {
 
-            var propertyName = e.PropertyName;
-            if (propertyName == nameof(ITerminalGrid.VisibleIndex))
-            {
-                this.SetVerticesDirty();
-            }
-            else if (propertyName == nameof(ITerminalGrid.Text))
-            {
-                this.SetVerticesDirty();
-            }
-            else if (propertyName == nameof(ITerminalGrid.SelectingRange))
-            {
-                this.SetVerticesDirty();
+                    case nameof(ITerminalGrid.Font):
+                    case nameof(ITerminalGrid.Style):
+                    case nameof(ITerminalGrid.VisibleIndex):
+                    case nameof(ITerminalGrid.Text):
+                    case nameof(ITerminalGrid.SelectingRange):
+                        {
+                            this.SetVerticesDirty();
+                        }
+                        break;
+                }
             }
         }
 

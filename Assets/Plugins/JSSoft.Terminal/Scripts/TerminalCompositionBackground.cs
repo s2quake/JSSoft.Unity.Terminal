@@ -31,8 +31,10 @@ namespace JSSoft.Terminal
     [ExecuteAlways]
     public class TerminalCompositionBackground : MaskableGraphic
     {
-        private readonly TerminalMesh terminalMesh = new TerminalMesh();
+        [SerializeField]
         private TerminalComposition composition;
+
+        private readonly TerminalMesh terminalMesh = new TerminalMesh();
 
         public TerminalCompositionBackground()
         {
@@ -41,11 +43,20 @@ namespace JSSoft.Terminal
 
         public TerminalGrid Grid => this.composition?.Grid;
 
+        public TerminalComposition Composition
+        {
+            get => this.composition;
+            internal set
+            {
+                this.composition = value ?? throw new ArgumentNullException(nameof(value));
+                this.color = this.composition.BackgroundColor;
+            }
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
-            base.material = new Material(Shader.Find("Unlit/Color"));
-            this.composition = this.GetComponentInParent<TerminalComposition>();
+            base.material = new Material(Shader.Find("UI/Default"));
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Composition_Validated;
@@ -55,7 +66,6 @@ namespace JSSoft.Terminal
         protected override void OnDisable()
         {
             base.OnDisable();
-            this.composition = null;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalValidationEvents.Validated -= Composition_Validated;
@@ -92,12 +102,11 @@ namespace JSSoft.Terminal
                 var padding = TerminalGridUtility.GetPadding(grid);
                 var bx = columnIndex * itemWidth + padding.Left + (int)offset.x;
                 var by = rowIndex * itemHeight + padding.Top + (int)offset.y;
-                var backgroundRect = new Rect(bx, by, itemWidth * volume, itemHeight);
+                var backgroundRect = new Rect(bx, by, itemWidth * volume, itemHeight) + backgroundMargin;
                 this.terminalMesh.Count = 1;
                 this.terminalMesh.SetVertex(0, backgroundRect, rect);
                 this.terminalMesh.SetUV(0, (Vector2.zero, Vector2.zero));
-                this.terminalMesh.SetColor(0, base.color);
-                this.material.color = base.color;
+                this.terminalMesh.SetColor(0, this.composition.BackgroundColor);
                 this.terminalMesh.Fill(vh);
             }
             else
@@ -108,19 +117,19 @@ namespace JSSoft.Terminal
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (sender is TerminalGrid grid && grid == this.Grid)
-            {
-                switch (e.PropertyName)
-                {
-                    case nameof(ITerminalGrid.VisibleIndex):
-                    case nameof(ITerminalGrid.CursorPoint):
-                    case nameof(ITerminalGrid.CompositionString):
-                        {
-                            this.SetVerticesDirty();
-                        }
-                        break;
-                }
-            }
+            // if (sender is TerminalGrid grid && grid == this.Grid)
+            // {
+            //     switch (e.PropertyName)
+            //     {
+            //         case nameof(ITerminalGrid.VisibleIndex):
+            //         case nameof(ITerminalGrid.CursorPoint):
+            //         case nameof(ITerminalGrid.CompositionString):
+            //             {
+            //                 this.SetVerticesDirty();
+            //             }
+            //             break;
+            //     }
+            // }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
@@ -130,10 +139,10 @@ namespace JSSoft.Terminal
 
         private void Composition_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalComposition composition && composition == this.composition)
-            {
-                this.SetVerticesDirty();
-            }
+            // if (sender is TerminalComposition composition && composition == this.composition)
+            // {
+            //     this.SetVerticesDirty();
+            // }
         }
 
         private void Composition_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -143,6 +152,11 @@ namespace JSSoft.Terminal
                 switch (e.PropertyName)
                 {
                     case nameof(TerminalComposition.BackgroundColor):
+                        {
+                            this.color = this.composition.BackgroundColor;
+                            this.SetVerticesDirty();
+                        }
+                        break;
                     case nameof(TerminalComposition.BackgroundMargin):
                     case nameof(TerminalComposition.ColumnIndex):
                     case nameof(TerminalComposition.RowIndex):

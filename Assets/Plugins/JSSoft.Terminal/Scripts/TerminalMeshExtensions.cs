@@ -20,38 +20,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using UnityEngine;
-using JSSoft.Terminal.Commands;
+using UnityEngine.UI;
+using UnityEngine.TextCore;
 using System.Collections.Generic;
-using Ntreev.Library.Commands;
-using JSSoft.Communication.Services.Commands;
-using JSSoft.Communication.Services.Commands.Client;
+using System.Linq;
 
-namespace JSSoft.Communication.Services
+namespace JSSoft.Terminal
 {
-    [DisallowMultipleComponent]
-    public class ClientCommandContextHost : CommandContextHost
+    public static class TerminalMeshExtensions
     {
-        [SerializeField]
-        private ClientContextHost clientContext = null;
-
-        protected override IEnumerable<ICommand> CollectCommands()
+        public static void SetVertices(this TerminalMesh terminalMesh, IEnumerable<ITerminalCell> cells, Rect rect)
         {
-            foreach (var item in base.CollectCommands())
+            var index = 0;
+            terminalMesh.Count = cells.Count();
+            foreach (var item in cells)
             {
-                if (item is JSSoft.Terminal.Commands.ExitCommand)
-                {
-                    yield return new JSSoft.Communication.Services.Commands.ExitCommand(this.clientContext);
-                    continue;
-                }
-                yield return item;
+                terminalMesh.SetVertex(index, item.ForegroundRect, rect);
+                terminalMesh.SetUV(index, item.ForegroundUV);
+                terminalMesh.SetColor(index, TerminalCell.GetForegroundColor(item));
+                index++;
             }
-            yield return new OpenCommand(this.clientContext);
-            yield return new CloseCommand(this.clientContext);
-            yield return new DataCommand(this.clientContext);
-            yield return new LoginCommand(this.clientContext);
-            yield return new LogoutCommand(this.clientContext);
-            yield return new UserCommand(this.clientContext);
         }
     }
 }

@@ -688,12 +688,12 @@ namespace JSSoft.Terminal
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.terminal = this.GetComponent<Terminal>();
-            this.notifier.Begin();
-            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
-            this.notifier.End();
+            // this.terminal = this.GetComponent<Terminal>();
+            // this.notifier.Begin();
+            // this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+            // this.notifier.End();
             this.UpdateColor();
-            this.Invoke(nameof(UpdateLayout), float.Epsilon); this.OnValidated(EventArgs.Empty);
+            // this.Invoke(nameof(UpdateLayout), float.Epsilon); this.OnValidated(EventArgs.Empty);
         }
 #endif
 
@@ -980,7 +980,7 @@ namespace JSSoft.Terminal
                 this.OnLostFocus(EventArgs.Empty);
         }
 
-        private void InvokePropertyChangedEvent(string propertyName)
+        internal void InvokePropertyChangedEvent(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
