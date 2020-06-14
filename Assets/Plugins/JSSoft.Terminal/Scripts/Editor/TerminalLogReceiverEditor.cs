@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using JSSoft.Terminal;
+using JSSoft.Terminal.Editor;
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEditorInternal;
@@ -34,11 +35,8 @@ namespace JSSoft.Communication.Services.Editor
     public class TerminalLogReceiverEditor : UnityEditor.Editor
     {
         private static readonly string[] colors;
-        private SerializedProperty logTypeProperty;
-        private SerializedProperty useForegroundColorProperty;
-        private SerializedProperty useBackgroundColorProperty;
-        private SerializedProperty foregroundColorProperty;
-        private SerializedProperty backgroundColorProperty;
+
+        private EditorPropertyNotifier notifier;
 
         static TerminalLogReceiverEditor()
         {
@@ -53,24 +51,32 @@ namespace JSSoft.Communication.Services.Editor
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.logTypeProperty);
-            EditorGUILayout.PropertyField(this.useForegroundColorProperty);
-            if (this.useForegroundColorProperty.boolValue == true)
-                EditorGUILayout.PropertyField(this.foregroundColorProperty);
-            EditorGUILayout.PropertyField(this.useBackgroundColorProperty);
-            if (this.useBackgroundColorProperty.boolValue == true)
-                EditorGUILayout.PropertyField(this.backgroundColorProperty);
-            this.serializedObject.ApplyModifiedProperties();
+            var useForegroundColorProperty = this.notifier.GetProperty(nameof(TerminalLogReceiver.UseForegroundColor));
+            var useBackgroundColorProperty = this.notifier.GetProperty(nameof(TerminalLogReceiver.UseBackgroundColor));
+            this.notifier.Begin();
+            this.notifier.PropertyField(nameof(TerminalLogReceiver.LogType));
+            this.notifier.PropertyField(nameof(TerminalLogReceiver.UseForegroundColor));
+            if (useForegroundColorProperty.boolValue == true)
+                this.notifier.PropertyField(nameof(TerminalLogReceiver.ForegroundColor));
+            this.notifier.PropertyField(nameof(TerminalLogReceiver.UseBackgroundColor));
+            if (useBackgroundColorProperty.boolValue == true)
+                this.notifier.PropertyField(nameof(TerminalLogReceiver.BackgroundColor));
+            this.notifier.End();
         }
 
         protected virtual void OnEnable()
         {
-            this.logTypeProperty = this.serializedObject.FindProperty("logType");
-            this.useForegroundColorProperty = this.serializedObject.FindProperty("useForegroundColor");
-            this.useBackgroundColorProperty = this.serializedObject.FindProperty("useBackgroundColor");
-            this.foregroundColorProperty = this.serializedObject.FindProperty("foregroundColor");
-            this.backgroundColorProperty = this.serializedObject.FindProperty("backgroundColor");
+            this.notifier = new EditorPropertyNotifier(this);
+            this.notifier.Add(nameof(TerminalLogReceiver.LogType));
+            this.notifier.Add(nameof(TerminalLogReceiver.UseForegroundColor));
+            this.notifier.Add(nameof(TerminalLogReceiver.UseBackgroundColor));
+            this.notifier.Add(nameof(TerminalLogReceiver.ForegroundColor));
+            this.notifier.Add(nameof(TerminalLogReceiver.BackgroundColor));
+        }
+
+        protected virtual void OnDisable()
+        {
+            this.notifier = null;
         }
     }
 }

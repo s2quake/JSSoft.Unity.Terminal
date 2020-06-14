@@ -29,16 +29,16 @@ namespace JSSoft.Terminal.Editor
     [CustomEditor(typeof(TerminalComposition))]
     public class TerminalCompositionEditor : UnityEditor.Editor
     {
-        private PropertyNotifier notifier;
+        private EditorPropertyNotifier notifier;
 
         public void OnEnable()
         {
-            this.notifier = new PropertyNotifier(this.serializedObject, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
             this.notifier.Add(nameof(TerminalComposition.Text));
             this.notifier.Add(nameof(TerminalComposition.ForegroundColor));
             this.notifier.Add(nameof(TerminalComposition.BackgroundColor));
-            this.notifier.Add(nameof(TerminalComposition.ForegroundMargin), true);
-            this.notifier.Add(nameof(TerminalComposition.BackgroundMargin), true);
+            this.notifier.Add(nameof(TerminalComposition.ForegroundMargin), EditorPropertyUsage.IncludeChildren);
+            this.notifier.Add(nameof(TerminalComposition.BackgroundMargin), EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalComposition.ColumnIndex));
             this.notifier.Add(nameof(TerminalComposition.RowIndex));
         }

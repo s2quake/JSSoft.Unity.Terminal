@@ -442,22 +442,7 @@ namespace JSSoft.Terminal
         public override string Text => this.text;
 
         [FieldName(nameof(outputText))]
-        public override string OutputText
-        {
-            get => this.outputText;
-            set
-            {
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
-                if (this.outputText != value)
-                {
-                    this.notifier.Begin();
-                    this.notifier.SetField(ref this.outputText, value, nameof(OutputText));
-                    this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
-                    this.notifier.End();
-                }
-            }
-        }
+        public override string OutputText => this.outputText;
 
         public override string Delimiter
         {

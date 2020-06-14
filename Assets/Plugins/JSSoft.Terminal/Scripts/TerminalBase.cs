@@ -36,7 +36,7 @@ namespace JSSoft.Terminal
 
         public abstract string Prompt { get; set; }
 
-        public abstract string OutputText { get; set; }
+        public abstract string OutputText { get; }
 
         public abstract string Delimiter { get; }
 

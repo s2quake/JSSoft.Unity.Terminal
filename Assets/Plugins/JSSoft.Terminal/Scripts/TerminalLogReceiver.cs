@@ -46,6 +46,20 @@ namespace JSSoft.Communication.Services
         {
         }
 
+        [FieldName(nameof(logType))]
+        public LogType LogType
+        {
+            get => this.logType;
+            set
+            {
+                if (this.logType != value)
+                {
+                    this.logType = value;
+                }
+            }
+        }
+
+        [FieldName(nameof(useForegroundColor))]
         public bool UseForegroundColor
         {
             get => this.useForegroundColor;
@@ -58,6 +72,7 @@ namespace JSSoft.Communication.Services
             }
         }
 
+        [FieldName(nameof(useBackgroundColor))]
         public bool UseBackgroundColor
         {
             get => this.useBackgroundColor;
@@ -70,7 +85,8 @@ namespace JSSoft.Communication.Services
             }
         }
 
-        private TerminalColor ForegroundColor
+        [FieldName(nameof(foregroundColor))]
+        public TerminalColor ForegroundColor
         {
             get => this.foregroundColor;
             set
@@ -82,7 +98,8 @@ namespace JSSoft.Communication.Services
             }
         }
 
-        private TerminalColor BackgroundColor
+        [FieldName(nameof(backgroundColor))]
+        public TerminalColor BackgroundColor
         {
             get => this.backgroundColor;
             set
@@ -98,13 +115,11 @@ namespace JSSoft.Communication.Services
         {
             this.dispatcher = Dispatcher.Current;
             this.terminal = this.GetComponent<TerminalBase>();
-            // Application.logMessageReceived += Application_LogMessageReceived;
             Application.logMessageReceivedThreaded += Application_LogMessageReceivedThreaded;
         }
 
         protected virtual void OnDisable()
         {
-            // Application.logMessageReceived -= Application_LogMessageReceived;
             Application.logMessageReceivedThreaded -= Application_LogMessageReceivedThreaded;
             this.dispatcher = null;
             this.terminal = null;

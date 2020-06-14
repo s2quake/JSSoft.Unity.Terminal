@@ -26,12 +26,16 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    public struct PropertyInfo
+    public class EditorProperty
     {
         public SerializedProperty Property { get; set; }
 
         public string Name { get; set; }
 
-        public bool IncludeChildren { get; set; }
+        public EditorPropertyUsage Usage { get; set; }
+
+        public bool IncludeChildren => this.Usage.HasFlag(EditorPropertyUsage.IncludeChildren);
+
+        public bool CanNotify => this.Usage.HasFlag(EditorPropertyUsage.DisallowNotification) == false;
     }
 }

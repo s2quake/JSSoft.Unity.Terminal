@@ -191,13 +191,13 @@ namespace JSSoft.Terminal
         {
             switch (e.PropertyName)
             {
-                case nameof(ITerminalGrid.Font):
-                case nameof(ITerminalGrid.Style):
+                case nameof(TerminalGrid.Font):
+                case nameof(TerminalGrid.Style):
                     {
                         this.UpdateAll();
                     }
                     break;
-                case nameof(ITerminalGrid.Text):
+                case nameof(TerminalGrid.Text):
                     {
                         this.Update();
                     }

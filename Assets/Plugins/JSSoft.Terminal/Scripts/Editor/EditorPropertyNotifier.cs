@@ -28,26 +28,34 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    public class PropertyNotifier
+    public class EditorPropertyNotifier
     {
+        private readonly UnityEditor.Editor editor;
         private readonly SerializedObject serializedObject;
         private readonly Action<string[]> action;
-        private readonly Dictionary<string, PropertyInfo> propertyByName = new Dictionary<string, PropertyInfo>();
-        private readonly List<PropertyInfo> propertyList = new List<PropertyInfo>();
+        private readonly Dictionary<string, EditorProperty> propertyByName = new Dictionary<string, EditorProperty>();
+        private readonly List<EditorProperty> propertyList = new List<EditorProperty>();
         private readonly List<string> nameList = new List<string>();
 
-        public PropertyNotifier(SerializedObject serializedObject, Action<string[]> action)
+        public EditorPropertyNotifier(UnityEditor.Editor editor)
+            : this(editor, (items) => { })
         {
-            this.serializedObject = serializedObject;
-            this.action = action;
+
+        }
+
+        public EditorPropertyNotifier(UnityEditor.Editor editor, Action<string[]> action)
+        {
+            this.editor = editor ?? throw new ArgumentNullException(nameof(editor));
+            this.serializedObject = editor.serializedObject;
+            this.action = action ?? throw new ArgumentNullException(nameof(action));
         }
 
         public void Add(string propertyName)
         {
-            this.Add(propertyName, false);
+            this.Add(propertyName, EditorPropertyUsage.None);
         }
 
-        public void Add(string propertyName, bool includeChildren)
+        public void Add(string propertyName, EditorPropertyUsage usage)
         {
             if (propertyName is null)
                 throw new ArgumentNullException(nameof(propertyName));
@@ -57,7 +65,7 @@ namespace JSSoft.Terminal.Editor
                 throw new ArgumentException($"{targetType} does not have {propertyName} property.", nameof(propertyName));
             if (Attribute.GetCustomAttribute(property, typeof(FieldNameAttribute)) is FieldNameAttribute attribute)
             {
-                this.Add(attribute.FieldName, propertyName, includeChildren);
+                this.Add(attribute.FieldName, propertyName, usage);
             }
             else
             {
@@ -67,25 +75,34 @@ namespace JSSoft.Terminal.Editor
 
         public void Add(string fieldName, string propertyName)
         {
-            this.Add(fieldName, propertyName, false);
+            this.Add(fieldName, propertyName, EditorPropertyUsage.None);
         }
 
-        public void Add(string fieldName, string propertyName, bool includeChildren)
+        public void Add(string fieldName, string propertyName, EditorPropertyUsage usage)
         {
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+            if (fieldName == string.Empty)
+                throw new ArgumentException("empty strings are not allowed.", nameof(fieldName));
+            if (propertyName is null)
+                throw new ArgumentNullException(nameof(propertyName));
+            if (propertyName == string.Empty)
+                throw new ArgumentException("empty strings are not allowed.", nameof(propertyName));
             var property = this.serializedObject.FindProperty(fieldName);
-            var propertyInfo = new PropertyInfo()
+            var propertyInfo = new EditorProperty()
             {
                 Property = property,
                 Name = propertyName,
-                IncludeChildren = includeChildren,
+                Usage = usage,
             };
-            this.propertyByName.Add(fieldName, propertyInfo);
+            this.propertyByName.Add(propertyName, propertyInfo);
             this.propertyList.Add(propertyInfo);
         }
 
         public void Begin()
         {
             this.nameList.Clear();
+            this.serializedObject.Update();
         }
 
         public void End()
@@ -102,25 +119,25 @@ namespace JSSoft.Terminal.Editor
             }
         }
 
-        public void PropertyField(string fieldName)
+        public void PropertyField(string propertyName)
         {
-            if (this.propertyByName.ContainsKey(fieldName) == false)
-                throw new ArgumentException($"{fieldName} does not exists.", nameof(fieldName));
-            this.PropertyField(this.propertyByName[fieldName]);
+            if (this.propertyByName.ContainsKey(propertyName) == false)
+                throw new ArgumentException($"{propertyName} does not exists.", nameof(propertyName));
+            this.PropertyField(this.propertyByName[propertyName]);
         }
 
-        public SerializedProperty GetProperty(string fieldName)
+        public SerializedProperty GetProperty(string propertyName)
         {
-            var propertyInfo = this.propertyByName[fieldName];
+            var propertyInfo = this.propertyByName[propertyName];
             return propertyInfo.Property;
         }
 
-        private void PropertyField(PropertyInfo propertyInfo)
+        private void PropertyField(EditorProperty propertyInfo)
         {
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(propertyInfo.Property, propertyInfo.IncludeChildren);
             this.serializedObject.ApplyModifiedProperties();
-            if (EditorGUI.EndChangeCheck() && propertyInfo.Name != string.Empty)
+            if (EditorGUI.EndChangeCheck() && propertyInfo.CanNotify == true)
             {
                 this.nameList.Add(propertyInfo.Name);
             }

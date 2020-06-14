@@ -20,49 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    [CustomEditor(typeof(Terminal))]
-    public class TerminalEditor : UnityEditor.Editor
+    [Flags]
+    public enum EditorPropertyUsage
     {
-        private EditorPropertyNotifier notifier;
+        None = 0,
 
-        public void OnEnable()
-        {
-            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
-            this.notifier.Add(nameof(Terminal.OutputText));
-            this.notifier.Add(nameof(Terminal.Prompt));
-            this.notifier.Add(nameof(Terminal.Command));
-            this.notifier.Add(nameof(Terminal.IsReadOnly));
-            this.notifier.Add(nameof(Terminal.IsVerbose));
-            this.notifier.Add(nameof(Terminal.Dispatcher));
-        }
+        IncludeChildren = 1,
 
-        public void OnDisable()
-        {
-            this.notifier = null;
-        }
-
-        public override void OnInspectorGUI()
-        {
-            this.notifier.Begin();
-            this.notifier.PropertyFieldAll();
-            this.notifier.End();
-        }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
-            if (this.target is Terminal terminal)
-            {
-                foreach (var item in propertyNames)
-                {
-                    terminal.InvokePropertyChangedEvent(item);
-                }
-            }
-        }
+        DisallowNotification = 2,
     }
 }

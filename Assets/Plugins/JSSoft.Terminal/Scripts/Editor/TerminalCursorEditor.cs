@@ -29,16 +29,16 @@ namespace JSSoft.Terminal.Editor
     [CustomEditor(typeof(TerminalCursor))]
     public class TerminalCursorEditor : UnityEditor.Editor
     {
-        private PropertyNotifier notifier;
+        private EditorPropertyNotifier notifier;
 
         public void OnEnable()
         {
-            this.notifier = new PropertyNotifier(this.serializedObject, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
             this.notifier.Add(nameof(TerminalCursor.CursorLeft));
             this.notifier.Add(nameof(TerminalCursor.CursorTop));
             this.notifier.Add(nameof(TerminalCursor.IsVisible));
-            this.notifier.Add(nameof(TerminalCursor.IsFocused), true);
-            this.notifier.Add(nameof(TerminalCursor.Style), true);
+            this.notifier.Add(nameof(TerminalCursor.IsFocused), EditorPropertyUsage.IncludeChildren);
+            this.notifier.Add(nameof(TerminalCursor.Style), EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalCursor.Thickness));
             this.notifier.Add(nameof(TerminalCursor.IsBlinkable));
             this.notifier.Add(nameof(TerminalCursor.BlinkDelay));

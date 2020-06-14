@@ -293,8 +293,9 @@ namespace JSSoft.Terminal
 
         public override bool IsFocused => this.isFocused;
 
-        public override string Text=> this.text;
+        public override string Text => this.text;
 
+        [FieldName(nameof(font))]
         public override TerminalFont Font
         {
             get => this.style != null ? this.style.Font : this.font;
@@ -311,6 +312,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(maxBufferHeight))]
         public override int MaxBufferHeight
         {
             get => this.maxBufferHeight;
@@ -365,6 +367,7 @@ namespace JSSoft.Terminal
 
         public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.ActualBufferHeight);
 
+        [FieldName(nameof(backgroundColor))]
         public override Color BackgroundColor
         {
             get => this.style != null ? this.style.BackgroundColor : this.backgroundColor;
@@ -378,6 +381,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(foregroundColor))]
         public override Color ForegroundColor
         {
             get => this.style != null ? this.style.ForegroundColor : this.foregroundColor;
@@ -391,6 +395,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(selectionColor))]
         public override Color SelectionColor
         {
             get => this.style != null ? this.style.SelectionColor : this.selectionColor;
@@ -404,6 +409,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorColor))]
         public override Color CursorColor
         {
             get => this.style != null ? this.style.CursorColor : this.cursorColor;
@@ -417,6 +423,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(colorPalette))]
         public TerminalColorPalette ColorPalette
         {
             get => this.style != null ? this.style.ColorPalette : this.colorPalette;
@@ -446,6 +453,7 @@ namespace JSSoft.Terminal
 
         public override Rect Rectangle => this.rectangle;
 
+        [FieldName(nameof(padding))]
         public override TerminalThickness Padding
         {
             get => this.padding;
@@ -459,6 +467,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(style))]
         public override TerminalStyle Style
         {
             get => this.style;
@@ -517,6 +526,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorStyle))]
         public override TerminalCursorStyle CursorStyle
         {
             get => this.style != null ? this.style.CursorStyle : this.cursorStyle;
@@ -530,6 +540,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorThickness))]
         public override int CursorThickness
         {
             get => this.style != null ? this.style.CursorThickness : this.cursorThickness;
@@ -545,6 +556,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(isCursorBlinkable))]
         public override bool IsCursorBlinkable
         {
             get => this.style != null ? this.style.IsCursorBlinkable : this.isCursorBlinkable;
@@ -558,6 +570,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorBlinkDelay))]
         public override float CursorBlinkDelay
         {
             get => this.style != null ? this.style.CursorBlinkDelay : this.cursorBlinkDelay;
@@ -573,6 +586,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(isScrollForwardEnabled))]
         public override bool IsScrollForwardEnabled
         {
             get => this.style != null ? this.style.IsScrollForwardEnabled : this.isScrollForwardEnabled;
@@ -586,6 +600,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(behaviourList))]
         public override IList<TerminalBehaviourBase> BehaviourList => this.behaviourList;
 
         public override IList<TerminalRange> Selections => this.selections;
@@ -631,15 +646,15 @@ namespace JSSoft.Terminal
 
         internal void UpdateLayout()
         {
-            var cursorIndex = this.terminal.CursorIndex; 
+            var cursorIndex = this.terminal.CursorIndex;
             var size = this.rectTransform.rect.size;
             size.x = Math.Abs(size.x);
-            size.y = Math.Abs(size.y); 
-            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, size); 
-            this.UpdateRectangle(bufferSize); 
+            size.y = Math.Abs(size.y);
+            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, size);
+            this.UpdateRectangle(bufferSize);
             this.notifier.Begin();
             this.notifier.SetField(ref this.actualBufferWidth, (int)bufferSize.x, nameof(ActualBufferWidth));
-            this.notifier.SetField(ref this.actualBufferHeight, (int)bufferSize.y, nameof(ActualBufferHeight)); 
+            this.notifier.SetField(ref this.actualBufferHeight, (int)bufferSize.y, nameof(ActualBufferHeight));
             this.characterInfos.Update();
             this.rows.Update();
             this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(cursorIndex), nameof(CursorPoint));

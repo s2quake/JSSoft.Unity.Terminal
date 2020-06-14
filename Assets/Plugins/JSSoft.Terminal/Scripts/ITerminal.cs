@@ -60,7 +60,7 @@ namespace JSSoft.Terminal
 
         string Prompt { get; set; }
 
-        string OutputText { get; set; }
+        string OutputText { get; }
 
         string Delimiter { get; }
 

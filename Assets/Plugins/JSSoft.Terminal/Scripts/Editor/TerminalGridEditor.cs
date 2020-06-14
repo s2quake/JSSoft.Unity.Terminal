@@ -29,30 +29,68 @@ namespace JSSoft.Terminal.Editor
     [CustomEditor(typeof(TerminalGrid))]
     public class TerminalGridEditor : UnityEditor.Editor
     {
-        private PropertyNotifier notifier;
+        private EditorPropertyNotifier notifier;
         private bool isDebug = false;
 
-        public void OnEnable()
+        public override void OnInspectorGUI()
         {
-            this.notifier = new PropertyNotifier(this.serializedObject, this.InvokeEvent);
-            this.notifier.Add("style", nameof(TerminalGrid.Style));
-            this.notifier.Add("font", nameof(TerminalGrid.Font));
-            this.notifier.Add("backgroundColor", nameof(TerminalGrid.BackgroundColor));
-            this.notifier.Add("foregroundColor", nameof(TerminalGrid.ForegroundColor));
-            this.notifier.Add("selectionColor", nameof(TerminalGrid.SelectionColor));
-            this.notifier.Add("cursorColor", nameof(TerminalGrid.CursorColor));
-            this.notifier.Add("colorPalette", nameof(TerminalGrid.ColorPalette));
-            this.notifier.Add("cursorStyle", nameof(TerminalGrid.CursorStyle));
-            this.notifier.Add("cursorThickness", nameof(TerminalGrid.CursorThickness));
-            this.notifier.Add("isCursorBlinkable", nameof(TerminalGrid.IsCursorBlinkable));
-            this.notifier.Add("cursorBlinkDelay", nameof(TerminalGrid.CursorBlinkDelay));
-            this.notifier.Add("isScrollForwardEnabled", nameof(TerminalGrid.IsScrollForwardEnabled));
-            this.notifier.Add("behaviourList", string.Empty);
-            this.notifier.Add("maxBufferHeight", nameof(TerminalGrid.MaxBufferHeight));
-            this.notifier.Add("padding", nameof(TerminalGrid.Padding), true);
+            var styleProperty = this.notifier.GetProperty(nameof(TerminalGrid.Style));
+            this.isDebug = GUILayout.Toggle(this.isDebug, "Debug Mode");
+            if (isDebug == true)
+            {
+                base.OnInspectorGUI();
+                return;
+            }
+
+            this.notifier.Begin();
+            this.notifier.PropertyField(nameof(TerminalGrid.Style));
+            GUILayout.Space(10);
+            if (styleProperty.objectReferenceValue != null)
+            {
+                EditorGUILayout.HelpBox("Property cannot be changed when style is applied.", MessageType.Info);
+            }
+            GUI.enabled = styleProperty.objectReferenceValue == null;
+            this.notifier.PropertyField(nameof(TerminalGrid.Font));
+            this.notifier.PropertyField(nameof(TerminalGrid.BackgroundColor));
+            this.notifier.PropertyField(nameof(TerminalGrid.ForegroundColor));
+            this.notifier.PropertyField(nameof(TerminalGrid.SelectionColor));
+            this.notifier.PropertyField(nameof(TerminalGrid.CursorColor));
+            this.notifier.PropertyField(nameof(TerminalGrid.ColorPalette));
+            this.notifier.PropertyField(nameof(TerminalGrid.CursorStyle));
+            this.notifier.PropertyField(nameof(TerminalGrid.CursorThickness));
+            this.notifier.PropertyField(nameof(TerminalGrid.IsCursorBlinkable));
+            this.notifier.PropertyField(nameof(TerminalGrid.CursorBlinkDelay));
+            this.notifier.PropertyField(nameof(TerminalGrid.IsScrollForwardEnabled));
+            this.notifier.PropertyField(nameof(TerminalGrid.BehaviourList));
+            GUI.enabled = true;
+
+            GUILayout.Space(10);
+            this.notifier.PropertyField(nameof(TerminalGrid.MaxBufferHeight));
+            this.notifier.PropertyField(nameof(TerminalGrid.Padding));
+            this.notifier.End();
         }
 
-        public void OnDisable()
+        protected virtual void OnEnable()
+        {
+            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier.Add(nameof(TerminalGrid.Style));
+            this.notifier.Add(nameof(TerminalGrid.Font));
+            this.notifier.Add(nameof(TerminalGrid.BackgroundColor));
+            this.notifier.Add(nameof(TerminalGrid.ForegroundColor));
+            this.notifier.Add(nameof(TerminalGrid.SelectionColor));
+            this.notifier.Add(nameof(TerminalGrid.CursorColor));
+            this.notifier.Add(nameof(TerminalGrid.ColorPalette));
+            this.notifier.Add(nameof(TerminalGrid.CursorStyle));
+            this.notifier.Add(nameof(TerminalGrid.CursorThickness));
+            this.notifier.Add(nameof(TerminalGrid.IsCursorBlinkable));
+            this.notifier.Add(nameof(TerminalGrid.CursorBlinkDelay));
+            this.notifier.Add(nameof(TerminalGrid.IsScrollForwardEnabled));
+            this.notifier.Add(nameof(TerminalGrid.BehaviourList), EditorPropertyUsage.DisallowNotification);
+            this.notifier.Add(nameof(TerminalGrid.MaxBufferHeight));
+            this.notifier.Add(nameof(TerminalGrid.Padding), EditorPropertyUsage.IncludeChildren);
+        }
+
+        protected virtual void OnDisable()
         {
             this.notifier = null;
         }
@@ -66,44 +104,6 @@ namespace JSSoft.Terminal.Editor
                     grid.InvokePropertyChangedEvent(item);
                 }
             }
-        }
-
-        public override void OnInspectorGUI()
-        {
-            var styleProperty = this.notifier.GetProperty("style");
-            this.isDebug = GUILayout.Toggle(this.isDebug, "Debug Mode");
-            if (isDebug == true)
-            {
-                base.OnInspectorGUI();
-                return;
-            }
-
-            this.notifier.Begin();
-            this.notifier.PropertyField("style");
-            GUILayout.Space(10);
-            if (styleProperty.objectReferenceValue != null)
-            {
-                EditorGUILayout.HelpBox("Property cannot be changed when style is applied.", MessageType.Info);
-            }
-            GUI.enabled = styleProperty.objectReferenceValue == null;
-            this.notifier.PropertyField("font");
-            this.notifier.PropertyField("backgroundColor");
-            this.notifier.PropertyField("foregroundColor");
-            this.notifier.PropertyField("selectionColor");
-            this.notifier.PropertyField("cursorColor");
-            this.notifier.PropertyField("colorPalette");
-            this.notifier.PropertyField("cursorStyle");
-            this.notifier.PropertyField("cursorThickness");
-            this.notifier.PropertyField("isCursorBlinkable");
-            this.notifier.PropertyField("cursorBlinkDelay");
-            this.notifier.PropertyField("isScrollForwardEnabled");
-            this.notifier.PropertyField("behaviourList");
-            GUI.enabled = true;
-
-            GUILayout.Space(10);
-            this.notifier.PropertyField("maxBufferHeight");
-            this.notifier.PropertyField("padding");
-            this.notifier.End();
         }
     }
 }
