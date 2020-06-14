@@ -26,8 +26,8 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    [CustomEditor(typeof(Terminal))]
-    public class TerminalEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TerminalStyle))]
+    public class TerminalStyleEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
 
@@ -41,12 +41,19 @@ namespace JSSoft.Terminal.Editor
         protected virtual void OnEnable()
         {
             this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
-            this.notifier.Add(nameof(Terminal.OutputText));
-            this.notifier.Add(nameof(Terminal.Prompt));
-            this.notifier.Add(nameof(Terminal.Command));
-            this.notifier.Add(nameof(Terminal.IsReadOnly));
-            this.notifier.Add(nameof(Terminal.IsVerbose));
-            this.notifier.Add(nameof(Terminal.Dispatcher));
+            this.notifier.Add(nameof(TerminalStyle.StyleName));
+            this.notifier.Add(nameof(TerminalStyle.Font));
+            this.notifier.Add(nameof(TerminalStyle.BackgroundColor));
+            this.notifier.Add(nameof(TerminalStyle.ForegroundColor));
+            this.notifier.Add(nameof(TerminalStyle.SelectionColor));
+            this.notifier.Add(nameof(TerminalStyle.CursorColor));
+            this.notifier.Add(nameof(TerminalStyle.ColorPalette));
+            this.notifier.Add(nameof(TerminalStyle.CursorStyle));
+            this.notifier.Add(nameof(TerminalStyle.CursorThickness));
+            this.notifier.Add(nameof(TerminalStyle.IsCursorBlinkable));
+            this.notifier.Add(nameof(TerminalStyle.CursorBlinkDelay));
+            this.notifier.Add(nameof(TerminalStyle.IsScrollForwardEnabled));
+            this.notifier.Add(nameof(TerminalStyle.BehaviourList), EditorPropertyUsage.IncludeChildren);
         }
 
         protected virtual void OnDisable()
@@ -56,11 +63,11 @@ namespace JSSoft.Terminal.Editor
 
         private void InvokeEvent(string[] propertyNames)
         {
-            if (this.target is Terminal terminal)
+            if (this.target is TerminalComposition composition)
             {
                 foreach (var item in propertyNames)
                 {
-                    terminal.InvokePropertyChangedEvent(item);
+                    composition.InvokePropertyChangedEvent(item);
                 }
             }
         }

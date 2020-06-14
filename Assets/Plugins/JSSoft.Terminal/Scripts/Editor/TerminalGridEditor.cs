@@ -43,6 +43,7 @@ namespace JSSoft.Terminal.Editor
             }
 
             this.notifier.Begin();
+            this.notifier.PropertyScript();
             this.notifier.PropertyField(nameof(TerminalGrid.Style));
             GUILayout.Space(10);
             if (styleProperty.objectReferenceValue != null)

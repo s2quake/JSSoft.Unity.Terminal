@@ -26,29 +26,54 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    [CustomEditor(typeof(TerminalCursor))]
-    public class TerminalCursorEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TerminalFontDescriptor))]
+    public class TerminalFontDescriptorEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
+        private Vector2 scrollPos;
 
         public override void OnInspectorGUI()
         {
-            this.notifier.Begin();
-            this.notifier.PropertyFieldAll();
-            this.notifier.End();
+            // this.notifier.Begin();
+            // this.notifier.PropertyFieldAll();
+            // this.notifier.End();
+            Debug.Log(EditorGUIUtility.singleLineHeight);
+            GUILayoutUtility.GetLastRect();
+            
+
+            return;
+            var obj = this.serializedObject;
+            EditorGUI.BeginChangeCheck();
+            obj.UpdateIfRequiredOrScript();
+
+            // EditorGUILayout.GetControlRect()
+            // Loop through properties and create one field (including children) for each top level property.
+            SerializedProperty property = obj.GetIterator();
+            bool expanded = true;
+            int i = 0;
+            while (property.NextVisible(expanded))
+            {
+                using (new EditorGUI.DisabledScope("m_Script" == property.propertyPath))
+                {
+                    EditorGUILayout.PropertyField(property, true, GUILayout.MaxHeight(100));
+                }
+                expanded = false;
+                i++;
+                // if (i > 1)
+                //     break;
+            }
+
+            obj.ApplyModifiedProperties();
+            EditorGUI.EndChangeCheck();
         }
 
         protected virtual void OnEnable()
         {
             this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
-            this.notifier.Add(nameof(TerminalCursor.CursorLeft));
-            this.notifier.Add(nameof(TerminalCursor.CursorTop));
-            this.notifier.Add(nameof(TerminalCursor.IsVisible));
-            this.notifier.Add(nameof(TerminalCursor.IsFocused), EditorPropertyUsage.IncludeChildren);
-            this.notifier.Add(nameof(TerminalCursor.Style), EditorPropertyUsage.IncludeChildren);
-            this.notifier.Add(nameof(TerminalCursor.Thickness));
-            this.notifier.Add(nameof(TerminalCursor.IsBlinkable));
-            this.notifier.Add(nameof(TerminalCursor.BlinkDelay));
+            this.notifier.Add(nameof(TerminalFontDescriptor.BaseInfo), EditorPropertyUsage.IncludeChildren);
+            this.notifier.Add(nameof(TerminalFontDescriptor.CommonInfo), EditorPropertyUsage.IncludeChildren);
+            this.notifier.Add(nameof(TerminalFontDescriptor.CharInfos), EditorPropertyUsage.IncludeChildren);
+            this.notifier.Add(nameof(TerminalFontDescriptor.Textures), EditorPropertyUsage.IncludeChildren);
         }
 
         protected virtual void OnDisable()

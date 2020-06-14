@@ -102,6 +102,7 @@ namespace JSSoft.Terminal
             throw new NotImplementedException();
         }
 
+        [FieldName(nameof(black))]
         public Color Black
         {
             get => this.black;
@@ -115,6 +116,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkBlue))]
         public Color DarkBlue
         {
             get => this.darkBlue;
@@ -128,6 +130,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkGreen))]
         public Color DarkGreen
         {
             get => this.darkGreen;
@@ -141,6 +144,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkCyan))]
         public Color DarkCyan
         {
             get => this.darkCyan;
@@ -154,6 +158,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkRed))]
         public Color DarkRed
         {
             get => this.darkRed;
@@ -167,6 +172,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkMagenta))]
         public Color DarkMagenta
         {
             get => this.darkMagenta;
@@ -180,6 +186,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkYellow))]
         public Color DarkYellow
         {
             get => this.darkYellow;
@@ -193,6 +200,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(gray))]
         public Color Gray
         {
             get => this.gray;
@@ -206,6 +214,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(darkGray))]
         public Color DarkGray
         {
             get => this.darkGray;
@@ -219,6 +228,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(blue))]
         public Color Blue
         {
             get => this.blue;
@@ -232,6 +242,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(green))]
         public Color Green
         {
             get => this.green;
@@ -245,6 +256,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cyan))]
         public Color Cyan
         {
             get => this.cyan;
@@ -258,6 +270,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(red))]
         public Color Red
         {
             get => this.red;
@@ -271,6 +284,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(magenta))]
         public Color Magenta
         {
             get => this.magenta;
@@ -284,6 +298,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(yellow))]
         public Color Yellow
         {
             get => this.yellow;
@@ -297,6 +312,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(white))]
         public Color White
         {
             get => this.white;
@@ -314,6 +330,11 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
         protected virtual void OnValidate()
         {
             this.OnValidated(EventArgs.Empty);
@@ -327,11 +348,6 @@ namespace JSSoft.Terminal
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             this.PropertyChanged?.Invoke(this, e);
-        }
-
-        private void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
     }
 }

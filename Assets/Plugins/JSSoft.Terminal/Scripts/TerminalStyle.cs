@@ -44,8 +44,6 @@ namespace JSSoft.Terminal
         private Color cursorColor = TerminalGrid.DefaultCursorColor;
         [SerializeField]
         private TerminalColorPalette colorPallete;
-        // [SerializeField]
-        // private TerminalThickness padding = new TerminalThickness(2);
         [SerializeField]
         private TerminalCursorStyle cursorStyle;
         [SerializeField]
@@ -61,6 +59,7 @@ namespace JSSoft.Terminal
         [SerializeField]
         private List<TerminalBehaviourBase> behaviourList = new List<TerminalBehaviourBase>();
 
+        [FieldName(nameof(styleName))]
         public string StyleName
         {
             get => this.styleName ?? string.Empty;
@@ -74,6 +73,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(font))]
         public TerminalFont Font
         {
             get => this.font;
@@ -87,6 +87,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(backgroundColor))]
         public Color BackgroundColor
         {
             get => this.backgroundColor;
@@ -100,6 +101,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(foregroundColor))]
         public Color ForegroundColor
         {
             get => this.foregroundColor;
@@ -113,6 +115,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(selectionColor))]
         public Color SelectionColor
         {
             get => this.selectionColor;
@@ -126,6 +129,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorColor))]
         public Color CursorColor
         {
             get => this.cursorColor;
@@ -139,6 +143,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(colorPallete))]
         public TerminalColorPalette ColorPalette
         {
             get => this.colorPallete;
@@ -152,19 +157,7 @@ namespace JSSoft.Terminal
             }
         }
 
-        // public TerminalThickness Padding
-        // {
-        //     get => this.padding;
-        //     set
-        //     {
-        //         if (this.padding != value)
-        //         {
-        //             this.padding = value;
-        //             this.InvokePropertyChangedEvent(nameof(Padding));
-        //         }
-        //     }
-        // }
-
+        [FieldName(nameof(cursorStyle))]
         public TerminalCursorStyle CursorStyle
         {
             get => this.cursorStyle;
@@ -178,6 +171,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorThickness))]
         public int CursorThickness
         {
             get => this.cursorThickness;
@@ -193,6 +187,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(isCursorBlinkable))]
         public bool IsCursorBlinkable
         {
             get => this.isCursorBlinkable;
@@ -206,6 +201,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(cursorBlinkDelay))]
         public float CursorBlinkDelay
         {
             get => this.cursorBlinkDelay;
@@ -221,6 +217,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(isScrollForwardEnabled))]
         public bool IsScrollForwardEnabled
         {
             get => this.isScrollForwardEnabled;
@@ -234,6 +231,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(behaviourList))]
         public List<TerminalBehaviourBase> BehaviourList => this.behaviourList;
 
         public event EventHandler Enabled;
@@ -243,6 +241,11 @@ namespace JSSoft.Terminal
         public event EventHandler Validated;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
 
         protected virtual void OnValidate()
         {
@@ -294,11 +297,6 @@ namespace JSSoft.Terminal
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             this.PropertyChanged?.Invoke(this, e);
-        }
-
-        private void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
     }
 }

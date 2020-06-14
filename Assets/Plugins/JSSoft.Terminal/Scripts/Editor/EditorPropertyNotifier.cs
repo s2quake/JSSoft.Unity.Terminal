@@ -36,6 +36,7 @@ namespace JSSoft.Terminal.Editor
         private readonly Dictionary<string, EditorProperty> propertyByName = new Dictionary<string, EditorProperty>();
         private readonly List<EditorProperty> propertyList = new List<EditorProperty>();
         private readonly List<string> nameList = new List<string>();
+        private readonly SerializedProperty scriptProperty;
 
         public EditorPropertyNotifier(UnityEditor.Editor editor)
             : this(editor, (items) => { })
@@ -48,6 +49,7 @@ namespace JSSoft.Terminal.Editor
             this.editor = editor ?? throw new ArgumentNullException(nameof(editor));
             this.serializedObject = editor.serializedObject;
             this.action = action ?? throw new ArgumentNullException(nameof(action));
+            this.scriptProperty = this.serializedObject.FindProperty("m_Script");
         }
 
         public void Add(string propertyName)
@@ -103,6 +105,7 @@ namespace JSSoft.Terminal.Editor
         {
             this.nameList.Clear();
             this.serializedObject.Update();
+            
         }
 
         public void End()
@@ -111,8 +114,16 @@ namespace JSSoft.Terminal.Editor
             this.nameList.Clear();
         }
 
+        public void PropertyScript()
+        {
+            GUI.enabled = false;
+            EditorGUILayout.PropertyField(this.scriptProperty);
+            GUI.enabled = true;
+        }
+
         public void PropertyFieldAll()
         {
+            this.PropertyScript();
             foreach (var item in this.propertyList)
             {
                 this.PropertyField(item);
@@ -134,8 +145,10 @@ namespace JSSoft.Terminal.Editor
 
         private void PropertyField(EditorProperty propertyInfo)
         {
+            var property = propertyInfo.Property;
+            var includeChildren = propertyInfo.IncludeChildren;
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(propertyInfo.Property, propertyInfo.IncludeChildren);
+            EditorGUILayout.PropertyField(property, includeChildren);
             this.serializedObject.ApplyModifiedProperties();
             if (EditorGUI.EndChangeCheck() && propertyInfo.CanNotify == true)
             {

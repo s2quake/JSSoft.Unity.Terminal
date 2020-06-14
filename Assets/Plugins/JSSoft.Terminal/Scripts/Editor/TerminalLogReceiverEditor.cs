@@ -54,6 +54,7 @@ namespace JSSoft.Communication.Services.Editor
             var useForegroundColorProperty = this.notifier.GetProperty(nameof(TerminalLogReceiver.UseForegroundColor));
             var useBackgroundColorProperty = this.notifier.GetProperty(nameof(TerminalLogReceiver.UseBackgroundColor));
             this.notifier.Begin();
+            this.notifier.PropertyScript();
             this.notifier.PropertyField(nameof(TerminalLogReceiver.LogType));
             this.notifier.PropertyField(nameof(TerminalLogReceiver.UseForegroundColor));
             if (useForegroundColorProperty.boolValue == true)

@@ -52,18 +52,60 @@ namespace JSSoft.Terminal
 
         public bool Contains(char character)
         {
-            return this.CharInfos.ContainsKey(character);
+            return this.Characters.ContainsKey(character);
         }
 
-        public CharInfo this[char character] => this.CharInfos[character];
+        public CharInfo this[char character] => this.Characters[character];
 
-        public Texture2D[] Textures => this.textures ?? new Texture2D[] { };
+        [FieldName(nameof(baseInfo))]
+        public BaseInfo BaseInfo
+        {
+            get => this.baseInfo;
+            set
+            {
+                this.baseInfo = value;
+                this.InvokePropertyChangedEvent(nameof(BaseInfo));
+            }
+        }
+
+        [FieldName(nameof(commonInfo))]
+        public CommonInfo CommonInfo
+        {
+            get => this.commonInfo;
+            set
+            {
+                this.commonInfo = value;
+                this.InvokePropertyChangedEvent(nameof(CommonInfo));
+            }
+        }
+
+        [FieldName(nameof(charInfos))]
+        public CharInfo[] CharInfos
+        {
+            get => this.charInfos ?? new CharInfo[] { };
+            set
+            {
+                this.charInfos = value;
+                this.InvokePropertyChangedEvent(nameof(CharInfos));
+            }
+        }
+
+        [FieldName(nameof(textures))]
+        public Texture2D[] Textures
+        {
+            get => this.textures ?? new Texture2D[] { };
+            set
+            {
+                this.textures = value;
+                this.InvokePropertyChangedEvent(nameof(Textures));
+            }
+        }
 
         public int Height => this.commonInfo.LineHeight;
 
         public int Width => this.width;
 
-        public IReadOnlyDictionary<char, CharInfo> CharInfos
+        public IReadOnlyDictionary<char, CharInfo> Characters
         {
             get
             {
@@ -82,6 +124,11 @@ namespace JSSoft.Terminal
         public event EventHandler Validated;
 
         public event PropertyChangedEventHandler PropertyChanged;
+
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
 
         protected virtual void OnValidate()
         {
@@ -160,11 +207,6 @@ namespace JSSoft.Terminal
         private void UpdateProperty()
         {
             this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
-        }
-
-        private void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
 #if UNITY_EDITOR

@@ -37,25 +37,15 @@ namespace JSSoft.Terminal.Utilities
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalGridEvents.Validated += TerminalGrid_Validated;
             TerminalGridEvents.LayoutChanged += TerminalGrid_LayoutChanged;
             TerminalGridEvents.PropertyChanged += TerminalGrid_PropertyChanged;
         }
 
         protected override void OnDisable()
         {
-            TerminalGridEvents.Validated -= TerminalGrid_Validated;
             TerminalGridEvents.LayoutChanged -= TerminalGrid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= TerminalGrid_PropertyChanged;
             base.OnDisable();
-        }
-
-        private void TerminalGrid_Validated(object sender, EventArgs e)
-        {
-            if (sender is TerminalGridBase grid && this.grid == grid)
-            {
-                base.color = grid.BackgroundColor;
-            }
         }
 
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)

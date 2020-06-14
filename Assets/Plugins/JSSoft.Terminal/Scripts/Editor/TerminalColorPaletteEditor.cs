@@ -26,8 +26,8 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
-    [CustomEditor(typeof(Terminal))]
-    public class TerminalEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TerminalColorPalette))]
+    public class TerminalColorPaletteEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
 
@@ -41,12 +41,22 @@ namespace JSSoft.Terminal.Editor
         protected virtual void OnEnable()
         {
             this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
-            this.notifier.Add(nameof(Terminal.OutputText));
-            this.notifier.Add(nameof(Terminal.Prompt));
-            this.notifier.Add(nameof(Terminal.Command));
-            this.notifier.Add(nameof(Terminal.IsReadOnly));
-            this.notifier.Add(nameof(Terminal.IsVerbose));
-            this.notifier.Add(nameof(Terminal.Dispatcher));
+            this.notifier.Add(nameof(TerminalColorPalette.Black));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkBlue));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkGreen));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkCyan));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkRed));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkMagenta));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkYellow));
+            this.notifier.Add(nameof(TerminalColorPalette.Gray));
+            this.notifier.Add(nameof(TerminalColorPalette.DarkGray));
+            this.notifier.Add(nameof(TerminalColorPalette.Blue));
+            this.notifier.Add(nameof(TerminalColorPalette.Green));
+            this.notifier.Add(nameof(TerminalColorPalette.Cyan));
+            this.notifier.Add(nameof(TerminalColorPalette.Red));
+            this.notifier.Add(nameof(TerminalColorPalette.Magenta));
+            this.notifier.Add(nameof(TerminalColorPalette.Yellow));
+            this.notifier.Add(nameof(TerminalColorPalette.White));
         }
 
         protected virtual void OnDisable()
@@ -56,11 +66,11 @@ namespace JSSoft.Terminal.Editor
 
         private void InvokeEvent(string[] propertyNames)
         {
-            if (this.target is Terminal terminal)
+            if (this.target is TerminalComposition composition)
             {
                 foreach (var item in propertyNames)
                 {
-                    terminal.InvokePropertyChangedEvent(item);
+                    composition.InvokePropertyChangedEvent(item);
                 }
             }
         }
