@@ -29,43 +29,51 @@ namespace JSSoft.Terminal.Editor
     [CustomEditor(typeof(TerminalFont))]
     public class TerminalFontEditor : UnityEditor.Editor
     {
-        private SerializedProperty fontProperty;
-        private ReorderableList fontList;
+        private EditorPropertyNotifier notifier;
 
-        public void OnEnable()
+        protected virtual void OnEnable()
         {
-            this.fontProperty = this.serializedObject.FindProperty("descriptorList");
-            this.fontList = new ReorderableList(this.serializedObject, this.fontProperty)
-            {
-                displayAdd = true,
-                displayRemove = true,
-                draggable = true,
-                drawHeaderCallback = item => EditorGUI.LabelField(item, "Font Descriptors"),
-                drawElementCallback = drawElementCallback,
-            };
+            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier.Add(nameof(TerminalFont.DescriptorList), EditorPropertyUsage.IncludeChildren);
+            this.notifier.Add(nameof(TerminalFont.Width));
+            this.notifier.Add(nameof(TerminalFont.Height));
+        }
+
+        protected virtual void OnDisable()
+        {
+            this.notifier = null;
         }
 
         public override void OnInspectorGUI()
         {
-            this.serializedObject.Update();
-            this.fontList.DoLayoutList();
-            EditorGUILayout.PropertyField(this.serializedObject.FindProperty("width"));
-            EditorGUILayout.PropertyField(this.serializedObject.FindProperty("height"));
-            this.serializedObject.ApplyModifiedProperties();
+            this.notifier.Begin();
+            this.notifier.PropertyFieldAll();
+            this.notifier.End();
         }
 
-        private void drawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
+        // private void drawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
+        // {
+        //     var element = this.fontProperty.GetArrayElementAtIndex(index);
+        //     rect.height -= 4;
+        //     rect.y += 2;
+        //     if (index == 0)
+        //         EditorGUI.LabelField(rect, "Main Font: ", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
+        //     else
+        //         EditorGUI.LabelField(rect, $"Sub Font {index - 1}: ");
+        //     rect.x += 70;
+        //     rect.width -= 70;
+        //     EditorGUI.PropertyField(rect, element);
+        // }
+
+        private void InvokeEvent(string[] propertyNames)
         {
-            var element = this.fontProperty.GetArrayElementAtIndex(index);
-            rect.height -= 4;
-            rect.y += 2;
-            if (index == 0)
-                EditorGUI.LabelField(rect, "Main Font: ", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
-            else
-                EditorGUI.LabelField(rect, $"Sub Font {index - 1}: ");
-            rect.x += 70;
-            rect.width -= 70;
-            EditorGUI.PropertyField(rect, element);
+            if (this.target is TerminalComposition composition)
+            {
+                foreach (var item in propertyNames)
+                {
+                    composition.InvokePropertyChangedEvent(item);
+                }
+            }
         }
     }
 }

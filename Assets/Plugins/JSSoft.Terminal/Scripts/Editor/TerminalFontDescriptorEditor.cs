@@ -30,41 +30,15 @@ namespace JSSoft.Terminal.Editor
     public class TerminalFontDescriptorEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
-        private Vector2 scrollPos;
 
         public override void OnInspectorGUI()
         {
-            // this.notifier.Begin();
-            // this.notifier.PropertyFieldAll();
-            // this.notifier.End();
-            Debug.Log(EditorGUIUtility.singleLineHeight);
-            GUILayoutUtility.GetLastRect();
-            
-
-            return;
-            var obj = this.serializedObject;
-            EditorGUI.BeginChangeCheck();
-            obj.UpdateIfRequiredOrScript();
-
-            // EditorGUILayout.GetControlRect()
-            // Loop through properties and create one field (including children) for each top level property.
-            SerializedProperty property = obj.GetIterator();
-            bool expanded = true;
-            int i = 0;
-            while (property.NextVisible(expanded))
-            {
-                using (new EditorGUI.DisabledScope("m_Script" == property.propertyPath))
-                {
-                    EditorGUILayout.PropertyField(property, true, GUILayout.MaxHeight(100));
-                }
-                expanded = false;
-                i++;
-                // if (i > 1)
-                //     break;
-            }
-
-            obj.ApplyModifiedProperties();
-            EditorGUI.EndChangeCheck();
+            this.notifier.Begin();
+            this.notifier.PropertyScript();
+            this.notifier.PropertyField(nameof(TerminalFontDescriptor.BaseInfo));
+            this.notifier.PropertyField(nameof(TerminalFontDescriptor.CommonInfo));
+            this.notifier.PropertyField(nameof(TerminalFontDescriptor.Textures));
+            this.notifier.End();
         }
 
         protected virtual void OnEnable()
@@ -83,11 +57,11 @@ namespace JSSoft.Terminal.Editor
 
         private void InvokeEvent(string[] propertyNames)
         {
-            if (this.target is TerminalComposition composition)
+            if (this.target is TerminalFontDescriptor descriptor)
             {
                 foreach (var item in propertyNames)
                 {
-                    composition.InvokePropertyChangedEvent(item);
+                    descriptor.InvokePropertyChangedEvent(item);
                 }
             }
         }

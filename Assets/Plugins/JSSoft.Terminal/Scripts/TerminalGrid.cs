@@ -932,7 +932,7 @@ namespace JSSoft.Terminal
                     this.UpdateCursorPoint();
                     this.SetLayoutDirty();
                     break;
-                case TerminalFontDescriptor descriptor when this.Font is TerminalFont font && font.Descriptors.Contains(descriptor) == true:
+                case TerminalFontDescriptor descriptor when this.Font is TerminalFont font && font.DescriptorList.Contains(descriptor) == true:
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
                     this.SetLayoutDirty();

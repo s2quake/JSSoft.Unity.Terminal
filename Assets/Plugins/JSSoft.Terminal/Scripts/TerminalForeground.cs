@@ -232,7 +232,7 @@ namespace JSSoft.Terminal
         {
             var font = this.grid.Font;
             var itemByTexture = this.Items.ToDictionary(item => item.Texture);
-            var textures = font != null ? font.Textures : new Texture2D[] { };
+            var textures = font != null ? font.Textures.ToArray() : new Texture2D[] { };
             for (var i = 0; i < textures.Length; i++)
             {
                 var texture = textures[i];

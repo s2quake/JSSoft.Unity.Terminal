@@ -37,7 +37,7 @@ namespace JSSoft.Terminal
     [CreateAssetMenu(menuName = "Terminal/Font")]
     public class TerminalFont : ScriptableObject, INotifyValidated
     {
-        private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
+        // private static readonly IReadOnlyList<TerminalFontDescriptor> emptyList = new List<TerminalFontDescriptor>();
         [SerializeField]
         private List<TerminalFontDescriptor> descriptorList = new List<TerminalFontDescriptor>();
         [SerializeField]
@@ -45,17 +45,17 @@ namespace JSSoft.Terminal
         [SerializeField]
         private int height = FontUtility.DefaultItemHeight;
 
-        private ObservableCollection<TerminalFontDescriptor> descriptors = new ObservableCollection<TerminalFontDescriptor>();
-        private Texture2D[] textures = new Texture2D[] { };
+        // private ObservableCollection<TerminalFontDescriptor> descriptors = new ObservableCollection<TerminalFontDescriptor>();
+        // private Texture2D[] textures = new Texture2D[] { };
 
         public TerminalFont()
         {
-            this.descriptors.CollectionChanged += Descriptors_CollectionChanged;
+            // this.descriptors.CollectionChanged += Descriptors_CollectionChanged;
         }
 
         public bool Contains(char character)
         {
-            foreach (var item in this.Descriptors)
+            foreach (var item in this.DescriptorList)
             {
                 if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
                     return true;
@@ -67,7 +67,7 @@ namespace JSSoft.Terminal
         {
             get
             {
-                foreach (var item in this.Descriptors)
+                foreach (var item in this.DescriptorList)
                 {
                     if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
                         return descriptor[character];
@@ -80,10 +80,27 @@ namespace JSSoft.Terminal
             }
         }
 
-        public IList<TerminalFontDescriptor> Descriptors => this.descriptors;
+        [FieldName(nameof(descriptorList))]
+        public IList<TerminalFontDescriptor> DescriptorList => this.descriptorList;
 
-        public Texture2D[] Textures => this.textures;
+        public IEnumerable<Texture2D> Textures
+        {
+            get
+            {
+                foreach (var item in this.descriptorList)
+                {
+                    if (item is TerminalFontDescriptor descriptor)
+                    {
+                        foreach (var texture in descriptor.Textures)
+                        {
+                            yield return texture;
+                        }
+                    }
+                }
+            }
+        }
 
+        [FieldName(nameof(height))]
         public int Height
         {
             get => this.height;
@@ -97,6 +114,7 @@ namespace JSSoft.Terminal
             }
         }
 
+        [FieldName(nameof(width))]
         public int Width
         {
             get => this.width;
@@ -118,10 +136,15 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
         protected virtual void OnValidate()
         {
-            this.UpdateDescriptors();
-            this.UpdateTextures();
+            // this.UpdateDescriptors();
+            // this.UpdateTextures();
             this.OnValidated(EventArgs.Empty);
         }
 
@@ -137,8 +160,8 @@ namespace JSSoft.Terminal
 
         protected virtual void OnEnable()
         {
-            this.UpdateDescriptors();
-            this.UpdateTextures();
+            // this.UpdateDescriptors();
+            // this.UpdateTextures();
             TerminalValidationEvents.Register(this);
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
@@ -173,14 +196,14 @@ namespace JSSoft.Terminal
 
         private void UpdateSize()
         {
-            var mainFont = this.Descriptors.FirstOrDefault();
+            var mainFont = this.DescriptorList.FirstOrDefault();
             this.width = mainFont != null ? mainFont.Width : FontUtility.DefaultItemWidth;
             this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
         }
 
         private void Object_Validated(object sender, EventArgs e)
         {
-            if (sender is TerminalFontDescriptor descriptor && this.Descriptors.Contains(descriptor))
+            if (sender is TerminalFontDescriptor descriptor && this.DescriptorList.Contains(descriptor))
             {
                 this.UpdateSize();
 #if UNITY_EDITOR
@@ -189,39 +212,34 @@ namespace JSSoft.Terminal
             }
         }
 
-        private void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
+        // private void Descriptors_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        // {
+        //     this.descriptorList.Clear();
+        //     this.descriptorList.AddRange(this.descriptors);
+        // }
 
-        private void Descriptors_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            this.descriptorList.Clear();
-            this.descriptorList.AddRange(this.descriptors);
-        }
+        // private void UpdateDescriptors()
+        // {
+        //     this.descriptors.CollectionChanged -= Descriptors_CollectionChanged;
+        //     this.descriptors.Clear();
+        //     foreach (var item in this.descriptorList)
+        //     {
+        //         this.descriptors.Add(item);
+        //     }
+        //     this.descriptors.CollectionChanged += Descriptors_CollectionChanged;
+        // }
 
-        private void UpdateDescriptors()
-        {
-            this.descriptors.CollectionChanged -= Descriptors_CollectionChanged;
-            this.descriptors.Clear();
-            foreach (var item in this.descriptorList)
-            {
-                this.descriptors.Add(item);
-            }
-            this.descriptors.CollectionChanged += Descriptors_CollectionChanged;
-        }
-
-        private void UpdateTextures()
-        {
-            var textureList = new List<Texture2D>();
-            foreach (var item in this.descriptorList)
-            {
-                if (item is TerminalFontDescriptor descriptor)
-                {
-                    textureList.AddRange(descriptor.Textures);
-                }
-            }
-            this.textures = textureList.ToArray();
-        }
+        // private void UpdateTextures()
+        // {
+        //     var textureList = new List<Texture2D>();
+        //     foreach (var item in this.descriptorList)
+        //     {
+        //         if (item is TerminalFontDescriptor descriptor)
+        //         {
+        //             textureList.AddRange(descriptor.Textures);
+        //         }
+        //     }
+        //     this.textures = textureList.ToArray();
+        // }
     }
 }

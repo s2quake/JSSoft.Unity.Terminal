@@ -58,11 +58,11 @@ namespace JSSoft.Terminal.Editor
 
         private void InvokeEvent(string[] propertyNames)
         {
-            if (this.target is TerminalComposition composition)
+            if (this.target is TerminalCursor cursor)
             {
                 foreach (var item in propertyNames)
                 {
-                    composition.InvokePropertyChangedEvent(item);
+                    cursor.InvokePropertyChangedEvent(item);
                 }
             }
         }
