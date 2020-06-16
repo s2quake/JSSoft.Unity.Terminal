@@ -210,7 +210,7 @@ namespace JSSoft.Terminal
                     this.UpdateAll();
                     break;
                 case nameof(ITerminalGrid.Text):
-                    this.Update();
+                    // this.Update();
                     break;
             }
         }

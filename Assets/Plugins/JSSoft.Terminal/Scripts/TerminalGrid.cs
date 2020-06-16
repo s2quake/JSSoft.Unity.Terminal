@@ -33,9 +33,6 @@ namespace JSSoft.Terminal
         [SerializeField]
         private TerminalFont font = null;
         [SerializeField]
-        [TextArea(5, 10)]
-        public string text = string.Empty;
-        [SerializeField]
         private Color backgroundColor = DefaultBackgroundColor;
         [SerializeField]
         private Color foregroundColor = DefaultForegroundColor;
@@ -91,6 +88,8 @@ namespace JSSoft.Terminal
         private int cursorVolume;
         private int actualBufferWidth;
         private int actualBufferHeight;
+        private string text;
+        private string test;
 
         public TerminalGrid()
         {
@@ -293,7 +292,7 @@ namespace JSSoft.Terminal
 
         public override bool IsFocused => this.isFocused;
 
-        public override string Text => this.text;
+        public override string Text => this.terminal.Text;
 
         [FieldName(nameof(font))]
         public override TerminalFont Font
@@ -623,16 +622,16 @@ namespace JSSoft.Terminal
 
         public override event PropertyChangedEventHandler PropertyChanged;
 
-        internal void SetText(string value)
-        {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-            if (this.text != value)
-            {
-                this.text = value;
-                this.InvokePropertyChangedEvent(nameof(Text));
-            }
-        }
+        // internal void SetText(string value)
+        // {
+        //     if (value == null)
+        //         throw new ArgumentNullException(nameof(value));
+        //     if (this.text != value)
+        //     {
+        //         this.text = value;
+        //         this.InvokePropertyChangedEvent(nameof(Text));
+        //     }
+        // }
 
         internal TerminalCell GetCell(TerminalPoint point)
         {
@@ -733,11 +732,13 @@ namespace JSSoft.Terminal
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
             this.text = this.terminal.Text;
+            this.test = this.terminal.Text;
             this.UpdateLayout();
             // this.ScrollToCursor();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
+            TerminalEvents.TextChanged += Terminal_TextChanged;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
             this.Invoke(nameof(this.ScrollToCursor), float.Epsilon);
@@ -745,9 +746,10 @@ namespace JSSoft.Terminal
         }
 
         protected override void OnDisable()
-        {
+        {   
             TerminalEvents.Validated -= Terminal_Validated;
-            TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
+            TerminalEvents.PropertyChanged -= Terminal_PropertyChanged;
+            TerminalEvents.TextChanged -= Terminal_TextChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
             this.terminal = null;
             base.OnDisable();
@@ -770,7 +772,7 @@ namespace JSSoft.Terminal
 
         protected virtual bool OnPreviewKeyPress(char character)
         {
-            if (character == '\n' || character == '\t' || character == 27)
+            if (character == '\n' || character == '\t' || character == 27 || character == 25)
                 return true;
             return false;
         }
@@ -779,10 +781,11 @@ namespace JSSoft.Terminal
         {
             for (var i = 0; i < eventList.Count; i++)
             {
-                var item = eventList[i]; if (item.rawType == EventType.KeyDown &&
-     item.keyCode == KeyCode.Return &&
-     item.modifiers == EventModifiers.None &&
-     i + 1 < eventList.Count)
+                var item = eventList[i]; 
+                if (item.rawType == EventType.KeyDown &&
+                    item.keyCode == KeyCode.Return &&
+                    item.modifiers == EventModifiers.None &&
+                    i + 1 < eventList.Count)
                 {
                     var nextItem = eventList[i + 1];
                     if (nextItem.character != '\n')
@@ -881,27 +884,27 @@ namespace JSSoft.Terminal
                 {
                     case nameof(Terminal.OutputText):
                         {
-                            this.notifier.Begin();
-                            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
-                            this.characterInfos.Update();
-                            this.rows.Update();
-                            this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
-                            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
-                            this.notifier.End();
-                            this.Selections.Clear();
+                            // this.notifier.Begin();
+                            // this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+                            // this.characterInfos.Update();
+                            // this.rows.Update();
+                            // this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
+                            // this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                            // this.notifier.End();
+                            // this.Selections.Clear();
                         }
                         break;
                     case nameof(Terminal.PromptText):
                         {
-                            this.notifier.Begin();
-                            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
-                            this.characterInfos.Update();
-                            this.rows.Update();
-                            this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
-                            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
-                            this.notifier.End();
-                            this.Selections.Clear();
-                            this.ScrollToCursor();
+                            // this.notifier.Begin();
+                            // this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+                            // this.characterInfos.Update();
+                            // this.rows.Update();
+                            // this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
+                            // this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                            // this.notifier.End();
+                            // this.Selections.Clear();
+                            // this.ScrollToCursor();
                         }
                         break;
                     case nameof(Terminal.CursorPosition):
@@ -916,11 +919,41 @@ namespace JSSoft.Terminal
                         break;
                     case nameof(Terminal.Text):
                         {
-                            this.ScrollToCursor();
+                            // this.ScrollToCursor();
                         }
                         break;
                 }
             }
+        }
+
+        private void Terminal_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            this.notifier.Begin();
+                            this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
+                            // this.characterInfos.Update();
+                            // this.rows.Update();
+                           
+            foreach (var item in e.Changes)
+            {
+                if (item.Length > 0)
+                {
+                    this.characterInfos.Update(item.Index);
+                    this.rows.Update(item.Index);
+                    // var text = this.terminal.Text.Substring(item.Index, item.Length);
+                    // this.test = this.test.Insert(item.Index, text);
+                }
+                else
+                {
+                    // this.test = this.test.Remove(item.Index + item.Length, -item.Length);
+                    this.characterInfos.Update(item.Index + item.Length);
+                    this.rows.Update(item.Index + item.Length);
+                }
+            }
+             this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
+                            this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
+                            this.notifier.End();
+                            this.Selections.Clear();
+            // Debug.Log(this.test);
         }
 
         private void Object_Validated(object sender, EventArgs e)

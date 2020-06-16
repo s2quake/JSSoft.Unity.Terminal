@@ -95,7 +95,7 @@ namespace JSSoft.Terminal
                 var count = this.scheduler.ProcessAll();
                 if (count > 0)
                 {
-                    Debug.Log(count);
+                    // Debug.Log(count);
                 }
             }
         }

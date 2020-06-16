@@ -41,6 +41,7 @@ namespace JSSoft.Terminal
             terminal.Enabled += Terminal_Enabled;
             terminal.Disabled += Terminal_Disabled;
             terminal.PropertyChanged += Terminal_PropertyChanged;
+            terminal.TextChanged += Terminal_TextChanged;
         }
 
         public static void Unregister(ITerminal terminal)
@@ -53,6 +54,7 @@ namespace JSSoft.Terminal
             terminal.Enabled -= Terminal_Enabled;
             terminal.Disabled -= Terminal_Disabled;
             terminal.PropertyChanged -= Terminal_PropertyChanged;
+            terminal.TextChanged -= Terminal_TextChanged;
             terminals.Remove(terminal);
         }
 
@@ -64,6 +66,8 @@ namespace JSSoft.Terminal
 
         public static event PropertyChangedEventHandler PropertyChanged;
 
+        public static event EventHandler<TextChangedEventArgs> TextChanged;
+
         private static void Terminal_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
@@ -72,6 +76,11 @@ namespace JSSoft.Terminal
         private static void Terminal_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             PropertyChanged?.Invoke(sender, e);
+        }
+
+        private static void Terminal_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            TextChanged?.Invoke(sender, e);
         }
 
         private static void Terminal_Enabled(object sender, EventArgs e)

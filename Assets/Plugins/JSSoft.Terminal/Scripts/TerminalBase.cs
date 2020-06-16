@@ -68,6 +68,8 @@ namespace JSSoft.Terminal
 
         public abstract event PropertyChangedEventHandler PropertyChanged;
 
+        public abstract event EventHandler<TextChangedEventArgs> TextChanged;
+
         public abstract event EventHandler Enabled;
 
         public abstract event EventHandler Disabled;
