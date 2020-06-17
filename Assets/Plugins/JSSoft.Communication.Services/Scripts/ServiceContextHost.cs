@@ -71,6 +71,8 @@ namespace JSSoft.Communication.Services
 
         public TerminalDispatcher Dispatcher => this.terminal.Dispatcher;
 
+        public ITerminal Terminal => this.terminal;
+
         public EventHandler Opened;
 
         public EventHandler Closed;
@@ -182,23 +184,23 @@ namespace JSSoft.Communication.Services
             {
                 this.IsOpened = true;
                 this.UpdatePrompt();
-                if (this.IsServer)
-                {
-                    this.Title = $"Server {this.ServiceContext.Host}:{this.ServiceContext.Port}";
-                    this.terminal.AppendLine("Server has started.");
-                }
-                else
-                {
-                    this.terminal.ForegroundColor = TerminalColor.Red;
-                    this.terminal.BackgroundColor = TerminalColor.Blue;
-                    this.Title = $"Client {this.ServiceContext.Host}:{this.ServiceContext.Port}";
-                    this.terminal.AppendLine("Server is connected.");
-                    this.terminal.ResetColor();
-                }
-                this.terminal.AppendLine("type 'help' to show available commands.");
-                this.terminal.AppendLine();
-                this.terminal.AppendLine("type 'login admin admin' to login.");
-                this.terminal.AppendLine();
+                // if (this.IsServer)
+                // {
+                //     this.Title = $"Server {this.ServiceContext.Host}:{this.ServiceContext.Port}";
+                //     this.terminal.AppendLine("Server has started.");
+                // }
+                // else
+                // {
+                //     this.terminal.ForegroundColor = TerminalColor.Red;
+                //     this.terminal.BackgroundColor = TerminalColor.Blue;
+                //     this.Title = $"Client {this.ServiceContext.Host}:{this.ServiceContext.Port}";
+                //     this.terminal.AppendLine("Server is connected.");
+                //     this.terminal.ResetColor();
+                // }
+                // this.terminal.AppendLine("type 'help' to show available commands.");
+                // this.terminal.AppendLine();
+                // this.terminal.AppendLine("type 'login admin admin' to login.");
+                // this.terminal.AppendLine();
                 this.OnOpened(EventArgs.Empty);
             });
         }
@@ -210,9 +212,9 @@ namespace JSSoft.Communication.Services
                 this.IsOpened = false;
                 this.UpdatePrompt();
                 this.Title = $"Client - Disconnected";
-                this.terminal.AppendLine("Server is disconnected.");
-                this.terminal.AppendLine("type 'open' to connect server.");
-                this.terminal.AppendLine();
+                // this.terminal.AppendLine("Server is disconnected.");
+                // this.terminal.AppendLine("type 'open' to connect server.");
+                // this.terminal.AppendLine();
                 this.OnClosed(EventArgs.Empty);
             });
         }

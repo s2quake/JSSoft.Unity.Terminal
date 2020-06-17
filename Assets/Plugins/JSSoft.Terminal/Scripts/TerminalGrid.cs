@@ -739,6 +739,7 @@ namespace JSSoft.Terminal
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
             TerminalEvents.TextChanged += Terminal_TextChanged;
+            TerminalEvents.Executed += Terminal_Executed;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
             this.Invoke(nameof(this.ScrollToCursor), float.Epsilon);
@@ -750,6 +751,7 @@ namespace JSSoft.Terminal
             TerminalEvents.Validated -= Terminal_Validated;
             TerminalEvents.PropertyChanged -= Terminal_PropertyChanged;
             TerminalEvents.TextChanged -= Terminal_TextChanged;
+            TerminalEvents.Executed -= Terminal_Executed;
             TerminalValidationEvents.Validated -= Object_Validated;
             this.terminal = null;
             base.OnDisable();
@@ -914,7 +916,7 @@ namespace JSSoft.Terminal
                             this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
                             this.notifier.End();
                             this.Selections.Clear();
-                            this.ScrollToCursor();
+                            //this.ScrollToCursor();
                         }
                         break;
                     case nameof(Terminal.Text):
@@ -928,6 +930,8 @@ namespace JSSoft.Terminal
 
         private void Terminal_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (sender is Terminal terminal && terminal == this.terminal)
+            {
             this.notifier.Begin();
                             this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
                             // this.characterInfos.Update();
@@ -953,7 +957,15 @@ namespace JSSoft.Terminal
                             this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
                             this.notifier.End();
                             this.Selections.Clear();
-            // Debug.Log(this.test);
+            }
+        }
+
+        private void Terminal_Executed(object sender, TerminalExecutedEventArgs e)
+        {
+            if (sender is Terminal terminal && terminal == this.terminal)
+            {
+                this.ScrollToCursor();
+            }
         }
 
         private void Object_Validated(object sender, EventArgs e)
@@ -1127,7 +1139,10 @@ namespace JSSoft.Terminal
                         if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
                         {
                             if (this.terminal.IsReadOnly == false && this.terminal.IsExecuting == false)
+                            {
                                 this.terminal.InsertCharacter(item.character);
+                                this.ScrollToCursor();
+                            }
                         }
                         this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                     }

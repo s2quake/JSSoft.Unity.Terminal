@@ -92,10 +92,11 @@ namespace JSSoft.Terminal
             if (Application.isPlaying && this.scheduler != null)
 #endif
             {
-                var count = this.scheduler.ProcessAll();
+                var time = DateTime.Now;
+                var count = this.scheduler.Process(1000/60);
                 if (count > 0)
                 {
-                    // Debug.Log(count);
+                    Debug.Log(DateTime.Now - time);
                 }
             }
         }

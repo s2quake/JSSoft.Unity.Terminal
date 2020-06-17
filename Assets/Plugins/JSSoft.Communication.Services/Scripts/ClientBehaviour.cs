@@ -28,6 +28,7 @@ using System.Threading.Tasks;
 using System;
 using System.Threading;
 using Ntreev.Library.Random;
+using JSSoft.Terminal;
 
 namespace JSSoft.Communication.Services
 {
@@ -93,8 +94,8 @@ namespace JSSoft.Communication.Services
                 this.clientContextHost = this.GetComponent<ClientContextHost>();
                 await this.clientContextHost.OpenAsync("localhost", 4004);
                 await this.clientContextHost.LoginAsync(this.userID, "1234");
-                this.userService = this.clientContextHost.UserService;
-                this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(100, 200), RandomUtility.Next(100, 1000));
+                // this.userService = this.clientContextHost.UserService;
+                // this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(100, 200), RandomUtility.Next(100, 1000));
                 // Debug.Log("timer created");
             }
         }
@@ -104,22 +105,31 @@ namespace JSSoft.Communication.Services
             if (sender is ServerContextHost serverContext)
             {
                 this.userService = null;
-                this.timer.Dispose();
+                this.timer?.Dispose();
                 this.timer = null;
             }
         }
 
         private async void Timer_Elapsed(object state)
         {
-            var userID = usedUsers.RandomOrDefault(item => this.userID != item);
-            if (userID != null)
+            await this.clientContextHost.Terminal.Dispatcher.InvokeAsync(() =>
             {
-                var token = this.clientContextHost.UserToken;
-                if (await this.userService.IsOnlineAsync(token, userID) == true)
-                {
-                    await this.userService.SendMessageAsync(token, userID, RandomUtility.NextString());
-                }
-            }
+                this.clientContextHost.Terminal.AppendLine(RandomUtility.NextString());
+            });
+            // await this.clientContextHost.Dispatcher.InvokeAsync(()=>
+            // {
+            //     this.clientContextHost.Terminal.Command = "help";
+            //     this.clientContextHost.Terminal.Execute();
+            // });
+            // var userID = usedUsers.RandomOrDefault(item => this.userID != item);
+            // if (userID != null)
+            // {
+            //     var token = this.clientContextHost.UserToken;
+            //     if (await this.userService.IsOnlineAsync(token, userID) == true)
+            //     {
+            //         await this.userService.SendMessageAsync(token, userID, RandomUtility.NextString());
+            //     }
+            // }
         }
     }
 }
