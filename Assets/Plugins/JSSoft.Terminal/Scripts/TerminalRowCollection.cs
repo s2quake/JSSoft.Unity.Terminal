@@ -160,6 +160,8 @@ namespace JSSoft.Terminal
             {
                 var item = this.pool.Any() ? this.pool.Pop() : new TerminalRow(this.grid, i);
                 item.Reset();
+                if (this.Count == this.Capacity)
+                    this.Capacity += this.maxBufferHeight;
                 this.Add(item);
             }
             for (var i = this.Count - 1; i >= 0; i--)

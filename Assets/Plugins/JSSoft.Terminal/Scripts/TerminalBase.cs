@@ -50,6 +50,8 @@ namespace JSSoft.Terminal
 
         public abstract bool IsVerbose { get; set; }
 
+        public abstract bool IsExecuting { get; }
+
         public abstract TerminalColor? ForegroundColor { get; set; }
 
         public abstract TerminalColor? BackgroundColor { get; set; }

@@ -94,8 +94,8 @@ namespace JSSoft.Communication.Services
                 this.clientContextHost = this.GetComponent<ClientContextHost>();
                 await this.clientContextHost.OpenAsync("localhost", 4004);
                 await this.clientContextHost.LoginAsync(this.userID, "1234");
-                // this.userService = this.clientContextHost.UserService;
-                // this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(100, 200), RandomUtility.Next(100, 1000));
+                this.userService = this.clientContextHost.UserService;
+                this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(100, 200), RandomUtility.Next(100, 1000));
                 // Debug.Log("timer created");
             }
         }
@@ -112,24 +112,24 @@ namespace JSSoft.Communication.Services
 
         private async void Timer_Elapsed(object state)
         {
-            await this.clientContextHost.Terminal.Dispatcher.InvokeAsync(() =>
-            {
-                this.clientContextHost.Terminal.AppendLine(RandomUtility.NextString());
-            });
+            // await this.clientContextHost.Terminal.Dispatcher.InvokeAsync(() =>
+            // {
+            //     this.clientContextHost.Terminal.AppendLine(RandomUtility.NextString());
+            // });
             // await this.clientContextHost.Dispatcher.InvokeAsync(()=>
             // {
             //     this.clientContextHost.Terminal.Command = "help";
             //     this.clientContextHost.Terminal.Execute();
             // });
-            // var userID = usedUsers.RandomOrDefault(item => this.userID != item);
-            // if (userID != null)
-            // {
-            //     var token = this.clientContextHost.UserToken;
-            //     if (await this.userService.IsOnlineAsync(token, userID) == true)
-            //     {
-            //         await this.userService.SendMessageAsync(token, userID, RandomUtility.NextString());
-            //     }
-            // }
+            var userID = usedUsers.RandomOrDefault(item => this.userID != item);
+            if (userID != null)
+            {
+                var token = this.clientContextHost.UserToken;
+                if (await this.userService.IsOnlineAsync(token, userID) == true)
+                {
+                    await this.userService.SendMessageAsync(token, userID, RandomUtility.NextString());
+                }
+            }
         }
     }
 }

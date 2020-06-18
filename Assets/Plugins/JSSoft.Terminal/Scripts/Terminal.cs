@@ -83,6 +83,10 @@ namespace JSSoft.Terminal
 
         public override void Execute()
         {
+            if (this.isReadOnly == true)
+                throw new InvalidOperationException("terminal is readonly.");
+            if (this.isExecuting == true)
+                throw new InvalidOperationException("terminal is being executed.");
             var commandText = this.command;
             var promptText = this.promptText;
             var prompt = this.prompt;
@@ -105,8 +109,8 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
-            this.notifier.End();
             this.InvokeTextChangedEvent(new TextChange(index, length));
+            this.notifier.End();
             this.AppendLine(promptText);
             this.ExecuteEvent(commandText, prompt);
         }
@@ -122,8 +126,8 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
-            this.notifier.End();
             this.InvokeTextChangedEvent(new TextChange(index, length));
+            this.notifier.End();
         }
 
         public override void MoveToFirst()
@@ -162,8 +166,8 @@ namespace JSSoft.Terminal
             this.completion = string.Empty;
             this.foregroundColors = new TerminalColor?[] { };
             this.backgroundColors = new TerminalColor?[] { };
-            this.notifier.End();
             this.InvokeTextChangedEvent(new TextChange(0, length));
+            this.notifier.End();
         }
 
         public override void Append(string text)
@@ -196,8 +200,8 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
                 this.inputText = this.command;
-                this.notifier.End();
                 this.InvokeTextChangedEvent(new TextChange(index, -1));
+                this.notifier.End();
             }
         }
 
@@ -213,8 +217,8 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.cursorPosition, this.cursorPosition - length, nameof(CursorPosition));
                 this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
                 this.inputText = this.command;
-                this.notifier.End();
                 this.InvokeTextChangedEvent(new TextChange(index, -length));
+                this.notifier.End();
             }
         }
 
@@ -334,8 +338,8 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + 1, nameof(CursorPosition));
             this.inputText = this.command;
             this.completion = string.Empty;
-            this.notifier.End();
             this.InvokeTextChangedEvent(new TextChange(index, $"{character}".Length));
+            this.notifier.End();
         }
 
         public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
@@ -387,7 +391,7 @@ namespace JSSoft.Terminal
             }
         }
 
-        public bool IsExecuting => this.isExecuting;
+        public override bool IsExecuting => this.isExecuting;
 
         [FieldName(nameof(isReadOnly))]
         public override bool IsReadOnly
@@ -476,8 +480,8 @@ namespace JSSoft.Terminal
                     this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                     ArrayUtility.Resize(ref this.promptForegroundColors, value.Length);
                     ArrayUtility.Resize(ref this.promptBackgroundColors, value.Length);
-                    this.notifier.End();
                     this.InvokeTextChangedEvent(removeChange, addChange);
+                    this.notifier.End();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
             }
@@ -506,8 +510,8 @@ namespace JSSoft.Terminal
                     this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                     this.inputText = value;
                     this.completion = string.Empty;
-                    this.notifier.End();
                     this.InvokeTextChangedEvent(removeChange, addChange);
+                    this.notifier.End();
                     this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
             }
@@ -726,8 +730,8 @@ namespace JSSoft.Terminal
                 this.foregroundColors[i] = this.ForegroundColor;
                 this.backgroundColors[i] = this.BackgroundColor;
             }
-            this.notifier.End();
             this.InvokeTextChangedEvent(new TextChange(index, text.Length));
+            this.notifier.End();
         }
 
         private void InsertPrompt(string prompt)
@@ -744,8 +748,8 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.isExecuting, false, nameof(IsExecuting));
             this.inputText = string.Empty;
             this.completion = string.Empty;
-            this.notifier.End();
             this.InvokeTextChangedEvent(removeChange, addChange);
+            this.notifier.End();
         }
 
         private IEnumerable<string> GetDependencyProperties(string propertyName)
@@ -764,12 +768,12 @@ namespace JSSoft.Terminal
         {
             var action = new Action<Exception>((e) =>
             {
-                this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt);
                 this.executed?.Invoke(this, new TerminalExecutedEventArgs(commandText, e));
+                this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt);
             });
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
-            this.isExecuting = true;
             this.InvokePropertyChangedEvent(nameof(IsExecuting));
+            this.isExecuting = true;
             if (this.executing != null)
                 this.executing.Invoke(this, eventArgs);
             else

@@ -120,7 +120,14 @@ namespace JSSoft.Communication.Services
             if (this.ServiceContext.IsOpened == true)
             {
                 this.ServiceContext.Closed -= ServiceContext_Closed;
-                await this.ServiceContext.CloseAsync(this.Token);
+                try
+                {
+                    await this.ServiceContext.CloseAsync(this.Token);
+                }
+                catch
+                {
+
+                }
             }
         }
 
@@ -184,23 +191,23 @@ namespace JSSoft.Communication.Services
             {
                 this.IsOpened = true;
                 this.UpdatePrompt();
-                // if (this.IsServer)
-                // {
-                //     this.Title = $"Server {this.ServiceContext.Host}:{this.ServiceContext.Port}";
-                //     this.terminal.AppendLine("Server has started.");
-                // }
-                // else
-                // {
-                //     this.terminal.ForegroundColor = TerminalColor.Red;
-                //     this.terminal.BackgroundColor = TerminalColor.Blue;
-                //     this.Title = $"Client {this.ServiceContext.Host}:{this.ServiceContext.Port}";
-                //     this.terminal.AppendLine("Server is connected.");
-                //     this.terminal.ResetColor();
-                // }
-                // this.terminal.AppendLine("type 'help' to show available commands.");
-                // this.terminal.AppendLine();
-                // this.terminal.AppendLine("type 'login admin admin' to login.");
-                // this.terminal.AppendLine();
+                if (this.IsServer)
+                {
+                    this.Title = $"Server {this.ServiceContext.Host}:{this.ServiceContext.Port}";
+                    this.terminal.AppendLine("Server has started.");
+                }
+                else
+                {
+                    this.terminal.ForegroundColor = TerminalColor.Red;
+                    this.terminal.BackgroundColor = TerminalColor.Blue;
+                    this.Title = $"Client {this.ServiceContext.Host}:{this.ServiceContext.Port}";
+                    this.terminal.AppendLine("Server is connected.");
+                    this.terminal.ResetColor();
+                }
+                this.terminal.AppendLine("type 'help' to show available commands.");
+                this.terminal.AppendLine();
+                this.terminal.AppendLine("type 'login admin admin' to login.");
+                this.terminal.AppendLine();
                 this.OnOpened(EventArgs.Empty);
             });
         }
@@ -211,10 +218,10 @@ namespace JSSoft.Communication.Services
             {
                 this.IsOpened = false;
                 this.UpdatePrompt();
-                this.Title = $"Client - Disconnected";
-                // this.terminal.AppendLine("Server is disconnected.");
-                // this.terminal.AppendLine("type 'open' to connect server.");
-                // this.terminal.AppendLine();
+                this.Title = $"Disconnected";
+                this.terminal.AppendLine("Server is disconnected.");
+                this.terminal.AppendLine("type 'open' to connect server.");
+                this.terminal.AppendLine();
                 this.OnClosed(EventArgs.Empty);
             });
         }
