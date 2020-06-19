@@ -52,7 +52,7 @@ namespace JSSoft.Terminal.Commands
             }
             else
             {
-                this.dispatcher.Invoke(() => this.terminal.Append(value.ToString()));
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(value.ToString()));
             }
         }
 
@@ -64,7 +64,7 @@ namespace JSSoft.Terminal.Commands
             }
             else
             {
-                this.dispatcher.Invoke(() => this.terminal.Append(Environment.NewLine));
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(Environment.NewLine));
             }
         }
 
@@ -76,7 +76,7 @@ namespace JSSoft.Terminal.Commands
             }
             else
             {
-                this.dispatcher.Invoke(() => this.terminal.Append(value + Environment.NewLine));
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(value + Environment.NewLine));
             }
         }
 
@@ -88,7 +88,7 @@ namespace JSSoft.Terminal.Commands
             }
             else
             {
-                this.dispatcher.Invoke(() => this.terminal.Append(value));
+                this.dispatcher.InvokeAsync(() => this.terminal.Append(value));
             }
         }
     }

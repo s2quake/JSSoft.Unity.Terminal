@@ -895,30 +895,28 @@ namespace JSSoft.Terminal
         {
             if (sender is Terminal terminal && terminal == this.terminal)
             {
-                var b = this.visibleIndex + this.actualBufferHeight == this.cursorPoint.Y + 1;
+                var scroll = this.visibleIndex + this.actualBufferHeight >= this.cursorPoint.Y;
                 this.notifier.Begin();
                 this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
                 foreach (var item in e.Changes)
                 {
+                    var time = DateTime.Now;
                     if (item.Length > 0)
                     {
                         this.characterInfos.Update(item.Index);
                         this.rows.Update(item.Index);
-                        // var text = this.terminal.Text.Substring(item.Index, item.Length);
-                        // this.test = this.test.Insert(item.Index, text);
                     }
                     else
                     {
                         this.characterInfos.Update(item.Index + item.Length);
                         this.rows.Update(item.Index + item.Length);
-                        // this.test = this.test.Remove(item.Index + item.Length, -item.Length);
                     }
                 }
                 this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(this.terminal.CursorIndex), nameof(CursorPoint));
                 this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
                 this.notifier.End();
                 this.Selections.Clear();
-                if (b == true)
+                if (scroll == true)
                     this.ScrollToCursor();
             }
         }

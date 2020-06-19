@@ -150,7 +150,7 @@ namespace JSSoft.Terminal.InputHandlers
             var grid = this.Grid;
             var row = grid.Rows[point.Y];
             var cell = row.Cells[point.X];
-            if (row.Text == string.Empty)
+            if (SelectionUtility.IsEmpty(row) == true)
                 this.SelectWordOfEmptyRow(row);
             else if (cell.Character == char.MinValue)
                 this.SelectWordOfEmptyCell(cell);
@@ -162,7 +162,7 @@ namespace JSSoft.Terminal.InputHandlers
         {
             var grid = this.Grid;
             var row = grid.Rows[point.Y];
-            if (row.Text != string.Empty)
+            if (SelectionUtility.IsEmpty(row) == false)
             {
                 var cell = row.Cells.First();
                 var index = cell.TextIndex;

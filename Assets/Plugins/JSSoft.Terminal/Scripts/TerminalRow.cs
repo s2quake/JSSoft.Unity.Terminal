@@ -33,7 +33,6 @@ namespace JSSoft.Terminal
         private readonly List<TerminalCell> cells = new List<TerminalCell>();
         private readonly Stack<TerminalCell> pool = new Stack<TerminalCell>();
         private TerminalRowAttributes attributes;
-        private string text = string.Empty;
 
         public TerminalRow(TerminalGrid grid, int index)
         {
@@ -85,18 +84,6 @@ namespace JSSoft.Terminal
                     return item;
             }
             return null;
-        }
-
-        public void Update()
-        {
-            this.text = string.Empty;
-            foreach (var item in this.cells)
-            {
-                if (item.Character != char.MinValue)
-                {
-                    this.text += item.Character;
-                }
-            }
         }
 
         public void Reset()
@@ -160,8 +147,6 @@ namespace JSSoft.Terminal
                     this.attributes &= ~TerminalRowAttributes.Multiline;
             }
         }
-
-        public string Text => this.text;
 
         public GlyphRect Rect { get; private set; }
 

@@ -50,8 +50,6 @@ namespace JSSoft.Terminal
             this.grid.Enabled += Grid_Enabled;
             this.grid.Disabled += Grid_Disabled;
             this.grid.PropertyChanged += Grid_PropertyChanged;
-            this.grid.Validated += Grid_Validated;
-            this.grid.LayoutChanged += Grid_LayoutChanged;
         }
 
         public void UpdateAll()
@@ -99,7 +97,6 @@ namespace JSSoft.Terminal
             var point = this.text.Length > 0 ? this.items[index].Point : TerminalPoint.Zero;
             var grid = this.grid;
             ArrayUtility.Resize(ref this.items, text.Length);
-            // Debug.Log($"{index}: {text.Length}");
             while (index < text.Length)
             {
                 var characterInfo = new TerminalCharacterInfo();
@@ -198,22 +195,7 @@ namespace JSSoft.Terminal
                         this.UpdateAll();
                     }
                     break;
-                case nameof(TerminalGrid.Text):
-                    {
-                        // this.Update();
-                    }
-                    break;
             }
-        }
-
-        private void Grid_Validated(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Grid_LayoutChanged(object sender, EventArgs e)
-        {
-            
         }
 
         private void Object_Validated(object sender, EventArgs e)

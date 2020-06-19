@@ -57,7 +57,7 @@ namespace JSSoft.Terminal
             }
             else if (isEnabled1 == false && isEnabled2 == false)
             {
-                if (row1.Text != string.Empty)
+                if (IsEmpty(row1) == false)
                 {
                     var l1 = LastPoint(row1, true);
                     var distance = l1.DistanceOf(s1, bufferWidth);
@@ -69,7 +69,7 @@ namespace JSSoft.Terminal
                     s1.X = bufferWidth;
                 }
 
-                if (row2.Text != string.Empty)
+                if (IsEmpty(row2) == false)
                 {
                     var l2 = LastPoint(row2, true);
                     var distance = l2.DistanceOf(s2, bufferWidth);
@@ -93,7 +93,7 @@ namespace JSSoft.Terminal
             var bufferWidth = row.Grid.ActualBufferWidth;
             var index = row.Index;
             var point = new TerminalPoint(bufferWidth, index);
-            if (row.Text != string.Empty)
+            if (IsEmpty(row) == false)
             {
                 for (var i = bufferWidth - 1; i >= 0; i--)
                 {
@@ -109,6 +109,11 @@ namespace JSSoft.Terminal
                 }
             }
             return point;
+        }
+
+        public static bool IsEmpty(ITerminalRow row)
+        {
+            return row.Cells.Any(item => item.Character != char.MinValue) == false;
         }
 
         public static void Select(ITerminalGrid grid, TerminalRange range)
@@ -143,7 +148,7 @@ namespace JSSoft.Terminal
         public static TerminalRange SelectLine(ITerminalGrid grid, TerminalPoint point)
         {
             var row = grid.Rows[point.Y];
-            if (row.Text != string.Empty)
+            if (IsEmpty(row) == false)
             {
                 var cell = row.Cells.First();
                 var index = cell.TextIndex;
@@ -169,7 +174,7 @@ namespace JSSoft.Terminal
         {
             var row = grid.Rows[point.Y];
             var cell = row.Cells[point.X];
-            if (row.Text == string.Empty)
+            if (IsEmpty(row) == true)
                 return SelectWordOfEmptyRow(grid, row);
             else if (cell.Character == char.MinValue)
                 return SelectWordOfEmptyCell(grid, cell);

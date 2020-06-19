@@ -29,9 +29,10 @@ using System.Text.RegularExpressions;
 
 namespace JSSoft.Communication.Services
 {
+    [RequireComponent(typeof(TerminalBase))]
+    [DisallowMultipleComponent]
     public abstract class ServiceContextHost : MonoBehaviour, IPromptDrawer
     {
-        [SerializeField]
         protected TerminalBase terminal;
 
         [RuntimeInitializeOnLoadMethod]
@@ -106,6 +107,7 @@ namespace JSSoft.Communication.Services
 
         protected virtual void Awake()
         {
+            this.terminal = this.GetComponent<TerminalBase>();
             this.ServiceContext.Opened += ServiceContext_Opened;
             this.ServiceContext.Closed += ServiceContext_Closed;
             // this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;

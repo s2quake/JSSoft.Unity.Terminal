@@ -117,32 +117,14 @@ namespace JSSoft.Terminal
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // if (sender is TerminalGrid grid && grid == this.Grid)
-            // {
-            //     switch (e.PropertyName)
-            //     {
-            //         case nameof(ITerminalGrid.VisibleIndex):
-            //         case nameof(ITerminalGrid.CursorPoint):
-            //         case nameof(ITerminalGrid.CompositionString):
-            //             {
-            //                 this.SetVerticesDirty();
-            //             }
-            //             break;
-            //     }
-            // }
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
-
         }
 
         private void Composition_Validated(object sender, EventArgs e)
         {
-            // if (sender is TerminalComposition composition && composition == this.composition)
-            // {
-            //     this.SetVerticesDirty();
-            // }
         }
 
         private void Composition_PropertyChanged(object sender, PropertyChangedEventArgs e)

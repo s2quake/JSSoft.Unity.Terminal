@@ -51,8 +51,6 @@ namespace JSSoft.Terminal
             this.grid.Enabled += Grid_Enabled;
             this.grid.Disabled += Grid_Disabled;
             this.grid.PropertyChanged += Grid_PropertyChanged;
-            this.grid.Validated += Grid_Validated;
-            this.grid.LayoutChanged += Grid_LayoutChanged;
             this.characterInfos = characterInfos;
         }
 
@@ -116,9 +114,8 @@ namespace JSSoft.Terminal
             {
                 var row = this[item.Key];
                 row.ResetAfter(item.Value + 1);
-                row.Update();
             }
-            for (var i = maximumIndex; i < maxBufferHeight; i++)
+            for (var i = maximumIndex; i < this.MaximumIndex; i++)
             {
                 var row = this.Prepare(i);
                 row.Reset();
@@ -204,30 +201,15 @@ namespace JSSoft.Terminal
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var propertyName = e.PropertyName;
-            switch (propertyName)
+            switch (e.PropertyName)
             {
                 case nameof(ITerminalGrid.Font):
                 case nameof(ITerminalGrid.Style):
-                    this.UpdateAll();
-                    break;
-                case nameof(ITerminalGrid.Text):
-                    // this.Update();
+                    {
+                        this.UpdateAll();
+                    }
                     break;
             }
-        }
-
-        private void Grid_Validated(object sender, EventArgs e)
-        {
-            // if (this.grid.IsActive() == true)
-            // {
-            //     this.Update();
-            // }
-        }
-
-        private void Grid_LayoutChanged(object sender, EventArgs e)
-        {
-            // this.Update();
         }
 
         private void Object_Validated(object sender, EventArgs e)

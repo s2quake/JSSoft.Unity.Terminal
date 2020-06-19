@@ -125,20 +125,6 @@ namespace JSSoft.Terminal.Editor
             }
         }
 
-        // [MenuItem("Terminal/Create Font Group")]
-        // private static void CreateFontGroup()
-        // {
-        //     var assetObject = Selection.activeObject;
-        //     if (assetObject != null)
-        //     {
-        //         var assetPath = AssetDatabase.GetAssetPath(assetObject);
-        //         var assetDirectory = Path.GetDirectoryName(assetPath);
-        //         var fontPath = Path.Combine(assetDirectory, $"FontGroup.asset");
-        //         var font = new TerminalFont();
-        //         AssetDatabase.CreateAsset(font, fontPath);
-        //     }
-        // }
-
         [MenuItem("GameObject/UI/Terminal")]
         private static void CreateTerminalUI()
         {

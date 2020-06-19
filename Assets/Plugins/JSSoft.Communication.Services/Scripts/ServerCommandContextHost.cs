@@ -29,10 +29,16 @@ using JSSoft.Communication.Services.Commands.Server;
 
 namespace JSSoft.Communication.Services
 {
+    [RequireComponent(typeof(ServerContextHost))]
     public class ServerCommandContextHost : CommandContextHost
     {
-        [SerializeField]
-        private ServerContextHost serverContext = null;
+        private ServerContextHost serverContext;
+
+        protected override void Awake()
+        {
+            this.serverContext = this.GetComponent<ServerContextHost>();
+            base.Awake();
+        }
 
         protected override IEnumerable<ICommand> CollectCommands()
         {
