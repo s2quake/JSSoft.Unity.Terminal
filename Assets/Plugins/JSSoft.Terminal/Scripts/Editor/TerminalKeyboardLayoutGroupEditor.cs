@@ -42,7 +42,7 @@ namespace JSSoft.Terminal.Editor
 
         protected virtual void OnEnable()
         {
-            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this);
             this.notifier.Add(nameof(TerminalKeyboardLayoutGroup.TerminalLayout));
             this.notifier.Add(nameof(TerminalKeyboardLayoutGroup.KeyboardLayout));
         }
@@ -50,10 +50,6 @@ namespace JSSoft.Terminal.Editor
         protected virtual void OnDisable()
         {
             this.notifier = null;
-        }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
         }
     }
 }

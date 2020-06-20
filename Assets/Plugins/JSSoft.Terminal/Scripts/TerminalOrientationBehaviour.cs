@@ -102,8 +102,6 @@ namespace JSSoft.Terminal
                 var height = (int)(rectangle.height - (padding.Top + padding.Bottom));
                 var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
-                // this.grid.BufferWidth = height / itemWidth;
-                // this.grid.BufferHeight = width / itemHeight;
             }
         }
 

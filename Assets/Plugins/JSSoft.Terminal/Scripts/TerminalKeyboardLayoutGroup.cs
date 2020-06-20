@@ -44,7 +44,10 @@ namespace JSSoft.Terminal
             get => this.terminalLayout;
             set
             {
-                this.terminalLayout = value;
+                if (this.terminalLayout != value)
+                {
+                    this.terminalLayout = value;
+                }
             }
         }
 
@@ -54,7 +57,10 @@ namespace JSSoft.Terminal
             get => this.keyboardLayout;
             set
             {
-                this.keyboardLayout = value;
+                if (this.keyboardLayout != value)
+                {
+                    this.keyboardLayout = value;
+                }
             }
         }
 
@@ -71,6 +77,7 @@ namespace JSSoft.Terminal
 
         protected override void OnDisable()
         {
+            this.layoutGroup = null;
             TerminalKeyboardEvents.Opened -= Keyboard_Opened;
             TerminalKeyboardEvents.Done -= Keyboard_Done;
             TerminalKeyboardEvents.Canceled -= Keyboard_Canceled;
