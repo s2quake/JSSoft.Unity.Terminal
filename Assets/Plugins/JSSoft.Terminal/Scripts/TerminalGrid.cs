@@ -622,17 +622,6 @@ namespace JSSoft.Terminal
 
         public override event PropertyChangedEventHandler PropertyChanged;
 
-        // internal void SetText(string value)
-        // {
-        //     if (value == null)
-        //         throw new ArgumentNullException(nameof(value));
-        //     if (this.text != value)
-        //     {
-        //         this.text = value;
-        //         this.InvokePropertyChangedEvent(nameof(Text));
-        //     }
-        // }
-
         internal TerminalCell GetCell(TerminalPoint point)
         {
             if (point.Y < 0 || point.Y >= this.rows.Count)
@@ -708,7 +697,6 @@ namespace JSSoft.Terminal
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
-
             if (this.IsActive() == true)
             {
                 this.UpdateLayout();

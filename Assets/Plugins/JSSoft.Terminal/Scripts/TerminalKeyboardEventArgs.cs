@@ -23,11 +23,11 @@
 using System;
 using UnityEngine;
 
-namespace JSSoft.Terminal.InputHandlers
+namespace JSSoft.Terminal
 {
-    class KeyboardEventArgs : EventArgs
+    public class TerminalKeyboardEventArgs : EventArgs
     {
-        public KeyboardEventArgs(string text, RangeInt selection, Rect area)
+        public TerminalKeyboardEventArgs(string text, RangeInt selection, Rect area)
         {
             this.Text = text ?? throw new ArgumentNullException(nameof(text));
             this.Selection = selection;

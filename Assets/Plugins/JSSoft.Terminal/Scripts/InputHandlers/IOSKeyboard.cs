@@ -24,7 +24,7 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class IOSKeyboard : KeyboardBase
+    class IOSKeyboard : TerminalKeyboardBase
     {
         private TouchScreenKeyboard keyboard;
 

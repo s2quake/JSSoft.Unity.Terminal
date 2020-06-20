@@ -23,9 +23,9 @@
 using System;
 using UnityEngine;
 
-namespace JSSoft.Terminal.InputHandlers
+namespace JSSoft.Terminal
 {
-    abstract class KeyboardBase
+    public abstract class TerminalKeyboardBase : ITerminalKeyboard
     {
         private ITerminalGrid grid;
         private string text;
@@ -60,7 +60,7 @@ namespace JSSoft.Terminal.InputHandlers
             {
                 this.OnOpen(this.text);
                 this.isOpened = true;
-                this.OnOpened(new KeyboardEventArgs(this.Text, this.Selection, this.Area));
+                this.OnOpened(new TerminalKeyboardEventArgs(this.Text, this.Selection, this.Area));
             }
             else if (this.isOpened == true)
             {
@@ -71,7 +71,7 @@ namespace JSSoft.Terminal.InputHandlers
                 if (result == true)
                 {
                     this.isOpened = false;
-                    this.OnDone(new KeyboardEventArgs(this.text, this.selection, this.area));
+                    this.OnDone(new TerminalKeyboardEventArgs(this.text, this.selection, this.area));
                     this.grid = null;
                     this.text = null;
                     this.selection = default(RangeInt);
@@ -92,7 +92,7 @@ namespace JSSoft.Terminal.InputHandlers
                     this.text = text;
                     this.selection = selection;
                     this.area = area;
-                    this.OnChanged(new KeyboardEventArgs(this.text, this.selection, this.area));
+                    this.OnChanged(new TerminalKeyboardEventArgs(this.text, this.selection, this.area));
                 }
             }
         }
@@ -109,13 +109,13 @@ namespace JSSoft.Terminal.InputHandlers
 
         public ITerminal Terminal => this.grid?.Terminal;
 
-        public event EventHandler<KeyboardEventArgs> Opened;
+        public event EventHandler<TerminalKeyboardEventArgs> Opened;
 
-        public event EventHandler<KeyboardEventArgs> Done;
+        public event EventHandler<TerminalKeyboardEventArgs> Done;
 
         public event EventHandler Canceled;
 
-        public event EventHandler<KeyboardEventArgs> Changed;
+        public event EventHandler<TerminalKeyboardEventArgs> Changed;
 
         protected abstract void OnOpen(string text);
 
@@ -123,12 +123,12 @@ namespace JSSoft.Terminal.InputHandlers
 
         protected abstract bool? OnUpdate();
 
-        protected virtual void OnOpened(KeyboardEventArgs e)
+        protected virtual void OnOpened(TerminalKeyboardEventArgs e)
         {
             this.Opened?.Invoke(this, e);
         }
 
-        protected virtual void OnDone(KeyboardEventArgs e)
+        protected virtual void OnDone(TerminalKeyboardEventArgs e)
         {
             this.Done?.Invoke(this, e);
         }
@@ -137,7 +137,7 @@ namespace JSSoft.Terminal.InputHandlers
         {
             this.Canceled?.Invoke(this, e);
         }
-        protected virtual void OnChanged(KeyboardEventArgs e)
+        protected virtual void OnChanged(TerminalKeyboardEventArgs e)
 
         {
             this.Changed?.Invoke(this, e);

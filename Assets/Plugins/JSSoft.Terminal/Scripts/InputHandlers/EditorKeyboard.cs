@@ -27,13 +27,12 @@ using UnityEditor;
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class EditorKeyboard : KeyboardBase
+    class EditorKeyboard : TerminalKeyboardBase
     {
         private bool? result;
         private RectTransform panelRect;
         private Button doneButton;
         private Button cancelButton;
-        private Rect area;
 
         public override string Text
         {
@@ -51,7 +50,15 @@ namespace JSSoft.Terminal.InputHandlers
             }
         }
 
-        public override Rect Area => this.area;
+        public override Rect Area
+        {
+            get
+            {
+                if (this.panelRect != null)
+                    return new Rect(0, Screen.height - this.panelRect.sizeDelta.y, Screen.width, this.panelRect.sizeDelta.y);
+                return default(Rect);
+            }
+        }
 
         protected override void OnOpen(string text)
         {
@@ -72,7 +79,6 @@ namespace JSSoft.Terminal.InputHandlers
             this.doneButton = doneButton;
             this.cancelButton = cancelButton;
             this.panelRect = panelRect;
-            this.area = new Rect(0, Screen.height - this.panelRect.sizeDelta.y, Screen.width, this.panelRect.sizeDelta.y);
             this.result = null;
         }
 
@@ -115,7 +121,6 @@ namespace JSSoft.Terminal.InputHandlers
             this.panelRect = null;
             this.doneButton = null;
             this.cancelButton = null;
-            this.area = default(Rect);
         }
 
         private static RectTransform CreatePanel(RectTransform canvasRect)

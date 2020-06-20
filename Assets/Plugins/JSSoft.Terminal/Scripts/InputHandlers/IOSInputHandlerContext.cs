@@ -25,6 +25,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.ComponentModel;
+using UnityEngine.UI;
 
 namespace JSSoft.Terminal.InputHandlers
 {
@@ -35,9 +36,9 @@ namespace JSSoft.Terminal.InputHandlers
         private readonly float clickThreshold = 0.5f;
         private readonly Swiper swiper = new Swiper();
 #if UNITY_EDITOR
-        private readonly KeyboardBase keyboard = new EditorKeyboard();
+        private readonly TerminalKeyboardBase keyboard = new EditorKeyboard();
 #else
-        private readonly KeyboardBase keyboard = new IOSKeyboard();
+        private readonly TerminalKeyboardBase keyboard = new IOSKeyboard();
 #endif
         private InputSelections selections;
         private Vector2 downPosition;
@@ -51,17 +52,17 @@ namespace JSSoft.Terminal.InputHandlers
         private bool isDown;
         private bool isSelecting;
         private bool isExecuting;
+        private bool isPortrait;
         private float downTime;
         private float scrollDelta;
         private Vector2 gridPosition;
+        private float deltaY;
         private TerminalOrientationBehaviour orientationBehaviour;
-        private bool isPortrait;
         private int bufferWidth;
         private int bufferHeight;
 
         public IOSInputHandlerContext()
         {
-
         }
 
         public override void BeginDrag(PointerEventData eventData)
@@ -209,6 +210,7 @@ namespace JSSoft.Terminal.InputHandlers
             base.Attach(grid);
             this.Terminal.Executed += Terminal_Executed;
             this.Terminal.PropertyChanged += Terminal_PropertyChanged;
+            this.Grid.LayoutChanged += Grid_LayoutChanged;
             this.swiper.Swiped += Swiper_Swiped;
             this.keyboard.Opened += Keyboard_Opened;
             this.keyboard.Done += Keyboard_Done;
@@ -220,16 +222,19 @@ namespace JSSoft.Terminal.InputHandlers
             this.isPortrait = TerminalOrientationBehaviour.IsPortait(Screen.orientation);
             this.bufferWidth = this.Grid.ActualBufferWidth;
             this.bufferHeight = this.Grid.ActualBufferHeight;
+            TerminalKeyboardEvents.Register(this.keyboard);
         }
 
         public override void Detach(ITerminalGrid grid)
         {
+            TerminalKeyboardEvents.Unregister(this.keyboard);
             this.orientationBehaviour.Changed.RemoveListener(OrientationBehaviour_Changed);
             this.orientationBehaviour = null;
             this.selections.Dispose();
             this.selections = null;
             this.Terminal.Executed -= Terminal_Executed;
             this.Terminal.PropertyChanged -= Terminal_PropertyChanged;
+            this.Grid.LayoutChanged -= Grid_LayoutChanged;
             this.swiper.Swiped -= Swiper_Swiped;
             this.keyboard.Opened -= Keyboard_Opened;
             this.keyboard.Done -= Keyboard_Done;
@@ -379,6 +384,24 @@ namespace JSSoft.Terminal.InputHandlers
             }
         }
 
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            Debug.Log(this.Grid.GetRect());
+            if (this.keyboard.IsOpened == true)
+            {
+                var pos = this.Grid.GetPosition();
+                this.Grid.LayoutChanged -= Grid_LayoutChanged;
+                // this.Grid.SetPosition(new Vector2(pos.x, pos.y - this.deltaY));
+                this.Grid.ScrollToCursor();
+                var w = Screen.width;
+                var h = Screen.height;
+                this.gridPosition = this.Grid.GetPosition();
+                // this.AdjustPosition(this.keyboard.Area);
+                this.Grid.LayoutChanged += Grid_LayoutChanged;
+            }
+            // Debug.Log(nameof(Grid_LayoutChanged));
+        }
+
         private void Swiper_Swiped(object sender, SwipedEventArgs e)
         {
             if (this.keyboard.IsOpened == true)
@@ -402,13 +425,6 @@ namespace JSSoft.Terminal.InputHandlers
             }
         }
 
-        private void Keyboard_Opened(object sender, KeyboardEventArgs e)
-        {
-            this.Grid.SetCommand(e.Text);
-            this.Grid.SelectCommand(e.Selection);
-            this.AdjustPosition(e.Area);
-        }
-
         private void OrientationBehaviour_Changed(ScreenOrientation oldValue, ScreenOrientation newValue, bool isRotated)
         {
             if (isRotated == true)
@@ -427,12 +443,15 @@ namespace JSSoft.Terminal.InputHandlers
                     bufferWidth = height / itemWidth;
                     bufferHeight = width / itemHeight;
                 }
+
                 if (this.keyboard.IsOpened == true)
+                {
                     this.Grid.SetPosition(this.gridPosition);
+                }
                 // this.Grid.BufferWidth = bufferWidth;
                 // this.Grid.BufferHeight = bufferHeight;
-                if (this.keyboard.IsOpened == true)
-                    this.AdjustPosition(this.keyboard.Area);
+                // if (this.keyboard.IsOpened == true)
+                //     this.AdjustPosition(this.keyboard.Area);
             }
         }
 
@@ -440,35 +459,49 @@ namespace JSSoft.Terminal.InputHandlers
         {
             var font = this.Grid.Font;
             var point = this.Grid.CursorPoint;
+            var padding = this.Grid.Padding;
+            var rect = this.Grid.GetRect();
+            var oldPos = this.Grid.GetPosition();
             var height = font.Height;
             var index = point.Y - this.Grid.VisibleIndex;
-            var rect = this.Grid.GetRect();
-            var i = index * height + (height * (int)(rect.y / height + 1));
+            var i = (index + 1) * height + rect.y + padding.Bottom;
             var y = keyboardArea.y;
             if (i >= y && keyboardArea.height > 0)
             {
-                var pos = new Vector2(this.gridPosition.x, this.gridPosition.y + (i - y));
-                this.gridPosition = this.Grid.GetPosition();
-                this.Grid.SetPosition(pos);
+                var newPos = new Vector2(oldPos.x, oldPos.y + (i - y));
+                this.deltaY = newPos.y - oldPos.y;
+                this.Grid.SetPosition(newPos);
+            }
+            else
+            {
+                this.deltaY = 0;
+                this.gridPosition = oldPos;
             }
         }
 
-        private void Keyboard_Done(object sender, KeyboardEventArgs e)
+        private void Keyboard_Opened(object sender, TerminalKeyboardEventArgs e)
+        {
+            this.Grid.SetCommand(e.Text);
+            this.Grid.SelectCommand(e.Selection);
+            // this.AdjustPosition(e.Area);
+        }
+
+        private void Keyboard_Done(object sender, TerminalKeyboardEventArgs e)
         {
             this.isExecuting = true;
             this.Terminal.Command = e.Text;
             this.Terminal.Execute();
             this.scrollPos = (int)this.Grid.VisibleIndex;
-            this.Grid.SetPosition(this.gridPosition);
+            // this.Grid.SetPosition(this.gridPosition);
         }
 
         private void Keyboard_Canceled(object sender, EventArgs e)
         {
             this.scrollPos = (int)this.Grid.VisibleIndex;
-            this.Grid.SetPosition(this.gridPosition);
+            // this.Grid.SetPosition(this.gridPosition);
         }
 
-        private void Keyboard_Changed(object sender, KeyboardEventArgs e)
+        private void Keyboard_Changed(object sender, TerminalKeyboardEventArgs e)
         {
             this.Grid.SetCommand(e.Text);
             this.Grid.SelectCommand(e.Selection);

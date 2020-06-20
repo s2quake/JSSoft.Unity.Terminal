@@ -30,14 +30,14 @@ namespace JSSoft.Terminal
         {
             var gameObject = grid.GameObject;
             var rectTransform = gameObject.GetComponent<RectTransform>();
-            return rectTransform.anchoredPosition;
+            return rectTransform.position;
         }
 
         public static void SetPosition(this ITerminalGrid grid, Vector2 position)
         {
             var gameObject = grid.GameObject;
             var rectTransform = gameObject.GetComponent<RectTransform>();
-            rectTransform.anchoredPosition = new Vector2(position.x, position.y);
+            rectTransform.position = new Vector2(position.x, position.y);
         }
 
         public static Rect GetRect(this ITerminalGrid grid)
