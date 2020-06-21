@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Plugins/JSSoft.Communication.Services/Scenes/iphone-client.unity
+    guid: eb4aa09eb79d24a84a6ba9733391ad5a
   m_configObjects: {}

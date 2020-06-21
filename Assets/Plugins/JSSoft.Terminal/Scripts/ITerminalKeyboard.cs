@@ -36,7 +36,7 @@ namespace JSSoft.Terminal
 
         Rect Area { get; }
 
-        ITerminal Terminal { get; }
+        ITerminalGrid Grid { get; }
 
         event EventHandler<TerminalKeyboardEventArgs> Opened;
 

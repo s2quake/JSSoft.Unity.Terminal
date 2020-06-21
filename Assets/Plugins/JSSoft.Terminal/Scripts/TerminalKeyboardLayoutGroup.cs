@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -36,6 +37,7 @@ namespace JSSoft.Terminal
         [SerializeField]
         private LayoutElement keyboardLayout;
 
+        private readonly HashSet<ITerminalGrid> grids = new HashSet<ITerminalGrid>();
         private VerticalLayoutGroup layoutGroup;
 
         [FieldName(nameof(terminalLayout))]
@@ -71,6 +73,7 @@ namespace JSSoft.Terminal
             TerminalKeyboardEvents.Done += Keyboard_Done;
             TerminalKeyboardEvents.Canceled += Keyboard_Canceled;
             TerminalKeyboardEvents.Changed += Keyboard_Changed;
+            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             this.layoutGroup = this.GetComponent<VerticalLayoutGroup>();
             this.keyboardLayout.ignoreLayout = true;
         }
@@ -81,6 +84,8 @@ namespace JSSoft.Terminal
             TerminalKeyboardEvents.Opened -= Keyboard_Opened;
             TerminalKeyboardEvents.Done -= Keyboard_Done;
             TerminalKeyboardEvents.Canceled -= Keyboard_Canceled;
+            TerminalKeyboardEvents.Changed -= Keyboard_Changed;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             base.OnDisable();
         }
 
@@ -88,6 +93,7 @@ namespace JSSoft.Terminal
         {
             if (sender is ITerminalKeyboard keyboard)
             {
+                this.grids.Add(keyboard.Grid);
                 this.UpdateLayout(keyboard);
             }
         }
@@ -97,6 +103,7 @@ namespace JSSoft.Terminal
             if (sender is ITerminalKeyboard keyboard)
             {
                 this.keyboardLayout.ignoreLayout = true;
+                this.grids.Remove(keyboard.Grid);
             }
         }
 
@@ -105,6 +112,7 @@ namespace JSSoft.Terminal
             if (sender is ITerminalKeyboard keyboard)
             {
                 this.keyboardLayout.ignoreLayout = true;
+                this.grids.Remove(keyboard.Grid);
             }
         }
 
@@ -113,6 +121,17 @@ namespace JSSoft.Terminal
             if (sender is ITerminalKeyboard keyboard)
             {
                 this.UpdateLayout(keyboard);
+            }
+        }
+
+        private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid)
+            {
+                if (this.grids.Contains(grid) == true)
+                {
+                    grid.ScrollToCursor();
+                }
             }
         }
 
