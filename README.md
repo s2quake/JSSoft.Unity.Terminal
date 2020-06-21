@@ -1,24 +1,74 @@
 # 개요
 
-터미널을 유니티에서 구현한 프로젝트입니다.
+유니티에서 터미널과 비슷한 환경을 사용하도록 구현한 라이브러리입니다.
 
-![dpng](./terminal.gif)
+흔히 콘솔창으로 많이 알려져 있는 이 기능은 개발 과정에 도움이 될 수 있도록
 
-# 실행 방법
+명령어 기반의 개발 환경을 제공합니다.
 
-프로젝트에는 grpc 기반의 서버 및 클라이언트 라이브러리가 포함되어 있습니다.
+![base](./terminal.gif)
+![4](./terminal-4.png)
+![16](./terminal-16.png)
 
-따라서 유니티 상에서 예제를 실행하기 위해서는 서버를 실행해야 합니다.
+# 개발 환경
 
-명령창에서 아래 경로에 있는 Server.exe 를 실행합니다.
+    Unity 2018.4.20f1
+    UGUI
 
-## Windows
+# 폴더 구조
 
-    Assets/Plugins/JSSoft.Communication/Server.exe
+## Assets/Plugins/JSSoft.Terminal
 
-## MacOS
+    터미널 라이브러리
 
-    mono Assets/Plugins/JSSoft.Communication/Server.exe
+## Assets/Plugins/JSSoft.Communication.Services
 
-서버가 실행되었으면 Unity에서 Assets/terminal.unity 을(를) 열고 Play 합니다.
+    터미널을 테스트 하기 위한 통신 모듈
+
+# 컴포넌트 구조
+
+## Terminal.cs
+
+    시각적 의존성 없이 터미널의 논리적인 부분만을 구현한 것입니다.
+    명령어 실행, 명령어 조합, 명령어내의 커서 위치, 문자열 출력 등이 이에 해당됩니다.
+
+## TerminalGrid.cs
+
+    논리적으로 구현된 터미널을 시각적으로 표시하도록 해주는 객체입니다.
+    이 객체는 터미널의 정보를 기반으로 Row와 Cell로 표현되며 사용자와의 상호 동작을 터미널에 전달합니다.
+    대부분의 컴포넌트는 Terminal보다 TerminalGrid와 연관성이 높습니다.
+
+## TerminalBackground
+
+    터미널에서 표현되는 글자의 배경색을 나타냅니다.
+
+## TerminalForeground
+
+    터미널에서 표현되는 글자의 표현과 전경색을 나타냅니다.
+    이 컴포넌트가 직접적으로 표시하지 않으며 하위 객체인 TerminalForegroundItem을 관리합니다.
+
+### TerminalForegroundItem
+
+    실제적으로 터미널의 글자를 표현하는 컴포넌트입니다. TerminalForeground에서 관리되고 있으며 글자 텍스쳐당 한개의 TerminalForegroundItem 으로 나타냅니다.
+
+## TerminalCursor
+
+    터미널의 명령 프롬프트의 커서를 나타냅니다.
+
+## TerminalComposition
+
+    터미널의 명령 프롬프트에서 IME(input method editor)에 의해 만들어지는 글자를 표현하는 컴포넌트입니다.
+    이 컴포넌트가 직접적으로 표시하지는 않으며 하위 객체를 관리하는 관리자 역할을 합니다.
+
+### TerminalCompositionBackground
+
+    IME에 의해 만들어지는 글자의 배경색을 나타냅니다.
+
+### TerminalCompositionForeground
+
+    IME에 의해 만들어지는 글자의 표현과 전경색을 나타냅니다.
+
+## TerminalScrollbar
+
+    터미널의 스크롤바를 나타냅니다.
 
