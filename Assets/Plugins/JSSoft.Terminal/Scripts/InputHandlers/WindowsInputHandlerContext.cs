@@ -173,14 +173,14 @@ namespace JSSoft.Terminal.InputHandlers
                 var p1 = grid.CharacterInfos[match1.Index].Point;
                 var p2 = grid.CharacterInfos[match2.Index].Point;
                 var p3 = new TerminalPoint(0, p1.Y);
-                var p4 = new TerminalPoint(grid.ActualBufferWidth, p2.Y);
+                var p4 = new TerminalPoint(grid.BufferWidth, p2.Y);
                 this.downRange = new TerminalRange(p3, p4);
                 this.UpdateSelecting();
             }
             else
             {
                 var p1 = new TerminalPoint(0, point.Y);
-                var p2 = new TerminalPoint(grid.ActualBufferWidth, point.Y);
+                var p2 = new TerminalPoint(grid.BufferWidth, point.Y);
                 this.downRange = new TerminalRange(p1, p2);
                 this.UpdateSelecting();
             }
@@ -211,7 +211,7 @@ namespace JSSoft.Terminal.InputHandlers
         {
             var grid = this.Grid;
             var p1 = new TerminalPoint(0, row.Index);
-            var p2 = new TerminalPoint(grid.ActualBufferWidth, row.Index);
+            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
             this.downRange = new TerminalRange(p1, p2);
             this.UpdateSelecting();
         }
@@ -222,7 +222,7 @@ namespace JSSoft.Terminal.InputHandlers
             var row = cell.Row;
             var cells = row.Cells;
             var p1 = SelectionUtility.LastPoint(row, true);
-            var p2 = new TerminalPoint(grid.ActualBufferWidth, row.Index);
+            var p2 = new TerminalPoint(grid.BufferWidth, row.Index);
             this.downRange = new TerminalRange(p1, p2);
             this.UpdateSelecting();
         }
@@ -335,8 +335,8 @@ namespace JSSoft.Terminal.InputHandlers
         {
             switch (e.PropertyName)
             {
-                case nameof(ITerminalGrid.ActualBufferWidth):
-                case nameof(ITerminalGrid.ActualBufferHeight):
+                case nameof(ITerminalGrid.BufferWidth):
+                case nameof(ITerminalGrid.BufferHeight):
                 case nameof(ITerminalGrid.MaxBufferHeight):
                     {
                         this.Grid.Selections.Clear();

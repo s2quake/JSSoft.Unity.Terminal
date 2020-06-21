@@ -56,7 +56,7 @@ namespace JSSoft.Terminal
             if (grid != null)
             {
                 var topIndex = grid.VisibleIndex;
-                var bottomIndex = topIndex + grid.ActualBufferHeight;
+                var bottomIndex = topIndex + grid.BufferHeight;
                 for (var i = topIndex; i < bottomIndex; i++)
                 {
                     var row = grid.Rows[i];
@@ -75,7 +75,7 @@ namespace JSSoft.Terminal
             {
                 if (cursorTop >= grid.Rows.Count)
                     throw new ArgumentOutOfRangeException(nameof(cursorTop));
-                if (cursorLeft >= grid.ActualBufferWidth)
+                if (cursorLeft >= grid.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(cursorLeft));
                 return grid.Rows[cursorTop].Cells[cursorLeft];
             }
@@ -208,7 +208,7 @@ namespace JSSoft.Terminal
             return visibleIndex;
         }
 
-        public static Vector2 GetActualBufferSize(ITerminalGrid grid, Vector2 size)
+        public static Vector2 GetBufferSize(ITerminalGrid grid, Vector2 size)
         {
             var bufferSize = Vector2.zero;
             var gameObject = grid.GameObject;

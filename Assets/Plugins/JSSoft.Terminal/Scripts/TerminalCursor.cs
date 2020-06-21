@@ -79,7 +79,7 @@ namespace JSSoft.Terminal
             get => this.cursorLeft;
             set
             {
-                if (value < 0 || value >= this.ActualBufferWidth)
+                if (value < 0 || value >= this.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.cursorLeft != value)
                 {
@@ -96,7 +96,7 @@ namespace JSSoft.Terminal
             get => this.cursorTop;
             set
             {
-                if (value < 0 || value >= this.ActualBufferHeight)
+                if (value < 0 || value >= this.BufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.cursorTop != value)
                 {
@@ -266,9 +266,9 @@ namespace JSSoft.Terminal
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.cursorLeft = Math.Min(this.ActualBufferWidth - 1, this.cursorLeft);
+            this.cursorLeft = Math.Min(this.BufferWidth - 1, this.cursorLeft);
             this.cursorLeft = Math.Max(0, this.cursorLeft);
-            this.cursorTop = Math.Min(this.ActualBufferHeight - 1, this.cursorTop);
+            this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
         }
 #endif
@@ -424,7 +424,7 @@ namespace JSSoft.Terminal
             {
                 this.volume = Math.Max(cell.Volume, 1);
             }
-            this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.ActualBufferHeight;
+            this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.BufferHeight;
             this.SetVerticesDirty();
         }
 
@@ -439,7 +439,7 @@ namespace JSSoft.Terminal
                     this.volume = Math.Max(cell.Volume, 1);
                 }
                 this.isVisible = this.grid.IsCursorVisible;
-                this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.ActualBufferHeight;
+                this.isInView = this.grid.CursorPoint.Y >= this.grid.VisibleIndex && this.grid.CursorPoint.Y < this.grid.VisibleIndex + this.grid.BufferHeight;
                 this.color = this.grid.CursorColor;
                 this.style = this.grid.CursorStyle;
                 this.thickness = this.grid.CursorThickness;
@@ -472,8 +472,8 @@ namespace JSSoft.Terminal
             throw new NotImplementedException();
         }
 
-        private int ActualBufferWidth => this.grid != null ? this.grid.ActualBufferWidth : 0;
+        private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
-        private int ActualBufferHeight => this.grid != null ? this.grid.ActualBufferHeight : 0;
+        private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
     }
 }

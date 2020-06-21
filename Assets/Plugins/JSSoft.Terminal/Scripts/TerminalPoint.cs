@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace JSSoft.Terminal
@@ -68,6 +69,21 @@ namespace JSSoft.Terminal
                 x = 0;
             }
             return c * op;
+        }
+
+        public IEnumerable<TerminalPoint> EnumerateTo(TerminalPoint point, int bufferWidth)
+        {
+            var (s1, s2) = this < point ? (this, point) : (point, this);
+            var x = s1.X;
+            for (var y = s1.Y; y <= s2.Y; y++)
+            {
+                var count = y == s2.Y ? s2.X : bufferWidth;
+                for (; x < count; x++)
+                {
+                    yield return new TerminalPoint(x, y);
+                }
+                x = 0;
+            }
         }
 
         public override int GetHashCode()

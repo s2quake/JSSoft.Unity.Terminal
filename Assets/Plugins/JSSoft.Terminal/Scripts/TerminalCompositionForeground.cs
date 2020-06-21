@@ -60,16 +60,12 @@ namespace JSSoft.Terminal
         {
             base.OnEnable();
             base.material = new Material(Shader.Find("UI/Default"));
-            TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
-            TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.PropertyChanged += Composition_PropertyChanged;
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
-            TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
-            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalValidationEvents.PropertyChanged -= Composition_PropertyChanged;
         }
 
@@ -86,8 +82,8 @@ namespace JSSoft.Terminal
             var columnIndex = this.composition.ColumnIndex;
             var rowIndex = this.composition.RowIndex;
             var grid = this.composition.Grid;
-            var bufferWidth = grid != null ? grid.ActualBufferWidth : 0;
-            var bufferHeight = grid != null ? grid.ActualBufferHeight : 0;
+            var bufferWidth = grid != null ? grid.BufferWidth : 0;
+            var bufferHeight = grid != null ? grid.BufferHeight : 0;
             var font = composition.Font;
             var offset = composition.Offset;
             var foregroundMargin = composition.ForegroundMargin;
@@ -116,32 +112,6 @@ namespace JSSoft.Terminal
             {
                 vh.Clear();
             }
-        }
-
-        private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // if (sender is TerminalGrid grid && grid == this.Grid)
-            // {
-            //     switch (e.PropertyName)
-            //     {
-            //         case nameof(ITerminalGrid.VisibleIndex):
-            //         case nameof(ITerminalGrid.CursorPoint):
-            //             {
-            //                 this.SetVerticesDirty();
-            //             }
-            //             break;
-            //         case nameof(ITerminalGrid.CompositionString):
-            //             {
-            //                 this.SetVerticesDirty();
-            //                 this.SetMaterialDirty();
-            //             }
-            //             break;
-            //     }
-            // }
-        }
-
-        private void Grid_LayoutChanged(object sender, EventArgs e)
-        {
         }
 
         private void Composition_PropertyChanged(object sender, PropertyChangedEventArgs e)

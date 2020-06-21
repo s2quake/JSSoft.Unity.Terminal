@@ -92,7 +92,7 @@ namespace JSSoft.Terminal
             get => this.columnIndex;
             set
             {
-                if (value < 0 || value >= this.ActualBufferWidth)
+                if (value < 0 || value >= this.BufferWidth)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.columnIndex != value)
                 {
@@ -108,7 +108,7 @@ namespace JSSoft.Terminal
             get => this.rowIndex;
             set
             {
-                if (value < 0 || value >= this.ActualBufferHeight)
+                if (value < 0 || value >= this.BufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.rowIndex != value)
                 {
@@ -195,9 +195,9 @@ namespace JSSoft.Terminal
         protected override void OnValidate()
         {
             base.OnValidate();
-            this.columnIndex = Math.Min(this.ActualBufferWidth - 1, this.columnIndex);
+            this.columnIndex = Math.Min(this.BufferWidth - 1, this.columnIndex);
             this.columnIndex = Math.Max(0, this.columnIndex);
-            this.rowIndex = Math.Min(this.ActualBufferHeight - 1, this.rowIndex);
+            this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
             this.rowIndex = Math.Max(0, this.rowIndex);
             this.OnValidated(EventArgs.Empty);
         }
@@ -305,8 +305,8 @@ namespace JSSoft.Terminal
             }
         }
 
-        private int ActualBufferWidth => this.grid != null ? this.grid.ActualBufferWidth : 0;
+        private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
-        private int ActualBufferHeight => this.grid != null ? this.grid.ActualBufferHeight : 0;
+        private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
     }
 }

@@ -34,8 +34,8 @@ namespace JSSoft.Terminal
         {
             var x = grid.CursorPoint.X;
             var y = grid.CursorPoint.Y;
-            var bufferWidth = grid.ActualBufferWidth;
-            var bufferHeight = grid.ActualBufferHeight;
+            var bufferWidth = grid.BufferWidth;
+            var bufferHeight = grid.BufferHeight;
             var rowCount = grid.Rows.Count;
             var maxBufferHeight = Math.Max(bufferHeight, rowCount);
             x = Math.Min(x, bufferWidth - 1);

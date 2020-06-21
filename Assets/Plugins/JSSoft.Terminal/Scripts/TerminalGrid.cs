@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.ComponentModel;
 using System.Collections.Specialized;
+using System.Text;
 
 namespace JSSoft.Terminal
 {
@@ -86,8 +87,8 @@ namespace JSSoft.Terminal
         private Rect rectangle;
         private IKeyBindingCollection keyBindings;
         private int cursorVolume;
-        private int actualBufferWidth;
-        private int actualBufferHeight;
+        private int bufferWidth;
+        private int bufferHeight;
         private string text;
         private string test;
 
@@ -120,7 +121,7 @@ namespace JSSoft.Terminal
             position.y -= padding.Top;
             var x = (int)(position.x / itemWidth);
             var y = (int)(position.y / itemHeight);
-            if (x >= this.ActualBufferWidth || y >= this.rows.Count)
+            if (x >= this.BufferWidth || y >= this.rows.Count)
                 return TerminalPoint.Invalid;
             return new TerminalPoint(x, y);
         }
@@ -141,7 +142,7 @@ namespace JSSoft.Terminal
 
         public override int PointToIndex(TerminalPoint point)
         {
-            if (point.Y >= 0 && point.Y < this.rows.Count && point.X >= 0 && point.X < this.ActualBufferWidth)
+            if (point.Y >= 0 && point.Y < this.rows.Count && point.X >= 0 && point.X < this.BufferWidth)
             {
                 return this.rows[point.Y].Cells[point.X].TextIndex;
             }
@@ -198,20 +199,20 @@ namespace JSSoft.Terminal
             {
                 this.VisibleIndex = this.CursorPoint.Y;
             }
-            if (this.CursorPoint.Y >= this.VisibleIndex + this.ActualBufferHeight)
+            if (this.CursorPoint.Y >= this.VisibleIndex + this.BufferHeight)
             {
-                this.VisibleIndex = this.CursorPoint.Y - this.ActualBufferHeight + 1;
+                this.VisibleIndex = this.CursorPoint.Y - this.BufferHeight + 1;
             }
         }
 
         public override void PageUp()
         {
-            this.Scroll(-this.ActualBufferHeight);
+            this.Scroll(-this.BufferHeight);
         }
 
         public override void PageDown()
         {
-            this.Scroll(this.ActualBufferHeight);
+            this.Scroll(this.BufferHeight);
         }
 
         public override void LineUp()
@@ -240,32 +241,19 @@ namespace JSSoft.Terminal
             if (this.Selections.Any() == true)
             {
                 var range = this.Selections.First();
-                var p1 = range.BeginPoint;
-                var p2 = range.EndPoint;
-                var capacity = p1.DistanceOf(p2, this.ActualBufferWidth);
-                var list = new List<char>(capacity);
-                var i1 = this.PointToIndex(p1);
-                var i2 = this.PointToIndex(p2);
-                for (var i = i1; i <= i2; i++)
-                {
-                    var item = this.characterInfos[i];
-                    if (item.Character != char.MinValue)
-                    {
-                        list.Add(item.Character);
-                    }
-                }
-                ClipboardUtility.Text = new string(list.ToArray());
+                var text = this.GetString(range);
+                GUIUtility.systemCopyBuffer = text;
             }
             else
             {
-                ClipboardUtility.Text = string.Empty;
+                GUIUtility.systemCopyBuffer = string.Empty;
             }
         }
 
         public override void SelectAll()
         {
             var p1 = new TerminalPoint(0, 0);
-            var p2 = new TerminalPoint(this.ActualBufferWidth, this.rows.Count);
+            var p2 = new TerminalPoint(this.BufferWidth, this.MaximumVisibleIndex + this.BufferHeight - 1);
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
@@ -317,7 +305,7 @@ namespace JSSoft.Terminal
             get => this.maxBufferHeight;
             set
             {
-                if (value < this.actualBufferHeight)
+                if (value < this.bufferHeight)
                     throw new ArgumentOutOfRangeException(nameof(value));
                 if (this.maxBufferHeight != value)
                 {
@@ -328,9 +316,9 @@ namespace JSSoft.Terminal
             }
         }
 
-        public override int ActualBufferWidth => this.actualBufferWidth;
+        public override int BufferWidth => this.bufferWidth;
 
-        public override int ActualBufferHeight => this.actualBufferHeight;
+        public override int BufferHeight => this.bufferHeight;
 
         public override IReadOnlyList<ITerminalRow> Rows => this.rows;
 
@@ -359,12 +347,12 @@ namespace JSSoft.Terminal
             get
             {
                 if (this.IsScrollForwardEnabled == false)
-                    return Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.ActualBufferHeight);
-                return Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.ActualBufferHeight;
+                    return Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
+                return Math.Max(this.rows.MaximumIndex, this.maxBufferHeight) - this.BufferHeight;
             }
         }
 
-        public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.ActualBufferHeight);
+        public int CursorVisibleIndex => Math.Max(this.rows.MinimumIndex, this.rows.MaximumIndex - this.BufferHeight);
 
         [FieldName(nameof(backgroundColor))]
         public override Color BackgroundColor
@@ -638,17 +626,22 @@ namespace JSSoft.Terminal
             var size = this.rectTransform.rect.size;
             size.x = Math.Abs(size.x);
             size.y = Math.Abs(size.y);
-            var bufferSize = TerminalGridUtility.GetActualBufferSize(this, size);
+            var bufferSize = TerminalGridUtility.GetBufferSize(this, size);
             this.UpdateRectangle(bufferSize);
             this.notifier.Begin();
-            this.notifier.SetField(ref this.actualBufferWidth, (int)bufferSize.x, nameof(ActualBufferWidth));
-            this.notifier.SetField(ref this.actualBufferHeight, (int)bufferSize.y, nameof(ActualBufferHeight));
+            this.notifier.SetField(ref this.bufferWidth, (int)bufferSize.x, nameof(BufferWidth));
+            this.notifier.SetField(ref this.bufferHeight, (int)bufferSize.y, nameof(BufferHeight));
             this.characterInfos.Update();
             this.rows.Update();
             this.notifier.SetField(ref this.cursorPoint, this.IndexToPoint(cursorIndex), nameof(CursorPoint));
             this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
             this.notifier.End();
             this.OnLayoutChanged(EventArgs.Empty);
+        }
+
+        internal void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         protected virtual void OnLayoutChanged(EventArgs e)
@@ -782,7 +775,7 @@ namespace JSSoft.Terminal
 
         private void ValidateValue()
         {
-            this.maxBufferHeight = Math.Max(this.actualBufferHeight, this.maxBufferHeight);
+            this.maxBufferHeight = Math.Max(this.bufferHeight, this.maxBufferHeight);
         }
 
         private void UpdateColor()
@@ -803,8 +796,8 @@ namespace JSSoft.Terminal
             var padding = this.padding;
             var itemWidth = TerminalGridUtility.GetItemWidth(this);
             var itemHeight = TerminalGridUtility.GetItemHeight(this);
-            var actualWidth = (int)(rect.width / itemWidth);
-            var actualHeight = (int)(rect.height / itemHeight);
+            var bufferWidth = (int)(rect.width / itemWidth);
+            var bufferHeight = (int)(rect.height / itemHeight);
             var rectWidth = bufferSize.x * itemWidth + padding.Left + padding.Right;
             var rectHeight = bufferSize.y * itemHeight + padding.Top + padding.Bottom;
             this.rectangle.x = 0;
@@ -833,8 +826,8 @@ namespace JSSoft.Terminal
         {
             var x = this.cursorPoint.X;
             var y = this.cursorPoint.Y;
-            var bufferWidth = this.actualBufferWidth;
-            var bufferHeight = this.actualBufferHeight;
+            var bufferWidth = this.bufferWidth;
+            var bufferHeight = this.bufferHeight;
             var rowCount = this.rows.Count;
             var maxBufferHeight = Math.Max(bufferHeight, rowCount);
             x = Math.Min(x, bufferWidth - 1);
@@ -883,7 +876,7 @@ namespace JSSoft.Terminal
         {
             if (sender is Terminal terminal && terminal == this.terminal)
             {
-                var scroll = this.visibleIndex + this.actualBufferHeight >= this.cursorPoint.Y;
+                var scroll = this.visibleIndex + this.bufferHeight >= this.cursorPoint.Y;
                 this.notifier.Begin();
                 this.notifier.SetField(ref this.text, this.terminal.Text, nameof(Text));
                 foreach (var item in e.Changes)
@@ -956,10 +949,10 @@ namespace JSSoft.Terminal
             var y = s1.Y;
             for (; y <= s2.Y; y++)
             {
-                var bufferWidth = y == s2.Y ? s2.X : this.ActualBufferWidth;
-                if (bufferWidth >= this.ActualBufferWidth)
+                var bufferWidth = y == s2.Y ? s2.X : this.BufferWidth;
+                if (bufferWidth >= this.BufferWidth)
                 {
-                    bufferWidth = this.ActualBufferWidth - 1;
+                    bufferWidth = this.BufferWidth - 1;
                 }
                 for (; x <= bufferWidth; x++)
                 {
@@ -977,6 +970,42 @@ namespace JSSoft.Terminal
             return query;
         }
 
+        private string GetString(TerminalRange range)
+        {
+            var bufferWidth = this.BufferWidth;
+            var p1 = range.BeginPoint;
+            var p2 = range.EndPoint;
+            var (s1, s2) = p1 < p2 ? (p1, p2) : (p2, p1);
+            var capacity = (s2.Y - s1.Y + 1) * bufferWidth;
+            var list = new List<char>(capacity);
+            var sb = new StringBuilder();
+            var x = s1.X;
+            for (var y = s1.Y; y <= s2.Y; y++)
+            {
+                var i = 0;
+                var count = y == s2.Y ? s2.X : bufferWidth;
+                for (; x < count; x++)
+                {
+                    var point = new TerminalPoint(x, y);
+                    var index = this.PointToIndex(point);
+                    if (index >= 0)
+                    {
+                        var charInfo = this.characterInfos[index];
+                        var character = charInfo.Character;
+                        if (character != char.MinValue)
+                        {
+                            sb.Append(character);
+                            i++;
+                        }
+                    }
+                }
+                x = 0;
+                if (i == 0 && y > s1.Y)
+                    sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
         private void SetFocused(bool value)
         {
             if (this.isFocused == value)
@@ -986,11 +1015,6 @@ namespace JSSoft.Terminal
                 this.OnGotFocus(EventArgs.Empty);
             else
                 this.OnLostFocus(EventArgs.Empty);
-        }
-
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private IList<Event> PopEvents()

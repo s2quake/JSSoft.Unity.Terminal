@@ -69,9 +69,9 @@ namespace JSSoft.Terminal
                     return 0;
                 if (this.style != this.grid.Style)
                     return 0;
-                if (this.bufferWidth != grid.ActualBufferWidth)
+                if (this.bufferWidth != grid.BufferWidth)
                     return 0;
-                if (this.bufferHeight != grid.ActualBufferHeight)
+                if (this.bufferHeight != grid.BufferHeight)
                     return 0;
                 if (this.maxBufferHeight != grid.MaxBufferHeight)
                     return 0;
@@ -89,8 +89,8 @@ namespace JSSoft.Terminal
                 return;
             var font = this.grid.Font;
             var style = this.grid.Style;
-            var bufferWidth = this.grid.ActualBufferWidth;
-            var bufferHeight = this.grid.ActualBufferHeight;
+            var bufferWidth = this.grid.BufferWidth;
+            var bufferHeight = this.grid.BufferHeight;
             var maxBufferHeight = this.grid.MaxBufferHeight;
             var padding = this.grid.Padding;
             var volume = this.characterInfos.Volume;

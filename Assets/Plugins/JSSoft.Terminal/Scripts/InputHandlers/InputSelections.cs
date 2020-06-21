@@ -107,8 +107,8 @@ namespace JSSoft.Terminal.InputHandlers
         {
             switch (e.PropertyName)
             {
-                case nameof(ITerminalGrid.ActualBufferWidth):
-                case nameof(ITerminalGrid.ActualBufferHeight):
+                case nameof(ITerminalGrid.BufferWidth):
+                case nameof(ITerminalGrid.BufferHeight):
                     {
                         this.RangeToSelection();
                     }

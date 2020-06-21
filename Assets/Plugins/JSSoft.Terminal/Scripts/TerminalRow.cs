@@ -38,8 +38,8 @@ namespace JSSoft.Terminal
         {
             this.Grid = grid ?? throw new ArgumentNullException(nameof(grid));
             this.Index = index;
-            this.cells.Capacity = grid.ActualBufferWidth;
-            for (var i = 0; i < grid.ActualBufferWidth; i++)
+            this.cells.Capacity = grid.BufferWidth;
+            for (var i = 0; i < grid.BufferWidth; i++)
             {
                 this.cells.Add(new TerminalCell(this, i));
             }
@@ -69,7 +69,7 @@ namespace JSSoft.Terminal
                     if (item.Intersect(position) == true)
                         return item.Point;
                 }
-                return new TerminalPoint(this.Grid.ActualBufferWidth, this.Index);
+                return new TerminalPoint(this.Grid.BufferWidth, this.Index);
             }
             return TerminalPoint.Invalid;
         }

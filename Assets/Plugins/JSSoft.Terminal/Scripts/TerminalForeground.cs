@@ -76,28 +76,20 @@ namespace JSSoft.Terminal
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalEvents.Validated += Terminal_Validated;
-            TerminalEvents.Enabled += Terminal_Enabled;
             TerminalGridEvents.Enabled += Grid_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
-            TerminalGridEvents.Validated += Grid_Validated;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalValidationEvents.Validated += Object_Validated;
-            TerminalValidationEvents.Enabled += Object_Enabled;
             this.CollectChilds();
             this.Invoke(nameof(SetDirty), float.Epsilon);
         }
 
         protected override void OnDisable()
         {
-            TerminalEvents.Validated -= Terminal_Validated;
-            TerminalEvents.Enabled -= Terminal_Enabled;
-            TerminalGridEvents.Validated -= Grid_Validated;
             TerminalGridEvents.Enabled -= Grid_Enabled;
             TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
-            TerminalValidationEvents.Enabled -= Object_Enabled;
             this.text = string.Empty;
             base.OnDisable();
         }
@@ -124,11 +116,6 @@ namespace JSSoft.Terminal
             this.cellList.Clear();
             foreach (var item in visibleCells)
             {
-                // if (itemByTexture.ContainsKey(item.Texture) == true)
-                // {
-                //     var foregrounItem = itemByTexture[item.Texture];
-                //     foregrounItem.SetVerticesDirty();
-                // }
                 this.cellList.Add(item);
             }
             foreach (var item in this.Items)
@@ -168,29 +155,6 @@ namespace JSSoft.Terminal
             }
         }
 
-        private void Grid_Validated(object sender, EventArgs e)
-        {
-            // if (sender is TerminalGrid grid && grid == this.grid)
-            // {
-            //     await Task.Delay(1);
-            //     this.RefreshChilds();
-            // }
-        }
-
-        private void Terminal_Validated(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.grid.Terminal)
-            {
-            }
-        }
-
-        private void Terminal_Enabled(object sender, EventArgs e)
-        {
-            if (sender is Terminal terminal && terminal == this.grid.Terminal)
-            {
-            }
-        }
-
         private void Grid_LayoutChanged(object sender, EventArgs e)
         {
             if (sender is TerminalGrid grid && grid == this.grid)
@@ -211,18 +175,6 @@ namespace JSSoft.Terminal
                 case TerminalColorPalette palette when this.grid?.ColorPalette:
                     {
                         this.SetDirty(true);
-                    }
-                    break;
-            }
-        }
-
-        private void Object_Enabled(object sender, EventArgs e)
-        {
-            switch (sender)
-            {
-                case TerminalStyle style when this.grid?.Font:
-                    {
-                        // this.SetDirty(true);
                     }
                     break;
             }

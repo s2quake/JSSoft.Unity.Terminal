@@ -1,59 +1,57 @@
-﻿// MIT License
-// 
-// Copyright (c) 2019 Jeesu Choi
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
+﻿// // MIT License
+// // 
+// // Copyright (c) 2019 Jeesu Choi
+// // 
+// // Permission is hereby granted, free of charge, to any person obtaining a copy
+// // of this software and associated documentation files (the "Software"), to deal
+// // in the Software without restriction, including without limitation the rights
+// // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// // copies of the Software, and to permit persons to whom the Software is
+// // furnished to do so, subject to the following conditions:
+// // 
+// // The above copyright notice and this permission notice shall be included in all
+// // copies or substantial portions of the Software.
+// // 
+// // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// // SOFTWARE.
 
-using System;
-using System.Reflection;
-using UnityEngine;
+// using System;
+// using System.Reflection;
+// using UnityEngine;
 
-namespace JSSoft.Terminal
-{
-    public static class ClipboardUtility
-    {
-        private static PropertyInfo property;
-
-        private static PropertyInfo Property
-        {
-            get
-            {
-                if (property == null)
-                {
-                    property = typeof(GUIUtility).GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
-                    if (property == null)
-                        throw new Exception("Can't access internal member 'GUIUtility.systemCopyBuffer' it may have been removed / renamed");
-                }
-                return property;
-            }
-        }
-
-        public static string Text
-        {
-            get => (string)Property.GetValue(null, null);
-            set
-            {
-                var textEditor = new TextEditor();
-                textEditor.text = value;
-                textEditor.SelectAll();
-                textEditor.Copy();
-            }
-        }
-    }
-}
+// namespace JSSoft.Terminal
+// {
+//     public static class ClipboardUtility
+//     {
+//         private static PropertyInfo m_systemCopyBufferProperty = null;
+//         private static PropertyInfo GetSystemCopyBufferProperty()
+//         {
+//             if (m_systemCopyBufferProperty == null)
+//             {
+//                 Type T = typeof(GUIUtility);
+//                 m_systemCopyBufferProperty = T.GetProperty("systemCopyBuffer", BindingFlags.Static | BindingFlags.NonPublic);
+//                 if (m_systemCopyBufferProperty == null)
+//                     throw new Exception("Can't access internal member 'GUIUtility.systemCopyBuffer' it may have been removed / renamed");
+//             }
+//             return m_systemCopyBufferProperty;
+//         }
+//         public static string Text
+//         {
+//             get
+//             {
+//                 PropertyInfo P = GetSystemCopyBufferProperty();
+//                 return (string)P.GetValue(null, null);
+//             }
+//             set
+//             {
+//                 PropertyInfo P = GetSystemCopyBufferProperty();
+//                 P.SetValue(null, value, null);
+//             }
+//         }
+//     }
+// }
