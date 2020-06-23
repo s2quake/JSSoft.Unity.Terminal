@@ -546,6 +546,18 @@ namespace JSSoft.Terminal
         [FieldName(nameof(dispatcher))]
         public override TerminalDispatcher Dispatcher => this.dispatcher;
 
+        public override event EventHandler<TerminalExecuteEventArgs> Executing
+        {
+            add { this.executing += value; }
+            remove { this.executing -= value; }
+        }
+
+        public override event EventHandler<TerminalExecutedEventArgs> Executed
+        {
+            add { this.executed += value; }
+            remove { this.executed -= value; }
+        }
+
         public override event EventHandler Validated;
 
         public override event PropertyChangedEventHandler PropertyChanged;
@@ -784,22 +796,6 @@ namespace JSSoft.Terminal
         {
             this.OnTextChanged(new TextChangedEventArgs(changes));
         }
-
-        #region ITerminal
-
-        public override event EventHandler<TerminalExecuteEventArgs> Executing
-        {
-            add { this.executing += value; }
-            remove { this.executing -= value; }
-        }
-
-        public override event EventHandler<TerminalExecutedEventArgs> Executed
-        {
-            add { this.executed += value; }
-            remove { this.executed -= value; }
-        }
-
-        #endregion
 
         #region IPromptDrawer
 
