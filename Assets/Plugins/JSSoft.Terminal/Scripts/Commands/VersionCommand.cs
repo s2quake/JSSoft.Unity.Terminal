@@ -21,30 +21,31 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using JSSoft.Terminal;
+using JSSoft.Terminal.Tasks;
 using Ntreev.Library.Commands;
+using Ntreev.Library.Threading;
+using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class CommandContext : CommandContextBase
+    public class VersionCommand : CommandAsyncBase
     {
-        private readonly ITerminal terminal;
-        private readonly VersionCommand versionCommand = new VersionCommand();
+        internal ITerminal Terminal { get; set; }
 
-        public CommandContext(ITerminal terminal, IEnumerable<ICommand> commands, IEnumerable<ICommandProvider> methods)
-            : base(commands, methods)
+        protected override async Task OnExecuteAsync()
         {
-            this.terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            this.Name = "UnityCommand";
-            this.VerifyName = false;
-            this.versionCommand.Terminal = terminal;
+            await this.Terminal.InvokeAsync(() =>
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine($"Identifier: {Application.identifier}");
+                sb.AppendLine($"Version: {Application.version}");
+                sb.AppendLine($"ProductName: {Application.productName}");
+                sb.AppendLine($"Unity Version: {Application.unityVersion}");
+                this.Terminal.AppendLine(sb.ToString());
+            });
         }
-
-        public new string[] GetCompletion(string[] items, string find)
-        {
-            return base.GetCompletion(items, find);
-        }
-
-        public override ICommand VersionCommand => this.versionCommand;
     }
 }

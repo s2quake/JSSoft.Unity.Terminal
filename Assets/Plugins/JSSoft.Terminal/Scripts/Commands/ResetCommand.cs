@@ -39,8 +39,7 @@ namespace JSSoft.Terminal.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            await Task.Delay(1);
-            // await this.Terminal.InvokeAsync(this.Terminal.Reset);
+            await this.Terminal.InvokeAsync(this.Terminal.Reset);
         }
     }
 }

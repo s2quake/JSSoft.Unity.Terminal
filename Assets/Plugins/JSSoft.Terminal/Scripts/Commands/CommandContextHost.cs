@@ -60,7 +60,7 @@ namespace JSSoft.Terminal.Commands
                         where this.isTest == true ||
                               Attribute.GetCustomAttribute(item.GetType(), typeof(TestCommandAttribute)) is null
                         select item;
-            this.commandContext = new CommandContext(query.ToArray(), Enumerable.Empty<ICommandProvider>());
+            this.commandContext = new CommandContext(this.terminal, query.ToArray(), Enumerable.Empty<ICommandProvider>());
             this.commandContext.Out = new CommandWriter(this.terminal);
         }
 
@@ -84,14 +84,11 @@ namespace JSSoft.Terminal.Commands
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
             yield return new ResetCommand(this.terminal);
+            yield return new InfoCommand(this.terminal);
             yield return new ExitCommand(this.terminal);
             yield return new VerboseCommand(this.terminal);
             yield return new ResolutionCommand(this.terminal);
             yield return new StyleCommand(this.terminal);
-
-            // yield return new TestCommand(this);
-            // yield return new WidthCommand();
-            // yield return new HeightCommand();
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)

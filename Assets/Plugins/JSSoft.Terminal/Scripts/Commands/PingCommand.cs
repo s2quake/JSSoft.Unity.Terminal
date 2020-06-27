@@ -22,29 +22,39 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using JSSoft.Terminal;
+using JSSoft.Terminal.Tasks;
 using Ntreev.Library.Commands;
+using Ntreev.Library.Threading;
+using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class CommandContext : CommandContextBase
+    public class PingCommand : TerminalCommandAsyncBase
     {
-        private readonly ITerminal terminal;
-        private readonly VersionCommand versionCommand = new VersionCommand();
-
-        public CommandContext(ITerminal terminal, IEnumerable<ICommand> commands, IEnumerable<ICommandProvider> methods)
-            : base(commands, methods)
+        public PingCommand(ITerminal terminal)
+            : base(terminal)
         {
-            this.terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            this.Name = "UnityCommand";
-            this.VerifyName = false;
-            this.versionCommand.Terminal = terminal;
+
         }
 
-        public new string[] GetCompletion(string[] items, string find)
+        [CommandProperty(IsRequired = true)]
+        [DefaultValue("")]
+        public string PropertyName
         {
-            return base.GetCompletion(items, find);
+            get; set;
         }
 
-        public override ICommand VersionCommand => this.versionCommand;
+        protected override async Task OnExecuteAsync()
+        {
+            await this.Terminal.InvokeAsync(() =>
+            {
+               
+            });
+        }
     }
 }
