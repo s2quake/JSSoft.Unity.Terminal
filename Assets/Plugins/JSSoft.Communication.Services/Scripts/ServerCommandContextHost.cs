@@ -34,10 +34,10 @@ namespace JSSoft.Communication.Services
     {
         private ServerContextHost serverContext;
 
-        protected override void Awake()
+        protected override void Start()
         {
             this.serverContext = this.GetComponent<ServerContextHost>();
-            base.Awake();
+            base.Start();
         }
 
         protected override IEnumerable<ICommand> CollectCommands()

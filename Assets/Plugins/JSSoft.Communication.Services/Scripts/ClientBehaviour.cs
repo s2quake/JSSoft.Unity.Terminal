@@ -95,7 +95,7 @@ namespace JSSoft.Communication.Services
                 await this.clientContextHost.OpenAsync("localhost", 4004);
                 await this.clientContextHost.LoginAsync(this.userID, "1234");
                 this.userService = this.clientContextHost.UserService;
-                this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(100, 200), RandomUtility.Next(100, 1000));
+                this.timer = new Timer(Timer_Elapsed, null, RandomUtility.Next(1000, 2000), RandomUtility.Next(100, 1000));
                 // Debug.Log("timer created");
             }
         }

@@ -93,7 +93,7 @@ namespace JSSoft.Terminal
 #endif
             {
                 var time = DateTime.Now;
-                var count = this.scheduler.Process(1000/60);
+                var count = this.scheduler.Process(1000 / 60);
                 // var count = this.scheduler.ProcessAll();
                 if (count > 0)
                 {

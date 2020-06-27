@@ -38,11 +38,6 @@ namespace JSSoft.Communication.Services
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
         {
-#if UNITY_STANDALONE_OSX
-            Screen.SetResolution(1280, 800, false);
-#elif UNITY_STANDALONE_WIN
-            Screen.SetResolution(3840, 2160, true);
-#endif
         }
 
         static ServiceContextHost()
@@ -119,7 +114,7 @@ namespace JSSoft.Communication.Services
 
         protected virtual async void OnDestroy()
         {
-            if (this.ServiceContext.IsOpened == true)
+            if (this.ServiceContext.ServiceState == ServiceState.Open)
             {
                 this.ServiceContext.Closed -= ServiceContext_Closed;
                 try
@@ -265,7 +260,7 @@ namespace JSSoft.Communication.Services
 
         internal async Task ExitAsync()
         {
-            if (this.ServiceContext.IsOpened == true)
+            if (this.ServiceContext.ServiceState == ServiceState.Open)
             {
                 this.ServiceContext.Closed -= ServiceContext_Closed;
                 await this.ServiceContext.CloseAsync(this.Token);

@@ -31,22 +31,24 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class ExitCommand : CommandAsyncBase
+    public class ExitCommand : TerminalCommandAsyncBase
     {
+        public ExitCommand(ITerminal terminal)
+            : base(terminal)
+        {
+        }
+
         [CommandProperty(IsRequired = true)]
         [DefaultValue(0)]
         public int ExitCode { get; set; }
 
-        protected override async Task OnExecuteAsync(object source)
+        protected override async Task OnExecuteAsync()
         {
-            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
-            {
 #if UNITY_EDITOR
-                await terminal.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
+            await this.Terminal.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
 #else
-                await terminal.InvokeAsync(() => UnityEngine.Application.Quit());
+            await this.Terminal.InvokeAsync(() => UnityEngine.Application.Quit());
 #endif
-            }
         }
     }
 }

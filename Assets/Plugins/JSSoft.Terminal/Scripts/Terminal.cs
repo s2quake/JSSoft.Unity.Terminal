@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -73,7 +74,15 @@ namespace JSSoft.Terminal
 
         static Terminal()
         {
-
+            // Debug.Log(CultureInfo.CurrentCulture);
+            var cultureInfo = CultureInfo.CreateSpecificCulture("ko-KR");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+            // CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("ko-KR");
+            // CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture;
+            // CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture;
+            // CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
+            // Debug.Log(CultureInfo.CurrentCulture);
         }
 
         public Terminal()

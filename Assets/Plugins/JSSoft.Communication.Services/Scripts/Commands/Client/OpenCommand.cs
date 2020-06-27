@@ -47,7 +47,7 @@ namespace JSSoft.Communication.Services.Commands.Client
 
         public override bool IsEnabled => this.context.IsOpened == false;
 
-        protected override async Task OnExecuteAsync(object source)
+        protected override async Task OnExecuteAsync()
         {
             await this.context.OpenAsync(this.Host, this.Port);
         }

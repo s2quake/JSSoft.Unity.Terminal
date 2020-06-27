@@ -20,8 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
+using System;
 using System.Threading.Tasks;
+using JSSoft.Terminal;
 using JSSoft.Terminal.Tasks;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
@@ -29,27 +30,16 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    [TestCommand]
-    class WidthCommand : CommandAsyncBase
+    public abstract class TerminalCommandMethodBase : CommandMethodBase
     {
-        [CommandProperty(IsRequired = true)]
-        [DefaultValue("")]
-        public int? Value { get; set; }
-
-        protected override async Task OnExecuteAsync(object source)
+        protected TerminalCommandMethodBase(ITerminal terminal)
         {
-            if (CommandUtility.GetService<ITerminalGrid>(source) is ITerminalGrid grid)
-            {
-                var terminal = grid.Terminal;
-                var value = this.Value;
-                await terminal.InvokeAsync(() =>
-                {
-                    // if (value == null)
-                    //     terminal.AppendLine($"width: {grid.BufferWidth}");
-                    // else
-                    //     grid.BufferWidth = (int)value;
-                });
-            }
+            this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
+
+        protected ITerminal Terminal { get; }
+
+        protected ITerminalGrid Grid { get; }
     }
 }

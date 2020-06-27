@@ -50,13 +50,18 @@ namespace JSSoft.Terminal.Commands
             set => this.text = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        protected virtual void Awake()
+        public TerminalBase Terminal => this.terminal;
+
+        public TerminalGridBase Grid => this.grid;
+
+        protected virtual void Start()
         {
             var query = from item in this.CollectCommands()
                         where this.isTest == true ||
                               Attribute.GetCustomAttribute(item.GetType(), typeof(TestCommandAttribute)) is null
                         select item;
             this.commandContext = new CommandContext(query.ToArray(), Enumerable.Empty<ICommandProvider>());
+            this.commandContext.Out = new CommandWriter(this.terminal);
         }
 
         protected virtual void OnEnable()
@@ -69,7 +74,6 @@ namespace JSSoft.Terminal.Commands
                 this.terminal.AppendLine(this.text);
             this.terminal.CursorPosition = 0;
             this.terminal.Executing += Terminal_Executing;
-            this.commandContext.Out = new CommandWriter(this.terminal);
         }
 
         protected virtual void OnDisable()
@@ -79,14 +83,15 @@ namespace JSSoft.Terminal.Commands
 
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
-            yield return new ResetCommand();
-            yield return new ExitCommand();
-            yield return new VerboseCommand();
-            yield return new StyleCommand();
+            yield return new ResetCommand(this.terminal);
+            yield return new ExitCommand(this.terminal);
+            yield return new VerboseCommand(this.terminal);
+            yield return new ResolutionCommand(this.terminal);
+            yield return new StyleCommand(this.terminal);
 
-            yield return new TestCommand();
-            yield return new WidthCommand();
-            yield return new HeightCommand();
+            // yield return new TestCommand(this);
+            // yield return new WidthCommand();
+            // yield return new HeightCommand();
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)
@@ -100,6 +105,8 @@ namespace JSSoft.Terminal.Commands
                 return this.terminal;
             else if (serviceType == typeof(ITerminalGrid))
                 return this.grid;
+            else if (serviceType == typeof(TerminalDispatcher))
+                return this.terminal.Dispatcher;
             return null;
         }
 
@@ -119,7 +126,7 @@ namespace JSSoft.Terminal.Commands
         {
             try
             {
-                await Task.Run(() => commandContext.Execute(this, commandContext.Name + " " + e.Command));
+                await Task.Run(() => commandContext.Execute(commandContext.Name + " " + e.Command));
                 e.Success();
             }
             catch (System.Reflection.TargetInvocationException ex)

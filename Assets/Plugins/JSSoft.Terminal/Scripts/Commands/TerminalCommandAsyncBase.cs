@@ -21,39 +21,25 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using System.ComponentModel;
 using System.Threading.Tasks;
 using JSSoft.Terminal;
+using JSSoft.Terminal.Tasks;
 using Ntreev.Library.Commands;
 using Ntreev.Library.Threading;
 using UnityEngine;
-using System.Collections.Generic;
-using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    [TestCommand]
-    class HeightCommand : CommandAsyncBase
+    public abstract class TerminalCommandAsyncBase : CommandAsyncBase
     {
-        [CommandProperty(IsRequired = true)]
-        [DefaultValue("")]
-        public int? Value { get; set; }
-
-        protected override async Task OnExecuteAsync(object source)
+        protected TerminalCommandAsyncBase(ITerminal terminal)
         {
-            if (CommandUtility.GetService<ITerminalGrid>(source) is ITerminalGrid grid)
-            {
-                var terminal = grid.Terminal;
-                var value = this.Value;
-                await terminal.InvokeAsync(() =>
-                {
-                    // if (value == null)
-                    //     terminal.AppendLine($"height: {grid.BufferHeight}");
-                    // else
-                    //     grid.BufferHeight = (int)value;
-                });
-            }
+            this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
+
+        protected ITerminal Terminal { get; }
+
+        protected ITerminalGrid Grid { get; }
     }
 }

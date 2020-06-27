@@ -39,7 +39,7 @@ namespace JSSoft.Communication.Services.Commands.Server
 
         public override bool IsEnabled => this.serverContext.IsOpened;
 
-        protected override Task OnExecuteAsync(object source)
+        protected override Task OnExecuteAsync()
         {
             return this.serverContext.CloseAsync();
         }

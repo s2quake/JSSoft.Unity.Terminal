@@ -48,7 +48,7 @@ namespace JSSoft.Communication.Services.Commands
 
         public override bool IsEnabled => this.contex.UserToken == Guid.Empty;
 
-        protected override async Task OnExecuteAsync(object source)
+        protected override async Task OnExecuteAsync()
         {
             await this.contex.LoginAsync(this.UserID, this.Password);
         }

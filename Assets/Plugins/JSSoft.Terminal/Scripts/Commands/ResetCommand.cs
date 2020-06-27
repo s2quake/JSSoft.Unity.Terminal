@@ -30,14 +30,17 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class ResetCommand : CommandAsyncBase
+    public class ResetCommand : TerminalCommandAsyncBase
     {
-        protected override async Task OnExecuteAsync(object source)
+        public ResetCommand(ITerminal terminal)
+            : base(terminal)
         {
-            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
-            {
-                await terminal.InvokeAsync(terminal.Reset);
-            }
+        }
+
+        protected override async Task OnExecuteAsync()
+        {
+            await Task.Delay(1);
+            // await this.Terminal.InvokeAsync(this.Terminal.Reset);
         }
     }
 }

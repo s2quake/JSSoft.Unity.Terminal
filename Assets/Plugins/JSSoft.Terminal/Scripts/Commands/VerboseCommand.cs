@@ -27,25 +27,27 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class VerboseCommand : CommandAsyncBase
+    public class VerboseCommand : TerminalCommandAsyncBase
     {
+        public VerboseCommand(ITerminal terminal)
+            : base(terminal)
+        {
+        }
+
         [CommandProperty(IsRequired = true)]
         [DefaultValue("")]
         public bool? Value { get; set; }
 
-        protected override async Task OnExecuteAsync(object source)
+        protected override async Task OnExecuteAsync()
         {
-            if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
+            var value = this.Value;
+            await this.Terminal.InvokeAsync(() =>
             {
-                var value = this.Value;
-                await terminal.InvokeAsync(() =>
-                {
-                    if (value == null)
-                        terminal.AppendLine($"Verbose: {$"{terminal.IsVerbose}".ToLower()}");
-                    else
-                        terminal.IsVerbose = (bool)value;
-                });
-            }
+                if (value == null)
+                    this.Terminal.AppendLine($"Verbose: {$"{this.Terminal.IsVerbose}".ToLower()}");
+                else
+                    this.Terminal.IsVerbose = (bool)value;
+            });
         }
     }
 }

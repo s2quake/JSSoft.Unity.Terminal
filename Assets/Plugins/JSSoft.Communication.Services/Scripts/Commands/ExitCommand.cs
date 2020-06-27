@@ -36,14 +36,15 @@ namespace JSSoft.Communication.Services.Commands
         private readonly ServiceContextHost context;
 
         public ExitCommand(ServiceContextHost context)
+            : base(context.Terminal)
         {
             this.context = context;    
         }
         
-        protected override async Task OnExecuteAsync(object source)
-        {
-            await this.context.ExitAsync();
-            await base.OnExecuteAsync(source);
-        }
+        // protected override async Task OnExecuteAsync()
+        // {
+        //     await this.context.ExitAsync();
+        //     await base.OnExecuteAsync();
+        // }
     }
 }
