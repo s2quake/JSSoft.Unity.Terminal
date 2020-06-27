@@ -43,17 +43,38 @@ namespace JSSoft.Terminal.Commands
         }
 
         [CommandProperty(IsRequired = true)]
-        [DefaultValue("")]
-        public string PropertyName
+        public string Address
+        {
+            get; set;
+        }
+
+        [CommandProperty]
+        [DefaultValue(3)]
+        public int Count
         {
             get; set;
         }
 
         protected override async Task OnExecuteAsync()
         {
-            await this.Terminal.InvokeAsync(() =>
+            var address = this.Address;
+            var count = this.Count;
+            for (var i = 0; i < count; i++)
             {
-               
+                var ping = await this.Terminal.Dispatcher.InvokeAsync(() => new Ping(address));
+                do
+                {
+                    await Task.Delay(1000);
+                } while (await this.Terminal.Dispatcher.InvokeAsync(() => ping.isDone) == false);
+                await this.Terminal.Dispatcher.InvokeAsync(() =>
+                {
+                    this.Terminal.AppendLine($"{address}: {ping.time}");
+                    ping.DestroyPing();
+                });
+            }
+            await this.Terminal.Dispatcher.InvokeAsync(() =>
+            {
+                this.Terminal.AppendLine();
             });
         }
     }

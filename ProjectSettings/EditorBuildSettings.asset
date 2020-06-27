@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Plugins/JSSoft.Communication.Services/Scenes/standalone-client.unity
-    guid: 4cfa7ca60bbff4714b03e84645ea60a5
+    path: Assets/Plugins/JSSoft.Communication.Services/Scenes/iphone-client.unity
+    guid: eb4aa09eb79d24a84a6ba9733391ad5a
   m_configObjects: {}

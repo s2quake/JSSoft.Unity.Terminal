@@ -88,6 +88,7 @@ namespace JSSoft.Terminal.Commands
             yield return new ExitCommand(this.terminal);
             yield return new VerboseCommand(this.terminal);
             yield return new ResolutionCommand(this.terminal);
+            yield return new PingCommand(this.terminal);
             yield return new StyleCommand(this.terminal);
         }
 
