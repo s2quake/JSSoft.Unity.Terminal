@@ -34,16 +34,7 @@ namespace JSSoft.Terminal.Commands
     {
         protected override async Task OnExecuteAsync()
         {
-            // await Task.Delay(5000);
-            // if (CommandUtility.GetService<ITerminal>(source) is ITerminal terminal)
-            // {
-            //     await terminal.InvokeAsync(() =>
-            //     {
-            //         terminal.AppendLine($"Linux: {RuntimeInformation.IsOSPlatform(OSPlatform.Linux)}");
-            //         terminal.AppendLine($"OSX: {RuntimeInformation.IsOSPlatform(OSPlatform.OSX)}");
-            //         terminal.AppendLine($"64bit: {IntPtr.Size == 8}");
-            //     });
-            // }
+            await Task.Delay(1);
         }
     }
 }

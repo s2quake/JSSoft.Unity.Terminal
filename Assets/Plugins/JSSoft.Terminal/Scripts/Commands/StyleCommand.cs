@@ -38,7 +38,7 @@ namespace JSSoft.Terminal.Commands
         public StyleCommand(ITerminal terminal)
             : base(terminal)
         {
-            
+
         }
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)
@@ -57,31 +57,30 @@ namespace JSSoft.Terminal.Commands
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsRemove { get; set; }
 
-        [CommandProperty(IsRequired = true)]
-        [DefaultValue("")]
+        [CommandPropertyRequired(DefaultValue = "")]
         public string StyleName { get; set; }
 
         protected override async Task OnExecuteAsync()
         {
-                await this.Grid.InvokeAsync(() =>
+            await this.Grid.InvokeAsync(() =>
+            {
+                if (this.IsList == true)
                 {
-                    if (this.IsList == true)
-                    {
-                        this.ShowStyleList(this.Grid);
-                    }
-                    else if (this.IsRemove == true)
-                    {
-                        this.RemoveStyle(this.Grid);
-                    }
-                    else if (this.StyleName == string.Empty)
-                    {
-                        this.ShowCurrentStyle(this.Grid);
-                    }
-                    else
-                    {
-                        this.ChangeStyle(this.Grid);
-                    }
-                });
+                    this.ShowStyleList(this.Grid);
+                }
+                else if (this.IsRemove == true)
+                {
+                    this.RemoveStyle(this.Grid);
+                }
+                else if (this.StyleName == string.Empty)
+                {
+                    this.ShowCurrentStyle(this.Grid);
+                }
+                else
+                {
+                    this.ChangeStyle(this.Grid);
+                }
+            });
         }
 
         private void ShowStyleList(ITerminalGrid grid)

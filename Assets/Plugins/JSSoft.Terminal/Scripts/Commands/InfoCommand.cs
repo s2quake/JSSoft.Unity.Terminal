@@ -81,8 +81,7 @@ namespace JSSoft.Terminal.Commands
 
         }
 
-        [CommandProperty(IsRequired = true)]
-        [DefaultValue("")]
+        [CommandPropertyRequired(DefaultValue = "")]
         public string PropertyName
         {
             get; set;

@@ -31,12 +31,10 @@ namespace JSSoft.Terminal.Commands
         private readonly ITerminal terminal;
         private readonly VersionCommand versionCommand = new VersionCommand();
 
-        public CommandContext(ITerminal terminal, IEnumerable<ICommand> commands, IEnumerable<ICommandProvider> methods)
-            : base(commands, methods)
+        public CommandContext(ITerminal terminal, IEnumerable<ICommand> commands)
+            : base("UnityCommand", commands)
         {
             this.terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            this.Name = "UnityCommand";
-            this.VerifyName = false;
             this.versionCommand.Terminal = terminal;
         }
 
@@ -45,6 +43,6 @@ namespace JSSoft.Terminal.Commands
             return base.GetCompletion(items, find);
         }
 
-        public override ICommand VersionCommand => this.versionCommand;
+        protected override ICommand CreateVersionCommand() => this.versionCommand;
     }
 }

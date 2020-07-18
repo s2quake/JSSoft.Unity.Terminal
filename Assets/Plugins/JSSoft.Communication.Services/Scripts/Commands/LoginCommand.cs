@@ -40,10 +40,10 @@ namespace JSSoft.Communication.Services.Commands
             this.userService = contex.UserService;
         }
 
-        [CommandProperty(IsRequired = true)]
+        [CommandPropertyRequired]
         public string UserID { get; set; }
 
-        [CommandProperty(IsRequired = true)]
+        [CommandPropertyRequired]
         public string Password { get; set; }
 
         public override bool IsEnabled => this.contex.UserToken == Guid.Empty;

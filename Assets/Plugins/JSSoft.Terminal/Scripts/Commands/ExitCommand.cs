@@ -38,8 +38,7 @@ namespace JSSoft.Terminal.Commands
         {
         }
 
-        [CommandProperty(IsRequired = true)]
-        [DefaultValue(0)]
+        [CommandPropertyRequired(DefaultValue = 0)]
         public int ExitCode { get; set; }
 
         protected override async Task OnExecuteAsync()

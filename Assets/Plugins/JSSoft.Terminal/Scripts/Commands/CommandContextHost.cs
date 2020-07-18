@@ -60,7 +60,7 @@ namespace JSSoft.Terminal.Commands
                         where this.isTest == true ||
                               Attribute.GetCustomAttribute(item.GetType(), typeof(TestCommandAttribute)) is null
                         select item;
-            this.commandContext = new CommandContext(this.terminal, query.ToArray(), Enumerable.Empty<ICommandProvider>());
+            this.commandContext = new CommandContext(this.terminal, query.ToArray());
             this.commandContext.Out = new CommandWriter(this.terminal);
         }
 
@@ -124,7 +124,7 @@ namespace JSSoft.Terminal.Commands
         {
             try
             {
-                await Task.Run(() => commandContext.Execute(commandContext.Name + " " + e.Command));
+                await Task.Run(() => commandContext.Execute(commandContext.Name, e.Command));
                 e.Success();
             }
             catch (System.Reflection.TargetInvocationException ex)

@@ -42,7 +42,7 @@ namespace JSSoft.Terminal.Commands
 
         }
 
-        [CommandProperty(IsRequired = true)]
+        [CommandPropertyRequired]
         public string Address
         {
             get; set;
