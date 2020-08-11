@@ -24,13 +24,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
+using JSSoft.Terminal.Fonts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace JSSoft.Terminal.Editor
 {
-    static class TerminalMeniItems
+    public static class TerminalMeniItems
     {
         private static Func<Type, Type> typeResolver;
 
@@ -55,12 +58,12 @@ namespace JSSoft.Terminal.Editor
                 var fontDescriptor = AssetDatabase.LoadAssetAtPath(fontPath, typeof(TerminalFontDescriptor)) as TerminalFontDescriptor;
                 if (fontDescriptor == null)
                 {
-                    fontDescriptor = TerminalFontDescriptor.Create(fntAsset);
+                    fontDescriptor = CreateFontDescriptor(fntAsset);
                     AssetDatabase.CreateAsset(fontDescriptor, fontPath);
                 }
                 else
                 {
-                    TerminalFontDescriptor.Update(fontDescriptor, fntAsset);
+                    UpdateFontDescriptor(fontDescriptor, fntAsset);
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
@@ -339,6 +342,46 @@ namespace JSSoft.Terminal.Editor
                 typeByType.Add(item, type);
             }
             return typeByType;
+        }
+
+        public static TerminalFontDescriptor CreateFontDescriptor(TextAsset fntAsset)
+        {
+            var font = new TerminalFontDescriptor();
+            UpdateFontDescriptor(font, fntAsset);
+            return font;
+        }
+
+        private static void UpdateFontDescriptor(TerminalFontDescriptor font, TextAsset fntAsset)
+        {
+            using (var sb = new StringReader(fntAsset.text))
+            using (var reader = XmlReader.Create(sb))
+            {
+                var assetPath = AssetDatabase.GetAssetPath(fntAsset);
+                var assetDirectory = Path.GetDirectoryName(assetPath);
+                var serializer = new XmlSerializer(typeof(Fonts.Serializations.FontSerializationInfo));
+                var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
+                var charInfos = obj.CharInfo.Items;
+                var pages = obj.Pages;
+                font.baseInfo = (BaseInfo)obj.Info;
+                font.commonInfo = (CommonInfo)obj.Common;
+                font.textures = new Texture2D[pages.Length];
+                for (var i = 0; i < pages.Length; i++)
+                {
+                    var item = pages[i];
+                    var texturePath = Path.Combine(assetDirectory, item.File);
+                    font.textures[i] = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
+                }
+                font.charInfos = new CharInfo[charInfos.Length];
+                for (var i = 0; i < charInfos.Length; i++)
+                {
+                    var item = charInfos[i];
+                    var charInfo = (CharInfo)item;
+                    charInfo.Texture = font.textures[item.Page];
+                    font.charInfos[i] = charInfo;
+                }
+                font.UpdateWidth();
+                font.UpdateProperty();
+            }
         }
     }
 }

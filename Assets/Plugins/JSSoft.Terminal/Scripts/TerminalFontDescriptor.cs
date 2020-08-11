@@ -38,15 +38,15 @@ namespace JSSoft.Terminal
     public class TerminalFontDescriptor : ScriptableObject, INotifyValidated
     {
         [SerializeField]
-        private BaseInfo baseInfo;
+        internal BaseInfo baseInfo;
         [SerializeField]
-        private CommonInfo commonInfo;
+        internal CommonInfo commonInfo;
         [SerializeField]
-        private CharInfo[] charInfos = new CharInfo[] { };
+        internal CharInfo[] charInfos = new CharInfo[] { };
         [SerializeField]
-        private Texture2D[] textures = new Texture2D[] { };
+        internal Texture2D[] textures = new Texture2D[] { };
         [SerializeField]
-        private int width;
+        internal int width;
 
         private Dictionary<char, CharInfo> charInfoByID = new Dictionary<char, CharInfo>();
 
@@ -188,7 +188,7 @@ namespace JSSoft.Terminal
         /// 프린트 가능한 문자들의 폭만을 계산
         /// https://theasciicode.com.ar
         /// </summary>
-        private void UpdateWidth()
+        internal void UpdateWidth()
         {
             var width = 0;
             for (var i = 0; i < this.charInfos.Length; i++)
@@ -204,51 +204,12 @@ namespace JSSoft.Terminal
             this.width = width;
         }
 
-        private void UpdateProperty()
+        internal void UpdateProperty()
         {
             this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
         }
 
 #if UNITY_EDITOR
-        public static TerminalFontDescriptor Create(TextAsset fntAsset)
-        {
-            var font = new TerminalFontDescriptor();
-            Update(font, fntAsset);
-            return font;
-        }
-
-        public static void Update(TerminalFontDescriptor font, TextAsset fntAsset)
-        {
-            using (var sb = new StringReader(fntAsset.text))
-            using (var reader = XmlReader.Create(sb))
-            {
-                var assetPath = AssetDatabase.GetAssetPath(fntAsset);
-                var assetDirectory = Path.GetDirectoryName(assetPath);
-                var serializer = new XmlSerializer(typeof(Fonts.Serializations.FontSerializationInfo));
-                var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
-                var charInfos = obj.CharInfo.Items;
-                var pages = obj.Pages;
-                font.baseInfo = (BaseInfo)obj.Info;
-                font.commonInfo = (CommonInfo)obj.Common;
-                font.textures = new Texture2D[pages.Length];
-                for (var i = 0; i < pages.Length; i++)
-                {
-                    var item = pages[i];
-                    var texturePath = Path.Combine(assetDirectory, item.File);
-                    font.textures[i] = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
-                }
-                font.charInfos = new CharInfo[charInfos.Length];
-                for (var i = 0; i < charInfos.Length; i++)
-                {
-                    var item = charInfos[i];
-                    var charInfo = (CharInfo)item;
-                    charInfo.Texture = font.textures[item.Page];
-                    font.charInfos[i] = charInfo;
-                }
-                font.UpdateWidth();
-                font.UpdateProperty();
-            }
-        }
 #endif
     }
 }

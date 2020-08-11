@@ -30,9 +30,7 @@ namespace JSSoft.Terminal
     {
         public FieldNameAttribute(string fieldName)
         {
-#if UNITY_EDITOR
             this.FieldName = fieldName;
-#endif
         }
 
         public string FieldName { get; } = string.Empty;
