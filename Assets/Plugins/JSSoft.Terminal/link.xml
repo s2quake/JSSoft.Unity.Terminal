@@ -2,8 +2,8 @@
     <assembly fullname="System" preserve="all">
         <type fullname="System.ComponentModel.NullableConverter" preserve="all" />
     </assembly>
-    <assembly fullname="Ntreev.Library.Commands">
-        <type fullname="Ntreev.Library.Commands*" preserve="all" />
+    <assembly fullname="JSSoft.Library.Commands">
+        <type fullname="JSSoft.Library.Commands*" preserve="all" />
     </assembly>
     <assembly fullname="JSSoft.Communication">
         <type fullname="JSSoft.Communication*" preserve="all" />

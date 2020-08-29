@@ -23,7 +23,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ntreev.Library.Threading;
+using JSSoft.Library.Threading;
 
 namespace JSSoft.Communication.Services.Server
 {

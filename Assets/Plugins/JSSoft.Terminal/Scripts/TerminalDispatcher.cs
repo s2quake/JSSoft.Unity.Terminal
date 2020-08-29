@@ -23,7 +23,7 @@
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
-using Ntreev.Library.Threading;
+using JSSoft.Library.Threading;
 
 namespace JSSoft.Terminal
 {

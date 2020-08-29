@@ -24,7 +24,7 @@ using System;
 using System.Threading.Tasks;
 using JSSoft.Communication;
 using JSSoft.Terminal.Commands;
-using Ntreev.Library.Commands;
+using JSSoft.Library.Commands;
 
 namespace JSSoft.Communication.Services.Commands.Server
 {

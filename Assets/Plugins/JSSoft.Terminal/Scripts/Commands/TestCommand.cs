@@ -22,8 +22,8 @@
 
 using System;
 using System.Threading.Tasks;
-using Ntreev.Library.Commands;
-using Ntreev.Library.Threading;
+using JSSoft.Library.Commands;
+using JSSoft.Library.Threading;
 using System.Runtime.InteropServices;
 using JSSoft.Terminal.Tasks;
 

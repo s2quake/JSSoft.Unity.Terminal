@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using Ntreev.Library.Threading;
+using JSSoft.Library.Threading;
 using JSSoft.Terminal;
 using UnityEngine;
 

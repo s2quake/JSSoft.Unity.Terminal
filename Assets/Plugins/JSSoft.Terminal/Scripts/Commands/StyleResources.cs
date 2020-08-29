@@ -24,7 +24,7 @@ using System;
 using System.Threading.Tasks;
 using JSSoft.Terminal;
 using UnityEngine;
-using Ntreev.Library.Threading;
+using JSSoft.Library.Threading;
 using System.Collections.Generic;
 
 namespace JSSoft.Terminal.Commands

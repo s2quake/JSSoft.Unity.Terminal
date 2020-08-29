@@ -22,7 +22,7 @@
 
 using System.ComponentModel;
 using System.Threading.Tasks;
-using Ntreev.Library.Commands;
+using JSSoft.Library.Commands;
 using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
