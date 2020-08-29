@@ -62,9 +62,9 @@ crashlytics-build.properties
 
 /ios
 /osx.app
-Assets/Plugins/JSSoft.Communication.Services/libgrpc.a
-Assets/Plugins/JSSoft.Communication.Services/libgrpc.a.meta
-Assets/Plugins/JSSoft.Communication.Services/libgrpc_csharp_ext.a
-Assets/Plugins/JSSoft.Communication.Services/libgrpc_csharp_ext.a.meta
-Assets/Plugins/JSSoft.Communication.Services/libgrpc_csharp_ext.so
-Assets/Plugins/JSSoft.Communication.Services/libgrpc_csharp_ext.so.meta
+**/libgrpc.a
+**/libgrpc.a.meta
+**/libgrpc_csharp_ext.a
+**/libgrpc_csharp_ext.a.meta
+**/libgrpc_csharp_ext.so
+**/libgrpc_csharp_ext.so.meta
