@@ -35,7 +35,7 @@ using UnityEditor;
 namespace JSSoft.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Font")]
-    public class TerminalFont : ScriptableObject, INotifyValidated
+    public class TerminalFont : ScriptableObject, INotifyValidated, IPropertyChangedNotifyable
     {
         [SerializeField]
         private List<TerminalFontDescriptor> descriptorList = new List<TerminalFontDescriptor>();
@@ -131,11 +131,6 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         protected virtual void OnValidate()
         {
             this.OnValidated(EventArgs.Empty);
@@ -185,6 +180,11 @@ namespace JSSoft.Terminal
             this.PropertyChanged?.Invoke(this, e);
         }
 
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
         private void UpdateSize()
         {
             var mainFont = this.DescriptorList.FirstOrDefault();
@@ -202,5 +202,14 @@ namespace JSSoft.Terminal
 #endif
             }
         }
+
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
     }
 }

@@ -20,12 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using System.IO;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
-using UnityEngine;
-using UnityEngine.UI;
 
 namespace JSSoft.Terminal.Editor
 {

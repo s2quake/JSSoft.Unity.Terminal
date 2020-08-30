@@ -29,7 +29,8 @@ namespace JSSoft.Terminal
         IScrollHandler,
         IUpdateSelectedHandler,
         ISelectHandler,
-        IDeselectHandler
+        IDeselectHandler,
+        IPropertyChangedNotifyable
     {
         [SerializeField]
         private TerminalFont font = null;
@@ -639,11 +640,6 @@ namespace JSSoft.Terminal
             this.OnLayoutChanged(EventArgs.Empty);
         }
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         protected virtual void OnLayoutChanged(EventArgs e)
         {
             this.LayoutChanged?.Invoke(this, EventArgs.Empty);
@@ -771,6 +767,11 @@ namespace JSSoft.Terminal
                     }
                 }
             }
+        }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private void ValidateValue()
@@ -1124,6 +1125,15 @@ namespace JSSoft.Terminal
                 eventData.Use();
             }
             this.InputHandler.Update(this, eventData);
+        }
+
+        #endregion
+        
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
         }
 
         #endregion

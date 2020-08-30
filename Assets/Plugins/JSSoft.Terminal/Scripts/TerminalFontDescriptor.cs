@@ -35,7 +35,7 @@ using UnityEngine;
 
 namespace JSSoft.Terminal
 {
-    public class TerminalFontDescriptor : ScriptableObject, INotifyValidated
+    public class TerminalFontDescriptor : ScriptableObject, INotifyValidated, IPropertyChangedNotifyable
     {
         [SerializeField]
         internal BaseInfo baseInfo;
@@ -125,11 +125,6 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         protected virtual void OnValidate()
         {
             this.UpdateProperty();
@@ -184,6 +179,11 @@ namespace JSSoft.Terminal
             this.PropertyChanged?.Invoke(this, e);
         }
 
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
         /// <summary>
         /// 프린트 가능한 문자들의 폭만을 계산
         /// https://theasciicode.com.ar
@@ -209,7 +209,13 @@ namespace JSSoft.Terminal
             this.charInfoByID = this.charInfos.ToDictionary(item => (char)item.ID);
         }
 
-#if UNITY_EDITOR
-#endif
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
     }
 }

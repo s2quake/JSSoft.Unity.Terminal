@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
@@ -33,7 +31,7 @@ namespace JSSoft.Terminal.Editor
 
         public void OnEnable()
         {
-            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this);
             this.notifier.Add(nameof(TerminalComposition.Text));
             this.notifier.Add(nameof(TerminalComposition.ForegroundColor));
             this.notifier.Add(nameof(TerminalComposition.BackgroundColor));
@@ -53,17 +51,6 @@ namespace JSSoft.Terminal.Editor
             this.notifier.Begin();
             this.notifier.PropertyFieldAll();
             this.notifier.End();
-        }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
-            if (this.target is TerminalComposition composition)
-            {
-                foreach (var item in propertyNames)
-                {
-                    composition.InvokePropertyChangedEvent(item);
-                }
-            }
         }
     }
 }

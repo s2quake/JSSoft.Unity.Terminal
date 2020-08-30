@@ -170,12 +170,11 @@ namespace JSSoft.Terminal.Editor
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
             terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
             terminalGridRect.SetParent(parentRect);
-            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, parentRect.rect.width);
-            terminalGridRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, parentRect.rect.height);
-            terminalGridRect.anchorMin = new Vector2(0.5f, 0.5f);
-            terminalGridRect.anchorMax = new Vector2(0.5f, 0.5f);
+            terminalGridRect.anchorMin = Vector3.zero;
+            terminalGridRect.anchorMax = Vector3.one;
             terminalGridRect.pivot = new Vector2(0.5f, 0.5f);
-            terminalGridRect.localPosition = Vector3.zero;
+            terminalGridRect.offsetMin = Vector2.zero;
+            terminalGridRect.offsetMax = Vector2.zero;
 
             var backgroundObj = new GameObject(nameof(TerminalBackground)) { layer = canvas.gameObject.layer };
             var background = backgroundObj.AddComponent(typeByType[typeof(TerminalBackground)]) as TerminalBackground;

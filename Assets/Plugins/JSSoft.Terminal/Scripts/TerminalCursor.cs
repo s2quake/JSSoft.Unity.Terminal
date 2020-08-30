@@ -29,7 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
-    public class TerminalCursor : MaskableGraphic, INotifyValidated
+    public class TerminalCursor : MaskableGraphic, INotifyValidated, IPropertyChangedNotifyable
     {
         [SerializeField]
         private TerminalGrid grid = null;
@@ -211,11 +211,6 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         protected override void OnPopulateMesh(VertexHelper vh)
         {
             base.OnPopulateMesh(vh);
@@ -339,6 +334,11 @@ namespace JSSoft.Terminal
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             this.PropertyChanged?.Invoke(this, e);
+        }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -475,5 +475,15 @@ namespace JSSoft.Terminal
         private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
         private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
+
+                        
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
     }
 }

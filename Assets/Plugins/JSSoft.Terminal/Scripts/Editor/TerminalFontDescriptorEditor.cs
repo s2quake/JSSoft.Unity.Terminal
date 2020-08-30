@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
@@ -43,7 +41,7 @@ namespace JSSoft.Terminal.Editor
 
         protected virtual void OnEnable()
         {
-            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this);
             this.notifier.Add(nameof(TerminalFontDescriptor.BaseInfo), EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalFontDescriptor.CommonInfo), EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalFontDescriptor.CharInfos), EditorPropertyUsage.IncludeChildren);
@@ -53,17 +51,6 @@ namespace JSSoft.Terminal.Editor
         protected virtual void OnDisable()
         {
             this.notifier = null;
-        }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
-            if (this.target is TerminalFontDescriptor descriptor)
-            {
-                foreach (var item in propertyNames)
-                {
-                    descriptor.InvokePropertyChangedEvent(item);
-                }
-            }
         }
     }
 }

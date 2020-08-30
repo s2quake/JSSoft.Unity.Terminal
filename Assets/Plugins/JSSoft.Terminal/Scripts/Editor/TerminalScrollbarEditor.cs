@@ -22,31 +22,35 @@
 
 using UnityEditor;
 using UnityEditor.UI;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
     [CustomEditor(typeof(TerminalScrollbar))]
     class TerminalScrollbarEditor : ScrollbarEditor
     {
-        private SerializedProperty gridProperty;
-        private SerializedProperty visibleTimeProperty;
+        private EditorPropertyNotifier notifier;
 
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-            this.serializedObject.Update();
-            EditorGUILayout.PropertyField(this.gridProperty);
-            EditorGUILayout.PropertyField(this.visibleTimeProperty);
-            this.serializedObject.ApplyModifiedProperties();
+            this.notifier.Begin();
+            this.notifier.PropertyField(nameof(TerminalScrollbar.Grid));
+            this.notifier.PropertyField(nameof(TerminalScrollbar.VisibleTime));
+            this.notifier.End();
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.gridProperty = this.serializedObject.FindProperty("grid");
-            this.visibleTimeProperty = this.serializedObject.FindProperty("visibleTime");
+            this.notifier = new EditorPropertyNotifier(this);
+            this.notifier.Add(nameof(TerminalScrollbar.Grid));
+            this.notifier.Add(nameof(TerminalScrollbar.VisibleTime));
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            this.notifier = null;
         }
     }
 }

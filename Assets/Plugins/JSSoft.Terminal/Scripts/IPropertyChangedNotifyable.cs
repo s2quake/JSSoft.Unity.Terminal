@@ -20,33 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using UnityEditor;
-
-namespace JSSoft.Terminal.Editor
+namespace JSSoft.Terminal
 {
-    [CustomEditor(typeof(TerminalKeyboardLayoutGroup))]
-    public class TerminalKeyboardLayoutGroupEditor : UnityEditor.Editor
+    internal interface IPropertyChangedNotifyable
     {
-        private EditorPropertyNotifier notifier;
-
-        public override void OnInspectorGUI()
-        {
-            this.notifier.Begin();
-            this.notifier.PropertyField(nameof(TerminalKeyboardLayoutGroup.TerminalLayout));
-            this.notifier.PropertyField(nameof(TerminalKeyboardLayoutGroup.KeyboardLayout));
-            this.notifier.End();
-        }
-
-        protected virtual void OnEnable()
-        {
-            this.notifier = new EditorPropertyNotifier(this);
-            this.notifier.Add(nameof(TerminalKeyboardLayoutGroup.TerminalLayout));
-            this.notifier.Add(nameof(TerminalKeyboardLayoutGroup.KeyboardLayout));
-        }
-
-        protected virtual void OnDisable()
-        {
-            this.notifier = null;
-        }
+        void InvokePropertyChangedEvent(string propertyName);
     }
 }

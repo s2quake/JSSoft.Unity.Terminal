@@ -26,13 +26,14 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using JSSoft.Library.Commands;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace JSSoft.Terminal
 {
     [ExecuteAlways]
-    public class Terminal : TerminalBase, IPromptDrawer, ICommandCompletor, INotifyValidated
+    public class Terminal : TerminalBase, IPromptDrawer, ICommandCompletor, INotifyValidated, IPropertyChangedNotifyable
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -577,11 +578,6 @@ namespace JSSoft.Terminal
 
         public override event EventHandler Disabled;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         internal TerminalColor? GetForegroundColor(int index)
         {
             if (index < this.outputText.Length && index < this.foregroundColors.Length)
@@ -679,6 +675,11 @@ namespace JSSoft.Terminal
             if (character == '\n')
                 return false;
             return true;
+        }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private void CompletionImpl(Func<string[], string, string> func)
@@ -823,6 +824,15 @@ namespace JSSoft.Terminal
                         where item.StartsWith(find)
                         select item;
             return query.ToArray();
+        }
+
+        #endregion
+                
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
         }
 
         #endregion

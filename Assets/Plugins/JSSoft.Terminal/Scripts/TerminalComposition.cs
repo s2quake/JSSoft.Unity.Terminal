@@ -30,7 +30,7 @@ namespace JSSoft.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    public class TerminalComposition : UIBehaviour, INotifyValidated
+    public class TerminalComposition : UIBehaviour, INotifyValidated, IPropertyChangedNotifyable
     {
         private static readonly int[] backgroundTriangles = new int[6] { 0, 1, 2, 2, 3, 0 };
         private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
@@ -186,11 +186,6 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
 #if UNITY_EDITOR
         protected override void OnValidate()
         {
@@ -254,6 +249,11 @@ namespace JSSoft.Terminal
             this.PropertyChanged?.Invoke(this, e);
         }
 
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+
         private void Grid_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is TerminalGrid grid && grid == this.grid)
@@ -308,5 +308,14 @@ namespace JSSoft.Terminal
         private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
         private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
+                        
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
     }
 }

@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
@@ -33,7 +31,7 @@ namespace JSSoft.Terminal.Editor
 
         protected virtual void OnEnable()
         {
-            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this);
             this.notifier.Add(nameof(TerminalFont.DescriptorList), EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalFont.Width));
             this.notifier.Add(nameof(TerminalFont.Height));
@@ -49,31 +47,6 @@ namespace JSSoft.Terminal.Editor
             this.notifier.Begin();
             this.notifier.PropertyFieldAll();
             this.notifier.End();
-        }
-
-        // private void drawElementCallback(Rect rect, int index, bool isActive, bool isFocused)
-        // {
-        //     var element = this.fontProperty.GetArrayElementAtIndex(index);
-        //     rect.height -= 4;
-        //     rect.y += 2;
-        //     if (index == 0)
-        //         EditorGUI.LabelField(rect, "Main Font: ", new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold });
-        //     else
-        //         EditorGUI.LabelField(rect, $"Sub Font {index - 1}: ");
-        //     rect.x += 70;
-        //     rect.width -= 70;
-        //     EditorGUI.PropertyField(rect, element);
-        // }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
-            if (this.target is TerminalComposition composition)
-            {
-                foreach (var item in propertyNames)
-                {
-                    composition.InvokePropertyChangedEvent(item);
-                }
-            }
         }
     }
 }

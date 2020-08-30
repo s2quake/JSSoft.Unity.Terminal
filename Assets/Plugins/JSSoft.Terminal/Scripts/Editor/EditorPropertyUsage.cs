@@ -21,9 +21,6 @@
 // SOFTWARE.
 
 using System;
-using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {

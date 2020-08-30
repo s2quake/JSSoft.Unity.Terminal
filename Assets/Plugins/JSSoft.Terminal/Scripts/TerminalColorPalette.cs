@@ -27,7 +27,7 @@ using UnityEngine;
 namespace JSSoft.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Palette")]
-    public class TerminalColorPalette : ScriptableObject, INotifyPropertyChanged
+    public class TerminalColorPalette : ScriptableObject, INotifyPropertyChanged, IPropertyChangedNotifyable
     {
         [SerializeField]
         private Color black = TerminalColors.Black;
@@ -330,11 +330,6 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         protected virtual void OnValidate()
         {
             this.OnValidated(EventArgs.Empty);
@@ -349,5 +344,19 @@ namespace JSSoft.Terminal
         {
             this.PropertyChanged?.Invoke(this, e);
         }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+                        
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
     }
 }

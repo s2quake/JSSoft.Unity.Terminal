@@ -25,9 +25,6 @@ using System.Collections.Generic;
 using JSSoft.Terminal;
 using JSSoft.Terminal.Editor;
 using UnityEditor;
-using UnityEditor.UI;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Communication.Services.Editor
 {

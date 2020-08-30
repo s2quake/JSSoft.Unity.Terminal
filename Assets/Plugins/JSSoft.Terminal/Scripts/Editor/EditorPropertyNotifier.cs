@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
@@ -39,7 +39,7 @@ namespace JSSoft.Terminal.Editor
         private readonly SerializedProperty scriptProperty;
 
         public EditorPropertyNotifier(UnityEditor.Editor editor)
-            : this(editor, (items) => { })
+            : this(editor, (items) => InvokeEvent(editor, items))
         {
 
         }
@@ -105,13 +105,16 @@ namespace JSSoft.Terminal.Editor
         {
             this.nameList.Clear();
             this.serializedObject.Update();
-            
+
         }
 
         public void End()
         {
-            this.action(this.nameList.ToArray());
-            this.nameList.Clear();
+            if (this.nameList.Any())
+            {
+                this.action(this.nameList.ToArray());
+                this.nameList.Clear();
+            }
         }
 
         public void PropertyScript()
@@ -153,6 +156,20 @@ namespace JSSoft.Terminal.Editor
             if (EditorGUI.EndChangeCheck() && propertyInfo.CanNotify == true)
             {
                 this.nameList.Add(propertyInfo.Name);
+            }
+        }
+
+        private static void InvokeEvent(UnityEditor.Editor editor, string[] propertyNames)
+        {
+            foreach (var target in editor.targets)
+            {
+                if (target is IPropertyChangedNotifyable obj)
+                {
+                    foreach (var propertyName in propertyNames)
+                    {
+                        obj.InvokePropertyChangedEvent(propertyName);
+                    }
+                }
             }
         }
     }

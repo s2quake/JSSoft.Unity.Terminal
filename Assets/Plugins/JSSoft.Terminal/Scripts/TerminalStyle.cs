@@ -28,7 +28,7 @@ using UnityEngine;
 namespace JSSoft.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Style")]
-    public class TerminalStyle : ScriptableObject, INotifyValidated
+    public class TerminalStyle : ScriptableObject, INotifyValidated, IPropertyChangedNotifyable
     {
         [SerializeField]
         private string styleName;
@@ -242,11 +242,6 @@ namespace JSSoft.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        internal void InvokePropertyChangedEvent(string propertyName)
-        {
-            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
         protected virtual void OnValidate()
         {
             this.OnValidated(EventArgs.Empty);
@@ -298,5 +293,19 @@ namespace JSSoft.Terminal
         {
             this.PropertyChanged?.Invoke(this, e);
         }
+
+        private void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+                        
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
     }
 }

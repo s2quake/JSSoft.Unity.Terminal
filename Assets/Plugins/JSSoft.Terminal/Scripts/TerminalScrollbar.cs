@@ -46,12 +46,14 @@ namespace JSSoft.Terminal
         private bool isPointerOn;
         private float time;
 
+        [FieldName(nameof(grid))]
         public TerminalGrid Grid
         {
             get => this.grid;
             set => this.grid = value;
         }
 
+        [FieldName(nameof(visibleTime))]
         public float VisibleTime
         {
             get => this.visibleTime;

@@ -21,8 +21,6 @@
 // SOFTWARE.
 
 using UnityEditor;
-using UnityEditorInternal;
-using UnityEngine;
 
 namespace JSSoft.Terminal.Editor
 {
@@ -40,7 +38,7 @@ namespace JSSoft.Terminal.Editor
 
         protected virtual void OnEnable()
         {
-            this.notifier = new EditorPropertyNotifier(this, this.InvokeEvent);
+            this.notifier = new EditorPropertyNotifier(this);
             this.notifier.Add(nameof(TerminalCursor.CursorLeft));
             this.notifier.Add(nameof(TerminalCursor.CursorTop));
             this.notifier.Add(nameof(TerminalCursor.IsVisible));
@@ -54,17 +52,6 @@ namespace JSSoft.Terminal.Editor
         protected virtual void OnDisable()
         {
             this.notifier = null;
-        }
-
-        private void InvokeEvent(string[] propertyNames)
-        {
-            if (this.target is TerminalCursor cursor)
-            {
-                foreach (var item in propertyNames)
-                {
-                    cursor.InvokePropertyChangedEvent(item);
-                }
-            }
         }
     }
 }
