@@ -28,6 +28,7 @@ using JSSoft.Terminal;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
@@ -43,6 +44,8 @@ namespace JSSoft.Terminal.Commands
         private string text = "type 'help' to help.";
         [SerializeField]
         private bool isTest = false;
+        [SerializeField]
+        private bool isAsync;
 
         public string Text
         {
@@ -108,11 +111,11 @@ namespace JSSoft.Terminal.Commands
             return null;
         }
 
-        private async void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
+        private void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
         {
             if (this.terminal.Dispatcher != null)
             {
-                await this.RunAsync(e);
+                this.Run(e);
             }
             else
             {
@@ -120,11 +123,30 @@ namespace JSSoft.Terminal.Commands
             }
         }
 
+        private async void Run(TerminalExecuteEventArgs e)
+        {
+            try
+            {
+                await this.terminal.InvokeAsync(() => this.commandContext.Execute(this.commandContext.Name, e.Command));
+                e.Success();
+            }
+            catch (System.Reflection.TargetInvocationException ex)
+            {
+                this.AppendException(ex);
+                e.Fail(ex);
+            }
+            catch (Exception ex)
+            {
+                this.AppendException(ex);
+                e.Fail(ex);
+            }
+        }
+
         private async Task RunAsync(TerminalExecuteEventArgs e)
         {
             try
             {
-                await Task.Run(() => commandContext.Execute(commandContext.Name, e.Command));
+                await Task.Run(() => this.commandContext.Execute(this.commandContext.Name, e.Command));
                 e.Success();
             }
             catch (System.Reflection.TargetInvocationException ex)

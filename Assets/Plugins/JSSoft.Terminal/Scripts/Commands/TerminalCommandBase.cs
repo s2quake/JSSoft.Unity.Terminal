@@ -30,16 +30,16 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class ResetCommand : TerminalCommandBase
+    public abstract class TerminalCommandBase : CommandBase
     {
-        public ResetCommand(ITerminal terminal)
-            : base(terminal)
+        protected TerminalCommandBase(ITerminal terminal)
         {
+            this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
 
-        protected override void OnExecute()
-        {
-            this.Terminal.Reset();
-        }
+        protected ITerminal Terminal { get; }
+
+        protected ITerminalGrid Grid { get; }
     }
 }
