@@ -31,21 +31,16 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class VersionCommand : CommandAsyncBase
+    public class VersionCommand : CommandBase
     {
-        internal ITerminal Terminal { get; set; }
-
-        protected override async Task OnExecuteAsync()
+        protected override void OnExecute()
         {
-            await this.Terminal.InvokeAsync(() =>
-            {
-                var sb = new StringBuilder();
-                sb.AppendLine($"Identifier: {Application.identifier}");
-                sb.AppendLine($"Version: {Application.version}");
-                sb.AppendLine($"ProductName: {Application.productName}");
-                sb.AppendLine($"Unity Version: {Application.unityVersion}");
-                this.Terminal.AppendLine(sb.ToString());
-            });
+            var sb = new StringBuilder();
+            sb.AppendLine($"Identifier: {Application.identifier}");
+            sb.AppendLine($"Version: {Application.version}");
+            sb.AppendLine($"ProductName: {Application.productName}");
+            sb.AppendLine($"Unity Version: {Application.unityVersion}");
+            this.Out.WriteLine(sb.ToString());
         }
     }
 }

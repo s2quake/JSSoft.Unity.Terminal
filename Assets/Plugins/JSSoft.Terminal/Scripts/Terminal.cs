@@ -666,6 +666,8 @@ namespace JSSoft.Terminal
             this.cursorPosition = this.command.Length;
             ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
             ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
+            if (this.dispatcher == null)
+                throw new InvalidOperationException("dispatcher field can not be a null.");
             this.OnValidated(EventArgs.Empty);
         }
 #endif
@@ -827,7 +829,7 @@ namespace JSSoft.Terminal
         }
 
         #endregion
-                
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)

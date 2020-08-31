@@ -35,7 +35,6 @@ namespace JSSoft.Terminal.Commands
             : base("UnityCommand", commands)
         {
             this.terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            this.versionCommand.Terminal = terminal;
         }
 
         public new string[] GetCompletion(string[] items, string find)

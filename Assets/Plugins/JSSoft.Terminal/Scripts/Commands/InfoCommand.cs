@@ -34,7 +34,7 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class InfoCommand : TerminalCommandAsyncBase
+    public class InfoCommand : TerminalCommandBase
     {
         private static readonly Dictionary<string, Func<string, string>> actions;
 
@@ -92,29 +92,26 @@ namespace JSSoft.Terminal.Commands
             return actions.Keys.ToArray();
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override void OnExecute()
         {
-            await this.Terminal.InvokeAsync(() =>
+            var sb = new StringBuilder();
+            var propertyName = this.PropertyName;
+            if (propertyName == string.Empty)
             {
-                var sb = new StringBuilder();
-                var propertyName = this.PropertyName;
-                if (propertyName == string.Empty)
+                foreach (var item in actions)
                 {
-                    foreach (var item in actions)
-                    {
-                        sb.AppendLine(item.Value(item.Key));
-                    }
+                    sb.AppendLine(item.Value(item.Key));
                 }
-                else if (actions.ContainsKey(propertyName) == true)
-                {
-                    sb.AppendLine(actions[propertyName](propertyName));
-                }
-                else
-                {
-                    sb.AppendLine($"property '{propertyName}' does not exists.");
-                }
-                this.Terminal.AppendLine(sb.ToString());
-            });
+            }
+            else if (actions.ContainsKey(propertyName) == true)
+            {
+                sb.AppendLine(actions[propertyName](propertyName));
+            }
+            else
+            {
+                sb.AppendLine($"property '{propertyName}' does not exists.");
+            }
+            this.Terminal.AppendLine(sb.ToString());
         }
     }
 }

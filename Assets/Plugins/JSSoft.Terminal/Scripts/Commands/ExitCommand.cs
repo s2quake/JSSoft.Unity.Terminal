@@ -31,7 +31,7 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class ExitCommand : TerminalCommandAsyncBase
+    public class ExitCommand : TerminalCommandBase
     {
         public ExitCommand(ITerminal terminal)
             : base(terminal)
@@ -41,12 +41,12 @@ namespace JSSoft.Terminal.Commands
         [CommandPropertyRequired(DefaultValue = 0)]
         public int ExitCode { get; set; }
 
-        protected override async Task OnExecuteAsync()
+        protected override void OnExecute()
         {
 #if UNITY_EDITOR
-            await this.Terminal.InvokeAsync(() => UnityEditor.EditorApplication.isPlaying = false);
+            UnityEditor.EditorApplication.isPlaying = false;
 #else
-            await this.Terminal.InvokeAsync(() => UnityEngine.Application.Quit());
+            UnityEngine.Application.Quit();
 #endif
         }
     }

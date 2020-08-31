@@ -32,7 +32,7 @@ using System.Text;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class ResolutionCommand : TerminalCommandAsyncBase
+    public class ResolutionCommand : TerminalCommandBase
     {
         public ResolutionCommand(ITerminal terminal)
             : base(terminal)
@@ -60,9 +60,9 @@ namespace JSSoft.Terminal.Commands
         [CommandProperty("list")]
         public bool IsList { get; set; }
 
-        protected override Task OnExecuteAsync()
+        protected override void OnExecute()
         {
-            return this.Terminal.InvokeAsync(this.Execute);
+            this.Execute();
         }
 
         private void Execute()

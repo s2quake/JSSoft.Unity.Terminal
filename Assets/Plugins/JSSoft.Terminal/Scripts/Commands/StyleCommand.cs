@@ -33,7 +33,7 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    public class StyleCommand : TerminalCommandAsyncBase
+    public class StyleCommand : TerminalCommandBase
     {
         public StyleCommand(ITerminal terminal)
             : base(terminal)
@@ -60,27 +60,24 @@ namespace JSSoft.Terminal.Commands
         [CommandPropertyRequired(DefaultValue = "")]
         public string StyleName { get; set; }
 
-        protected override async Task OnExecuteAsync()
+        protected override void OnExecute()
         {
-            await this.Grid.InvokeAsync(() =>
+            if (this.IsList == true)
             {
-                if (this.IsList == true)
-                {
-                    this.ShowStyleList(this.Grid);
-                }
-                else if (this.IsRemove == true)
-                {
-                    this.RemoveStyle(this.Grid);
-                }
-                else if (this.StyleName == string.Empty)
-                {
-                    this.ShowCurrentStyle(this.Grid);
-                }
-                else
-                {
-                    this.ChangeStyle(this.Grid);
-                }
-            });
+                this.ShowStyleList(this.Grid);
+            }
+            else if (this.IsRemove == true)
+            {
+                this.RemoveStyle(this.Grid);
+            }
+            else if (this.StyleName == string.Empty)
+            {
+                this.ShowCurrentStyle(this.Grid);
+            }
+            else
+            {
+                this.ChangeStyle(this.Grid);
+            }
         }
 
         private void ShowStyleList(ITerminalGrid grid)

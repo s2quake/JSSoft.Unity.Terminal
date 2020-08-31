@@ -127,26 +127,7 @@ namespace JSSoft.Terminal.Commands
         {
             try
             {
-                await this.terminal.InvokeAsync(() => this.commandContext.Execute(this.commandContext.Name, e.Command));
-                e.Success();
-            }
-            catch (System.Reflection.TargetInvocationException ex)
-            {
-                this.AppendException(ex);
-                e.Fail(ex);
-            }
-            catch (Exception ex)
-            {
-                this.AppendException(ex);
-                e.Fail(ex);
-            }
-        }
-
-        private async Task RunAsync(TerminalExecuteEventArgs e)
-        {
-            try
-            {
-                await Task.Run(() => this.commandContext.Execute(this.commandContext.Name, e.Command));
+                await this.commandContext.ExecuteAsync(this.commandContext.Name, e.Command);
                 e.Success();
             }
             catch (System.Reflection.TargetInvocationException ex)
