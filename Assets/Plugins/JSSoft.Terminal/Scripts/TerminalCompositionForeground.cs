@@ -124,6 +124,7 @@ namespace JSSoft.Terminal
                         {
                             this.color = this.composition.ForegroundColor;
                             this.SetVerticesDirty();
+                            this.SetMaterialDirty();
                         }
                         break;
                     case nameof(TerminalComposition.ForegroundMargin):
@@ -132,6 +133,7 @@ namespace JSSoft.Terminal
                     case nameof(TerminalComposition.RowIndex):
                         {
                             this.SetVerticesDirty();
+                            this.SetMaterialDirty();
                         }
                         break;
                 }

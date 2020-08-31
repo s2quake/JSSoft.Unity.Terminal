@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -113,6 +114,10 @@ namespace JSSoft.Terminal.Editor
             if (this.nameList.Any())
             {
                 this.action(this.nameList.ToArray());
+                foreach (var item in this.nameList)
+                {
+                    this.OnPropertyChanged(new PropertyChangedEventArgs(item));
+                }
                 this.nameList.Clear();
             }
         }
@@ -144,6 +149,13 @@ namespace JSSoft.Terminal.Editor
         {
             var propertyInfo = this.propertyByName[propertyName];
             return propertyInfo.Property;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
         }
 
         private void PropertyField(EditorProperty propertyInfo)

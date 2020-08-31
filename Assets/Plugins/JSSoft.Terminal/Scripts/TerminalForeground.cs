@@ -144,6 +144,11 @@ namespace JSSoft.Terminal
                             this.RefreshChilds();
                         }
                         break;
+                    case nameof(ITerminalGrid.ForegroundColor):
+                        {
+                            this.SetDirty(true);
+                        }
+                        break;
                     case nameof(ITerminalGrid.VisibleIndex):
                     case nameof(ITerminalGrid.Text):
                     case nameof(ITerminalGrid.SelectingRange):

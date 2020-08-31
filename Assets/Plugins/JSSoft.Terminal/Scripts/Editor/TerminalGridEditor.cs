@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.ComponentModel;
 using UnityEditor;
 using UnityEngine;
 
@@ -88,11 +90,26 @@ namespace JSSoft.Terminal.Editor
             this.notifier.Add(nameof(TerminalGrid.BehaviourList), EditorPropertyUsage.DisallowNotification);
             this.notifier.Add(nameof(TerminalGrid.MaxBufferHeight));
             this.notifier.Add(nameof(TerminalGrid.Padding), EditorPropertyUsage.IncludeChildren);
+            this.notifier.PropertyChanged += Notifier_PropertyChanged;
         }
 
         protected virtual void OnDisable()
         {
             this.notifier = null;
+        }
+
+        private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TerminalGrid.Padding))
+            {
+                foreach (var item in this.targets)
+                {
+                    if (item is TerminalGrid grid)
+                    {
+                        grid.UpdateLayout();
+                    }
+                }
+            }
         }
     }
 }

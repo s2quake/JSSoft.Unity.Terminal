@@ -216,7 +216,8 @@ namespace JSSoft.Terminal.Editor
             var composition = compositionObj.AddComponent(typeByType[typeof(TerminalComposition)]) as TerminalComposition;
             var compositionRect = composition.GetComponent<RectTransform>();
             composition.Grid = terminalGrid;
-            composition.ForegroundColor = TerminalGrid.DefaultForegroundColor;
+            composition.ForegroundColor = terminalGrid.ForegroundColor;
+            composition.BackgroundColor = terminalGrid.BackgroundColor;
             compositionRect.SetParent(terminalGridRect);
             compositionRect.anchorMin = Vector3.zero;
             compositionRect.anchorMax = Vector3.one;

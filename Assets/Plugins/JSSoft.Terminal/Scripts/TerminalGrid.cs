@@ -91,7 +91,6 @@ namespace JSSoft.Terminal
         private int bufferWidth;
         private int bufferHeight;
         private string text;
-        private string test;
 
         public TerminalGrid()
         {
@@ -451,6 +450,7 @@ namespace JSSoft.Terminal
                 {
                     this.padding = value;
                     this.InvokePropertyChangedEvent(nameof(Padding));
+                    this.UpdateLayout();
                 }
             }
         }
@@ -628,6 +628,8 @@ namespace JSSoft.Terminal
             size.x = Math.Abs(size.x);
             size.y = Math.Abs(size.y);
             var bufferSize = TerminalGridUtility.GetBufferSize(this, size);
+            if (bufferSize.y <= 0)
+                return;
             this.UpdateRectangle(bufferSize);
             this.notifier.Begin();
             this.notifier.SetField(ref this.bufferWidth, (int)bufferSize.x, nameof(BufferWidth));
@@ -704,7 +706,6 @@ namespace JSSoft.Terminal
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
             this.text = this.terminal.Text;
-            this.test = this.terminal.Text;
             this.UpdateLayout();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
@@ -1128,7 +1129,7 @@ namespace JSSoft.Terminal
         }
 
         #endregion
-        
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)

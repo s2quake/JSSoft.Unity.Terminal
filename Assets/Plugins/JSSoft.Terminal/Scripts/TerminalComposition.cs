@@ -52,9 +52,11 @@ namespace JSSoft.Terminal
         [SerializeField]
         private int rowIndex;
 
+        private readonly PropertyNotifier notifier;
+
         public TerminalComposition()
         {
-
+            this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
         }
 
         public TerminalGrid Grid
@@ -260,18 +262,26 @@ namespace JSSoft.Terminal
             {
                 switch (e.PropertyName)
                 {
+                    case nameof(ITerminalGrid.ForegroundColor):
+                    case nameof(ITerminalGrid.Style):
+                        {
+                            this.UpdateColor();
+                        }
+                        break;
                     case nameof(ITerminalGrid.VisibleIndex):
                     case nameof(ITerminalGrid.CursorPoint):
                         {
                             var cursorPoint = this.grid.CursorPoint;
                             var visibleIndex = this.grid.VisibleIndex;
-                            this.columnIndex = cursorPoint.X;
-                            this.rowIndex = cursorPoint.Y - visibleIndex;
+                            this.notifier.Begin();
+                            this.notifier.SetField(ref this.columnIndex, cursorPoint.X, nameof(ColumnIndex));
+                            this.notifier.SetField(ref this.rowIndex, cursorPoint.Y - visibleIndex, nameof(RowIndex));
+                            this.notifier.End();
                         }
                         break;
                     case nameof(ITerminalGrid.CompositionString):
                         {
-                            this.text = this.grid.CompositionString;
+                            this.Text = this.grid.CompositionString;
                         }
                         break;
                 }
@@ -282,6 +292,10 @@ namespace JSSoft.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
+                var cursorPoint = this.grid.CursorPoint;
+                var visibleIndex = this.grid.VisibleIndex;
+                this.columnIndex = cursorPoint.X;
+                this.rowIndex = cursorPoint.Y - visibleIndex;
                 this.UpdateColor();
             }
         }
@@ -301,14 +315,17 @@ namespace JSSoft.Terminal
                 return;
             if (this.grid != null)
             {
-                this.foregroundColor = this.grid.ForegroundColor;
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.foregroundColor, this.grid.ForegroundColor, nameof(ForegroundColor));
+                this.notifier.SetField(ref this.backgroundColor, this.grid.BackgroundColor, nameof(BackgroundColor));
+                this.notifier.End();
             }
         }
 
         private int BufferWidth => this.grid != null ? this.grid.BufferWidth : 0;
 
         private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
-                        
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)

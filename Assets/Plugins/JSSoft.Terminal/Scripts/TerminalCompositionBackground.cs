@@ -119,6 +119,7 @@ namespace JSSoft.Terminal
                         {
                             this.color = this.composition.BackgroundColor;
                             this.SetVerticesDirty();
+                            this.SetMaterialDirty();
                         }
                         break;
                     case nameof(TerminalComposition.BackgroundMargin):
@@ -127,6 +128,7 @@ namespace JSSoft.Terminal
                     case nameof(TerminalComposition.Text):
                         {
                             this.SetVerticesDirty();
+                            this.SetMaterialDirty();
                         }
                         break;
                 }
