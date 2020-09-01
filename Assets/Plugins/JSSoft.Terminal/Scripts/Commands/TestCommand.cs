@@ -42,10 +42,10 @@ namespace JSSoft.Terminal.Commands
         {
             for (var i = 0; i < 100; i++)
             {
-                await Task.Delay(1);
-                await this.SetProgressAsync($"Progress: {i}", (float)i / 100);
+                await this.SetProgressAsync($"Progress", (float)i / 100);
             }
-            await this.ResetProgressAsync();
+            var message = await this.SetProgressAsync($"Progress", 1);
+            await this.ResetProgressAsync(message);
             await this.WriteLineAsync("Completed");
             await Task.Delay(1);
         }

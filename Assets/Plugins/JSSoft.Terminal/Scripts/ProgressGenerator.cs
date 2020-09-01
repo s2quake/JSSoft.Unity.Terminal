@@ -24,6 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Text;
 using UnityEngine;
 
 namespace JSSoft.Terminal
@@ -44,7 +45,14 @@ namespace JSSoft.Terminal
         {
             if (this.Grid != null)
             {
-                return message;
+                var width = this.Grid.BufferWidth;
+                var percent = $"{(int)(value * 100):D3}%|";
+                var w = (int)((width - percent.Length) * value);
+                var progress = "#".PadRight(w, '#');
+                var sb = new StringBuilder();
+                sb.AppendLine(message);
+                sb.Append($"{percent}{progress}");
+                return sb.ToString();
             }
             return message;
         }

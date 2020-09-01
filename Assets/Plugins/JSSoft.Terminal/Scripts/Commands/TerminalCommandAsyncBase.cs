@@ -57,9 +57,13 @@ namespace JSSoft.Terminal.Commands
             });
         }
 
-        protected async Task ResetProgressAsync()
+        protected async Task ResetProgressAsync(string message)
         {
-            await this.Terminal.Dispatcher.InvokeAsync(() => this.Terminal.Progress(string.Empty, 0));
+            await this.Terminal.Dispatcher.InvokeAsync(() => 
+            {
+                this.Terminal.Progress(string.Empty, 0);
+                this.Out.WriteLine(message);
+            });
         }
 
         protected ITerminal Terminal { get; }
