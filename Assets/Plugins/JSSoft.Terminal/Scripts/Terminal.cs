@@ -33,7 +33,7 @@ using UnityEngine.EventSystems;
 namespace JSSoft.Terminal
 {
     [ExecuteAlways]
-    public class Terminal : TerminalBase, IPromptDrawer, ICommandCompletor, INotifyValidated, IPropertyChangedNotifyable
+    public class Terminal : TerminalBase, INotifyValidated, IPropertyChangedNotifyable
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -50,6 +50,7 @@ namespace JSSoft.Terminal
         private string command = string.Empty;
         private string completion;
         private string text = string.Empty;
+        private string progressText = string.Empty;
         private int historyIndex;
         private bool isExecuting;
         [SerializeField]
@@ -66,7 +67,9 @@ namespace JSSoft.Terminal
         private TerminalColor?[] promptBackgroundColors = new TerminalColor?[] { };
         private IKeyBindingCollection keyBindings;
         private ICommandCompletor commandCompletor;
-        private IPromptDrawer promptDrawer;
+        private ISyntaxHighlighter syntaxHighlighter;
+        private IProgressGenerator progressGenerator;
+        internal IProgressGenerator defaultProgressGenerator;
         [SerializeField]
         private TerminalDispatcher dispatcher;
 
@@ -75,10 +78,9 @@ namespace JSSoft.Terminal
 
         static Terminal()
         {
-            // Debug.Log(CultureInfo.CurrentCulture);
-            var cultureInfo = CultureInfo.CreateSpecificCulture("ko-KR");
-            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+            // var cultureInfo = CultureInfo.CreateSpecificCulture("ko-KR");
+            // CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            // CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             // CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("ko-KR");
             // CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture;
             // CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture;
@@ -132,7 +134,7 @@ namespace JSSoft.Terminal
             this.notifier.Begin();
             this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
             this.notifier.SetField(ref this.promptText, this.prompt, nameof(PromptText));
-            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
@@ -170,7 +172,7 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
             this.notifier.SetField(ref this.promptText, this.prompt, nameof(PromptText));
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
-            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
@@ -208,7 +210,7 @@ namespace JSSoft.Terminal
                 this.notifier.Begin();
                 this.notifier.SetField(ref this.command, this.command.Remove(this.cursorPosition, 1), nameof(Command));
                 this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
-                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                 this.inputText = this.command;
                 this.InvokeTextChangedEvent(new TextChange(index, -1));
                 this.notifier.End();
@@ -225,7 +227,7 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.command, this.command.Remove(this.cursorPosition - length, length), nameof(Command));
                 this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                 this.notifier.SetField(ref this.cursorPosition, this.cursorPosition - length, nameof(CursorPosition));
-                this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                 this.inputText = this.command;
                 this.InvokeTextChangedEvent(new TextChange(index, -length));
                 this.notifier.End();
@@ -336,14 +338,35 @@ namespace JSSoft.Terminal
             this.notifier.End();
         }
 
+        public override void Progress(string message, float value)
+        {
+            if (message == null)
+                throw new ArgumentNullException(nameof(message));
+            if (this.progressText != message)
+            {
+                var progressMessage = string.Empty;
+                if (message != string.Empty || value != 0)
+                    progressMessage = this.ProgressGenerator.Generate(message, value);
+                var index = this.outputText.Length;
+                var length = this.progressText.Length;
+                var removeChange = new TextChange(index, length);
+                var addChange = new TextChange(index, progressMessage.Length);
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.progressText, progressMessage, nameof(Progress));
+                this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
+                this.InvokeTextChangedEvent(removeChange, addChange);
+                this.notifier.End();
+            }
+        }
+
         public void InsertCharacter(char character)
         {
             if (this.isReadOnly == true || this.isExecuting == true)
                 throw new InvalidOperationException();
-            var index = this.outputText.Length + this.Delimiter.Length + this.prompt.Length + this.cursorPosition;
+            var index = CombineLength(this.outputText, this.progressText, this.prompt) + this.cursorPosition;
             this.notifier.Begin();
             this.notifier.SetField(ref this.text, this.text.Insert(index, $"{character}"), nameof(Text));
-            this.notifier.SetField(ref this.promptText, this.text.Substring(this.outputText.Length + this.Delimiter.Length), nameof(PromptText));
+            this.notifier.SetField(ref this.promptText, this.text.Substring(CombineLength(this.outputText, this.progressText, string.Empty)), nameof(PromptText));
             this.notifier.SetField(ref this.command, this.promptText.Substring(this.prompt.Length), nameof(Command));
             this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + 1, nameof(CursorPosition));
             this.inputText = this.command;
@@ -447,27 +470,14 @@ namespace JSSoft.Terminal
             }
         }
 
-        public int CursorIndex => this.CursorPosition + this.OutputText.Length + this.Delimiter.Length + this.Prompt.Length;
+        public int CursorIndex => this.cursorPosition + CombineLength(this.outputText, this.progressText, this.prompt);
 
         public override string Text => this.text;
 
+        public override string ProgressText => this.progressText;
+
         [FieldName(nameof(outputText))]
         public override string OutputText => this.outputText;
-
-        public override string Delimiter
-        {
-            get
-            {
-                if (this.outputText != string.Empty && this.outputText.EndsWith(Environment.NewLine) == false)
-                {
-                    return Environment.NewLine;
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-        }
 
         [FieldName(nameof(prompt))]
         public override string Prompt
@@ -486,13 +496,13 @@ namespace JSSoft.Terminal
                     this.notifier.Begin();
                     this.notifier.SetField(ref this.prompt, value, nameof(Prompt));
                     this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
-                    this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                    this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                     this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                     ArrayUtility.Resize(ref this.promptForegroundColors, value.Length);
                     ArrayUtility.Resize(ref this.promptBackgroundColors, value.Length);
                     this.InvokeTextChangedEvent(removeChange, addChange);
                     this.notifier.End();
-                    this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                    this.SyntaxHighlighter.Highlight(TerminalTextType.Prompt, this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
             }
         }
@@ -516,20 +526,20 @@ namespace JSSoft.Terminal
                     this.notifier.Begin();
                     this.notifier.SetField(ref this.command, value, nameof(Command));
                     this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
-                    this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+                    this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                     this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
                     this.inputText = value;
                     this.completion = string.Empty;
                     this.InvokeTextChangedEvent(removeChange, addChange);
                     this.notifier.End();
-                    this.PromptDrawer.Draw(this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                    this.SyntaxHighlighter.Highlight(TerminalTextType.Prompt, this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
                 }
             }
         }
 
         public override ICommandCompletor CommandCompletor
         {
-            get => this.commandCompletor ?? this;
+            get => this.commandCompletor ?? JSSoft.Terminal.CommandCompletor.Default;
             set
             {
                 if (this.commandCompletor != value)
@@ -540,15 +550,28 @@ namespace JSSoft.Terminal
             }
         }
 
-        public override IPromptDrawer PromptDrawer
+        public override ISyntaxHighlighter SyntaxHighlighter
         {
-            get => this.promptDrawer ?? this;
+            get => this.syntaxHighlighter ?? JSSoft.Terminal.SyntaxHighlighter.Default;
             set
             {
-                if (this.promptDrawer != value)
+                if (this.syntaxHighlighter != value)
                 {
-                    this.promptDrawer = value;
-                    this.InvokePropertyChangedEvent(nameof(PromptDrawer));
+                    this.syntaxHighlighter = value;
+                    this.InvokePropertyChangedEvent(nameof(SyntaxHighlighter));
+                }
+            }
+        }
+
+        public override IProgressGenerator ProgressGenerator
+        {
+            get => this.progressGenerator ?? this.defaultProgressGenerator;
+            set
+            {
+                if (this.progressGenerator != value)
+                {
+                    this.progressGenerator = value;
+                    this.InvokePropertyChangedEvent(nameof(ProgressGenerator));
                 }
             }
         }
@@ -584,7 +607,7 @@ namespace JSSoft.Terminal
             {
                 return this.foregroundColors[index];
             }
-            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
+            var promptIndex = index - CombineLength(this.outputText, this.progressText, string.Empty);
             if (promptIndex >= 0 && promptIndex < this.promptForegroundColors.Length)
             {
                 return this.promptForegroundColors[promptIndex];
@@ -598,7 +621,7 @@ namespace JSSoft.Terminal
             {
                 return this.backgroundColors[index];
             }
-            var promptIndex = index - (this.outputText.Length + this.Delimiter.Length);
+            var promptIndex = index - CombineLength(this.outputText, this.progressText, string.Empty);
             if (promptIndex >= 0 && promptIndex < this.promptBackgroundColors.Length)
             {
                 return this.promptBackgroundColors[promptIndex];
@@ -633,7 +656,7 @@ namespace JSSoft.Terminal
 
         protected virtual string[] GetCompletion(string[] items, string find)
         {
-            return this.CommandCompletor.Complete(items, find);
+            return this.commandCompletor.Complete(items, find);
         }
 
         protected override void OnEnable()
@@ -641,7 +664,7 @@ namespace JSSoft.Terminal
             base.OnEnable();
             this.inputText = this.command;
             this.promptText = this.prompt + this.command;
-            this.text = this.outputText + this.Delimiter + this.promptText;
+            this.text = Combine(this.outputText, this.progressText, this.promptText);
             this.cursorPosition = this.command.Length;
             ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
             ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
@@ -662,7 +685,7 @@ namespace JSSoft.Terminal
             base.OnValidate();
             this.inputText = this.command;
             this.promptText = this.prompt + this.command;
-            this.text = this.outputText + this.Delimiter + this.promptText;
+            this.text = Combine(this.outputText, this.progressText, this.promptText);
             this.cursorPosition = this.command.Length;
             ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
             ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
@@ -675,6 +698,27 @@ namespace JSSoft.Terminal
             if (character == '\n')
                 return false;
             return true;
+        }
+
+        internal static string Combine(string outputText, string progressMessage, string promptText)
+        {
+            var text = outputText;
+            if (outputText != string.Empty && outputText.EndsWith(Environment.NewLine) == false)
+            {
+                text += Environment.NewLine;
+            }
+            if (progressMessage != string.Empty)
+            {
+                text += progressMessage;
+                text += Environment.NewLine;
+            }
+            text += promptText;
+            return text;
+        }
+
+        internal static int CombineLength(string outputText, string progressMessage, string promptText)
+        {
+            return Combine(outputText, progressMessage, promptText).Length;
         }
 
         private void InvokePropertyChangedEvent(string propertyName)
@@ -744,7 +788,7 @@ namespace JSSoft.Terminal
             var index = this.outputText.Length;
             this.notifier.Begin();
             this.notifier.SetField(ref this.outputText, this.outputText + text, nameof(OutputText));
-            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
             ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
             ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
             for (var i = index; i < this.outputText.Length; i++)
@@ -765,7 +809,7 @@ namespace JSSoft.Terminal
             this.notifier.Begin();
             this.notifier.SetField(ref this.prompt, prompt, nameof(Prompt));
             this.notifier.SetField(ref this.promptText, prompt, nameof(PromptText));
-            this.notifier.SetField(ref this.text, this.outputText + this.Delimiter + this.promptText, nameof(Text));
+            this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.notifier.SetField(ref this.isExecuting, false, nameof(IsExecuting));
             this.inputText = string.Empty;
@@ -807,26 +851,17 @@ namespace JSSoft.Terminal
             this.OnTextChanged(new TextChangedEventArgs(changes));
         }
 
-        #region IPromptDrawer
+        // #region ICommandCompletor
 
-        void IPromptDrawer.Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
-        {
+        // string[] ICommandCompletor.Complete(string[] items, string find)
+        // {
+        //     var query = from item in this.completions
+        //                 where item.StartsWith(find)
+        //                 select item;
+        //     return query.ToArray();
+        // }
 
-        }
-
-        #endregion
-
-        #region ICommandCompletor
-
-        string[] ICommandCompletor.Complete(string[] items, string find)
-        {
-            var query = from item in this.completions
-                        where item.StartsWith(find)
-                        select item;
-            return query.ToArray();
-        }
-
-        #endregion
+        // #endregion
 
         #region IPropertyChangedNotifyable
 

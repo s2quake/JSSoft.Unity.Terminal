@@ -38,6 +38,30 @@ namespace JSSoft.Terminal.Commands
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
 
+        protected async Task WriteAsync(string text)
+        {
+            await this.Terminal.Dispatcher.InvokeAsync(() => this.Terminal.Append(text));
+        }
+
+        protected async Task WriteLineAsync(string text)
+        {
+            await this.Terminal.Dispatcher.InvokeAsync(() => this.Terminal.AppendLine(text));
+        }
+
+        protected async Task<string> SetProgressAsync(string message, float value)
+        {
+            return await this.Terminal.Dispatcher.InvokeAsync(() =>
+            {
+                this.Terminal.Progress(message, value);
+                return this.Terminal.ProgressText;
+            });
+        }
+
+        protected async Task ResetProgressAsync()
+        {
+            await this.Terminal.Dispatcher.InvokeAsync(() => this.Terminal.Progress(string.Empty, 0));
+        }
+
         protected ITerminal Terminal { get; }
 
         protected ITerminalGrid Grid { get; }

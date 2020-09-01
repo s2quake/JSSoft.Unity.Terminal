@@ -705,6 +705,7 @@ namespace JSSoft.Terminal
         {
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
+            this.terminal.defaultProgressGenerator = new ProgressGenerator(this);
             this.text = this.terminal.Text;
             this.UpdateLayout();
             TerminalGridEvents.Register(this);
@@ -715,7 +716,6 @@ namespace JSSoft.Terminal
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
             this.Invoke(nameof(this.ScrollToCursor), float.Epsilon);
-
         }
 
         protected override void OnDisable()

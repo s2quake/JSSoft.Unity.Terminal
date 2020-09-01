@@ -20,34 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
-using JSSoft.Library.Commands;
-using JSSoft.Library.Threading;
-using System.Runtime.InteropServices;
-using JSSoft.Terminal.Tasks;
-using UnityEngine;
-
-namespace JSSoft.Terminal.Commands
-{
-    [TestCommand]
-    class TestCommand : TerminalCommandAsyncBase
-    {
-        public TestCommand(ITerminal terminal)
-            : base(terminal)
-        {
-        }
-
-        protected override async Task OnExecuteAsync()
-        {
-            for (var i = 0; i < 100; i++)
-            {
-                await Task.Delay(1);
-                await this.SetProgressAsync($"Progress: {i}", (float)i / 100);
-            }
-            await this.ResetProgressAsync();
-            await this.WriteLineAsync("Completed");
-            await Task.Delay(1);
-        }
-    }
-}
+// namespace JSSoft.Terminal
+// {
+//     public interface IPromptIndicator
+//     {
+//         void Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors);
+//     }
+// }

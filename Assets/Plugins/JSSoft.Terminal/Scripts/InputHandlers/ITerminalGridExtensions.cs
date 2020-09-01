@@ -42,7 +42,7 @@ namespace JSSoft.Terminal.InputHandlers
             else
             {
                 var cursorPosition = selection.start;
-                var index1 = cursorPosition + terminal.OutputText.Length + terminal.Delimiter.Length + terminal.Prompt.Length;
+                var index1 = cursorPosition + Terminal.CombineLength(terminal.OutputText, terminal.ProgressText, terminal.Prompt);
                 var index2 = index1 + selection.length;
                 var point1 = grid.IndexToPoint(index1);
                 var point2 = grid.IndexToPoint(index2);

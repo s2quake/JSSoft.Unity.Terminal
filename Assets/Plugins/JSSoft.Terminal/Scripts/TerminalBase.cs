@@ -38,11 +38,11 @@ namespace JSSoft.Terminal
 
         public abstract string OutputText { get; }
 
-        public abstract string Delimiter { get; }
-
         public abstract string PromptText { get; }
 
         public abstract string Text { get; }
+
+        public abstract string ProgressText { get; }
 
         public abstract int CursorPosition { get; set; }
 
@@ -58,7 +58,9 @@ namespace JSSoft.Terminal
 
         public abstract ICommandCompletor CommandCompletor { get; set; }
 
-        public abstract IPromptDrawer PromptDrawer { get; set; }
+        public abstract ISyntaxHighlighter SyntaxHighlighter { get; set; }
+
+        public abstract IProgressGenerator ProgressGenerator { get; set; }
 
         public abstract TerminalDispatcher Dispatcher { get; }
 
@@ -103,6 +105,8 @@ namespace JSSoft.Terminal
         public abstract void ResetColor();
 
         public abstract void ResetOutput();
+
+        public abstract void Progress(string message, float value);
 
         #region ITerminal
 

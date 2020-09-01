@@ -56,17 +56,19 @@ namespace JSSoft.Terminal
 
         void MoveRight();
 
+        void Progress(string message, float value);
+
         string Command { get; set; }
 
         string Prompt { get; set; }
 
         string OutputText { get; }
 
-        string Delimiter { get; }
-
         string PromptText { get; }
 
         string Text { get; }
+
+        string ProgressText { get; }
 
         int CursorPosition { get; set; }
 
@@ -82,7 +84,9 @@ namespace JSSoft.Terminal
 
         ICommandCompletor CommandCompletor { get; set; }
 
-        IPromptDrawer PromptDrawer { get; set; }
+        ISyntaxHighlighter SyntaxHighlighter { get; set; }
+
+        IProgressGenerator ProgressGenerator { get; set; }
 
         GameObject GameObject { get; }
 

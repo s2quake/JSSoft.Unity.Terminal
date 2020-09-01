@@ -20,10 +20,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using UnityEngine;
+
 namespace JSSoft.Terminal
 {
-    public interface IPromptDrawer
+    public class ProgressGenerator : IProgressGenerator
     {
-        void Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors);
+        public ProgressGenerator()
+        {
+        }
+
+        public ProgressGenerator(ITerminalGrid grid)
+        {
+            this.Grid = grid;
+        }
+
+        // ProgressMessage: [100%] [#############################]
+        public string Generate(string message, float value)
+        {
+            if (this.Grid != null)
+            {
+                return message;
+            }
+            return message;
+        }
+
+        public ITerminalGrid Grid { get; }
     }
 }

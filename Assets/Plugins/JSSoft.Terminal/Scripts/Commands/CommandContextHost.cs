@@ -44,8 +44,6 @@ namespace JSSoft.Terminal.Commands
         private string text = "type 'help' to help.";
         [SerializeField]
         private bool isTest = false;
-        [SerializeField]
-        private bool isAsync;
 
         public string Text
         {
@@ -93,6 +91,7 @@ namespace JSSoft.Terminal.Commands
             yield return new ResolutionCommand(this.terminal);
             yield return new PingCommand(this.terminal);
             yield return new StyleCommand(this.terminal);
+            yield return new TestCommand(this.terminal);
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)

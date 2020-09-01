@@ -31,7 +31,7 @@ namespace JSSoft.Communication.Services
 {
     [RequireComponent(typeof(TerminalBase))]
     [DisallowMultipleComponent]
-    public abstract class ServiceContextHost : MonoBehaviour, IPromptDrawer
+    public abstract class ServiceContextHost : MonoBehaviour, ISyntaxHighlighter
     {
         protected TerminalBase terminal;
 
@@ -108,7 +108,7 @@ namespace JSSoft.Communication.Services
             // this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
             // this.UserServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
             this.UserServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
-            this.terminal.PromptDrawer = this;
+            this.terminal.SyntaxHighlighter = this;
             this.terminal.Prompt = ">";
         }
 
@@ -267,11 +267,12 @@ namespace JSSoft.Communication.Services
             }
         }
 
-        #region IPromptDrawer
+        #region ISyntaxHighlighter
 
-        void IPromptDrawer.Draw(string command, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
+        void ISyntaxHighlighter.Highlight(TerminalTextType textType, string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
-            this.OnDrawPrompt(command, foregroundColors, backgroundColors);
+            if (textType == TerminalTextType.Prompt)
+                this.OnDrawPrompt(text, foregroundColors, backgroundColors);
         }
 
         #endregion
