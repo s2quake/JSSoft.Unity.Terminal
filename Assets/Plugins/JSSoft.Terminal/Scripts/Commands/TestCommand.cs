@@ -40,7 +40,13 @@ namespace JSSoft.Terminal.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            for (var i = 0; i < 100; i++)
+            await this.Terminal.InvokeAsync(() =>
+            {
+                this.Terminal.ForegroundColor = TerminalColor.Blue;
+                this.Terminal.AppendLine("ewrwerw");
+                this.Terminal.ResetColor();
+            });
+            for (var i = 0; i < 10; i++)
             {
                 await this.SetProgressAsync($"Progress", (float)i / 100);
             }

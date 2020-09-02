@@ -38,6 +38,10 @@ namespace JSSoft.Terminal
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
         private readonly PropertyNotifier notifier;
+        private readonly TerminalBlock outputBlock = new TerminalBlock();
+        private readonly TerminalBlock progressBlock = new TerminalBlock();
+        private readonly TerminalBlock promptBlock = new TerminalBlock();
+        private readonly TerminalBlock commandBlock = new TerminalBlock();
 
         private string promptText = string.Empty;
         [SerializeField]
@@ -59,16 +63,12 @@ namespace JSSoft.Terminal
         [SerializeField]
         private bool isVerbose;
         private int cursorPosition;
-        public TerminalColor? foregroundColor;
-        public TerminalColor? backgroundColor;
-        private TerminalColor?[] foregroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] backgroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] progressForegroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] progressBackgroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] promptForegroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] promptBackgroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] commandForegroundColors = new TerminalColor?[] { };
-        private TerminalColor?[] commandBackgroundColors = new TerminalColor?[] { };
+        private int outputIndex;
+        private int progressIndex;
+        private int promptIndex;
+        private int commandIndex;
+        private TerminalColor? foregroundColor;
+        private TerminalColor? backgroundColor;
         private IKeyBindingCollection keyBindings;
         private ICommandCompletor commandCompletor;
         private ISyntaxHighlighter syntaxHighlighter;
@@ -180,8 +180,7 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
-            this.foregroundColors = new TerminalColor?[] { };
-            this.backgroundColors = new TerminalColor?[] { };
+            this.outputBlock.Text = this.outputText;
             this.InvokeTextChangedEvent(new TextChange(0, length));
             this.notifier.End();
         }
@@ -358,9 +357,11 @@ namespace JSSoft.Terminal
                 this.notifier.Begin();
                 this.notifier.SetField(ref this.progressText, progressMessage, nameof(Progress));
                 this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
-                ArrayUtility.Resize(ref this.progressForegroundColors, this.progressText.Length);
-                ArrayUtility.Resize(ref this.progressBackgroundColors, this.progressText.Length);
-                this.SyntaxHighlighter.Highlight(TerminalTextType.Progress, this.progressText, this.progressForegroundColors, this.progressBackgroundColors);
+                this.progressIndex = CombineLength(this.outputText);
+                this.promptIndex = CombineLength(this.outputText, this.progressText);
+                this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
+                this.progressBlock.Text = this.progressText;
+                this.progressBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Progress);
                 this.InvokeTextChangedEvent(removeChange, addChange);
                 this.notifier.End();
             }
@@ -376,11 +377,13 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.promptText, this.text.Substring(CombineLength(this.outputText, this.progressText, string.Empty)), nameof(PromptText));
             this.notifier.SetField(ref this.command, this.promptText.Substring(this.prompt.Length), nameof(Command));
             this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + 1, nameof(CursorPosition));
-            ArrayUtility.Resize(ref this.commandForegroundColors, this.command.Length);
-            ArrayUtility.Resize(ref this.commandBackgroundColors, this.command.Length);
+            this.commandBlock.Text = this.command;
+            this.progressIndex = CombineLength(this.outputText);
+            this.promptIndex = CombineLength(this.outputText, this.progressText);
+            this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
             this.inputText = this.command;
             this.completion = string.Empty;
-            this.SyntaxHighlighter.Highlight(TerminalTextType.Command, this.command, this.commandForegroundColors, this.commandBackgroundColors);
+            this.commandBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Command);
             this.InvokeTextChangedEvent(new TextChange(index, $"{character}".Length));
             this.notifier.End();
         }
@@ -508,9 +511,10 @@ namespace JSSoft.Terminal
                     this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                     this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                     this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
-                    ArrayUtility.Resize(ref this.promptForegroundColors, value.Length);
-                    ArrayUtility.Resize(ref this.promptBackgroundColors, value.Length);
-                    this.SyntaxHighlighter.Highlight(TerminalTextType.Prompt, this.prompt, this.promptForegroundColors, this.promptBackgroundColors);
+                    this.promptIndex = CombineLength(this.outputText, this.progressText);
+                    this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
+                    this.promptBlock.Text = this.prompt;
+                    this.promptBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Prompt);
                     this.InvokeTextChangedEvent(removeChange, addChange);
                     this.notifier.End();
                 }
@@ -538,11 +542,13 @@ namespace JSSoft.Terminal
                     this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                     this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                     this.notifier.SetField(ref this.cursorPosition, this.command.Length, nameof(CursorPosition));
-                    ArrayUtility.Resize(ref this.commandForegroundColors, value.Length);
-                    ArrayUtility.Resize(ref this.commandBackgroundColors, value.Length);
-                    this.inputText = value;
+                    this.commandBlock.Text = this.command;
+                    this.progressIndex = CombineLength(this.outputText);
+                    this.promptIndex = CombineLength(this.outputText, this.progressText);
+                    this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
+                    this.inputText = this.command;
                     this.completion = string.Empty;
-                    this.SyntaxHighlighter.Highlight(TerminalTextType.Command, this.command, this.commandForegroundColors, this.commandBackgroundColors);
+                    this.commandBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Command);
                     this.InvokeTextChangedEvent(removeChange, addChange);
                     this.notifier.End();
                 }
@@ -615,64 +621,42 @@ namespace JSSoft.Terminal
 
         internal TerminalColor? GetForegroundColor(int index)
         {
-            if (index < this.outputText.Length)
+            if (this.outputBlock.Contains(index - this.outputIndex) == true)
             {
-                if (index < this.foregroundColors.Length)
-                    return this.foregroundColors[index];
-                return null;
+                return this.outputBlock.GetForegroundColor(index - this.outputIndex);
             }
-            var progressIndex = index - CombineLength(this.outputText);
-            if (progressIndex >= 0 && progressIndex < this.progressText.Length)
+            else if (this.progressBlock.Contains(index - this.progressIndex) == true)
             {
-                if (progressIndex < this.progressForegroundColors.Length)
-                    return this.progressForegroundColors[progressIndex];
-                return null;
+                return this.progressBlock.GetForegroundColor(index - this.progressIndex);
             }
-            var promptIndex = index - CombineLength(this.outputText, this.progressText);
-            if (promptIndex >= 0 && promptIndex < this.prompt.Length)
+            else if (this.promptBlock.Contains(index - this.promptIndex) == true)
             {
-                if (promptIndex < this.promptForegroundColors.Length)
-                    return this.promptForegroundColors[promptIndex];
-                return null;
+                return this.promptBlock.GetForegroundColor(index - this.promptIndex);
             }
-            var commandIndex = index - CombineLength(this.outputText, this.progressText, this.prompt);
-            if (commandIndex >= 0 && commandIndex < this.command.Length)
+            else if (this.commandBlock.Contains(index - this.commandIndex) == true)
             {
-                if (commandIndex < this.commandForegroundColors.Length)
-                    return this.commandForegroundColors[commandIndex];
-                return null;
+                return this.commandBlock.GetForegroundColor(index - this.commandIndex);
             }
             return null;
         }
 
         internal TerminalColor? GetBackgroundColor(int index)
         {
-            if (index < this.outputText.Length)
+            if (this.outputBlock.Contains(index - this.outputIndex) == true)
             {
-                if (index < this.backgroundColors.Length)
-                    return this.backgroundColors[index];
-                return null;
+                return this.outputBlock.GetBackgroundColor(index - this.outputIndex);
             }
-            var progressIndex = index - CombineLength(this.outputText, string.Empty, string.Empty);
-            if (progressIndex >= 0 && progressIndex < this.progressText.Length)
+            else if (this.progressBlock.Contains(index - this.progressIndex) == true)
             {
-                if (progressIndex < this.progressBackgroundColors.Length)
-                    return this.progressBackgroundColors[progressIndex];
-                return null;
+                return this.progressBlock.GetBackgroundColor(index - this.progressIndex);
             }
-            var promptIndex = index - CombineLength(this.outputText, this.progressText, string.Empty);
-            if (promptIndex >= 0 && promptIndex < this.prompt.Length)
+            else if (this.promptBlock.Contains(index - this.promptIndex) == true)
             {
-                if (promptIndex < this.promptBackgroundColors.Length)
-                    return this.promptBackgroundColors[promptIndex];
-                return null;
+                return this.promptBlock.GetBackgroundColor(index - this.promptIndex);
             }
-            var commandIndex = index - CombineLength(this.outputText, this.progressText, this.prompt);
-            if (commandIndex >= 0 && commandIndex < this.command.Length)
+            else if (this.commandBlock.Contains(index - this.commandIndex) == true)
             {
-                if (commandIndex < this.commandBackgroundColors.Length)
-                    return this.commandBackgroundColors[commandIndex];
-                return null;
+                return this.commandBlock.GetBackgroundColor(index - this.commandIndex);
             }
             return null;
         }
@@ -714,8 +698,7 @@ namespace JSSoft.Terminal
             this.promptText = this.prompt + this.command;
             this.text = Combine(this.outputText, this.progressText, this.promptText);
             this.cursorPosition = this.command.Length;
-            ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
-            ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
+            this.outputBlock.Text = this.outputText;
             TerminalEvents.Register(this);
             this.OnEnabled(EventArgs.Empty);
         }
@@ -735,8 +718,7 @@ namespace JSSoft.Terminal
             this.promptText = this.prompt + this.command;
             this.text = Combine(this.outputText, this.progressText, this.promptText);
             this.cursorPosition = this.command.Length;
-            ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
-            ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
+            this.outputBlock.Text = this.outputText;
             this.OnValidated(EventArgs.Empty);
         }
 #endif
@@ -837,13 +819,13 @@ namespace JSSoft.Terminal
             this.notifier.Begin();
             this.notifier.SetField(ref this.outputText, this.outputText + text, nameof(OutputText));
             this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
-            ArrayUtility.Resize(ref this.foregroundColors, this.outputText.Length);
-            ArrayUtility.Resize(ref this.backgroundColors, this.outputText.Length);
+            this.outputBlock.Text = this.outputText;
             for (var i = index; i < this.outputText.Length; i++)
             {
-                this.foregroundColors[i] = this.ForegroundColor;
-                this.backgroundColors[i] = this.BackgroundColor;
+                this.outputBlock.SetForegroundColor(i, this.ForegroundColor);
+                this.outputBlock.SetBackgroundColor(i, this.BackgroundColor);
             }
+
             this.InvokeTextChangedEvent(new TextChange(index, text.Length));
             this.notifier.End();
         }
@@ -860,6 +842,10 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.notifier.SetField(ref this.isExecuting, false, nameof(IsExecuting));
+            this.promptIndex = CombineLength(this.outputText, this.progressText);
+            this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
+            this.promptBlock.Text = this.prompt;
+            this.promptBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Prompt);
             this.inputText = string.Empty;
             this.completion = string.Empty;
             this.InvokeTextChangedEvent(removeChange, addChange);
