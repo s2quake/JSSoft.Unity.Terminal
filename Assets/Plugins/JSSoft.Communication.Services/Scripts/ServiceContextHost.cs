@@ -34,6 +34,7 @@ namespace JSSoft.Communication.Services
     public abstract class ServiceContextHost : MonoBehaviour, ISyntaxHighlighter
     {
         protected TerminalBase terminal;
+        private ISyntaxHighlighter syntaxHighlighter;
 
         [RuntimeInitializeOnLoadMethod]
         static void OnRuntimeMethodLoad()
@@ -108,6 +109,7 @@ namespace JSSoft.Communication.Services
             // this.UserServiceNotification.LoggedIn += UserServiceNotification_LoggedIn;
             // this.UserServiceNotification.LoggedOut += UserServiceNotification_LoggedOut;
             this.UserServiceNotification.MessageReceived += userServiceNotification_MessageReceived;
+            this.syntaxHighlighter = this.terminal.SyntaxHighlighter;
             this.terminal.SyntaxHighlighter = this;
             this.terminal.Prompt = ">";
         }
@@ -271,6 +273,7 @@ namespace JSSoft.Communication.Services
 
         void ISyntaxHighlighter.Highlight(TerminalTextType textType, string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
+            this.syntaxHighlighter.Highlight(textType, text, foregroundColors, backgroundColors);
             if (textType == TerminalTextType.Prompt)
                 this.OnDrawPrompt(text, foregroundColors, backgroundColors);
         }

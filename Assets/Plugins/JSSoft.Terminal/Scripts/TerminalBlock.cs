@@ -20,43 +20,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using UnityEngine;
+
 namespace JSSoft.Terminal
 {
-    public class SyntaxHighlighter : ISyntaxHighlighter
+    class TerminalBlock
     {
-        public void Highlight(TerminalTextType textType, string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
+        private TerminalColor?[] foregroundColors = new TerminalColor?[] { };
+        private TerminalColor?[] backgroundColors = new TerminalColor?[] { };
+
+        public int Index { get; set; }
+
+        public int Length { get; set; }
+
+        public void Resize(int capacity)
         {
-            switch (textType)
-            {
-                case TerminalTextType.Command:
-                    {
-                        this.HighlightCommand(text, foregroundColors, backgroundColors);
-                    }
-                    break;
-                case TerminalTextType.Progress:
-                    {
-                        this.HighlightProgress(text, foregroundColors, backgroundColors);
-                    }
-                    break;
-            }
+            ArrayUtility.Resize(ref this.foregroundColors, capacity);
+            ArrayUtility.Resize(ref this.backgroundColors, capacity);
         }
 
-        public static SyntaxHighlighter Default { get; } = new SyntaxHighlighter();
-
-        private void HighlightCommand(string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
+        public TerminalColor? GetForegroundColor(int index)
         {
-            for (var i = 0; i < text.Length; i++)
+            var localIndex = index - this.Index;
+            if (localIndex >= 0 && localIndex < this.Length)
             {
-                foregroundColors[i] = TerminalColor.Red;
+                if (localIndex < this.foregroundColors.Length)
+                    return this.foregroundColors[localIndex];
             }
+            return null;
         }
 
-        private void HighlightProgress(string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
+        public TerminalColor? GetBackgroundColor(int index)
         {
-            for (var i = 0; i < text.Length; i++)
+            var localIndex = index - this.Index;
+            if (localIndex >= 0 && localIndex < this.Length)
             {
-                foregroundColors[i] = TerminalColor.Green;
+                if (localIndex < this.backgroundColors.Length)
+                    return this.backgroundColors[localIndex];
             }
+            return null;
         }
     }
 }
