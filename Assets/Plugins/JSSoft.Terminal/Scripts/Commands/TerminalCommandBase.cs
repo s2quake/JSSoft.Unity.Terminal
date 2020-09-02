@@ -37,6 +37,48 @@ namespace JSSoft.Terminal.Commands
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        protected void Write(string text)
+        {
+            this.Write(text, null);
+        }
+
+        protected void Write(string text, TerminalColor? foregroundColor)
+        {
+            this.Write(text, foregroundColor, null);
+        }
+
+        protected void Write(string text, TerminalColor? foregroundColor, TerminalColor? backgroundColor)
+        {
+            if (foregroundColor != null)
+                this.Terminal.ForegroundColor = foregroundColor;
+            if (backgroundColor != null)
+                this.Terminal.ForegroundColor = backgroundColor;
+            this.Out.Write(text);
+            if (foregroundColor != null || backgroundColor != null)
+                this.Terminal.ResetColor();
+        }
+
+        protected void WriteLine(string text)
+        {
+            this.WriteLine(text, null);
+        }
+
+        protected void WriteLine(string text, TerminalColor? foregroundColor)
+        {
+            this.WriteLine(text, foregroundColor, null);
+        }
+
+        protected void WriteLine(string text, TerminalColor? foregroundColor, TerminalColor? backgroundColor)
+        {
+            if (foregroundColor != null)
+                this.Terminal.ForegroundColor = foregroundColor;
+            if (backgroundColor != null)
+                this.Terminal.ForegroundColor = backgroundColor;
+            this.Out.WriteLine(text);
+            if (foregroundColor != null || backgroundColor != null)
+                this.Terminal.ResetColor();
+        }
 
         protected ITerminal Terminal { get; }
 

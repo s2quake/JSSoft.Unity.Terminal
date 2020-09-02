@@ -56,7 +56,7 @@ namespace JSSoft.Terminal.Commands
                     this.Terminal.ForegroundColor = foregroundColor;
                 if (backgroundColor != null)
                     this.Terminal.ForegroundColor = backgroundColor;
-                this.Terminal.Append(text);
+                this.Out.Write(text);
                 if (foregroundColor != null || backgroundColor != null)
                     this.Terminal.ResetColor();
             });
@@ -80,7 +80,7 @@ namespace JSSoft.Terminal.Commands
                     this.Terminal.ForegroundColor = foregroundColor;
                 if (backgroundColor != null)
                     this.Terminal.ForegroundColor = backgroundColor;
-                this.Terminal.AppendLine(text);
+                this.Out.WriteLine(text);
                 if (foregroundColor != null || backgroundColor != null)
                     this.Terminal.ResetColor();
             });
@@ -92,7 +92,7 @@ namespace JSSoft.Terminal.Commands
             {
                 var progressText = this.Terminal.Progress(message, 1);
                 this.Terminal.Progress(string.Empty, 0);
-                this.Terminal.AppendLine(progressText);
+                this.Out.WriteLine(progressText);
             });
         }
 
@@ -102,7 +102,7 @@ namespace JSSoft.Terminal.Commands
             {
                 var progressText = this.Terminal.ProgressText;
                 this.Terminal.Progress(string.Empty, 0);
-                this.Terminal.AppendLine(progressText);
+                this.Out.WriteLine(progressText);
             });
         }
 
