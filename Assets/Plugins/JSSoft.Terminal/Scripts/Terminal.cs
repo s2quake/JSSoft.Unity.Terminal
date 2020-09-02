@@ -341,7 +341,7 @@ namespace JSSoft.Terminal
             this.notifier.End();
         }
 
-        public override void Progress(string message, float value)
+        public override string Progress(string message, float value)
         {
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
@@ -365,6 +365,7 @@ namespace JSSoft.Terminal
                 this.InvokeTextChangedEvent(removeChange, addChange);
                 this.notifier.End();
             }
+            return this.progressText;
         }
 
         public void InsertCharacter(char character)

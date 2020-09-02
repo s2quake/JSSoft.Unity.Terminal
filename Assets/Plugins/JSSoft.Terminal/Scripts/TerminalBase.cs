@@ -106,7 +106,7 @@ namespace JSSoft.Terminal
 
         public abstract void ResetOutput();
 
-        public abstract void Progress(string message, float value);
+        public abstract string Progress(string message, float value);
 
         #region ITerminal
 

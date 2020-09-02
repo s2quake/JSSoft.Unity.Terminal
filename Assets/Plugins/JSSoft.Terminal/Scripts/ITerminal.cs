@@ -56,7 +56,7 @@ namespace JSSoft.Terminal
 
         void MoveRight();
 
-        void Progress(string message, float value);
+        string Progress(string message, float value);
 
         string Command { get; set; }
 

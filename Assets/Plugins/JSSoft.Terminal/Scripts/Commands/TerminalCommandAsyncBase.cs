@@ -38,31 +38,80 @@ namespace JSSoft.Terminal.Commands
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
 
-        protected async Task WriteAsync(string text)
+        protected Task WriteAsync(string text)
         {
-            await this.Terminal.Dispatcher.InvokeAsync(() => this.Terminal.Append(text));
+            return this.WriteAsync(text, null);
         }
 
-        protected async Task WriteLineAsync(string text)
+        protected Task WriteAsync(string text, TerminalColor? foregroundColor)
         {
-            await this.Terminal.Dispatcher.InvokeAsync(() => this.Terminal.AppendLine(text));
+            return this.WriteAsync(text, foregroundColor, null);
         }
 
-        protected async Task<string> SetProgressAsync(string message, float value)
+        protected Task WriteAsync(string text, TerminalColor? foregroundColor, TerminalColor? backgroundColor)
         {
-            return await this.Terminal.Dispatcher.InvokeAsync(() =>
+            return this.Terminal.Dispatcher.InvokeAsync(() =>
             {
-                this.Terminal.Progress(message, value);
-                return this.Terminal.ProgressText;
+                if (foregroundColor != null)
+                    this.Terminal.ForegroundColor = foregroundColor;
+                if (backgroundColor != null)
+                    this.Terminal.ForegroundColor = backgroundColor;
+                this.Terminal.Append(text);
+                if (foregroundColor != null || backgroundColor != null)
+                    this.Terminal.ResetColor();
             });
         }
 
-        protected async Task ResetProgressAsync(string message)
+        protected Task WriteLineAsync(string text)
         {
-            await this.Terminal.Dispatcher.InvokeAsync(() => 
+            return this.WriteLineAsync(text, null);
+        }
+
+        protected Task WriteLineAsync(string text, TerminalColor? foregroundColor)
+        {
+            return this.WriteLineAsync(text, foregroundColor, null);
+        }
+
+        protected Task WriteLineAsync(string text, TerminalColor? foregroundColor, TerminalColor? backgroundColor)
+        {
+            return this.Terminal.Dispatcher.InvokeAsync(() =>
             {
+                if (foregroundColor != null)
+                    this.Terminal.ForegroundColor = foregroundColor;
+                if (backgroundColor != null)
+                    this.Terminal.ForegroundColor = backgroundColor;
+                this.Terminal.AppendLine(text);
+                if (foregroundColor != null || backgroundColor != null)
+                    this.Terminal.ResetColor();
+            });
+        }
+
+        protected Task CompleteProgressAsync(string message)
+        {
+            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            {
+                var progressText = this.Terminal.Progress(message, 1);
                 this.Terminal.Progress(string.Empty, 0);
-                this.Out.WriteLine(message);
+                this.Terminal.AppendLine(progressText);
+            });
+        }
+
+        protected Task CancelProgressAasync(string message)
+        {
+            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            {
+                var progressText = this.Terminal.ProgressText;
+                this.Terminal.Progress(string.Empty, 0);
+                this.Terminal.AppendLine(progressText);
+            });
+        }
+
+        protected Task<string> SetProgressAsync(string message, float value)
+        {
+            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            {
+                this.Terminal.Progress(message, value);
+                return this.Terminal.ProgressText;
             });
         }
 

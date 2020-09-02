@@ -40,23 +40,41 @@ namespace JSSoft.Terminal
             this.Grid = grid;
         }
 
-        // ProgressMessage: [100%] [#############################]
         public string Generate(string message, float value)
         {
             if (this.Grid != null)
             {
-                var width = this.Grid.BufferWidth;
-                var percent = $"{(int)(value * 100):D3}%|";
-                var w = (int)((width - percent.Length) * value);
-                var progress = "#".PadRight(w, '#');
-                var sb = new StringBuilder();
-                sb.AppendLine(message);
-                sb.Append($"{percent}{progress}");
-                return sb.ToString();
+                return this.GeneratePattern2(message, value);
             }
             return message;
         }
 
         public ITerminalGrid Grid { get; }
+
+        // ProgressMessage: 
+        // 100%|#############################]
+        private string GeneratePattern1(string message, float value)
+        {
+            var width = this.Grid.BufferWidth;
+            var percent = $"{(int)(value * 100),3:D}%|";
+            var w = (int)((width - percent.Length) * value);
+            var progress = "#".PadRight(w, '#');
+            var sb = new StringBuilder();
+            sb.AppendLine(message);
+            sb.Append($"{percent}{progress}");
+            return sb.ToString();
+        }
+
+        // ProgressMessage...: [100%] [#############################]
+        private string GeneratePattern2(string message, float value)
+        {
+            var width = this.Grid.BufferWidth;
+            var text = $"{message}: ";
+            var percent = $"[{(int)(value * 100),3:D}%] ";
+            var column = (int)((width - text.Length - percent.Length - 2));
+            var w = (int)(column * value);
+            var progress = "#".PadRight(w, '#').PadRight(column, ' ');
+            return $"{text}{percent}[{progress}]";
+        }
     }
 }

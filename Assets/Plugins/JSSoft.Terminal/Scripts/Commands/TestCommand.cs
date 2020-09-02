@@ -27,6 +27,7 @@ using JSSoft.Library.Threading;
 using System.Runtime.InteropServices;
 using JSSoft.Terminal.Tasks;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace JSSoft.Terminal.Commands
 {
@@ -40,18 +41,28 @@ namespace JSSoft.Terminal.Commands
 
         protected override async Task OnExecuteAsync()
         {
-            await this.Terminal.InvokeAsync(() =>
+            var items = new Dictionary<string, int>()
             {
-                this.Terminal.ForegroundColor = TerminalColor.Blue;
-                this.Terminal.AppendLine("ewrwerw");
-                this.Terminal.ResetColor();
-            });
-            for (var i = 0; i < 10; i++)
+                { "Download1", 50 },
+                { "Download2", 30 },
+                { "Download3", 40 },
+                { "Download4", 90 },
+                { "Download5", 30 },
+                { "Download6", 150 },
+                { "Download7", 10 },
+                { "Download8", 15 },
+                { "Download9", 20 }
+            };
+
+            await this.WriteLineAsync("Start Loading.", TerminalColor.Blue);
+            foreach (var item in items)
             {
-                await this.SetProgressAsync($"Progress", (float)i / 100);
+                for (var i = 0; i < item.Value; i++)
+                {
+                    await this.SetProgressAsync(item.Key, (float)i / item.Value);
+                }
+                await this.CompleteProgressAsync(item.Key);
             }
-            var message = await this.SetProgressAsync($"Progress", 1);
-            await this.ResetProgressAsync(message);
             await this.WriteLineAsync("Completed");
             await Task.Delay(1);
         }
