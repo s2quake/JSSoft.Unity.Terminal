@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 using System.ComponentModel;
 using System.Collections.Specialized;
 using System.Text;
+using System.IO;
 
 namespace JSSoft.Terminal
 {
@@ -236,17 +237,16 @@ namespace JSSoft.Terminal
             }
         }
 
-        public override void Copy()
+        public override string Copy()
         {
             if (this.Selections.Any() == true)
             {
                 var range = this.Selections.First();
-                var text = this.GetString(range);
-                GUIUtility.systemCopyBuffer = text;
+                return this.GetString(range);
             }
             else
             {
-                GUIUtility.systemCopyBuffer = string.Empty;
+                return string.Empty;
             }
         }
 

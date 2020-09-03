@@ -21,6 +21,10 @@
 // SOFTWARE.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using KeyBinding = JSSoft.Terminal.KeyBinding<JSSoft.Terminal.ITerminalGrid>;
 
@@ -48,7 +52,8 @@ namespace JSSoft.Terminal.KeyBindings
             new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Command, KeyCode.PageDown, (g) => g.LineDown()),
             new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command, KeyCode.Home, (g) => g.ScrollToTop()),
             new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Command, KeyCode.End, (g) => g.ScrollToBottom()),
-            new KeyBinding(EventModifiers.Command, KeyCode.C, (g) => g.Copy()),
+            new KeyBinding(EventModifiers.Command, KeyCode.C, (g) => GUIUtility.systemCopyBuffer = g.Copy()),
+            new KeyBinding(EventModifiers.Command, KeyCode.V, async (g) => await PasteAsync(g, GUIUtility.systemCopyBuffer)),
             new KeyBinding(EventModifiers.Command, KeyCode.A, (g) => g.SelectAll()),
         };
 
@@ -58,8 +63,36 @@ namespace JSSoft.Terminal.KeyBindings
             new KeyBinding(EventModifiers.FunctionKey | EventModifiers.Alt | EventModifiers.Control, KeyCode.PageDown, (g) => g.LineDown()),
             new KeyBinding(EventModifiers.Control, KeyCode.Home, (g) => g.ScrollToTop()),
             new KeyBinding(EventModifiers.Control, KeyCode.End, (g) => g.ScrollToBottom()),
-            new KeyBinding(EventModifiers.Control, KeyCode.C, (g) => g.Copy()),
+            new KeyBinding(EventModifiers.Control, KeyCode.C, (g) => GUIUtility.systemCopyBuffer = g.Copy()),
+            new KeyBinding(EventModifiers.Control, KeyCode.V, async (g) => await PasteAsync(g, GUIUtility.systemCopyBuffer)),
             new KeyBinding(EventModifiers.Control, KeyCode.A, (g) => g.SelectAll()),
         };
+
+        private static ManualResetEvent resetEvent = new ManualResetEvent(false);
+
+        private static async Task PasteAsync(ITerminalGrid grid, string text)
+        {
+            var terminal = grid.Terminal;
+            var items = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+            var queue = new Queue<string>(items);
+            terminal.Executed += Terminal_Executed;
+            while (queue.Any())
+            {
+                var command = queue.Dequeue();
+                terminal.Command += command;
+                if (queue.Any() == true)
+                {
+                    resetEvent.Reset();
+                    terminal.Execute();
+                    await Task.Run(() => resetEvent.WaitOne());
+                }
+            }
+            terminal.Executed -= Terminal_Executed;
+        }
+
+        private static void Terminal_Executed(object sender, TerminalExecutedEventArgs e)
+        {
+            resetEvent.Set();
+        }
     }
 }

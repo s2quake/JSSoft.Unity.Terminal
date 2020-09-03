@@ -125,7 +125,7 @@ namespace JSSoft.Terminal
 
         public abstract event EventHandler Disabled;
 
-        public abstract void Copy();
+        public abstract string Copy();
 
         public abstract void Focus();
 

@@ -37,7 +37,7 @@ namespace JSSoft.Terminal.Commands
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+        
         protected void Write(string text)
         {
             this.Write(text, null);
