@@ -737,6 +737,12 @@ namespace JSSoft.Terminal
             this.inputHandler?.Detach(this);
         }
 
+        protected virtual void Update()
+        {
+            if (this.terminal.IsExecuting == false)
+                this.ProcessEvent();
+        }
+
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
         {
             if (this.terminal.ProcessKeyEvent(modifiers, keyCode) == true)
@@ -1095,6 +1101,17 @@ namespace JSSoft.Terminal
             }
         }
 
+        Queue<KeyInfo> eventQueue = new Queue<KeyInfo>();
+
+        struct KeyInfo
+        {
+            public KeyCode KeyCode { get; set; }
+
+            public EventModifiers Modifiers { get; set; }
+
+            public char Character { get; set; }
+        }
+
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
             if (this.PopEvents() is IList<Event> events)
@@ -1109,23 +1126,41 @@ namespace JSSoft.Terminal
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
-                        if (this.OnPreviewKeyDown(modifiers, keyCode) == true)
-                            continue;
-                        if (item.character != 0 && this.OnPreviewKeyPress(item.character) == false)
+
+                        var keyInfo = new KeyInfo()
                         {
-                            if (this.terminal.IsReadOnly == false && this.terminal.IsExecuting == false)
-                            {
-                                this.terminal.InsertCharacter(item.character);
-                                this.ScrollToCursor();
-                            }
-                        }
+                            KeyCode = item.keyCode,
+                            Modifiers = item.modifiers,
+                            Character = item.character,
+                        };
+                        this.eventQueue.Enqueue(keyInfo);
                         this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
                     }
                 }
 
                 eventData.Use();
             }
+            if (this.terminal.IsExecuting == false)
+                this.ProcessEvent();
             this.InputHandler.Update(this, eventData);
+        }
+
+        public void ProcessEvent()
+        {
+            while (this.eventQueue.Any() == true)
+            {
+                var item = this.eventQueue.Dequeue();
+                if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
+                    continue;
+                if (item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
+                {
+                    if (this.terminal.IsReadOnly == false)
+                    {
+                        this.terminal.InsertCharacter(item.Character);
+                        this.ScrollToCursor();
+                    }
+                }
+            }
         }
 
         #endregion

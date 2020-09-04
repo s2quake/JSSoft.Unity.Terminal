@@ -24,8 +24,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using JSSoft.Library.Commands;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -125,6 +128,7 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
+            this.RefreshIndex();
             this.InvokeTextChangedEvent(new TextChange(index, length));
             this.notifier.End();
             this.AppendLine(promptText);
@@ -142,6 +146,7 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.inputText = string.Empty;
             this.completion = string.Empty;
+            this.RefreshIndex();
             this.InvokeTextChangedEvent(new TextChange(index, length));
             this.notifier.End();
         }
@@ -181,6 +186,7 @@ namespace JSSoft.Terminal
             this.inputText = string.Empty;
             this.completion = string.Empty;
             this.outputBlock.Text = this.outputText;
+            this.RefreshIndex();
             this.InvokeTextChangedEvent(new TextChange(0, length));
             this.notifier.End();
         }
@@ -215,6 +221,7 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.promptText, this.prompt + this.command, nameof(PromptText));
                 this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                 this.inputText = this.command;
+                this.RefreshIndex();
                 this.InvokeTextChangedEvent(new TextChange(index, -1));
                 this.notifier.End();
             }
@@ -232,6 +239,7 @@ namespace JSSoft.Terminal
                 this.notifier.SetField(ref this.cursorPosition, this.cursorPosition - length, nameof(CursorPosition));
                 this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
                 this.inputText = this.command;
+                this.RefreshIndex();
                 this.InvokeTextChangedEvent(new TextChange(index, -length));
                 this.notifier.End();
             }
@@ -357,9 +365,7 @@ namespace JSSoft.Terminal
                 this.notifier.Begin();
                 this.notifier.SetField(ref this.progressText, progressMessage, nameof(Progress));
                 this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
-                this.progressIndex = CombineLength(this.outputText);
-                this.promptIndex = CombineLength(this.outputText, this.progressText);
-                this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
+                this.RefreshIndex();
                 this.progressBlock.Text = this.progressText;
                 this.progressBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Progress);
                 this.InvokeTextChangedEvent(removeChange, addChange);
@@ -370,7 +376,7 @@ namespace JSSoft.Terminal
 
         public void InsertCharacter(char character)
         {
-            if (this.isReadOnly == true || this.isExecuting == true)
+            if (this.isReadOnly == true)
                 throw new InvalidOperationException();
             var index = CombineLength(this.outputText, this.progressText, this.prompt) + this.cursorPosition;
             this.notifier.Begin();
@@ -378,12 +384,10 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.promptText, this.text.Substring(CombineLength(this.outputText, this.progressText, string.Empty)), nameof(PromptText));
             this.notifier.SetField(ref this.command, this.promptText.Substring(this.prompt.Length), nameof(Command));
             this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + 1, nameof(CursorPosition));
-            this.commandBlock.Text = this.command;
-            this.progressIndex = CombineLength(this.outputText);
-            this.promptIndex = CombineLength(this.outputText, this.progressText);
-            this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
             this.inputText = this.command;
             this.completion = string.Empty;
+            this.RefreshIndex();
+            this.commandBlock.Text = this.command;
             this.commandBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Command);
             this.InvokeTextChangedEvent(new TextChange(index, $"{character}".Length));
             this.notifier.End();
@@ -839,12 +843,11 @@ namespace JSSoft.Terminal
             var addChange = new TextChange(index, prompt.Length);
             this.notifier.Begin();
             this.notifier.SetField(ref this.prompt, prompt, nameof(Prompt));
-            this.notifier.SetField(ref this.promptText, prompt, nameof(PromptText));
+            this.notifier.SetField(ref this.promptText, prompt + this.command, nameof(PromptText));
             this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
-            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
+            // this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.notifier.SetField(ref this.isExecuting, false, nameof(IsExecuting));
-            this.promptIndex = CombineLength(this.outputText, this.progressText);
-            this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
+            this.RefreshIndex();
             this.promptBlock.Text = this.prompt;
             this.promptBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Prompt);
             this.inputText = string.Empty;
@@ -869,8 +872,8 @@ namespace JSSoft.Terminal
         {
             var action = new Action<Exception>((e) =>
             {
-                this.executed?.Invoke(this, new TerminalExecutedEventArgs(commandText, e));
                 this.InsertPrompt(this.prompt != string.Empty ? this.prompt : prompt);
+                this.executed?.Invoke(this, new TerminalExecutedEventArgs(commandText, e));
             });
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
             this.InvokePropertyChangedEvent(nameof(IsExecuting));
@@ -884,6 +887,13 @@ namespace JSSoft.Terminal
         private void InvokeTextChangedEvent(params TextChange[] changes)
         {
             this.OnTextChanged(new TextChangedEventArgs(changes));
+        }
+
+        private void RefreshIndex()
+        {
+            this.progressIndex = CombineLength(this.outputText);
+            this.promptIndex = CombineLength(this.outputText, this.progressText);
+            this.commandIndex = CombineLength(this.outputText, this.progressText, this.prompt);
         }
 
         #region IPropertyChangedNotifyable

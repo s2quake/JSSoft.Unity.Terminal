@@ -53,8 +53,8 @@ namespace JSSoft.Terminal.KeyBindings
             new KeyBinding(EventModifiers.Control, KeyCode.RightArrow, (t) => true),
             new KeyBinding(EventModifiers.Control, KeyCode.UpArrow, (t) => true),
             new KeyBinding(EventModifiers.Control, KeyCode.DownArrow, (t) => true),
-            new KeyBinding(EventModifiers.None, KeyCode.Return, (t) => t.Execute(), (t) => t.IsReadOnly == false && t.IsExecuting == false),
-            new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter, (t) => t.Execute(), (t) => t.IsReadOnly == false && t.IsExecuting == false),
+            new KeyBinding(EventModifiers.None, KeyCode.Return, (t) => t.Execute(), (t) => t.IsReadOnly == false),
+            new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter, (t) => t.Execute(), (t) => t.IsReadOnly == false),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, (t) => t.Backspace()),
             // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.FunctionKey + KeyCode.Backspace 가 호출됨.
             new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => true),
@@ -67,10 +67,8 @@ namespace JSSoft.Terminal.KeyBindings
         {
             new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => DeleteToFirst(t)),
             new KeyBinding(EventModifiers.Control, KeyCode.K, (t) => DeleteToLast(t)),
-            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.CursorPosition = 0),
-            new KeyBinding(EventModifiers.Command | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.CursorPosition = t.Command.Length),
-            new KeyBinding(EventModifiers.Control, KeyCode.E, (t) => t.CursorPosition = t.Command.Length),
-            new KeyBinding(EventModifiers.Control, KeyCode.A, (t) => t.CursorPosition = 0),
+            new KeyBinding(EventModifiers.Control, KeyCode.E, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.Control, KeyCode.A, (t) => t.MoveToFirst()),
             new KeyBinding(EventModifiers.Control, KeyCode.W, (t) => DeletePrevWord(t)),
             new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
             new KeyBinding(EventModifiers.Alt | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
@@ -80,11 +78,8 @@ namespace JSSoft.Terminal.KeyBindings
         {
             new KeyBinding(EventModifiers.Alt, KeyCode.U, (t) => DeleteToFirst(t)),
             new KeyBinding(EventModifiers.Alt, KeyCode.K, (t) => DeleteToLast(t)),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.CursorPosition = 0),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.CursorPosition = t.Command.Length),
-            new KeyBinding(EventModifiers.Alt, KeyCode.E, (t) => t.CursorPosition = t.Command.Length),
-            new KeyBinding(EventModifiers.Alt, KeyCode.A, (t) => t.CursorPosition = 0),
-            new KeyBinding(EventModifiers.Alt, KeyCode.W, (t) => DeletePrevWord(t)),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
         };
