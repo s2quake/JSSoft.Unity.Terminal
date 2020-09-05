@@ -127,6 +127,8 @@ namespace JSSoft.Terminal
 
         public abstract string Copy();
 
+        public abstract void Paste(string text);
+
         public abstract void Focus();
 
         public abstract TerminalPoint IndexToPoint(int index);

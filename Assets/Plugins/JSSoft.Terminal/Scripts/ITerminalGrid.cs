@@ -61,6 +61,8 @@ namespace JSSoft.Terminal
 
         string Copy();
 
+        void Paste(string text);
+
         void SelectAll();
 
         ITerminal Terminal { get; }

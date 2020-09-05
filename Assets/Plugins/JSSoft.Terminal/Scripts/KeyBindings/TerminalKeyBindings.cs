@@ -53,8 +53,6 @@ namespace JSSoft.Terminal.KeyBindings
             new KeyBinding(EventModifiers.Control, KeyCode.RightArrow, (t) => true),
             new KeyBinding(EventModifiers.Control, KeyCode.UpArrow, (t) => true),
             new KeyBinding(EventModifiers.Control, KeyCode.DownArrow, (t) => true),
-            new KeyBinding(EventModifiers.None, KeyCode.Return, (t) => t.Execute(), (t) => t.IsReadOnly == false),
-            new KeyBinding(EventModifiers.None, KeyCode.KeypadEnter, (t) => t.Execute(), (t) => t.IsReadOnly == false),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, (t) => t.Backspace()),
             // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.FunctionKey + KeyCode.Backspace 가 호출됨.
             new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => true),

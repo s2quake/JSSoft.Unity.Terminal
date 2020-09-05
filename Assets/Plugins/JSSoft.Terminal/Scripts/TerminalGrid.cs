@@ -1,4 +1,24 @@
-﻿// MIT License// Copyright (c) 2020 Jeesu Choi// Permission is hereby granted, free of charge, to any person obtaining a copy// in the Software without restriction, including without limitation the rights// copies of the Software, and to permit persons to whom the Software is//// copies or substantial portions of the Software.// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,// SOFTWARE.
+﻿// MIT License
+// 
+// Copyright (c) 2020 Jeesu Choi
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 using System;
 using System.Linq;
@@ -80,6 +100,7 @@ namespace JSSoft.Terminal
         private readonly TerminalCharacterInfoCollection characterInfos;
         private readonly TerminalGridSelection selections;
         private readonly PropertyNotifier notifier;
+        private readonly Queue<KeyInfo> eventQueue = new Queue<KeyInfo>();
 
         private IInputHandler inputHandler;
         private Terminal terminal;
@@ -250,6 +271,17 @@ namespace JSSoft.Terminal
             }
         }
 
+        public override void Paste(string text)
+        {
+            foreach (var item in text)
+            {
+                this.eventQueue.Enqueue(new KeyInfo()
+                {
+                    Character = item
+                });
+            }
+        }
+
         public override void SelectAll()
         {
             var p1 = new TerminalPoint(0, 0);
@@ -257,6 +289,33 @@ namespace JSSoft.Terminal
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
+        }
+
+        public void ProcessEvent()
+        {
+            var itemList = new List<char>();
+            while (this.eventQueue.Any() == true)
+            {
+                var item = this.eventQueue.Dequeue();
+                if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
+                    continue;
+                if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
+                {
+                    if (item.Character == '\n')
+                    {
+                        var items = itemList.ToArray();
+                        itemList.Clear();
+                        this.terminal.InsertCharacter(items);
+                        this.terminal.Execute();
+                        break;
+                    }
+                    else
+                    {
+                        itemList.Add(item.Character);
+                    }
+                }
+            }
+            this.terminal.InsertCharacter(itemList.ToArray());
         }
 
         public override IKeyBindingCollection KeyBindings
@@ -752,7 +811,7 @@ namespace JSSoft.Terminal
 
         protected virtual bool OnPreviewKeyPress(char character)
         {
-            if (character == '\n' || character == '\t' || character == 27 || character == 25)
+            if (character == '\t' || character == 27 || character == 25)
                 return true;
             return false;
         }
@@ -1101,17 +1160,6 @@ namespace JSSoft.Terminal
             }
         }
 
-        Queue<KeyInfo> eventQueue = new Queue<KeyInfo>();
-
-        struct KeyInfo
-        {
-            public KeyCode KeyCode { get; set; }
-
-            public EventModifiers Modifiers { get; set; }
-
-            public char Character { get; set; }
-        }
-
         void IUpdateSelectedHandler.OnUpdateSelected(BaseEventData eventData)
         {
             if (this.PopEvents() is IList<Event> events)
@@ -1126,7 +1174,6 @@ namespace JSSoft.Terminal
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
-
                         var keyInfo = new KeyInfo()
                         {
                             KeyCode = item.keyCode,
@@ -1135,6 +1182,7 @@ namespace JSSoft.Terminal
                         };
                         this.eventQueue.Enqueue(keyInfo);
                         this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
+                        this.ScrollToCursor();
                     }
                 }
 
@@ -1143,24 +1191,6 @@ namespace JSSoft.Terminal
             if (this.terminal.IsExecuting == false)
                 this.ProcessEvent();
             this.InputHandler.Update(this, eventData);
-        }
-
-        public void ProcessEvent()
-        {
-            while (this.eventQueue.Any() == true)
-            {
-                var item = this.eventQueue.Dequeue();
-                if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
-                    continue;
-                if (item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
-                {
-                    if (this.terminal.IsReadOnly == false)
-                    {
-                        this.terminal.InsertCharacter(item.Character);
-                        this.ScrollToCursor();
-                    }
-                }
-            }
         }
 
         #endregion

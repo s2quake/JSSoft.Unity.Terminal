@@ -374,23 +374,27 @@ namespace JSSoft.Terminal
             return this.progressText;
         }
 
-        public void InsertCharacter(char character)
+        public void InsertCharacter(params char[] characters)
         {
             if (this.isReadOnly == true)
                 throw new InvalidOperationException();
-            var index = CombineLength(this.outputText, this.progressText, this.prompt) + this.cursorPosition;
-            this.notifier.Begin();
-            this.notifier.SetField(ref this.text, this.text.Insert(index, $"{character}"), nameof(Text));
-            this.notifier.SetField(ref this.promptText, this.text.Substring(CombineLength(this.outputText, this.progressText, string.Empty)), nameof(PromptText));
-            this.notifier.SetField(ref this.command, this.promptText.Substring(this.prompt.Length), nameof(Command));
-            this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + 1, nameof(CursorPosition));
-            this.inputText = this.command;
-            this.completion = string.Empty;
-            this.RefreshIndex();
-            this.commandBlock.Text = this.command;
-            this.commandBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Command);
-            this.InvokeTextChangedEvent(new TextChange(index, $"{character}".Length));
-            this.notifier.End();
+            if (characters.Any() == true)
+            {
+                var text = new string(characters);
+                var index = CombineLength(this.outputText, this.progressText, this.prompt) + this.cursorPosition;
+                this.notifier.Begin();
+                this.notifier.SetField(ref this.text, this.text.Insert(index, text), nameof(Text));
+                this.notifier.SetField(ref this.promptText, this.text.Substring(CombineLength(this.outputText, this.progressText, string.Empty)), nameof(PromptText));
+                this.notifier.SetField(ref this.command, this.promptText.Substring(this.prompt.Length), nameof(Command));
+                this.notifier.SetField(ref this.cursorPosition, this.cursorPosition + text.Length, nameof(CursorPosition));
+                this.inputText = this.command;
+                this.completion = string.Empty;
+                this.RefreshIndex();
+                this.commandBlock.Text = this.command;
+                this.commandBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Command);
+                this.InvokeTextChangedEvent(new TextChange(index, text.Length));
+                this.notifier.End();
+            }
         }
 
         public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
@@ -730,8 +734,8 @@ namespace JSSoft.Terminal
 
         protected virtual bool IsValidCharacter(char character)
         {
-            if (character == '\n')
-                return false;
+            // if (character == '\n')
+            //     return false;
             return true;
         }
 
