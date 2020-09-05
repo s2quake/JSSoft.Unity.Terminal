@@ -100,7 +100,6 @@ namespace JSSoft.Terminal.KeyBindings
                 var match = matches.Where(item => item.Index <= index).Last();
                 terminal.CursorPosition = match.Index;
             }
-
             return terminal.CursorPosition;
         }
 

@@ -45,18 +45,18 @@ namespace JSSoft.Terminal
 
         private void HighlightCommand(string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
-            for (var i = 0; i < text.Length; i++)
-            {
-                foregroundColors[i] = TerminalColor.Red;
-            }
+            // for (var i = 0; i < text.Length; i++)
+            // {
+            //     foregroundColors[i] = TerminalColor.Red;
+            // }
         }
 
         private void HighlightProgress(string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
         {
-            for (var i = 0; i < text.Length; i++)
-            {
-                foregroundColors[i] = TerminalColor.Green;
-            }
+            // for (var i = 0; i < text.Length; i++)
+            // {
+            //     foregroundColors[i] = TerminalColor.Green;
+            // }
         }
     }
 }
