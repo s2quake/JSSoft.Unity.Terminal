@@ -39,146 +39,74 @@ using System.Diagnostics;
 
 namespace JSSoft.Javascript
 {
-    [RequireComponent(typeof(TerminalBase))]
-    [DisallowMultipleComponent]
-    public class JavascriptContextHost : MonoBehaviour, IServiceProvider
+    public class JavascriptContextHost : TerminalHostBase
     {
         private Engine engine;
-        private TerminalBase terminal;
-        private TerminalGridBase grid;
-        public TerminalBase Terminal => this.terminal;
-        public TerminalGridBase Grid => this.grid;
+        private TextWriter consoleWriter;
 
-        protected virtual void Start()
+        protected override void Start()
         {
+
         }
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
             this.engine = new Engine(cfg => cfg.AllowClr());
-            this.engine.SetValue("print", new Action<object>((obj) => this.terminal.AppendLine($"{obj}")));
-            this.engine.SetValue("load", new Func<string, object>(
-                    path => engine.Execute(File.ReadAllText(path))
-                                  .GetCompletionValue()));
-
-            this.grid = this.GetComponent<TerminalGridBase>();
-            this.terminal = this.GetComponent<TerminalBase>();
-            this.terminal.ResetOutput();
-
-            var assembly = Assembly.GetExecutingAssembly();
-            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            var version = fvi.FileVersion;
-
-            this.terminal.AppendLine($"Welcome to Jint ({version})");
-            this.terminal.AppendLine("Type 'exit' to leave, " +
-                              "'print()' to write on the console, " +
-                              "'load()' to load scripts.");
-            this.terminal.AppendLine();
-            this.terminal.CursorPosition = 0;
-            this.terminal.Prompt = "jint> ";
-            this.terminal.Executing += Terminal_Executing;
+            this.engine.SetValue("print", new Action<object>((obj) => this.Terminal.AppendLine($"{obj}")));
+            this.engine.SetValue("load", new Func<string, object>(path => engine.Execute(File.ReadAllText(path)).GetCompletionValue()));
+            this.Terminal.AppendLine($"Welcome to Jint ({this.Version})");
+            this.Terminal.AppendLine("Type 'exit' to leave, 'print()' to write on the console, 'load()' to load scripts.");
+            this.Terminal.AppendLine();
+            this.Terminal.Prompt = "jint> ";
+            this.IsAsync = false;
+            this.consoleWriter = Console.Out;
+            Console.SetOut(new TerminalTextWriter(this.Terminal));
         }
 
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
-
+            Console.SetOut(this.consoleWriter);
+            base.OnDisable();
         }
 
-        protected virtual object GetService(Type serviceType)
+        protected override void OnException(Exception e, string message)
         {
-            if (serviceType == typeof(ITerminal))
-                return this.terminal;
-            else if (serviceType == typeof(ITerminalGrid))
-                return this.grid;
-            else if (serviceType == typeof(TerminalDispatcher))
-                return this.terminal.Dispatcher;
-            return null;
+            this.Terminal.ForegroundColor = TerminalColor.Red;
+            base.OnException(e, message);
+            this.Terminal.ResetColor();
+            UnityEngine.Debug.LogError(message);
         }
 
-        private void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
+        protected override void OnRun(string command)
         {
-            if (this.terminal.Dispatcher != null)
+            if (command == "exit")
             {
-                this.Run(e);
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+                UnityEngine.Application.Quit();
+#endif
             }
             else
             {
-                this.terminal.AppendLine("dispatcher is null.");
+                var result = engine.GetValue(engine.Execute(command).GetCompletionValue());
+                if (result.Type != Types.None && result.Type != Types.Null && result.Type != Types.Undefined)
+                {
+                    var str = TypeConverter.ToString(engine.Json.Stringify(engine.Json, Arguments.From(result, Undefined.Instance, "  ")));
+                    this.Terminal.AppendLine($"=> {str}");
+                }
             }
         }
 
-        private void Run(TerminalExecuteEventArgs e)
+        private string Version
         {
-            try
+            get
             {
-                var input = e.Command;
-                if (input == "exit")
-                {
-#if UNITY_EDITOR
-                    UnityEditor.EditorApplication.isPlaying = false;
-#else
-                    UnityEngine.Application.Quit();
-#endif
-                }
-                else
-                {
-                    var result = engine.GetValue(engine.Execute(input).GetCompletionValue());
-                    if (result.Type != Types.None && result.Type != Types.Null && result.Type != Types.Undefined)
-                    {
-                        var str = TypeConverter.ToString(engine.Json.Stringify(engine.Json, Arguments.From(result, Undefined.Instance, "  ")));
-                        this.terminal.AppendLine($"=> {str}");
-                    }
-                    e.Success();
-                }
-            }
-            catch (System.Reflection.TargetInvocationException ex)
-            {
-                this.AppendException(ex);
-                e.Fail(ex);
-            }
-            catch (JavaScriptException ex)
-            {
-                this.terminal.ForegroundColor = TerminalColor.Red;
-                this.AppendException(ex);
-                this.terminal.ResetColor();
-                e.Fail(ex);
-            }
-            catch (Exception ex)
-            {
-                this.AppendException(ex);
-                e.Fail(ex);
+                var assembly = Assembly.GetExecutingAssembly();
+                var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+                return fvi.FileVersion;
             }
         }
-
-        private void AppendException(Exception e)
-        {
-            var message = GetMessage();
-            this.terminal.AppendLine(message);
-            UnityEngine.Debug.LogError(message);
-
-            string GetMessage()
-            {
-                if (this.terminal.IsVerbose == true)
-                {
-                    return $"{e}";
-                }
-                else
-                {
-                    if (e.InnerException != null)
-                        return e.InnerException.Message;
-                    else
-                        return e.Message;
-                }
-            }
-        }
-
-        #region IServiceProvider
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            return this.GetService(serviceType);
-        }
-
-        #endregion
     }
 }

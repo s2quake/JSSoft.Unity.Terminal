@@ -32,13 +32,9 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    [RequireComponent(typeof(TerminalBase))]
-    [DisallowMultipleComponent]
-    public class CommandContextHost : MonoBehaviour, ICommandCompletor, IServiceProvider
+    public class CommandContextHost : TerminalHostBase, ICommandCompletor
     {
         private CommandContext commandContext;
-        private TerminalBase terminal;
-        private TerminalGridBase grid;
         [TextArea(5, 10)]
         [SerializeField]
         private string text = "type 'help' to help.";
@@ -51,47 +47,41 @@ namespace JSSoft.Terminal.Commands
             set => this.text = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public TerminalBase Terminal => this.terminal;
-
-        public TerminalGridBase Grid => this.grid;
-
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
             var query = from item in this.CollectCommands()
                         where this.isTest == true ||
                               Attribute.GetCustomAttribute(item.GetType(), typeof(TestCommandAttribute)) is null
                         select item;
-            this.commandContext = new CommandContext(this.terminal, query.ToArray());
-            this.commandContext.Out = new CommandWriter(this.terminal);
+            this.commandContext = new CommandContext(this.Terminal, query.ToArray());
+            this.commandContext.Out = new CommandWriter(this.Terminal);
         }
 
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
-            this.grid = this.GetComponent<TerminalGridBase>();
-            this.terminal = this.GetComponent<TerminalBase>();
-            this.terminal.CommandCompletor = this;
-            this.terminal.ResetOutput();
+            base.OnEnable();
+            this.Terminal.CommandCompletor = this;
+            this.Terminal.ResetOutput();
             if (this.text != string.Empty)
-                this.terminal.AppendLine(this.text);
-            this.terminal.CursorPosition = 0;
-            this.terminal.Executing += Terminal_Executing;
+                this.Terminal.AppendLine(this.text);
         }
 
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
-
+            base.OnDisable();
         }
 
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
-            yield return new ResetCommand(this.terminal);
-            yield return new InfoCommand(this.terminal);
-            yield return new ExitCommand(this.terminal);
-            yield return new VerboseCommand(this.terminal);
-            yield return new ResolutionCommand(this.terminal);
-            yield return new PingCommand(this.terminal);
-            yield return new StyleCommand(this.terminal);
-            yield return new TestCommand(this.terminal);
+            yield return new ResetCommand(this.Terminal);
+            yield return new InfoCommand(this.Terminal);
+            yield return new ExitCommand(this.Terminal);
+            yield return new VerboseCommand(this.Terminal);
+            yield return new ResolutionCommand(this.Terminal);
+            yield return new PingCommand(this.Terminal);
+            yield return new StyleCommand(this.Terminal);
+            yield return new TestCommand(this.Terminal);
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)
@@ -99,68 +89,9 @@ namespace JSSoft.Terminal.Commands
             return this.commandContext.GetCompletion(items, find);
         }
 
-        protected virtual object GetService(Type serviceType)
+        protected override Task OnRunAsync(string command)
         {
-            if (serviceType == typeof(ITerminal))
-                return this.terminal;
-            else if (serviceType == typeof(ITerminalGrid))
-                return this.grid;
-            else if (serviceType == typeof(TerminalDispatcher))
-                return this.terminal.Dispatcher;
-            return null;
-        }
-
-        private void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
-        {
-            if (this.terminal.Dispatcher != null)
-            {
-                this.Run(e);
-            }
-            else
-            {
-                this.terminal.AppendLine("dispatcher is null.");
-            }
-        }
-
-        private async void Run(TerminalExecuteEventArgs e)
-        {
-            try
-            {
-                await this.commandContext.ExecuteAsync(this.commandContext.Name, e.Command);
-                e.Success();
-            }
-            catch (System.Reflection.TargetInvocationException ex)
-            {
-                this.AppendException(ex);
-                e.Fail(ex);
-            }
-            catch (Exception ex)
-            {
-                this.AppendException(ex);
-                e.Fail(ex);
-            }
-        }
-
-        private void AppendException(Exception e)
-        {
-            var message = GetMessage();
-            this.terminal.AppendLine(message);
-            Debug.LogError(message);
-
-            string GetMessage()
-            {
-                if (this.terminal.IsVerbose == true)
-                {
-                    return $"{e}";
-                }
-                else
-                {
-                    if (e.InnerException != null)
-                        return e.InnerException.Message;
-                    else
-                        return e.Message;
-                }
-            }
+            return this.commandContext.ExecuteAsync(this.commandContext.Name, command);
         }
 
         #region ICommandCompletor
@@ -168,15 +99,6 @@ namespace JSSoft.Terminal.Commands
         string[] ICommandCompletor.Complete(string[] items, string find)
         {
             return this.GetCompletion(items, find);
-        }
-
-        #endregion
-
-        #region IServiceProvider
-
-        object IServiceProvider.GetService(Type serviceType)
-        {
-            return this.GetService(serviceType);
         }
 
         #endregion
