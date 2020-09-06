@@ -32,6 +32,8 @@ using System.Text;
 
 namespace JSSoft.Terminal.Commands
 {
+    [CommandSummary("Change resolution properties.")]
+    [CommandSummary("해상도 속성을 변경합니다.", Locale = "ko-KR")]
     public class ResolutionCommand : TerminalCommandBase
     {
         public ResolutionCommand(ITerminal terminal)

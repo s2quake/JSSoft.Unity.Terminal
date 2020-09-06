@@ -33,12 +33,13 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
+    [CommandSummary("Change terminal style.")]
+    [CommandSummary("터미널 스타일을 변경합니다.", Locale = "ko-KR")]
     public class StyleCommand : TerminalCommandBase
     {
         public StyleCommand(ITerminal terminal)
             : base(terminal)
         {
-
         }
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)

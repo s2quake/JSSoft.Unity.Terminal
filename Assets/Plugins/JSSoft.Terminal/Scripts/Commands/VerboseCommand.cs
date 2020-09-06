@@ -27,6 +27,8 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
+    [CommandSummary("Displays or sets the details for the message.")]
+    [CommandSummary("메시지에 대한 세부 정보를 표시하거나 설정합니다.", Locale = "ko-KR")]
     public class VerboseCommand : TerminalCommandBase
     {
         public VerboseCommand(ITerminal terminal)

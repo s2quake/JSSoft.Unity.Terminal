@@ -34,12 +34,13 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
+    [CommandSummary("Ping any given IP address.")]
+    [CommandSummary("주어진 IP 주소에 PING 메시지를 보냅니다.", Locale = "ko-KR")]
     public class PingCommand : TerminalCommandAsyncBase
     {
         public PingCommand(ITerminal terminal)
             : base(terminal)
         {
-
         }
 
         [CommandPropertyRequired]

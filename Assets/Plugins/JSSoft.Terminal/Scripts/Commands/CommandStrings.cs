@@ -21,37 +21,13 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using JSSoft.Library.Threading;
+using System.Collections.Generic;
 using JSSoft.Library.Commands;
-using UnityEngine;
-using System.Threading;
-using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Exit the application.")]
-    [CommandSummary("프로그램을 종료합니다.", Locale = "ko-KR")]
-    public class ExitCommand : TerminalCommandBase
+    public class CommandStrings
     {
-        public ExitCommand(ITerminal terminal)
-            : base(terminal)
-        {
-        }
-
-        [CommandSummary("Specifies the exit code. The default is 0.")]
-        [CommandSummary("종료코드를 나타냅니다. 기본값은 0 입니다.", Locale = "ko-KR")]
-        [CommandPropertyRequired(DefaultValue = 0)]
-        public int ExitCode { get; set; }
-
-        protected override void OnExecute()
-        {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            UnityEngine.Application.Quit();
-#endif
-        }
+        
     }
 }
