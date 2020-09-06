@@ -32,8 +32,8 @@ using System.Text;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Change resolution properties.")]
-    [CommandSummary("해상도 속성을 변경합니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.ResolutionCommand.Summary)]
+    [CommandSummary(CommandStrings.ResolutionCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ResolutionCommand : TerminalCommandBase
     {
         public ResolutionCommand(ITerminal terminal)
@@ -41,24 +41,34 @@ namespace JSSoft.Terminal.Commands
         {
         }
 
+        [CommandSummary(CommandStrings.ResolutionCommand.Width.Summary)]
+        [CommandSummary(CommandStrings.ResolutionCommand.Width.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public int Width { get; set; }
 
+        [CommandSummary(CommandStrings.ResolutionCommand.Height.Summary)]
+        [CommandSummary(CommandStrings.ResolutionCommand.Height.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public int Height { get; set; }
 
+        [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary)]
+        [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("window")]
         [CommandPropertyTrigger(nameof(IsFullScreen), false)]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public bool IsWindowMode { get; set; }
 
+        [CommandSummary(CommandStrings.ResolutionCommand.IsFullScreen.Summary)]
+        [CommandSummary(CommandStrings.ResolutionCommand.IsFullScreen.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("full")]
         [CommandPropertyTrigger(nameof(IsWindowMode), false)]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public bool IsFullScreen { get; set; }
 
+        [CommandSummary(CommandStrings.ResolutionCommand.IsList.Summary)]
+        [CommandSummary(CommandStrings.ResolutionCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("list")]
         public bool IsList { get; set; }
 

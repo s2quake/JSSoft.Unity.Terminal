@@ -34,8 +34,8 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Ping any given IP address.")]
-    [CommandSummary("주어진 IP 주소에 PING 메시지를 보냅니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.PingCommand.Summary)]
+    [CommandSummary(CommandStrings.PingCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class PingCommand : TerminalCommandAsyncBase
     {
         public PingCommand(ITerminal terminal)
@@ -43,12 +43,16 @@ namespace JSSoft.Terminal.Commands
         {
         }
 
+        [CommandSummary(CommandStrings.PingCommand.Address.Summary)]
+        [CommandSummary(CommandStrings.PingCommand.Address.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired]
         public string Address
         {
             get; set;
         }
 
+        [CommandSummary(CommandStrings.PingCommand.Count.Summary)]
+        [CommandSummary(CommandStrings.PingCommand.Count.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty]
         [DefaultValue(3)]
         public int Count

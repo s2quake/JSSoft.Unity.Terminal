@@ -34,8 +34,8 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Displays information.")]
-    [CommandSummary("정보를 표시합니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.InfoCommand.Summary)]
+    [CommandSummary(CommandStrings.InfoCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class InfoCommand : TerminalCommandBase
     {
         private static readonly Dictionary<string, Func<string, string>> actions;
@@ -82,6 +82,8 @@ namespace JSSoft.Terminal.Commands
         {
         }
 
+        [CommandSummary(CommandStrings.InfoCommand.PropertyName.Summary)]
+        [CommandSummary(CommandStrings.InfoCommand.PropertyName.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = "")]
         public string PropertyName
         {

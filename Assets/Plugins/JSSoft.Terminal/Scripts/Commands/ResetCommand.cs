@@ -30,8 +30,8 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Initialize the terminal.")]
-    [CommandSummary("터미널을 초기화합니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.ResetCommand.Summary)]
+    [CommandSummary(CommandStrings.ResetCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ResetCommand : TerminalCommandBase
     {
         public ResetCommand(ITerminal terminal)

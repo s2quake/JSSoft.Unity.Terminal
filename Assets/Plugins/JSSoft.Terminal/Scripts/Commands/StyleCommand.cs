@@ -33,8 +33,8 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Change terminal style.")]
-    [CommandSummary("터미널 스타일을 변경합니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.StyleCommand.Summary)]
+    [CommandSummary(CommandStrings.StyleCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class StyleCommand : TerminalCommandBase
     {
         public StyleCommand(ITerminal terminal)
@@ -48,16 +48,22 @@ namespace JSSoft.Terminal.Commands
             return styles.Keys.ToArray();
         }
 
+        [CommandSummary(CommandStrings.StyleCommand.IsList.Summary)]
+        [CommandSummary(CommandStrings.StyleCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("list")]
         [CommandPropertyTrigger(nameof(IsRemove), false)]
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsList { get; set; }
 
+        [CommandSummary(CommandStrings.StyleCommand.IsRemove.Summary)]
+        [CommandSummary(CommandStrings.StyleCommand.IsRemove.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("remove")]
         [CommandPropertyTrigger(nameof(IsList), false)]
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsRemove { get; set; }
 
+        [CommandSummary(CommandStrings.StyleCommand.StyleName.Summary)]
+        [CommandSummary(CommandStrings.StyleCommand.StyleName.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = "")]
         public string StyleName { get; set; }
 

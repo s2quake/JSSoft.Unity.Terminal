@@ -31,8 +31,8 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Displays version.")]
-    [CommandSummary("버전을 표시합니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.VersionCommand.Summary)]
+    [CommandSummary(CommandStrings.VersionCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class VersionCommand : CommandBase
     {
         protected override void OnExecute()

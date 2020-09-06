@@ -31,8 +31,8 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary("Exit the application.")]
-    [CommandSummary("프로그램을 종료합니다.", Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.ExitCommand.Summary)]
+    [CommandSummary(CommandStrings.ExitCommand.Summary_ko_KR)]
     public class ExitCommand : TerminalCommandBase
     {
         public ExitCommand(ITerminal terminal)
@@ -40,8 +40,8 @@ namespace JSSoft.Terminal.Commands
         {
         }
 
-        [CommandSummary("Specifies the exit code. The default is 0.")]
-        [CommandSummary("종료코드를 나타냅니다. 기본값은 0 입니다.", Locale = "ko-KR")]
+        [CommandSummary(CommandStrings.ExitCommand.ExitCode.Summary)]
+        [CommandSummary(CommandStrings.ExitCommand.ExitCode.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = 0)]
         public int ExitCode { get; set; }
 
