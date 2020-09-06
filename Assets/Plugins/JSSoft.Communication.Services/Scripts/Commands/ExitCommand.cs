@@ -40,11 +40,5 @@ namespace JSSoft.Communication.Services.Commands
         {
             this.context = context;    
         }
-        
-        // protected override async Task OnExecuteAsync()
-        // {
-        //     await this.context.ExitAsync();
-        //     await base.OnExecuteAsync();
-        // }
     }
 }
