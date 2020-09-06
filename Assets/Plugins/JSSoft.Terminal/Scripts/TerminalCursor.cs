@@ -60,7 +60,6 @@ namespace JSSoft.Terminal
 
         public TerminalCursor()
         {
-
         }
 
         public TerminalGrid Grid

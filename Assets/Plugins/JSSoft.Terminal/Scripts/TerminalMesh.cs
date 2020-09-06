@@ -38,7 +38,6 @@ namespace JSSoft.Terminal
 
         public TerminalMesh()
         {
-
         }
 
         public void Fill(VertexHelper vertexHelper)

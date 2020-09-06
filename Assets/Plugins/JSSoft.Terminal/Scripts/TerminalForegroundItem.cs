@@ -42,7 +42,6 @@ namespace JSSoft.Terminal
 
         public TerminalForegroundItem()
         {
-
         }
 
         public override Texture mainTexture => this.texture;

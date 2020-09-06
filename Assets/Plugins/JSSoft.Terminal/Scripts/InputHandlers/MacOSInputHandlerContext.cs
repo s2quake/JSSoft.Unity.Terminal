@@ -87,7 +87,6 @@ namespace JSSoft.Terminal.InputHandlers
 
         public override void PointerClick(PointerEventData eventData)
         {
-
         }
 
         public override void PointerDown(PointerEventData eventData)
@@ -130,12 +129,10 @@ namespace JSSoft.Terminal.InputHandlers
 
         public override void PointerEnter(PointerEventData eventData)
         {
-
         }
 
         public override void PointerExit(PointerEventData eventData)
         {
-
         }
 
         public override void PointerUp(PointerEventData eventData)
@@ -177,7 +174,6 @@ namespace JSSoft.Terminal.InputHandlers
 
         public override void Update(BaseEventData eventData)
         {
-
         }
 
         private void UpdateSelecting()

@@ -26,7 +26,6 @@ namespace JSSoft.Terminal.InputHandlers
     {
         public IOSInputHandler()
         {
-
         }
 
         protected override IOSInputHandlerContext CreateContext(ITerminalGrid grid)

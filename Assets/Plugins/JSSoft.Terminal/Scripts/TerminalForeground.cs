@@ -49,7 +49,6 @@ namespace JSSoft.Terminal
 
         public TerminalForeground()
         {
-
         }
 
         public TerminalGrid Grid

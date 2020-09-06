@@ -38,7 +38,6 @@ namespace JSSoft.Terminal
 
         public TerminalCompositionBackground()
         {
-
         }
 
         public TerminalGrid Grid => this.composition?.Grid;

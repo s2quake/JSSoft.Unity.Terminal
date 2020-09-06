@@ -38,7 +38,6 @@ namespace JSSoft.Terminal
 
         public TerminalBackground()
         {
-
         }
 
         public TerminalGrid Grid

@@ -55,7 +55,6 @@ namespace JSSoft.Communication.Services
 
         public ClientBehaviour()
         {
-
         }
 
         protected virtual void Awake()

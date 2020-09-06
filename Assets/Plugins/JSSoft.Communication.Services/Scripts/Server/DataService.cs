@@ -33,7 +33,6 @@ namespace JSSoft.Communication.Services.Server
 
         public DataService()
         {
-
         }
 
         public Task<DateTime> CreateDataBaseAsync(string dataBaseName)

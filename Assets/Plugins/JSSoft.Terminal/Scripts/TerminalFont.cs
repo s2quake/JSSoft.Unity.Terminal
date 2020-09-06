@@ -138,12 +138,10 @@ namespace JSSoft.Terminal
 
         protected virtual void Awake()
         {
-
         }
 
         protected virtual void OnDestroy()
         {
-
         }
 
         protected virtual void OnEnable()

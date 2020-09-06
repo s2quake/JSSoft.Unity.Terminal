@@ -32,7 +32,6 @@ namespace JSSoft.Communication.Services
         public ServerContext(params IServiceHost[] serviceHosts)
             : base(serviceHosts)
         {
-
         }
     }
 }

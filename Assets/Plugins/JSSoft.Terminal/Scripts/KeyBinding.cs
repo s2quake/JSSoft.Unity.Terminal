@@ -33,13 +33,11 @@ namespace JSSoft.Terminal
         public KeyBinding(EventModifiers modifiers, KeyCode key, Func<T, bool> action)
             : this(modifiers, key, action, (obj) => true)
         {
-
         }
 
         public KeyBinding(EventModifiers modifiers, KeyCode key, Action<T> action)
             : this(modifiers, key, action, (obj) => true)
         {
-
         }
 
         public KeyBinding(EventModifiers modifiers, KeyCode key, Action<T> action, Func<T, bool> verify)

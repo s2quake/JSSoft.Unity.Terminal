@@ -734,8 +734,6 @@ namespace JSSoft.Terminal
 
         protected virtual bool IsValidCharacter(char character)
         {
-            // if (character == '\n')
-            //     return false;
             return true;
         }
 
@@ -849,7 +847,6 @@ namespace JSSoft.Terminal
             this.notifier.SetField(ref this.prompt, prompt, nameof(Prompt));
             this.notifier.SetField(ref this.promptText, prompt + this.command, nameof(PromptText));
             this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
-            // this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
             this.notifier.SetField(ref this.isExecuting, false, nameof(IsExecuting));
             this.RefreshIndex();
             this.promptBlock.Text = this.prompt;

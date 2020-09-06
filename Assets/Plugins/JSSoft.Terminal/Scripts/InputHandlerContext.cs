@@ -28,57 +28,46 @@ namespace JSSoft.Terminal
     {
         public virtual void Select(BaseEventData eventData)
         {
-
         }
 
         public virtual void Deselect(BaseEventData eventData)
         {
-
         }
 
         public virtual void Update(BaseEventData eventData)
         {
-
         }
 
         public virtual void BeginDrag(PointerEventData eventData)
         {
-
         }
 
         public virtual void Drag(PointerEventData eventData)
         {
-
         }
 
         public virtual void EndDrag(PointerEventData eventData)
         {
-
         }
 
         public virtual void PointerClick(PointerEventData eventData)
         {
-
         }
 
         public virtual void PointerDown(PointerEventData eventData)
         {
-
         }
 
         public virtual void PointerEnter(PointerEventData eventData)
         {
-
         }
 
         public virtual void PointerExit(PointerEventData eventData)
         {
-
         }
 
         public virtual void PointerUp(PointerEventData eventData)
         {
-
         }
 
         public virtual void Attach(ITerminalGrid grid)

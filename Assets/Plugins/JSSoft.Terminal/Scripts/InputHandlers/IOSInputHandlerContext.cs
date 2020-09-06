@@ -139,12 +139,10 @@ namespace JSSoft.Terminal.InputHandlers
 
         public override void PointerEnter(PointerEventData eventData)
         {
-
         }
 
         public override void PointerExit(PointerEventData eventData)
         {
-
         }
 
         public override void PointerUp(PointerEventData eventData)

@@ -42,7 +42,6 @@ namespace JSSoft.Terminal.Editor
         public EditorPropertyNotifier(UnityEditor.Editor editor)
             : this(editor, (items) => InvokeEvent(editor, items))
         {
-
         }
 
         public EditorPropertyNotifier(UnityEditor.Editor editor, Action<string[]> action)

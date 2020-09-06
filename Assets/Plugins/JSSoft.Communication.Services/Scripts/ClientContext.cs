@@ -31,7 +31,6 @@ namespace JSSoft.Communication.Services
         public ClientContext(params IServiceHost[] serviceHosts)
             : base(serviceHosts)
         {
-
         }
 
         protected override InstanceBase CreateInstance(Type type)

@@ -202,12 +202,10 @@ namespace JSSoft.Terminal
 
         protected override void Start()
         {
-
         }
 
         protected override void OnDestroy()
         {
-
         }
 
         protected override void OnEnable()

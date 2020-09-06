@@ -38,17 +38,14 @@ namespace JSSoft.Communication.Services
 
         public void Error(object message)
         {
-
         }
 
         public void Warn(object message)
         {
-
         }
 
         public void Fatal(object message)
         {
-
         }
     }
 }
