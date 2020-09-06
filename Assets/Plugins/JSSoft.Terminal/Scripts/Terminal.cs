@@ -66,7 +66,7 @@ namespace JSSoft.Terminal
         [SerializeField]
         private bool isVerbose;
         private int cursorPosition;
-        private int outputIndex;
+        private int outputIndex = 0;
         private int progressIndex;
         private int promptIndex;
         private int commandIndex;

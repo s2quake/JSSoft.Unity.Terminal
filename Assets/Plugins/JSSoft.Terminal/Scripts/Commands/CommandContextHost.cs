@@ -72,6 +72,12 @@ namespace JSSoft.Terminal.Commands
             base.OnDisable();
         }
 
+        protected override void OnException(Exception e, string message)
+        {
+            base.OnException(e, message);
+            UnityEngine.Debug.LogError(message);
+        }
+
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
             yield return new ResetCommand(this.Terminal);

@@ -20,35 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using UnityEngine;
+
 namespace JSSoft.Terminal
 {
-    public class SyntaxHighlighter : ISyntaxHighlighter
+    public class TerminalKeyPressEventArgs : EventArgs
     {
-        public void Highlight(TerminalTextType textType, string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
+        public TerminalKeyPressEventArgs(char character)
         {
-            switch (textType)
-            {
-                case TerminalTextType.Command:
-                    {
-                        this.HighlightCommand(text, foregroundColors, backgroundColors);
-                    }
-                    break;
-                case TerminalTextType.Progress:
-                    {
-                        this.HighlightProgress(text, foregroundColors, backgroundColors);
-                    }
-                    break;
-            }
+            this.Character = character;
         }
 
-        public static SyntaxHighlighter Default { get; } = new SyntaxHighlighter();
+        public char Character { get; }
 
-        private void HighlightCommand(string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
-        {
-        }
-
-        private void HighlightProgress(string text, TerminalColor?[] foregroundColors, TerminalColor?[] backgroundColors)
-        {
-        }
+        public bool Handled { get; set; }
     }
 }

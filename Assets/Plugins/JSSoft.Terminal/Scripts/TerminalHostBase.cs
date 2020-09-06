@@ -48,6 +48,10 @@ namespace JSSoft.Terminal
             set => this.isAsync = value;
         }
 
+        protected virtual void Awake()
+        {
+        }
+
         protected virtual void Start()
         {
         }
@@ -60,6 +64,11 @@ namespace JSSoft.Terminal
         }
 
         protected virtual void OnDisable()
+        {
+            this.terminal.Executing -= Terminal_Executing;
+        }
+
+        protected virtual void OnDestroy()
         {
         }
 

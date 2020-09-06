@@ -44,23 +44,29 @@ namespace JSSoft.Javascript
         private Engine engine;
         private TextWriter consoleWriter;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            this.engine = new Engine(cfg => cfg.AllowClr());
+            this.engine.SetValue("print", new Action<object>((obj) => this.Terminal.AppendLine($"{obj}")));
+            this.engine.SetValue("load", new Func<string, object>(path => engine.Execute(File.ReadAllText(path)).GetCompletionValue()));
+            this.IsAsync = false;
+            this.consoleWriter = Console.Out;
+        }
+
         protected override void Start()
         {
-
+            base.Start();
+            this.IsAsync = false;
+            this.Terminal.AppendLine($"Welcome to Jint ({this.Version})");
+            this.Terminal.AppendLine("Type 'exit' to leave, 'print()' to write on the console, 'load()' to load scripts.");
+            this.Terminal.AppendLine();
+            this.Terminal.Prompt = "jint> ";
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.engine = new Engine(cfg => cfg.AllowClr());
-            this.engine.SetValue("print", new Action<object>((obj) => this.Terminal.AppendLine($"{obj}")));
-            this.engine.SetValue("load", new Func<string, object>(path => engine.Execute(File.ReadAllText(path)).GetCompletionValue()));
-            this.Terminal.AppendLine($"Welcome to Jint ({this.Version})");
-            this.Terminal.AppendLine("Type 'exit' to leave, 'print()' to write on the console, 'load()' to load scripts.");
-            this.Terminal.AppendLine();
-            this.Terminal.Prompt = "jint> ";
-            this.IsAsync = false;
-            this.consoleWriter = Console.Out;
             Console.SetOut(new TerminalTextWriter(this.Terminal));
         }
 

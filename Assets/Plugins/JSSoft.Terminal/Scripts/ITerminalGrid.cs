@@ -150,5 +150,7 @@ namespace JSSoft.Terminal
         event EventHandler Enabled;
 
         event EventHandler Disabled;
+
+        event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
     }
 }

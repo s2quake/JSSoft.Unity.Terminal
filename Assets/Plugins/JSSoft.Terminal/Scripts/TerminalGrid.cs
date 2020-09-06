@@ -664,11 +664,13 @@ namespace JSSoft.Terminal
 
         public override event EventHandler Validated;
 
+        public override event PropertyChangedEventHandler PropertyChanged;
+
         public override event EventHandler Enabled;
 
         public override event EventHandler Disabled;
 
-        public override event PropertyChangedEventHandler PropertyChanged;
+        public override event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
 
         internal TerminalCell GetCell(TerminalPoint point)
         {
@@ -721,6 +723,11 @@ namespace JSSoft.Terminal
             this.Validated?.Invoke(this, e);
         }
 
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
+        }
+
         protected virtual void OnEnabled(EventArgs e)
         {
             this.Enabled?.Invoke(this, e);
@@ -731,9 +738,9 @@ namespace JSSoft.Terminal
             this.Disabled?.Invoke(this, e);
         }
 
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected virtual void OnKeyPressed(TerminalKeyPressEventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, e);
+            this.KeyPressed?.Invoke(this, e);
         }
 
 #if UNITY_EDITOR
@@ -811,6 +818,10 @@ namespace JSSoft.Terminal
 
         protected virtual bool OnPreviewKeyPress(char character)
         {
+            var args = new TerminalKeyPressEventArgs(character);
+            this.OnKeyPressed(args);
+            if (args.Handled == true)
+                return true;
             if (character == '\t' || character == 27 || character == 25)
                 return true;
             return false;
