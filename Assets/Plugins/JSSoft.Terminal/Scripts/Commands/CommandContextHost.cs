@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using JSSoft.Terminal.Tasks;
+using System.IO;
 
 namespace JSSoft.Terminal.Commands
 {
@@ -40,11 +41,18 @@ namespace JSSoft.Terminal.Commands
         private string text = "type 'help' to help.";
         [SerializeField]
         private bool isTest = false;
+        private TextWriter consoleWriter;
 
         public string Text
         {
             get => this.text;
             set => this.text = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            this.consoleWriter = Console.Out;
         }
 
         protected override void Start()
@@ -65,10 +73,12 @@ namespace JSSoft.Terminal.Commands
             this.Terminal.ResetOutput();
             if (this.text != string.Empty)
                 this.Terminal.AppendLine(this.text);
+                Console.SetOut(new TerminalTextWriter(this.Terminal));
         }
 
         protected override void OnDisable()
         {
+            Console.SetOut(this.consoleWriter);
             base.OnDisable();
         }
 

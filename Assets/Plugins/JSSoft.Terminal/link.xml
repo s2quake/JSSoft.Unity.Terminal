@@ -1,11 +1,9 @@
 <linker>
     <assembly fullname="System" preserve="all">
-        <type fullname="System.ComponentModel.NullableConverter" preserve="all" />
+        <type fullname="System*" preserve="all" />
     </assembly>
-    <assembly fullname="JSSoft.Library.Commands">
-        <type fullname="JSSoft.Library.Commands*" preserve="all" />
-    </assembly>
-    <assembly fullname="JSSoft.Communication">
-        <type fullname="JSSoft.Communication*" preserve="all" />
-    </assembly>
+    <assembly fullname="JSSoft.Library.Commands" preserve="all" />
+    <assembly fullname="JSSoft.Library" preserve="all" />
+    <assembly fullname="JSSoft.Library.Commands.resources" preserve="all" />
+    <assembly fullname="JSSoft.Library.resources" preserve="all" />
 </linker>
