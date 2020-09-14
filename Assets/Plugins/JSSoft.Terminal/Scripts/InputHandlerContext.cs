@@ -73,17 +73,15 @@ namespace JSSoft.Terminal
         public virtual void Attach(ITerminalGrid grid)
         {
             this.Grid = grid;
-            this.Terminal = grid.Terminal;
         }
 
         public virtual void Detach(ITerminalGrid grid)
         {
             this.Grid = null;
-            this.Terminal = null;
         }
 
         public ITerminalGrid Grid { get; private set; }
 
-        public ITerminal Terminal { get; private set; }
+        public ITerminal Terminal => this.Grid != null ? this.Grid.Terminal : null;
     }
 }

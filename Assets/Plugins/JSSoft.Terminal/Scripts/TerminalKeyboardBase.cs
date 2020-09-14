@@ -137,8 +137,8 @@ namespace JSSoft.Terminal
         {
             this.Canceled?.Invoke(this, e);
         }
-        protected virtual void OnChanged(TerminalKeyboardEventArgs e)
 
+        protected virtual void OnChanged(TerminalKeyboardEventArgs e)
         {
             this.Changed?.Invoke(this, e);
         }

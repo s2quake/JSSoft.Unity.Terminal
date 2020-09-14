@@ -36,7 +36,7 @@ namespace JSSoft.Terminal.KeyBindings
                 return TerminalKeyBindings.TerminalOnMacOS;
             else if (TerminalEnvironment.IsWindows == true)
                 return TerminalKeyBindings.TerminalOnWindows;
-            throw new NotImplementedException();
+            return TerminalKeyBindings.Common;
         }
 
         public static readonly IKeyBindingCollection Common = new KeyBindingCollection("Terminal Key Bindings")

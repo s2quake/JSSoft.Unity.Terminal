@@ -52,7 +52,7 @@ namespace JSSoft.Terminal.InputHandlers
             }
         }
 
-#if UNITY_IOS
+#if UNITY_IOS || UNITY_ANDROID
         public override Rect Area => TouchScreenKeyboard.area;
 #else
         public override Rect Area => default(Rect);

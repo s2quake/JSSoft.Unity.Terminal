@@ -20,34 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-
-namespace JSSoft.Terminal
+namespace JSSoft.Terminal.InputHandlers
 {
-    public static class InputHandlerInstances
+    class AndroidInputHandler : InputHandler<AndroidInputHandlerContext>
     {
-        public static IInputHandler DefaultHandler
+        public AndroidInputHandler()
         {
-            get
-            {
-                if (TerminalEnvironment.IsMac == true)
-                    return MacOSInputHandler;
-                else if (TerminalEnvironment.IsWindows == true)
-                    return WindowsInputHandler;
-                else if (TerminalEnvironment.IsIPhone == true)
-                    return IOSInputHandler;
-                else if (TerminalEnvironment.IsAndroid == true)
-                    return AndroidInputHandler;
-                throw new NotImplementedException();
-            }
         }
 
-        public static IInputHandler MacOSInputHandler { get; } = new InputHandlers.MacOSInputHandler();
-
-        public static IInputHandler WindowsInputHandler { get; } = new InputHandlers.WindowsInputHandler();
-
-        public static IInputHandler IOSInputHandler { get; } = new InputHandlers.IOSInputHandler();
-
-        public static IInputHandler AndroidInputHandler { get; } = new InputHandlers.AndroidInputHandler();
+        protected override AndroidInputHandlerContext CreateContext(ITerminalGrid grid)
+        {
+            return new AndroidInputHandlerContext();
+        }
     }
 }

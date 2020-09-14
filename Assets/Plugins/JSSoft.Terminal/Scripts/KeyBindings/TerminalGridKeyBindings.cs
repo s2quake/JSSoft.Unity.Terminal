@@ -38,7 +38,7 @@ namespace JSSoft.Terminal.KeyBindings
                 return TerminalGridKeyBindings.TerminalOnMacOS;
             else if (TerminalEnvironment.IsWindows == true)
                 return TerminalGridKeyBindings.TerminalOnWindows;
-            throw new NotImplementedException();
+            return TerminalGridKeyBindings.Common;
         }
         public static readonly IKeyBindingCollection Common = new KeyBindingCollection("Terminal Grid Common Key Bindings")
         {

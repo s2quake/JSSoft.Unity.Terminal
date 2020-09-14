@@ -29,7 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class IOSInputHandlerContext : InputHandlerContext
+    class AndroidInputHandlerContext : InputHandlerContext
     {
         private const float scrollSpeed = 1.0f;
         private const float scrollStopSpeed = 100.0f;
@@ -55,7 +55,7 @@ namespace JSSoft.Terminal.InputHandlers
         private float downTime;
         private float scrollDelta;
 
-        public IOSInputHandlerContext()
+        public AndroidInputHandlerContext()
         {
         }
 
@@ -194,7 +194,7 @@ namespace JSSoft.Terminal.InputHandlers
             }
 
             this.swiper.Update();
-            this.keyboard.Update();
+            // this.keyboard.Update();
         }
 
         public override void Attach(ITerminalGrid grid)

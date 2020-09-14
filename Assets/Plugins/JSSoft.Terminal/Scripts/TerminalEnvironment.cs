@@ -31,5 +31,7 @@ namespace JSSoft.Terminal
         public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
 
         public static bool IsIPhone => (Application.platform == RuntimePlatform.IPhonePlayer);
+
+        public static bool IsAndroid => (Application.platform == RuntimePlatform.Android);
     }
 }
