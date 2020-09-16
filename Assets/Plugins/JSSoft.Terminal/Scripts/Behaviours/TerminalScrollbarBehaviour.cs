@@ -25,11 +25,11 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal.Behaviours
 {
-    public class MacOSScrollbarBehaviour : TerminalBehaviourBase
+    public class TerminalScrollbarBehaviour : TerminalBehaviourBase
     {
         protected override void OnAttach(ITerminalGrid grid)
         {
-             var gameObject = grid.GameObject;
+            var gameObject = grid.GameObject;
             var scrollbar = gameObject.GetComponentInChildren<TerminalScrollbar>();
             var scrollbarImage = scrollbar.GetComponent<Image>();
             var handleRect = scrollbar.handleRect;
@@ -45,7 +45,7 @@ namespace JSSoft.Terminal.Behaviours
 
         protected override void OnDetach(ITerminalGrid grid)
         {
-           
+
         }
     }
 }

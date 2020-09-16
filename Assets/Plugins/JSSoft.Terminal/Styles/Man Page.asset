@@ -12,18 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9634ed125b5c34d6abf655ba2dd59090, type: 3}
   m_Name: Man Page
   m_EditorClassIdentifier: 
+  styleName: 
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
   backgroundColor: {r: 0.99607843, g: 0.95686275, b: 0.57254905, a: 1}
   foregroundColor: {r: 0, g: 0, b: 0, a: 1}
   selectionColor: {r: 0.7490196, g: 0.72156864, b: 0.45882353, a: 1}
   cursorColor: {r: 0.54509807, g: 0.54509807, b: 0.54509807, a: 1}
-  compositionColor: {r: 0, g: 0, b: 0, a: 1}
   colorPallete: {fileID: 11400000, guid: 1032e140c69e644e19985a161f1598a6, type: 2}
-  padding:
-    left: 2
-    top: 2
-    right: 2
-    bottom: 2
   cursorStyle: 0
   cursorThickness: 2
   isCursorBlinkable: 0
@@ -32,3 +27,4 @@ MonoBehaviour:
   behaviourList:
   - {fileID: 11400000, guid: ed41edde8f02ee44f9c50e3e42663707, type: 2}
   - {fileID: 11400000, guid: 150ab82340cb3004e88610d1ce858dd2, type: 2}
+  - {fileID: 11400000, guid: bcd9bdb6c155fd842ae12186e6758198, type: 2}

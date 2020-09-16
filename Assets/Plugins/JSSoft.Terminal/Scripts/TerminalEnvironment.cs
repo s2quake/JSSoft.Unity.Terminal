@@ -33,5 +33,7 @@ namespace JSSoft.Terminal
         public static bool IsIPhone => (Application.platform == RuntimePlatform.IPhonePlayer);
 
         public static bool IsAndroid => (Application.platform == RuntimePlatform.Android);
+
+        public static bool IsStandalone => IsMac == true || IsWindows == true;
     }
 }

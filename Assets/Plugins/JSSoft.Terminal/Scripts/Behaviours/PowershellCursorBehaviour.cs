@@ -20,20 +20,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using UnityEngine;
+
 namespace JSSoft.Terminal.Behaviours
 {
-    public class MacOSInputBehaviour : TerminalBehaviourBase
+    public class PowershellCursorBehaviour : TerminalBehaviourBase
     {
-        private static readonly IInputHandler windowsInputHandler = new InputHandlers.MacOSInputHandler();
-
         protected override void OnAttach(ITerminalGrid grid)
         {
-            grid.InputHandler = windowsInputHandler;
+            grid.GotFocus += Grid_GotFocus;
+            grid.LostFocus += Grid_LostFocus;
+            if (Application.isPlaying == true)
+                grid.IsCursorVisible = grid.IsFocused;
+            else
+                grid.IsCursorVisible = true;
         }
 
         protected override void OnDetach(ITerminalGrid grid)
         {
-            grid.InputHandler = null;
+            grid.GotFocus -= Grid_GotFocus;
+            grid.LostFocus -= Grid_LostFocus;
+            grid.IsCursorVisible = true;
+        }
+
+        private void Grid_GotFocus(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid && Application.isPlaying == true)
+            {
+                grid.IsCursorVisible = true;
+            }
+        }
+
+        private void Grid_LostFocus(object sender, EventArgs e)
+        {
+            if (sender is ITerminalGrid grid && Application.isPlaying == true)
+            {
+                grid.IsCursorVisible = false;
+            }
         }
     }
 }

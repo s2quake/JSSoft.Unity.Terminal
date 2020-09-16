@@ -25,7 +25,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal.Behaviours
 {
-    public class WindowsScrollbarBehaviour : TerminalBehaviourBase
+    public class PowershellScrollbarBehaviour : TerminalBehaviourBase
     {
         protected override void OnAttach(ITerminalGrid grid)
         {

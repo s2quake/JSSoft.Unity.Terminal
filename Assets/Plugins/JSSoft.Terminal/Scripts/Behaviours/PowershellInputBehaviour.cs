@@ -22,18 +22,20 @@
 
 namespace JSSoft.Terminal.Behaviours
 {
-    public class IOSInputBehaviour : TerminalBehaviourBase
+    public class PowershellInputBehaviour : TerminalBehaviourBase
     {
-        private static readonly IInputHandler windowsInputHandler = new InputHandlers.IOSInputHandler();
+        private static readonly IInputHandler windowsInputHandler = new InputHandlers.WindowsInputHandler();
 
         protected override void OnAttach(ITerminalGrid grid)
         {
-            grid.InputHandler = windowsInputHandler;
+            if (TerminalEnvironment.IsStandalone == true)
+                grid.InputHandler = windowsInputHandler;
         }
 
         protected override void OnDetach(ITerminalGrid grid)
         {
-            grid.InputHandler = null;
+            if (TerminalEnvironment.IsStandalone == true)
+                grid.InputHandler = null;
         }
     }
 }

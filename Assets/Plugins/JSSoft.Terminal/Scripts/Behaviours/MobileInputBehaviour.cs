@@ -20,44 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using UnityEngine;
-
 namespace JSSoft.Terminal.Behaviours
 {
-    public class WindowsCursorBehaviour : TerminalBehaviourBase
+    public class MobileInputBehaviour : TerminalBehaviourBase
     {
+        private static readonly IInputHandler inputHandler = new InputHandlers.IOSInputHandler();
+
         protected override void OnAttach(ITerminalGrid grid)
         {
-            grid.GotFocus += Grid_GotFocus;
-            grid.LostFocus += Grid_LostFocus;
-            if (Application.isPlaying == true)
-                grid.IsCursorVisible = grid.IsFocused;
-            else
-                grid.IsCursorVisible = true;
+            if (TerminalEnvironment.IsIPhone == true)
+                grid.InputHandler = inputHandler;
         }
 
         protected override void OnDetach(ITerminalGrid grid)
         {
-            grid.GotFocus -= Grid_GotFocus;
-            grid.LostFocus -= Grid_LostFocus;
-            grid.IsCursorVisible = true;
-        }
-
-        private void Grid_GotFocus(object sender, EventArgs e)
-        {
-            if (sender is ITerminalGrid grid && Application.isPlaying == true)
-            {
-                grid.IsCursorVisible = true;
-            }
-        }
-
-        private void Grid_LostFocus(object sender, EventArgs e)
-        {
-            if (sender is ITerminalGrid grid && Application.isPlaying == true)
-            {
-                grid.IsCursorVisible = false;
-            }
+            if (TerminalEnvironment.IsIPhone == true)
+                grid.InputHandler = null;
         }
     }
 }
