@@ -25,7 +25,7 @@ using UnityEngine.EventSystems;
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class MacOSInputHandlerContext : InputHandlerContext
+    class TerminalInputHandlerContext : InputHandlerContext
     {
         private static Texture2D cursorTexture;
         private readonly float clickThreshold = 0.5f;

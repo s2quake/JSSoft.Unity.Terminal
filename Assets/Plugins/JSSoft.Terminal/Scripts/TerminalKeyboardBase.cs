@@ -33,6 +33,13 @@ namespace JSSoft.Terminal
         private Rect area;
         private bool isOpened;
 
+        protected TerminalKeyboardBase()
+        {
+            this.Opened += (s, e) => Current = this;
+            this.Done += (s, e) => Current = null;
+            this.Canceled += (s, e) => Current = null;
+        }
+
         public void Open(ITerminalGrid grid, string text)
         {
             if (this.isOpened == true)
@@ -108,6 +115,8 @@ namespace JSSoft.Terminal
         public ITerminalGrid Grid => this.grid;
 
         public ITerminal Terminal => this.grid?.Terminal;
+
+        public static TerminalKeyboardBase Current { get; private set; }
 
         public event EventHandler<TerminalKeyboardEventArgs> Opened;
 

@@ -29,7 +29,7 @@ using System.ComponentModel;
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class WindowsInputHandlerContext : InputHandlerContext
+    class PowershellInputHandlerContext : InputHandlerContext
     {
         private static Texture2D cursorTexture;
         private readonly float clickThreshold = 0.5f;
@@ -302,7 +302,8 @@ namespace JSSoft.Terminal.InputHandlers
             if (oldPoint == newPoint)
             {
                 this.Selections.Clear();
-                this.Selections.Add(this.SelectingRange);
+                if (this.SelectingRange != TerminalRange.Empty)
+                    this.Selections.Add(this.SelectingRange);
                 this.SelectingRange = TerminalRange.Empty;
                 if (this.downCount == 2)
                 {

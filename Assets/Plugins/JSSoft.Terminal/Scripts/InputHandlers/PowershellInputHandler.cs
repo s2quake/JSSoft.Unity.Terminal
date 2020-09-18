@@ -22,16 +22,16 @@
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class MacOSInputHandler : InputHandler<MacOSInputHandlerContext>
+    class PowershellInputHandler : InputHandler<PowershellInputHandlerContext>
     {
-        public MacOSInputHandler()
+        public PowershellInputHandler()
         {
             
         }
 
-        protected override MacOSInputHandlerContext CreateContext(ITerminalGrid grid)
+        protected override PowershellInputHandlerContext CreateContext(ITerminalGrid grid)
         {
-            return new MacOSInputHandlerContext();
+            return new PowershellInputHandlerContext();
         }
     }
 }

@@ -22,15 +22,15 @@
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class IOSInputHandler : InputHandler<IOSInputHandlerContext>
+    class TerminalInputHandler : InputHandler<TerminalInputHandlerContext>
     {
-        public IOSInputHandler()
+        public TerminalInputHandler()
         {
         }
 
-        protected override IOSInputHandlerContext CreateContext(ITerminalGrid grid)
+        protected override TerminalInputHandlerContext CreateContext(ITerminalGrid grid)
         {
-            return new IOSInputHandlerContext();
+            return new TerminalInputHandlerContext();
         }
     }
 }

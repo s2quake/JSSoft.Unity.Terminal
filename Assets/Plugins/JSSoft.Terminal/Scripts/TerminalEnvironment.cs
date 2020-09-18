@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace JSSoft.Terminal
 {
@@ -34,6 +37,18 @@ namespace JSSoft.Terminal
 
         public static bool IsAndroid => (Application.platform == RuntimePlatform.Android);
 
+#if UNITY_EDITOR
+        public static bool IsStandalone => EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneOSX ||
+                                           EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows ||
+                                           EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64;
+
+        public static bool IsMobile => EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ||
+                                       EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS;
+#else
         public static bool IsStandalone => IsMac == true || IsWindows == true;
+
+        public static bool IsMobile => IsIPhone == true || IsAndroid == true;
+#endif
+
     }
 }

@@ -195,7 +195,7 @@ namespace JSSoft.Terminal
 
         public override void Focus()
         {
-            if (EventSystem.current != null)
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != this.gameObject)
             {
                 EventSystem.current.SetSelectedGameObject(this.gameObject);
             }

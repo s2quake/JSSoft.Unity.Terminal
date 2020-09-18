@@ -24,12 +24,12 @@ namespace JSSoft.Terminal.Behaviours
 {
     public class PowershellInputBehaviour : TerminalBehaviourBase
     {
-        private static readonly IInputHandler windowsInputHandler = new InputHandlers.WindowsInputHandler();
+        private static readonly IInputHandler inputHandler = new InputHandlers.PowershellInputHandler();
 
         protected override void OnAttach(ITerminalGrid grid)
         {
             if (TerminalEnvironment.IsStandalone == true)
-                grid.InputHandler = windowsInputHandler;
+                grid.InputHandler = inputHandler;
         }
 
         protected override void OnDetach(ITerminalGrid grid)

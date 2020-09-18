@@ -39,6 +39,7 @@ namespace JSSoft.Terminal
 
         private readonly HashSet<ITerminalGrid> grids = new HashSet<ITerminalGrid>();
         private VerticalLayoutGroup layoutGroup;
+        private ITerminalKeyboard keyboard;
 
         [FieldName(nameof(terminalLayout))]
         public LayoutElement TerminalLayout
@@ -63,6 +64,14 @@ namespace JSSoft.Terminal
                 {
                     this.keyboardLayout = value;
                 }
+            }
+        }
+
+        protected virtual void Update()
+        {
+            if (this.keyboard != null && this.keyboard.Area.height != this.keyboardLayout.preferredHeight)
+            {
+                this.keyboardLayout.preferredHeight = this.keyboard.Area.height;
             }
         }
 
@@ -95,6 +104,7 @@ namespace JSSoft.Terminal
             {
                 this.grids.Add(keyboard.Grid);
                 this.UpdateLayout(keyboard);
+                this.keyboard = keyboard;
             }
         }
 
@@ -104,6 +114,7 @@ namespace JSSoft.Terminal
             {
                 this.keyboardLayout.ignoreLayout = true;
                 this.grids.Remove(keyboard.Grid);
+                this.keyboard = null;
             }
         }
 
@@ -113,6 +124,7 @@ namespace JSSoft.Terminal
             {
                 this.keyboardLayout.ignoreLayout = true;
                 this.grids.Remove(keyboard.Grid);
+                this.keyboard = null;
             }
         }
 

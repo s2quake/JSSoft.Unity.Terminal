@@ -24,7 +24,7 @@ namespace JSSoft.Terminal.Behaviours
 {
     public class TerminalInputBehaviour : TerminalBehaviourBase
     {
-        private static readonly IInputHandler inputHandler = new InputHandlers.MacOSInputHandler();
+        private static readonly IInputHandler inputHandler = new InputHandlers.TerminalInputHandler();
 
         protected override void OnAttach(ITerminalGrid grid)
         {

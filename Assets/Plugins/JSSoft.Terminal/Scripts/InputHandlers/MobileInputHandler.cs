@@ -22,15 +22,15 @@
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class AndroidInputHandler : InputHandler<AndroidInputHandlerContext>
+    class MobileInputHandler : InputHandler<MobileInputHandlerContext>
     {
-        public AndroidInputHandler()
+        public MobileInputHandler()
         {
         }
 
-        protected override AndroidInputHandlerContext CreateContext(ITerminalGrid grid)
+        protected override MobileInputHandlerContext CreateContext(ITerminalGrid grid)
         {
-            return new AndroidInputHandlerContext();
+            return new MobileInputHandlerContext();
         }
     }
 }

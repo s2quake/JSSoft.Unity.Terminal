@@ -20,21 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using UnityEditor;
+using UnityEngine;
+
 namespace JSSoft.Terminal.Behaviours
 {
     public class MobileInputBehaviour : TerminalBehaviourBase
     {
-        private static readonly IInputHandler inputHandler = new InputHandlers.IOSInputHandler();
+        private static readonly IInputHandler inputHandler = new InputHandlers.MobileInputHandler();
 
         protected override void OnAttach(ITerminalGrid grid)
         {
-            if (TerminalEnvironment.IsIPhone == true)
+            if (TerminalEnvironment.IsMobile == true)
                 grid.InputHandler = inputHandler;
         }
 
         protected override void OnDetach(ITerminalGrid grid)
         {
-            if (TerminalEnvironment.IsIPhone == true)
+            if (TerminalEnvironment.IsMobile == true)
                 grid.InputHandler = null;
         }
     }

@@ -30,24 +30,24 @@ namespace JSSoft.Terminal
         {
             get
             {
-                if (TerminalEnvironment.IsMac == true)
-                    return MacOSInputHandler;
-                else if (TerminalEnvironment.IsWindows == true)
-                    return WindowsInputHandler;
-                else if (TerminalEnvironment.IsIPhone == true)
-                    return IOSInputHandler;
-                else if (TerminalEnvironment.IsAndroid == true)
-                    return AndroidInputHandler;
+                if (TerminalEnvironment.IsStandalone == true)
+                {
+                    if (TerminalEnvironment.IsWindows == true)
+                        return PowershellInputHandler;
+                    return TerminalInputHandler;
+                }
+                else if (TerminalEnvironment.IsMobile == true)
+                {
+                    return MobileInputHandler;
+                }
                 throw new NotImplementedException();
             }
         }
 
-        public static IInputHandler MacOSInputHandler { get; } = new InputHandlers.MacOSInputHandler();
+        public static IInputHandler TerminalInputHandler { get; } = new InputHandlers.TerminalInputHandler();
 
-        public static IInputHandler WindowsInputHandler { get; } = new InputHandlers.WindowsInputHandler();
+        public static IInputHandler PowershellInputHandler { get; } = new InputHandlers.PowershellInputHandler();
 
-        public static IInputHandler IOSInputHandler { get; } = new InputHandlers.IOSInputHandler();
-
-        public static IInputHandler AndroidInputHandler { get; } = new InputHandlers.AndroidInputHandler();
+        public static IInputHandler MobileInputHandler { get; } = new InputHandlers.MobileInputHandler();
     }
 }

@@ -24,7 +24,7 @@ using UnityEngine;
 
 namespace JSSoft.Terminal.InputHandlers
 {
-    class IOSKeyboard : TerminalKeyboardBase
+    class MobileKeyboard : TerminalKeyboardBase
     {
         private TouchScreenKeyboard keyboard;
 
@@ -52,8 +52,56 @@ namespace JSSoft.Terminal.InputHandlers
             }
         }
 
-#if UNITY_IOS || UNITY_ANDROID
+#if UNITY_IOS
         public override Rect Area => TouchScreenKeyboard.area;
+#elif UNITY_ANDROID
+        public override Rect Area
+        {
+            get
+            {
+                // using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                // {
+                //     var view = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
+                //                          .Get<AndroidJavaObject>("mUnityPlayer")
+                //                          .Call<AndroidJavaObject>("getView");
+                //     using (var rect = new AndroidJavaObject("android.graphics.Rect"))
+                //     {
+                //         view.Call("getWindowVisibleDisplayFrame", rect);
+                //         var height = Screen.height - rect.Call<int>("height");
+                //         return new Rect(0, Screen.height - height, Screen.width, height);
+                //     }
+                // }
+
+                using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                {
+                    var view = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
+                        .Get<AndroidJavaObject>("mUnityPlayer")
+                        .Call<AndroidJavaObject>("getView");
+
+                    var height = 0;
+                    try
+                    {
+                        var dialog = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
+                            .Get<AndroidJavaObject>("mUnityPlayer")
+                            .Get<AndroidJavaObject>("b");
+
+                        var decorView = dialog.Call<AndroidJavaObject>("getWindow")
+                            .Call<AndroidJavaObject>("getDecorView");
+
+                        height = decorView.Call<int>("getHeight");
+                    }
+                    catch
+                    {
+                    }
+                    using (var rect = new AndroidJavaObject("android.graphics.Rect"))
+                    {
+                        view.Call("getWindowVisibleDisplayFrame", rect);
+                        var h = (float)(Screen.height - rect.Call<int>("height") + height);
+                        return new Rect(0, Screen.height - h, Screen.width, h);
+                    }
+                }
+            }
+        }
 #else
         public override Rect Area => default(Rect);
 #endif
@@ -61,8 +109,10 @@ namespace JSSoft.Terminal.InputHandlers
         protected override void OnOpen(string text)
         {
             this.keyboard = TouchScreenKeyboard.Open(text, TouchScreenKeyboardType.Default, false, false, false, false, "type command");
+#if UNITY_IOS
             this.keyboard.active = true;
             this.keyboard.text = text;
+#endif
         }
 
         protected override void OnClose()
@@ -77,11 +127,13 @@ namespace JSSoft.Terminal.InputHandlers
             {
                 if (this.keyboard.status == TouchScreenKeyboard.Status.Done)
                 {
+                    this.keyboard.active = false;
                     this.keyboard = null;
                     return true;
                 }
                 else if (this.keyboard.status == TouchScreenKeyboard.Status.Canceled)
                 {
+                    this.keyboard.active = false;
                     this.keyboard = null;
                     return false;
                 }
@@ -89,6 +141,12 @@ namespace JSSoft.Terminal.InputHandlers
                 {
                     this.Text = this.keyboard.text;
                     this.Selection = this.keyboard.selection;
+                }
+                else if (this.keyboard.status == TouchScreenKeyboard.Status.LostFocus)
+                {
+                    this.keyboard.active = false;
+                    this.keyboard = null;
+                    return false;
                 }
             }
             return null;
