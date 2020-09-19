@@ -41,10 +41,21 @@ namespace JSSoft.Terminal.KeyBindings
 
         public static readonly IKeyBindingCollection Common = new KeyBindingCollection("Terminal Key Bindings")
         {
+#if UNITY_ANDROID
+            new KeyBinding(EventModifiers.None, KeyCode.UpArrow, (t) => t.PrevHistory()),
+            new KeyBinding(EventModifiers.None, KeyCode.DownArrow, (t) => t.NextHistory()),
+            new KeyBinding(EventModifiers.None, KeyCode.LeftArrow, (t) => t.MoveLeft()),
+            new KeyBinding(EventModifiers.None, KeyCode.RightArrow, (t) => t.MoveRight()),
+            new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => t.Backspace()),
+#else
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.UpArrow, (t) => t.PrevHistory()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.DownArrow, (t) => t.NextHistory()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => t.MoveLeft()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => t.MoveRight()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, (t) => t.Backspace()),
+            // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.FunctionKey + KeyCode.Backspace 가 호출됨.
+            new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => true),
+#endif
             new KeyBinding(EventModifiers.Shift, KeyCode.LeftArrow, (t) => true),
             new KeyBinding(EventModifiers.Shift, KeyCode.RightArrow, (t) => true),
             new KeyBinding(EventModifiers.Shift, KeyCode.UpArrow, (t) => true),
@@ -53,12 +64,10 @@ namespace JSSoft.Terminal.KeyBindings
             new KeyBinding(EventModifiers.Control, KeyCode.RightArrow, (t) => true),
             new KeyBinding(EventModifiers.Control, KeyCode.UpArrow, (t) => true),
             new KeyBinding(EventModifiers.Control, KeyCode.DownArrow, (t) => true),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Backspace, (t) => t.Backspace()),
-            // ime 입력중에 Backspace 키를 누르면 두번이 호출됨 그중 처음에는 EventModifiers.FunctionKey + KeyCode.Backspace 가 호출됨.
-            new KeyBinding(EventModifiers.None, KeyCode.Backspace, (t) => true),
+
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Delete, (t) => t.Delete()),
             new KeyBinding(EventModifiers.None, KeyCode.Tab, (t) => t.NextCompletion()),
-            new KeyBinding(EventModifiers.Shift, KeyCode.Tab, (t) => t.PrevCompletion())
+            new KeyBinding(EventModifiers.Shift, KeyCode.Tab, (t) => t.PrevCompletion()),
         };
 
         public static readonly IKeyBindingCollection TerminalOnMacOS = new KeyBindingCollection("Terminal(MacOS) Key Bindings", Common)
