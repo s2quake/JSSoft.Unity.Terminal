@@ -297,7 +297,6 @@ namespace JSSoft.Terminal
             while (this.eventQueue.Any() == true)
             {
                 var item = this.eventQueue.Dequeue();
-                Debug.Log($"{item.Modifiers}: {item.KeyCode}");
                 if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
                     continue;
                 if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
@@ -671,6 +670,8 @@ namespace JSSoft.Terminal
 
         public override event EventHandler Disabled;
 
+        public override event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+
         public override event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
 
         internal TerminalCell GetCell(TerminalPoint point)
@@ -737,6 +738,11 @@ namespace JSSoft.Terminal
         protected virtual void OnDisabled(EventArgs e)
         {
             this.Disabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnKeyPreview(TerminalKeyPreviewEventArgs e)
+        {
+            this.KeyPreview?.Invoke(this, e);
         }
 
         protected virtual void OnKeyPressed(TerminalKeyPressEventArgs e)
@@ -812,6 +818,10 @@ namespace JSSoft.Terminal
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
         {
+            var args = new TerminalKeyPreviewEventArgs(modifiers, keyCode);
+            this.OnKeyPreview(args);
+            if (args.Handled == true)
+                return true;
             if (this.terminal.ProcessKeyEvent(modifiers, keyCode) == true)
                 return true;
             return this.KeyBindings.Process(this, modifiers, keyCode);

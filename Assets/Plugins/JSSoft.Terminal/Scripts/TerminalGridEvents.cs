@@ -46,6 +46,7 @@ namespace JSSoft.Terminal
             grid.PropertyChanged += Grid_PropertyChanged;
             grid.Enabled += Grid_Enabled;
             grid.Disabled += Grid_Disabled;
+            grid.KeyPreview += Grid_KeyPreview;
             grid.KeyPressed += Grid_KeyPressed;
         }
 
@@ -63,6 +64,7 @@ namespace JSSoft.Terminal
             grid.PropertyChanged -= Grid_PropertyChanged;
             grid.Enabled -= Grid_Enabled;
             grid.Disabled -= Grid_Disabled;
+            grid.KeyPreview -= Grid_KeyPreview;
             grid.KeyPressed -= Grid_KeyPressed;
             grids.Remove(grid);
         }
@@ -82,6 +84,8 @@ namespace JSSoft.Terminal
         public static event EventHandler Enabled;
 
         public static event EventHandler Disabled;
+
+        public static event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
 
         public static event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
 
@@ -123,6 +127,11 @@ namespace JSSoft.Terminal
         private static void Grid_Disabled(object sender, EventArgs e)
         {
             Disabled?.Invoke(sender, e);
+        }
+
+        private static void Grid_KeyPreview(object sender, TerminalKeyPreviewEventArgs e)
+        {
+            KeyPreview?.Invoke(sender, e);
         }
 
         private static void Grid_KeyPressed(object sender, TerminalKeyPressEventArgs e)

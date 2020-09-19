@@ -236,7 +236,6 @@ namespace JSSoft.Terminal.InputHandlers
             var downCount = GetDownCount(this.downCount, this.clickThreshold, this.time, newTime, this.downPosition, newPosition);
             var row = grid.Rows[newPoint.Y];
             var cell = row.Cells[newPoint.X];
-            var isFocused = this.Grid.IsFocused;
             eventData.useDragThreshold = false;
             this.Focus();
             this.downPosition = newPosition;
@@ -254,11 +253,6 @@ namespace JSSoft.Terminal.InputHandlers
                     this.scrollDelta = 0.0f;
                     this.downPoint = TerminalPoint.Invalid;
                     this.downCount = 0;
-                }
-                else if (this.isExecuting == false && isFocused == true)
-                {
-                    this.Grid.ScrollToCursor();
-                    this.keyboard.Open(this.Grid, this.Terminal.Command);
                 }
             }
         }
@@ -284,6 +278,11 @@ namespace JSSoft.Terminal.InputHandlers
                     {
                         this.Grid.Selections.Clear();
                         this.Grid.SelectingRange = TerminalRange.Empty;
+                    }
+                    else if (this.isExecuting == false)
+                    {
+                        this.Grid.ScrollToCursor();
+                        this.keyboard.Open(this.Grid, this.Terminal.Command);
                     }
                 }
             }

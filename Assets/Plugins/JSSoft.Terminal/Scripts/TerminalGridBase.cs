@@ -125,6 +125,8 @@ namespace JSSoft.Terminal
 
         public abstract event EventHandler Disabled;
 
+        public abstract event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+
         public abstract event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
 
         public abstract string Copy();

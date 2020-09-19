@@ -10,17 +10,23 @@ namespace JSSoft.Terminal.Scenes
     [RequireComponent(typeof(Animator))]
     public class GridVisibleController : UIBehaviour
     {
+        [SerializeField]
+        private float value;
         private Animator animator;
         private GameObject selectedObject;
+        private float value2;
 
         protected override void OnEnable()
         {
             base.OnEnable();
             this.animator = this.GetComponent<Animator>();
+            this.value2 = this.value;
+            TerminalGridEvents.KeyPressed += Grid_KeyPressed;
         }
 
         protected override void OnDisable()
         {
+            TerminalGridEvents.KeyPressed -= Grid_KeyPressed;
             base.OnDisable();
         }
 
@@ -44,6 +50,26 @@ namespace JSSoft.Terminal.Scenes
                     this.selectedObject = null;
                     EventSystem.current.SetSelectedGameObject(currentObject);
                 }
+            }
+            this.UpdatePosition();
+        }
+
+        private void UpdatePosition()
+        {
+            if (this.value != this.value2)
+            {
+                var rect = this.GetComponent<RectTransform>();
+                var pos = rect.anchoredPosition;
+                rect.anchoredPosition = new Vector2(pos.x, rect.rect.height * this.value);
+                this.value2 = this.value;
+            }
+        }
+
+        private void Grid_KeyPressed(object sender, TerminalKeyPressEventArgs e)
+        {
+            if (TerminalEnvironment.IsStandalone == true && e.Character == '`' && e.Handled == false)
+            {
+                e.Handled = true;
             }
         }
     }

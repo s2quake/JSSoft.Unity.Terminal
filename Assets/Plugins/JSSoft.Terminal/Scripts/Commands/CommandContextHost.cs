@@ -97,6 +97,9 @@ namespace JSSoft.Terminal.Commands
             yield return new ResolutionCommand(this.Terminal);
             yield return new PingCommand(this.Terminal);
             yield return new StyleCommand(this.Terminal);
+            yield return new InternetProtocolConfigurationCommand(this.Terminal);
+            yield return new InterfaceConfigurationCommand(this.Terminal);
+
             yield return new TestCommand(this.Terminal);
         }
 
