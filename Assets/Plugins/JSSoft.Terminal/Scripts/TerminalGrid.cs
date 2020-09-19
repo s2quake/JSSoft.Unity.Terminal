@@ -297,6 +297,7 @@ namespace JSSoft.Terminal
             while (this.eventQueue.Any() == true)
             {
                 var item = this.eventQueue.Dequeue();
+                Debug.Log($"{item.Modifiers}: {item.KeyCode}");
                 if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
                     continue;
                 if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
