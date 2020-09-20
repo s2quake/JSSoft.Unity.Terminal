@@ -21,11 +21,12 @@ namespace JSSoft.Terminal.Scenes
         [SerializeField]
         private EventModifiers modifiers = EventModifiers.None;
         [SerializeField]
-        private TerminalGridBase grid;
+        private TerminalGridBase grid = null;
 
         private Animator animator;
         private float value2;
         private bool isTrigger;
+        private GameObject currentObject;
 
         public float Value
         {
@@ -59,6 +60,7 @@ namespace JSSoft.Terminal.Scenes
             base.OnEnable();
             this.animator = this.GetComponent<Animator>();
             this.value2 = this.value;
+            this.currentObject = this.grid != null ? this.grid.gameObject : null;
             TerminalGridEvents.KeyPreview += Grid_KeyPreview;
         }
 
@@ -70,7 +72,7 @@ namespace JSSoft.Terminal.Scenes
 
         protected virtual void OnGUI()
         {
-            if (Event.current is Event current && current.modifiers == this.modifiers && Input.GetKeyDown(this.keyCode) == true)
+            if (Event.current is Event current && current.modifiers == this.modifiers && Input.GetKeyDown(this.keyCode) == true && this.isTrigger == false)
             {
                 this.isTrigger = true;
             }
@@ -81,21 +83,19 @@ namespace JSSoft.Terminal.Scenes
             if (this.isTrigger == true)
             {
                 var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
-                var currentObject = this.grid != null ? this.grid.gameObject : null;
                 if (stateInfo.IsName(StateHide) != true && this.value <= 0)
                 {
                     this.animator.ResetTrigger(StateShow);
                     this.animator.SetTrigger(StateHide);
-                    if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>() is TerminalGridBase grid)
-                        this.grid = grid;
+                    if (EventSystem.current.currentSelectedGameObject != null)
+                        this.currentObject = EventSystem.current.currentSelectedGameObject;
                     EventSystem.current.SetSelectedGameObject(null);
                 }
                 else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
                 {
                     this.animator.ResetTrigger(StateHide);
                     this.animator.SetTrigger(StateShow);
-                    this.grid = null;
-                    EventSystem.current.SetSelectedGameObject(currentObject);
+                    EventSystem.current.SetSelectedGameObject(this.currentObject);
                 }
                 this.isTrigger = false;
             }

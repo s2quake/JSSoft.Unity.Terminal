@@ -38,9 +38,13 @@ namespace JSSoft.Terminal.Behaviours
             var color = handleRectImage.color;
             animator.enabled = false;
             scrollbarImage.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-            // scrollbarImage.pixelsPerUnitMultiplier = 10.0f;
+#if UNITY_2019_3_OR_NEWER
+            scrollbarImage.pixelsPerUnitMultiplier = 10.0f;
+#endif
             handleRectImage.color = new Color(color.r, color.g, color.b, 1.0f);
-            // handleRectImage.pixelsPerUnitMultiplier = 10.0f;
+#if UNITY_2019_3_OR_NEWER
+            handleRectImage.pixelsPerUnitMultiplier = 10.0f;
+#endif
         }
 
         protected override void OnDetach(ITerminalGrid grid)
@@ -54,9 +58,13 @@ namespace JSSoft.Terminal.Behaviours
             var color = handleRectImage.color;
             animator.enabled = true;
             scrollbarImage.color = new Color(0.54509803f, 0.54509803f, 0.54509803f, 0.0f);
-            // scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+#if UNITY_2019_3_OR_NEWER
+            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+#endif
             handleRectImage.color = new Color(color.r, color.g, color.b, 0.0f);
-            // handleRectImage.pixelsPerUnitMultiplier = 0.5f;
+#if UNITY_2019_3_OR_NEWER
+            handleRectImage.pixelsPerUnitMultiplier = 0.5f;
+#endif
         }
     }
 }

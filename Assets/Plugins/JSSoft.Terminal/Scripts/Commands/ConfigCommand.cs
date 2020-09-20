@@ -35,8 +35,8 @@ using System.ComponentModel;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.VersionCommand.Summary)]
-    [CommandSummary(CommandStrings.VersionCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.ConfigCommand.Summary)]
+    [CommandSummary(CommandStrings.ConfigCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ConfigCommand : TerminalCommandBase
     {
         private readonly IConfigurationProvider provider;
@@ -69,38 +69,26 @@ namespace JSSoft.Terminal.Commands
             return null;
         }
 
-        // public override string[] GetCompletions(CommandMethodDescriptor methodDescriptor, CommandMemberDescriptor memberDescriptor, string find)
-        // {
-        //     switch (methodDescriptor.DescriptorName)
-        //     {
-        //         case nameof(Set):
-        //         case nameof(Reset):
-        //             {
-        //                 if (memberDescriptor.DescriptorName == "configName")
-        //                 {
-        //                     var query = from item in this.Properties
-        //                                 let configName = item.configName
-        //                                 select configName;
-        //                     return query.ToArray();
-        //                 }
-        //                 return null;
-        //             }
-        //     }
-        //     return null;
-        // }
-
         [CommandPropertyRequired(DefaultValue = "")]
+        [CommandSummary(CommandStrings.ConfigCommand.ConfigName.Summary)]
+        [CommandSummary(CommandStrings.ConfigCommand.ConfigName.Summary_ko_KR, Locale = "ko-KR")]
         public string ConfigName { get; set; }
 
         [CommandPropertyRequired(DefaultValue = "")]
+        [CommandSummary(CommandStrings.ConfigCommand.Value.Summary)]
+        [CommandSummary(CommandStrings.ConfigCommand.Value.Summary_ko_KR, Locale = "ko-KR")]
         public string Value { get; set; }
 
         [CommandProperty("list")]
         [CommandPropertyTrigger(nameof(ConfigName), "")]
+        [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary)]
+        [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public bool ListSwitch { get; set; }
 
         [CommandProperty("reset")]
         [CommandPropertyTrigger(nameof(ListSwitch), false)]
+        [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary)]
+        [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public bool ResetSwitch { get; set; }
 
         protected override void OnExecute()
@@ -127,6 +115,8 @@ namespace JSSoft.Terminal.Commands
             }
         }
 
+        protected IEnumerable<ConfigurationPropertyDescriptor> Configs => this.provider.Configs;
+
         private void ShowList()
         {
             var sb = new StringBuilder();
@@ -142,21 +132,6 @@ namespace JSSoft.Terminal.Commands
             var config = this.GetProperty(configName);
             this.Terminal.AppendLine($"{config.Value}");
         }
-
-        // [CommandMethod]
-        // [CommandMethodStaticProperty(typeof(FilterProperties))]
-        // public void List()
-        // {
-        //     var sb = new StringBuilder();
-        //     foreach (var item in this.Properties)
-        //     {
-        //         if (StringUtility.GlobMany(item.configName, FilterProperties.FilterExpression) == true)
-        //         {
-        //             sb.AppendLine($"{item.configName}={item.Value}");
-        //         }
-        //     }
-        //     this.Terminal.Append(sb.ToString());
-        // }
 
         private void Set(string configName, string value)
         {
@@ -178,18 +153,10 @@ namespace JSSoft.Terminal.Commands
             property.Reset();
         }
 
-        // [CommandMethod]
-        // public void Reset(string configName)
-        // {
-        //     this.GetProperty(configName).Reset();
-        // }
-
         private void ShowUsage()
         {
             this.Terminal.AppendLine("type 'help config'");
         }
-
-        protected IEnumerable<ConfigurationPropertyDescriptor> Configs => this.provider.Configs;
 
         private ConfigurationPropertyDescriptor GetProperty(string configName)
         {

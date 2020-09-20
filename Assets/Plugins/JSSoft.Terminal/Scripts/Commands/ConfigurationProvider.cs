@@ -37,14 +37,41 @@ namespace JSSoft.Terminal.Commands
     {
         private readonly List<ConfigurationPropertyDescriptor> configList = new List<ConfigurationPropertyDescriptor>();
 
-        public void Add(ConfigurationPropertyDescriptor item)
+        public void Add(ConfigurationPropertyDescriptor descriptor)
         {
-            this.configList.Add(item);
+            foreach (var item in this.configList)
+            {
+                if (item.PropertyName == descriptor.PropertyName)
+                    throw new ArgumentException();
+            }
+            this.configList.Add(descriptor);
         }
 
-        public void Remove(ConfigurationPropertyDescriptor item)
+        public void Add(ConfigurationProperty property)
         {
-            this.configList.Remove(item);
+            foreach (var item in this.configList)
+            {
+                if (item.PropertyName == property.PropertyName)
+                    throw new ArgumentException();
+            }
+            this.configList.Add(property.Descriptor);
+        }
+
+        public void Remove(ConfigurationPropertyDescriptor descriptor)
+        {
+            this.configList.Remove(descriptor);
+        }
+
+        public void Remove(ConfigurationProperty property)
+        {
+            foreach (var item in this.configList)
+            {
+                if (item.PropertyName == property.PropertyName)
+                {
+                    this.configList.Remove(item);
+                    break;
+                }
+            }
         }
 
         public void Remove(string propertyName)

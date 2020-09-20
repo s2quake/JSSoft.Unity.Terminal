@@ -159,5 +159,35 @@ namespace JSSoft.Terminal.Commands
             public const string Summary = "Displays ip address.";
             public const string Summary_ko_KR = "ip 주소를 표시합니다.";
         }
+
+        public static class ConfigCommand
+        {
+            public const string Summary = "Get and set properties.";
+            public const string Summary_ko_KR = "속성을 가져오거나 설정합니다.";
+
+            public static class ConfigName
+            {
+                public const string Summary = "Specifies the name of the property.";
+                public const string Summary_ko_KR = "속성의 이름을 지정합니다.";
+            }
+
+            public static class Value
+            {
+                public const string Summary = "Specify a value. If no value is specified, displays the value of the property.";
+                public const string Summary_ko_KR = "값을 지정합니다. 값이 지정되지 않으면 해당 속성의 값을 표시합니다.";
+            }
+
+            public static class ListSwitch
+            {
+                public const string Summary = "Displays the names and values of all properties.";
+                public const string Summary_ko_KR = "모든 속성의 이름과 값을 표시합니다.";
+            }
+
+            public static class ResetSwitch
+            {
+                public const string Summary = "Returns the value of the property to its default value.";
+                public const string Summary_ko_KR = "속성의 값을 기본값으로 되돌립니다.";
+            }
+        }
     }
 }

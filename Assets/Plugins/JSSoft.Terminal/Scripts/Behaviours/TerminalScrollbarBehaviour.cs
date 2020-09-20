@@ -35,12 +35,16 @@ namespace JSSoft.Terminal.Behaviours
             var handleRect = scrollbar.handleRect;
             var handleRectImage = handleRect.GetComponent<Image>();
             var animator = scrollbar.GetComponent<Animator>();
-            // var color = handleRectImage.color;
+#if UNITY_2019_3_OR_NEWER
+            var color = handleRectImage.color;
+#endif
             animator.enabled = true;
-            // scrollbarImage.color = new Color(0.54509803f, 0.54509803f, 0.54509803f, 0.0f);
-            // scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
-            // handleRectImage.color = new Color(color.r, color.g, color.b, 0.0f);
-            // handleRectImage.pixelsPerUnitMultiplier = 0.5f;
+#if UNITY_2019_3_OR_NEWER
+            scrollbarImage.color = new Color(0.54509803f, 0.54509803f, 0.54509803f, 0.0f);
+            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+            handleRectImage.color = new Color(color.r, color.g, color.b, 0.0f);
+            handleRectImage.pixelsPerUnitMultiplier = 0.5f;
+#endif
         }
 
         protected override void OnDetach(ITerminalGrid grid)
