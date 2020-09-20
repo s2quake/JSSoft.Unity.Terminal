@@ -122,7 +122,11 @@ namespace JSSoft.Terminal
             base.OnDisable();
         }
 
+#if UNITY_2019_3_OR_NEWER
+        protected override void Update()
+#else
         protected virtual void Update()
+#endif
         {
             if (this.isPointerOn == false && this.PointerOnParam == true)
             {

@@ -153,5 +153,11 @@ namespace JSSoft.Terminal.Commands
             public const string Summary = "Displays version.";
             public const string Summary_ko_KR = "버전을 표시합니다.";
         }
+
+        public static class InternetProtocolCommand
+        {
+            public const string Summary = "Displays ip address.";
+            public const string Summary_ko_KR = "ip 주소를 표시합니다.";
+        }
     }
 }

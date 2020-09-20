@@ -10,46 +10,94 @@ namespace JSSoft.Terminal.Scenes
     [RequireComponent(typeof(Animator))]
     public class GridVisibleController : UIBehaviour
     {
+        public const string StateNone = "None";
+        public const string StateHide = "Hide";
+        public const string StateShow = "Show";
+
         [SerializeField]
         private float value;
+        [SerializeField]
+        private KeyCode keyCode = KeyCode.BackQuote;
+        [SerializeField]
+        private EventModifiers modifiers = EventModifiers.None;
+        [SerializeField]
+        private TerminalGridBase grid;
+
         private Animator animator;
-        private GameObject selectedObject;
         private float value2;
+        private bool isTrigger;
+
+        public float Value
+        {
+            get => this.value;
+            set
+            {
+                this.value = value;
+            }
+        }
+
+        public KeyCode KeyCode
+        {
+            get => this.keyCode;
+            set
+            {
+                this.keyCode = value;
+            }
+        }
+
+        public EventModifiers Modifiers
+        {
+            get => this.modifiers;
+            set
+            {
+                this.modifiers = value;
+            }
+        }
 
         protected override void OnEnable()
         {
             base.OnEnable();
             this.animator = this.GetComponent<Animator>();
             this.value2 = this.value;
-            TerminalGridEvents.KeyPressed += Grid_KeyPressed;
+            TerminalGridEvents.KeyPreview += Grid_KeyPreview;
         }
 
         protected override void OnDisable()
         {
-            TerminalGridEvents.KeyPressed -= Grid_KeyPressed;
+            TerminalGridEvents.KeyPreview -= Grid_KeyPreview;
             base.OnDisable();
+        }
+
+        protected virtual void OnGUI()
+        {
+            if (Event.current is Event current && current.modifiers == this.modifiers && Input.GetKeyDown(this.keyCode) == true)
+            {
+                this.isTrigger = true;
+            }
         }
 
         protected virtual void Update()
         {
-            if (TerminalEnvironment.IsStandalone == true && Input.GetKeyDown(KeyCode.BackQuote) == true)
+            if (this.isTrigger == true)
             {
                 var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
-                var currentObject = this.selectedObject;
-                if (stateInfo.IsName("None") == true || stateInfo.IsName("Show") == true)
+                var currentObject = this.grid != null ? this.grid.gameObject : null;
+                if (stateInfo.IsName(StateHide) != true && this.value <= 0)
                 {
-                    this.animator.ResetTrigger("Show");
-                    this.animator.SetTrigger("Hide");
-                    this.selectedObject = EventSystem.current.currentSelectedGameObject;
+                    this.animator.ResetTrigger(StateShow);
+                    this.animator.SetTrigger(StateHide);
+                    if (EventSystem.current.currentSelectedGameObject != null && EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>() is TerminalGridBase grid)
+                        this.grid = grid;
                     EventSystem.current.SetSelectedGameObject(null);
                 }
-                else if (stateInfo.IsName("Hide") == true)
+                else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
                 {
-                    this.animator.ResetTrigger("Hide");
-                    this.animator.SetTrigger("Show");
-                    this.selectedObject = null;
+                    this.animator.ResetTrigger(StateHide);
+                    this.animator.SetTrigger(StateShow);
+                    this.grid = null;
                     EventSystem.current.SetSelectedGameObject(currentObject);
                 }
+                this.isTrigger = false;
             }
             this.UpdatePosition();
         }
@@ -65,9 +113,9 @@ namespace JSSoft.Terminal.Scenes
             }
         }
 
-        private void Grid_KeyPressed(object sender, TerminalKeyPressEventArgs e)
+        private void Grid_KeyPreview(object sender, TerminalKeyPreviewEventArgs e)
         {
-            if (TerminalEnvironment.IsStandalone == true && e.Character == '`' && e.Handled == false)
+            if (e.Modifiers == this.modifiers && e.KeyCode == this.keyCode && e.Handled == false)
             {
                 e.Handled = true;
             }

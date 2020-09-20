@@ -133,7 +133,7 @@ namespace JSSoft.Terminal
                     await this.OnRunAsync(e.Command);
                 else
                     this.OnRun(e.Command);
-                    e.Success();
+                e.Success();
             }
             catch (Exception ex)
             {

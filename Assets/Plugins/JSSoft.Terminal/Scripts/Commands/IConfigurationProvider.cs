@@ -21,42 +21,20 @@
 // SOFTWARE.
 
 using System;
-using System.ComponentModel;
+using System.Text;
 using System.Threading.Tasks;
-using JSSoft.Library.Threading;
-using JSSoft.Library.Commands;
-using UnityEngine;
-using System.Threading;
+using JSSoft.Terminal;
 using JSSoft.Terminal.Tasks;
+using JSSoft.Library.Commands;
+using JSSoft.Library.Threading;
+using UnityEngine;
+using System.Collections.Generic;
+using JSSoft.Library;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ExitCommand.Summary)]
-    [CommandSummary(CommandStrings.ExitCommand.Summary_ko_KR)]
-    public class InternetProtocolConfigurationCommand : TerminalCommandBase
+    public interface IConfigurationProvider
     {
-        public InternetProtocolConfigurationCommand(ITerminal terminal)
-            : base(terminal, "ipconfig")
-        {
-        }
-
-        protected override void OnExecute()
-        {
-            this.WriteLine(GetLocalIPAddress());
-        }
-
-        public static string GetLocalIPAddress()
-        {
-            var host = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-                {
-                    return ip.ToString();
-                }
-            }
-
-            throw new System.Exception("No network adapters with an IPv4 address in the system!");
-        }
+        IEnumerable<ConfigurationPropertyDescriptor> Configs { get; }
     }
 }

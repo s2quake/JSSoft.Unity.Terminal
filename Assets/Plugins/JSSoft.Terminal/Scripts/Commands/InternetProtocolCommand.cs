@@ -31,12 +31,12 @@ using JSSoft.Terminal.Tasks;
 
 namespace JSSoft.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ExitCommand.Summary)]
-    [CommandSummary(CommandStrings.ExitCommand.Summary_ko_KR)]
-    public class InterfaceConfigurationCommand : TerminalCommandBase
+    [CommandSummary(CommandStrings.InternetProtocolCommand.Summary)]
+    [CommandSummary(CommandStrings.InternetProtocolCommand.Summary_ko_KR)]
+    public class InternetProtocolCommand : TerminalCommandBase
     {
-        public InterfaceConfigurationCommand(ITerminal terminal)
-            : base(terminal, "ifconfig")
+        public InternetProtocolCommand(ITerminal terminal)
+            : base(terminal, "ip")
         {
         }
 

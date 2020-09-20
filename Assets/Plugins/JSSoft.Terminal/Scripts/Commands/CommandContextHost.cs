@@ -73,7 +73,7 @@ namespace JSSoft.Terminal.Commands
             this.Terminal.ResetOutput();
             if (this.text != string.Empty)
                 this.Terminal.AppendLine(this.text);
-                Console.SetOut(new TerminalTextWriter(this.Terminal));
+            Console.SetOut(new TerminalTextWriter(this.Terminal));
         }
 
         protected override void OnDisable()
@@ -97,8 +97,8 @@ namespace JSSoft.Terminal.Commands
             yield return new ResolutionCommand(this.Terminal);
             yield return new PingCommand(this.Terminal);
             yield return new StyleCommand(this.Terminal);
-            yield return new InternetProtocolConfigurationCommand(this.Terminal);
-            yield return new InterfaceConfigurationCommand(this.Terminal);
+            yield return new InternetProtocolCommand(this.Terminal);
+            yield return new ConfigCommand(this.Terminal, ConfigurationProvider.Current);
 
             yield return new TestCommand(this.Terminal);
         }
@@ -106,6 +106,11 @@ namespace JSSoft.Terminal.Commands
         protected virtual string[] GetCompletion(string[] items, string find)
         {
             return this.commandContext.GetCompletion(items, find);
+        }
+
+        protected override void OnRun(string command)
+        {
+            this.commandContext.Execute(this.commandContext.Name, command);
         }
 
         protected override Task OnRunAsync(string command)

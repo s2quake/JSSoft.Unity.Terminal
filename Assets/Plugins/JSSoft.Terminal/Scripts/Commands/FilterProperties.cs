@@ -21,22 +21,47 @@
 // SOFTWARE.
 
 using System;
+using System.Text;
+using System.Threading.Tasks;
+using JSSoft.Terminal;
+using JSSoft.Terminal.Tasks;
+using JSSoft.Library.Commands;
+using JSSoft.Library.Threading;
 using UnityEngine;
+using System.ComponentModel;
+using System.IO;
 
-namespace JSSoft.Terminal
+namespace JSSoft.Terminal.Commands
 {
-    public class TerminalKeyPreviewEventArgs : EventArgs
+    public static class FilterProperties
     {
-        public TerminalKeyPreviewEventArgs(EventModifiers modifiers, KeyCode keyCode)
+        [CommandProperty("filter")]
+        [CommandPropertyTrigger(nameof(FilterFile), "")]
+        [DefaultValue(null)]
+        public static string Filter
         {
-            this.Modifiers = modifiers;
-            this.KeyCode = keyCode;
+            get; set;
         }
 
-        public EventModifiers Modifiers { get; }
+        [CommandProperty]
+        [CommandPropertyTrigger(nameof(Filter), null)]
+        [DefaultValue("")]
+        public static string FilterFile
+        {
+            get; set;
+        }
 
-        public KeyCode KeyCode { get; }
-
-        public bool Handled { get; set; }
+        public static string FilterExpression
+        {
+            get
+            {
+                if (FilterFile != string.Empty)
+                {
+                    var lines = File.ReadAllLines(FilterFile);
+                    return string.Join(";", lines);
+                }
+                return Filter;
+            }
+        }
     }
 }

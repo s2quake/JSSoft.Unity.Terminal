@@ -21,22 +21,46 @@
 // SOFTWARE.
 
 using System;
+using System.Text;
+using System.Threading.Tasks;
+using JSSoft.Terminal;
+using JSSoft.Terminal.Tasks;
+using JSSoft.Library.Commands;
+using JSSoft.Library.Threading;
 using UnityEngine;
+using System.Collections.Generic;
+using JSSoft.Library;
 
-namespace JSSoft.Terminal
+namespace JSSoft.Terminal.Commands
 {
-    public class TerminalKeyPreviewEventArgs : EventArgs
+    public class ConfigurationProvider : IConfigurationProvider
     {
-        public TerminalKeyPreviewEventArgs(EventModifiers modifiers, KeyCode keyCode)
+        private readonly List<ConfigurationPropertyDescriptor> configList = new List<ConfigurationPropertyDescriptor>();
+
+        public void Add(ConfigurationPropertyDescriptor item)
         {
-            this.Modifiers = modifiers;
-            this.KeyCode = keyCode;
+            this.configList.Add(item);
         }
 
-        public EventModifiers Modifiers { get; }
+        public void Remove(ConfigurationPropertyDescriptor item)
+        {
+            this.configList.Remove(item);
+        }
 
-        public KeyCode KeyCode { get; }
+        public void Remove(string propertyName)
+        {
+            foreach (var item in this.configList)
+            {
+                if (item.PropertyName == propertyName)
+                {
+                    this.configList.Remove(item);
+                    break;
+                }
+            }
+        }
 
-        public bool Handled { get; set; }
+        public IEnumerable<ConfigurationPropertyDescriptor> Configs => this.configList;
+
+        public static ConfigurationProvider Current { get; } = new ConfigurationProvider();
     }
 }
