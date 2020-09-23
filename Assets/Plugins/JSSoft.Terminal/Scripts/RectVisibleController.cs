@@ -28,7 +28,6 @@ namespace JSSoft.Terminal
         private Animator animator;
         private float value2;
         private bool isTrigger;
-        private GameObject currentObject;
 
         public void Show()
         {
@@ -83,7 +82,6 @@ namespace JSSoft.Terminal
             this.animator = this.GetComponent<Animator>();
             this.value2 = this.value;
             this.position = this.GetComponent<RectTransform>().anchoredPosition;
-            this.currentObject = this.grid != null ? this.grid.gameObject : null;
         }
 
         protected override void OnDisable()
@@ -109,14 +107,15 @@ namespace JSSoft.Terminal
                     this.animator.ResetTrigger(StateShow);
                     this.animator.SetTrigger(StateHide);
                     if (EventSystem.current.currentSelectedGameObject != null)
-                        this.currentObject = EventSystem.current.currentSelectedGameObject;
+                        this.grid = EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>();
                     EventSystem.current.SetSelectedGameObject(null);
                 }
                 else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
                 {
                     this.animator.ResetTrigger(StateHide);
                     this.animator.SetTrigger(StateShow);
-                    EventSystem.current.SetSelectedGameObject(this.currentObject);
+                    if (this.grid != null)
+                        EventSystem.current.SetSelectedGameObject(this.grid.gameObject);
                 }
                 this.isTrigger = false;
             }

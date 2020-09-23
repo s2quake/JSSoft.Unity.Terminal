@@ -116,22 +116,28 @@ namespace JSSoft.Terminal.Editor
             }
         }
 
-        [MenuItem("Terminal/Test")]
-        public static void Test()
-        {
-            var obj = Selection.activeObject;
-            if (obj is GameObject gameObject)
-            {
-                var text = gameObject.GetComponent<Text>();
-                var path = AssetDatabase.GetAssetPath(text.font);
-                Debug.Log(path);
-            }
-        }
+        // [MenuItem("Terminal/Test")]
+        // public static void Test()
+        // {
+        //     var obj = Selection.activeObject;
+        //     if (obj is GameObject gameObject)
+        //     {
+        //         var text = gameObject.GetComponent<Text>();
+        //         var path = AssetDatabase.GetAssetPath(text.font);
+        //         Debug.Log(path);
+        //     }
+        // }
 
         [MenuItem("GameObject/UI/Terminal")]
         private static void CreateTerminalUI()
         {
             CreateTerminal();
+        }
+
+        [MenuItem("GameObject/UI/Terminal Layout")]
+        private static void CreateTerminalUILayout()
+        {
+            CreateTerminalLayout();
         }
 
         private static void CreateTerminal()
@@ -298,6 +304,61 @@ namespace JSSoft.Terminal.Editor
             terminal.Prompt = "Prompt>";
 
             Selection.activeGameObject = terminalGridObj;
+        }
+
+        private static void CreateTerminalLayout()
+        {
+            var canvas = PrepareCanvas();
+            var parentRect = PrepareParent();
+
+            var types = new List<Type>()
+            {
+                { typeof(VerticalLayoutGroup) },
+                { typeof(TerminalKeyboardLayoutGroup) },
+                { typeof(TerminalRectVisibleController) },
+            };
+
+            var controllerAsset = AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Terminal/Animations/RectVisibleController/RectVisibleController.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+
+            var terminalRootObj = new GameObject("TerminalRoot", types.ToArray()) { layer = canvas.gameObject.layer };
+            var terminalRootRect = terminalRootObj.GetComponent<RectTransform>();
+            var terminalVertLayout = terminalRootObj.GetComponent<VerticalLayoutGroup>();
+            var terminalKeyboardLayout = terminalRootObj.GetComponent<TerminalKeyboardLayoutGroup>();
+            var temrinalAnimator = terminalRootObj.GetComponent<Animator>();
+            temrinalAnimator.runtimeAnimatorController = controllerAsset;
+            terminalVertLayout.padding = new RectOffset(2, 2, 2, 2);
+            terminalVertLayout.childControlWidth = true;
+            terminalVertLayout.childControlHeight = true;
+            terminalVertLayout.childForceExpandHeight = true;
+            terminalVertLayout.childForceExpandWidth = true;
+            terminalRootRect.SetParent(parentRect);
+            terminalRootRect.anchorMin = Vector3.zero;
+            terminalRootRect.anchorMax = Vector3.one;
+            terminalRootRect.pivot = new Vector2(0.5f, 0.5f);
+            terminalRootRect.offsetMin = Vector2.zero;
+            terminalRootRect.offsetMax = Vector2.zero;
+
+            var terminalHostObj = new GameObject("TerminalLayout", typeof(VerticalLayoutGroup), typeof(LayoutElement)) { layer = canvas.gameObject.layer };
+            var terminalHostVertLayout = terminalHostObj.GetComponent<VerticalLayoutGroup>();
+            var terminalHostRect = terminalHostObj.GetComponent<RectTransform>();
+            var terminalHostLayoutElement = terminalHostObj.GetComponent<LayoutElement>();
+            terminalHostVertLayout.childControlWidth = true;
+            terminalHostVertLayout.childControlHeight = true;
+            terminalHostVertLayout.childForceExpandHeight = true;
+            terminalHostVertLayout.childForceExpandWidth = true;
+            terminalHostLayoutElement.flexibleHeight = 1;
+            terminalHostRect.SetParent(terminalRootRect);
+
+            var keyboardObj = new GameObject("KeyboardLayout", typeof(LayoutElement)) { layer = canvas.gameObject.layer };
+            var keyboardRect = keyboardObj.GetComponent<RectTransform>();
+            var keyboardLayoutElement = keyboardObj.GetComponent<LayoutElement>();
+            keyboardLayoutElement.ignoreLayout = true;
+            keyboardRect.SetParent(terminalRootRect);
+
+            terminalKeyboardLayout.TerminalLayout = terminalHostLayoutElement;
+            terminalKeyboardLayout.KeyboardLayout = keyboardLayoutElement;
+
+            Selection.activeGameObject = terminalHostObj;
         }
 
         private static Canvas PrepareCanvas()
