@@ -29,6 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
+    [RequireComponent(typeof(CanvasRenderer))]
     class TerminalForegroundItem : MaskableGraphic
     {
         [SerializeField]

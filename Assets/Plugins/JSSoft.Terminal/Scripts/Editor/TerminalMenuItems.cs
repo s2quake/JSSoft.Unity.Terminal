@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
+using JSSoft.Terminal.Commands;
 using JSSoft.Terminal.Fonts;
 using UnityEditor;
 using UnityEngine;
@@ -128,19 +129,45 @@ namespace JSSoft.Terminal.Editor
         //     }
         // }
 
-        [MenuItem("GameObject/UI/Terminal")]
+        [MenuItem("GameObject/UI/Terminals/Terminal")]
         private static void CreateTerminalUI()
         {
             CreateTerminal();
         }
 
-        [MenuItem("GameObject/UI/Terminal Layout")]
+        [MenuItem("GameObject/UI/Terminals/Terminal - Commands")]
+        private static void CreateTerminalUICommands()
+        {
+            var terminalGridObj = CreateTerminal();
+            terminalGridObj.AddComponent<CommandContextHost>();
+        }
+
+        [MenuItem("GameObject/UI/Terminals/Terminal Layout")]
         private static void CreateTerminalUILayout()
         {
             CreateTerminalLayout();
         }
 
-        private static void CreateTerminal()
+        [MenuItem("GameObject/UI/Terminals/Terminal Full")]
+        private static void CreateTerminalUIFull()
+        {
+            var terminalLayoutObj = CreateTerminalLayout();
+            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
+            var terminalGridObj = CreateTerminal();
+            rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
+        }
+
+        [MenuItem("GameObject/UI/Terminals/Terminal Full - Commands")]
+        private static void CreateTerminalUIFullCommands()
+        {
+            var terminalLayoutObj = CreateTerminalLayout();
+            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
+            var terminalGridObj = CreateTerminal();
+            rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
+            terminalGridObj.AddComponent<CommandContextHost>();
+        }
+
+        private static GameObject CreateTerminal()
         {
             var canvas = PrepareCanvas();
             var parentRect = PrepareParent();
@@ -304,9 +331,10 @@ namespace JSSoft.Terminal.Editor
             terminal.Prompt = "Prompt>";
 
             Selection.activeGameObject = terminalGridObj;
+            return Selection.activeGameObject;
         }
 
-        private static void CreateTerminalLayout()
+        private static GameObject CreateTerminalLayout()
         {
             var canvas = PrepareCanvas();
             var parentRect = PrepareParent();
@@ -342,6 +370,7 @@ namespace JSSoft.Terminal.Editor
             var terminalHostVertLayout = terminalHostObj.GetComponent<VerticalLayoutGroup>();
             var terminalHostRect = terminalHostObj.GetComponent<RectTransform>();
             var terminalHostLayoutElement = terminalHostObj.GetComponent<LayoutElement>();
+            terminalHostVertLayout.spacing = 2;
             terminalHostVertLayout.childControlWidth = true;
             terminalHostVertLayout.childControlHeight = true;
             terminalHostVertLayout.childForceExpandHeight = true;
@@ -359,10 +388,23 @@ namespace JSSoft.Terminal.Editor
             terminalKeyboardLayout.KeyboardLayout = keyboardLayoutElement;
 
             Selection.activeGameObject = terminalHostObj;
+            return Selection.activeGameObject;
         }
 
         private static Canvas PrepareCanvas()
         {
+            if (Selection.activeGameObject != null)
+            {
+                if (Selection.activeGameObject.GetComponent<Canvas>() is Canvas c)
+                {
+                    return c;
+                }
+
+                if (Selection.activeGameObject.GetComponentInParent<Canvas>() is Canvas c1)
+                {
+                    return c1;
+                }
+            }
             var canvas = GameObject.FindObjectOfType<Canvas>();
             if (canvas == null)
             {

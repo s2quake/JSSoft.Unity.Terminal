@@ -28,6 +28,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
+    [RequireComponent(typeof(CanvasRenderer))]
     [ExecuteAlways]
     public class TerminalCompositionForeground : MaskableGraphic
     {

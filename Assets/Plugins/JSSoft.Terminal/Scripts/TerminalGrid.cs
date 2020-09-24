@@ -35,6 +35,7 @@ namespace JSSoft.Terminal
 {
     [RequireComponent(typeof(Terminal))]
     [RequireComponent(typeof(RectTransform))]
+    [RequireComponent(typeof(CanvasRenderer))]
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]

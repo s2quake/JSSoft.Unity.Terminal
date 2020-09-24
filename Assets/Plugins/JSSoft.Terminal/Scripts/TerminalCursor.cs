@@ -29,6 +29,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Terminal
 {
+    [RequireComponent(typeof(CanvasRenderer))]
     public class TerminalCursor : MaskableGraphic, INotifyValidated, IPropertyChangedNotifyable
     {
         [SerializeField]
