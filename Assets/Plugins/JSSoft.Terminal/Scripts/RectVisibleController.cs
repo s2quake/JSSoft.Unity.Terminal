@@ -24,7 +24,6 @@ namespace JSSoft.Terminal
         [SerializeField]
         private TerminalGridBase grid = null;
 
-
         private Animator animator;
         private float value2;
         private bool isTrigger;
@@ -80,8 +79,7 @@ namespace JSSoft.Terminal
         {
             base.OnEnable();
             this.animator = this.GetComponent<Animator>();
-            this.value2 = this.value;
-            this.position = this.GetComponent<RectTransform>().anchoredPosition;
+            this.value2 = float.MinValue;
         }
 
         protected override void OnDisable()

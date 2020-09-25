@@ -395,23 +395,22 @@ namespace JSSoft.Terminal.Editor
         {
             if (Selection.activeGameObject != null)
             {
-                if (Selection.activeGameObject.GetComponent<Canvas>() is Canvas c)
+                if (Selection.activeGameObject.GetComponentInParent<Canvas>() is Canvas canvas)
                 {
-                    return c;
+                    return canvas;
                 }
-
-                if (Selection.activeGameObject.GetComponentInParent<Canvas>() is Canvas c1)
-                {
-                    return c1;
-                }
+                return null;
             }
-            var canvas = GameObject.FindObjectOfType<Canvas>();
-            if (canvas == null)
+            else
             {
-                EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
-                canvas = GameObject.FindObjectOfType<Canvas>();
+                var canvas = GameObject.FindObjectOfType<Canvas>();
+                if (canvas == null)
+                {
+                    EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
+                    canvas = GameObject.FindObjectOfType<Canvas>();
+                }
+                return canvas;
             }
-            return canvas;
         }
 
         private static RectTransform PrepareParent()
