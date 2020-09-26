@@ -39,15 +39,15 @@ namespace JSSoft.Terminal.Commands
     [CommandSummary(CommandStrings.ConfigCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ConfigCommand : TerminalCommandBase
     {
-        private readonly IConfigurationProvider provider;
+        private readonly ICommandConfigurationProvider provider;
 
-        public ConfigCommand(ITerminal terminal, IConfigurationProvider provider)
+        public ConfigCommand(ITerminal terminal, ICommandConfigurationProvider provider)
             : base(terminal)
         {
             this.provider = provider;
         }
 
-        public ConfigCommand(string name, ITerminal terminal, IConfigurationProvider provider)
+        public ConfigCommand(string name, ITerminal terminal, ICommandConfigurationProvider provider)
             : base(terminal, name)
         {
             this.provider = provider;
@@ -60,7 +60,7 @@ namespace JSSoft.Terminal.Commands
                 if (completionContext.MemberDescriptor.DescriptorName == nameof(ConfigName))
                 {
                     var query = from item in this.Configs
-                                let configName = item.PropertyName
+                                let configName = item.Name
                                 where configName.StartsWith(completionContext.Find)
                                 select configName;
                     return query.ToArray();
@@ -115,42 +115,45 @@ namespace JSSoft.Terminal.Commands
             }
         }
 
-        protected IEnumerable<ConfigurationPropertyDescriptor> Configs => this.provider.Configs;
+        protected IEnumerable<ICommandConfiguration> Configs => this.provider.Configs;
 
         private void ShowList()
         {
             var sb = new StringBuilder();
             foreach (var item in this.Configs)
             {
-                sb.AppendLine($"{item.PropertyName}={item.Value}");
+                sb.AppendLine($"{item.Name}={item.Value}");
             }
             this.Terminal.Append(sb.ToString());
         }
 
         private void Show(string configName)
         {
-            var config = this.GetProperty(configName);
+            var config = this.GetConfiguration(configName);
             this.Terminal.AppendLine($"{config.Value}");
         }
 
         private void Set(string configName, string value)
         {
-            var property = this.GetProperty(configName);
-            if (property.PropertyType != typeof(string))
+            var config = this.GetConfiguration(configName);
+            if (config.Type != typeof(string))
             {
-                var converter = TypeDescriptor.GetConverter(property.PropertyType);
-                property.Value = converter.ConvertFromString(value);
+                var converter = TypeDescriptor.GetConverter(config.Type);
+                config.Value = converter.ConvertFromString(value);
             }
             else
             {
-                property.Value = value;
+                config.Value = value;
             }
         }
 
         private void Reset(string configName)
         {
-            var property = this.GetProperty(configName);
-            property.Reset();
+            var config = this.GetConfiguration(configName);
+            if (config.DefaultValue != DBNull.Value)
+            {
+                config.Value = config.DefaultValue;
+            }
         }
 
         private void ShowUsage()
@@ -158,9 +161,9 @@ namespace JSSoft.Terminal.Commands
             this.Terminal.AppendLine("type 'help config'");
         }
 
-        private ConfigurationPropertyDescriptor GetProperty(string configName)
+        private ICommandConfiguration GetConfiguration(string configName)
         {
-            var config = this.Configs.FirstOrDefault(item => item.PropertyName == configName);
+            var config = this.Configs.FirstOrDefault(item => item.Name == configName);
             if (config == null)
                 throw new ArgumentException($"{configName} does not existed property.");
             return config;

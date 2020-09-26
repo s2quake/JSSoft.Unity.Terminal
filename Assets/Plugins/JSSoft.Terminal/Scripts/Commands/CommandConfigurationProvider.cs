@@ -33,8 +33,37 @@ using JSSoft.Library;
 
 namespace JSSoft.Terminal.Commands
 {
-    public interface IConfigurationProvider
+    public class CommandConfigurationProvider : ICommandConfigurationProvider
     {
-        IEnumerable<ConfigurationPropertyDescriptor> Configs { get; }
+        private readonly List<ICommandConfiguration> configList = new List<ICommandConfiguration>();
+
+        public void Add(ICommandConfiguration config)
+        {
+            foreach (var item in this.configList)
+            {
+                if (item.Name == config.Name)
+                    throw new ArgumentException();
+            }
+            this.configList.Add(config);
+        }
+
+        public void Remove(ICommandConfiguration config)
+        {
+            this.configList.Remove(config);
+        }
+
+        public void Remove(string propertyName)
+        {
+            foreach (var item in this.configList)
+            {
+                if (item.Name == propertyName)
+                {
+                    this.configList.Remove(item);
+                    break;
+                }
+            }
+        }
+
+        public IEnumerable<ICommandConfiguration> Configs => this.configList;
     }
 }

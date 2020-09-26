@@ -222,7 +222,7 @@ namespace JSSoft.Terminal
             {
                 this.VisibleIndex = this.CursorPoint.Y;
             }
-            if (this.CursorPoint.Y >= this.VisibleIndex + this.BufferHeight)
+            if (this.CursorPoint.Y >= this.VisibleIndex + this.BufferHeight && this.BufferHeight > 0)
             {
                 this.VisibleIndex = this.CursorPoint.Y - this.BufferHeight + 1;
             }

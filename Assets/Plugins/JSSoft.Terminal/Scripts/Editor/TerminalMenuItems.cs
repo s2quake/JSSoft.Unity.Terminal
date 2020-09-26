@@ -171,7 +171,7 @@ namespace JSSoft.Terminal.Editor
         {
             var canvas = PrepareCanvas();
             var parentRect = PrepareParent();
-            var dispatcher = PrepareDispatcher();
+            var dispatcher = PrepareDispatcher(canvas);
             var canvasTransform = canvas.transform;
             var pixelRect = canvas.pixelRect;
 
@@ -291,7 +291,9 @@ namespace JSSoft.Terminal.Editor
             scrollbarImage.sprite = backgroundSprite;
             scrollbarImage.color = TerminalGrid.DefaultScrollbarColor;
             scrollbarImage.type = Image.Type.Sliced;
-            // scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+#if UNITY_2019_3_OR_NEWER
+            scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
+#endif
             scrollbarRect.SetParent(terminalGridRect);
             scrollbarRect.anchorMin = new Vector2(1, 0);
             scrollbarRect.anchorMax = Vector3.one;
@@ -316,7 +318,9 @@ namespace JSSoft.Terminal.Editor
             handleImage.sprite = uiSprite;
             handleImage.color = TerminalGrid.DefaultScrollbarColor;
             handleImage.type = Image.Type.Sliced;
-            // handleImage.pixelsPerUnitMultiplier = 0.5f;
+#if UNITY_2019_3_OR_NEWER            
+            handleImage.pixelsPerUnitMultiplier = 0.5f;
+#endif
             handleRect.SetParent(slidingAreaRect);
             handleRect.offsetMin = new Vector2(-10.0f, -10.0f);
             handleRect.offsetMax = new Vector2(10.0f, 10.0f);
@@ -422,13 +426,16 @@ namespace JSSoft.Terminal.Editor
             return GameObject.FindObjectOfType<Canvas>().GetComponent<RectTransform>();
         }
 
-        private static TerminalDispatcher PrepareDispatcher()
+        private static TerminalDispatcher PrepareDispatcher(Canvas canvas)
         {
-            var dispatcher = GameObject.FindObjectOfType<TerminalDispatcher>();
+            var dispatcher = canvas.GetComponentInChildren<TerminalDispatcher>();
+            var canvasRect = canvas.GetComponent<RectTransform>();
             if (dispatcher == null)
             {
-                var dispatcherObject = new GameObject(nameof(TerminalDispatcher), typeof(TerminalDispatcher));
+                var dispatcherObject = new GameObject(nameof(TerminalDispatcher), typeof(TerminalDispatcher), typeof(RectTransform));
+                var dispatcherRect = dispatcherObject.GetComponent<RectTransform>();
                 dispatcher = dispatcherObject.GetComponent<TerminalDispatcher>();
+                dispatcherRect.SetParent(canvasRect);
             }
             return dispatcher;
         }

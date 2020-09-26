@@ -30,6 +30,7 @@ using System;
 using System.Collections.Generic;
 using JSSoft.Terminal.Tasks;
 using System.IO;
+using UnityEngine.Events;
 
 namespace JSSoft.Terminal.Commands
 {
@@ -42,11 +43,25 @@ namespace JSSoft.Terminal.Commands
         [SerializeField]
         private bool isTest = false;
         private TextWriter consoleWriter;
+        private ICommandProvider commandsProvider;
+        private ICommandConfigurationProvider configurationProvider;
 
         public string Text
         {
             get => this.text;
             set => this.text = value ?? throw new ArgumentNullException(nameof(value));
+        }
+
+        public ICommandProvider CommandsProvider
+        {
+            get => this.commandsProvider;
+            set => this.commandsProvider = value;
+        }
+
+        public ICommandConfigurationProvider ConfigurationProvider
+        {
+            get => this.configurationProvider;
+            set => this.configurationProvider = value;
         }
 
         protected override void Awake()
@@ -90,17 +105,11 @@ namespace JSSoft.Terminal.Commands
 
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
-            yield return new ResetCommand(this.Terminal);
-            yield return new InfoCommand(this.Terminal);
-            yield return new ExitCommand(this.Terminal);
-            yield return new VerboseCommand(this.Terminal);
-            yield return new ResolutionCommand(this.Terminal);
-            yield return new PingCommand(this.Terminal);
-            yield return new StyleCommand(this.Terminal);
-            yield return new InternetProtocolCommand(this.Terminal);
-            yield return new ConfigCommand(this.Terminal, ConfigurationProvider.Current);
-
-            yield return new TestCommand(this.Terminal);
+            foreach (var item in (this.CommandsProvider ?? new CommandsProvider()).Provide(this.Terminal))
+            {
+                yield return item;
+            }
+            yield return new ConfigCommand(this.Terminal, this.ConfigurationProvider ?? new CommandConfigurationProvider());
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)
@@ -126,5 +135,10 @@ namespace JSSoft.Terminal.Commands
         }
 
         #endregion
+
+        [System.Serializable]
+        public class CollectCommandsEvent : UnityEvent<int>
+        {
+        }
     }
 }
