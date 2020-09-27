@@ -19,7 +19,7 @@ UGUI로 구현이 되었습니다.
 
 # 폴더 구조
 
-## Assets/Plugins/JSSoft.Terminal
+## Assets/Plugins/JSSoft.Unity.Terminal
 
     터미널 라이브러리
 

@@ -1,9 +1,0 @@
-{
-    "name": "JSSoft.Terminal.Editor",
-    "references": [
-        "JSSoft.Terminal"
-    ],
-    "optionalUnityReferences": [
-        "TestAssemblies"
-    ]
-}

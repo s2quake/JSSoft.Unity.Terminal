@@ -1,0 +1,14 @@
+{
+    "name": "JSSoft.Communication.Services",
+    "references": [
+        "JSSoft.Unity.Terminal"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": []
+}

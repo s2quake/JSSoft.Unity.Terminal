@@ -1,0 +1,19 @@
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Collections;
+using JSSoft.Unity.Terminal;
+
+public class TerminalBehaviour : TerminalBehaviourBase
+{
+    protected override void OnAttach(ITerminalGrid grid)
+    {
+
+    }
+
+    protected override void OnDetach(ITerminalGrid grid)
+    {
+
+    }
+}
