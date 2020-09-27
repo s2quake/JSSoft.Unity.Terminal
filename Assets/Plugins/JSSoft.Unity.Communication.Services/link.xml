@@ -1,7 +1,0 @@
-<linker>
-    <assembly fullname="System" preserve="all">
-        <type fullname="System.ComponentModel.NullableConverter" preserve="all" />
-    </assembly>
-    <assembly fullname="JSSoft.Communication" preserve="all" />
-    <assembly fullname="JSSoft.Library.Random" preserve="all" />
-</linker>
