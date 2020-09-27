@@ -132,44 +132,49 @@ namespace JSSoft.Unity.Terminal.Editor
         [MenuItem("GameObject/UI/Terminals/Terminal")]
         private static void CreateTerminalUI()
         {
-            CreateTerminal();
+            var canvas = PrepareCanvas();
+            CreateTerminal(canvas);
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal - Commands")]
         private static void CreateTerminalUICommands()
         {
-            var terminalGridObj = CreateTerminal();
+            var canvas = PrepareCanvas();
+            var terminalGridObj = CreateTerminal(canvas);
             terminalGridObj.AddComponent<CommandContextHost>();
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Layout")]
         private static void CreateTerminalUILayout()
         {
-            CreateTerminalLayout();
+            var canvas = PrepareCanvas();
+            CreateTerminalLayout(canvas);
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Full")]
         private static void CreateTerminalUIFull()
         {
-            var terminalLayoutObj = CreateTerminalLayout();
+            var canvas = PrepareCanvas();
+            var terminalLayoutObj = CreateTerminalLayout(canvas);
             var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
-            var terminalGridObj = CreateTerminal();
+            var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Full - Commands")]
         private static void CreateTerminalUIFullCommands()
         {
-            var terminalLayoutObj = CreateTerminalLayout();
+            var canvas = PrepareCanvas();
+            var terminalLayoutObj = CreateTerminalLayout(canvas);
             var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
-            var terminalGridObj = CreateTerminal();
+            var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
             terminalGridObj.AddComponent<CommandContextHost>();
+            PrepareStyles(canvas);
         }
 
-        private static GameObject CreateTerminal()
+        private static GameObject CreateTerminal(Canvas canvas)
         {
-            var canvas = PrepareCanvas();
             var parentRect = PrepareParent();
             var dispatcher = PrepareDispatcher(canvas);
             var canvasTransform = canvas.transform;
@@ -338,9 +343,8 @@ namespace JSSoft.Unity.Terminal.Editor
             return Selection.activeGameObject;
         }
 
-        private static GameObject CreateTerminalLayout()
+        private static GameObject CreateTerminalLayout(Canvas canvas)
         {
-            var canvas = PrepareCanvas();
             var parentRect = PrepareParent();
 
             var types = new List<Type>()
@@ -438,6 +442,32 @@ namespace JSSoft.Unity.Terminal.Editor
                 dispatcherRect.SetParent(canvasRect);
             }
             return dispatcher;
+        }
+
+        private static TerminalStyles PrepareStyles(Canvas canvas)
+        {
+            var styles = canvas.GetComponentInChildren<TerminalStyles>();
+            var canvasRect = canvas.GetComponent<RectTransform>();
+            if (styles == null)
+            {
+                var stylesObject = new GameObject(nameof(TerminalStyles), typeof(TerminalStyles), typeof(RectTransform));
+                var stylesRect = stylesObject.GetComponent<RectTransform>();
+                styles = stylesObject.GetComponent<TerminalStyles>();
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Basic.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Grass.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/HomeBrew.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Man Page.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Novel.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Ocean.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Pro.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Red Sands.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Silver Aerogel.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Solid Colors.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Console.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/PowerShell.asset", typeof(TerminalStyle)) as TerminalStyle);
+                stylesRect.SetParent(canvasRect);
+            }
+            return styles;
         }
 
         private static IDictionary<Type, Type> CollectTypes(IEnumerable<Type> types)

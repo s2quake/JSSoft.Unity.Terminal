@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    public class StyleResources : MonoBehaviour
+    public class TerminalStyles : MonoBehaviour
     {
         [SerializeField]
         private List<TerminalStyle> styles = new List<TerminalStyle>();

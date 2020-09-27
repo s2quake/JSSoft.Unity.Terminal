@@ -134,7 +134,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         private static IDictionary<string, TerminalStyle> GetStyles()
         {
-            var resources = UnityEngine.GameObject.FindObjectOfType<StyleResources>();
+            var resources = UnityEngine.GameObject.FindObjectOfType<TerminalStyles>();
             if (resources == null)
                 throw new InvalidOperationException("cannot found StyleResources.");
             var styles = new Dictionary<string, TerminalStyle>(resources.Styles.Count);
