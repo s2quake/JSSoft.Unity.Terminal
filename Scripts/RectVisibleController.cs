@@ -97,6 +97,8 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual void Update()
         {
+            if (Application.isPlaying == false)
+                return;
             var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
             if (this.isTrigger == true && stateInfo.normalizedTime >= stateInfo.length)
             {

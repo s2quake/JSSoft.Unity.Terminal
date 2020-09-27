@@ -34,7 +34,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    public class CommandsProvider : ICommandProvider
+    public class CommandProvider : ICommandProvider
     {
         public virtual IEnumerable<ICommand> Provide(ITerminal terminal)
         {

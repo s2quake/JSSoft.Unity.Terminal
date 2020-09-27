@@ -36,7 +36,7 @@ namespace JSSoft.Unity.Terminal
         private TerminalBase terminal;
         private TerminalGridBase grid;
         [SerializeField]
-        private bool isAsync = true;
+        private bool isAsync = false;
 
         public TerminalBase Terminal => this.terminal;
 

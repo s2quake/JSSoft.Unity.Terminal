@@ -43,7 +43,7 @@ namespace JSSoft.Unity.Terminal.Commands
         [SerializeField]
         private bool isTest = false;
         private TextWriter consoleWriter;
-        private ICommandProvider commandsProvider;
+        private ICommandProvider commandProvider;
         private ICommandConfigurationProvider configurationProvider;
 
         public string Text
@@ -52,10 +52,10 @@ namespace JSSoft.Unity.Terminal.Commands
             set => this.text = value ?? throw new ArgumentNullException(nameof(value));
         }
 
-        public ICommandProvider CommandsProvider
+        public ICommandProvider CommandProvider
         {
-            get => this.commandsProvider;
-            set => this.commandsProvider = value;
+            get => this.commandProvider;
+            set => this.commandProvider = value;
         }
 
         public ICommandConfigurationProvider ConfigurationProvider
@@ -105,7 +105,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
-            foreach (var item in (this.CommandsProvider ?? new CommandsProvider()).Provide(this.Terminal))
+            foreach (var item in (this.CommandProvider ?? new CommandProvider()).Provide(this.Terminal))
             {
                 yield return item;
             }
