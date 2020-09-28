@@ -136,6 +136,30 @@ namespace JSSoft.Unity.Terminal.Commands
             }
         }
 
+        public static class SceneCommand
+        {
+            public const string Summary = "Change scene.";
+            public const string Summary_ko_KR = "장면을 변경합니다.";
+
+            public static class IsList
+            {
+                public const string Summary = "Displays a list of scene.";
+                public const string Summary_ko_KR = "장면의 목록을 표시합니다.";
+            }
+
+            // public static class IsRemove
+            // {
+            //     public const string Summary = "Removes the currently applied style.";
+            //     public const string Summary_ko_KR = "현재 적용된 스타일을 제거합니다.";
+            // }
+
+            public static class SceneName
+            {
+                public const string Summary = "Specifies the name or index of the scene to load. If not specified, displays the name of the active scene.";
+                public const string Summary_ko_KR = "로드할 장면의 이름 또는 번호를 지정합니다. 지정되지 않으면 현재 로드된 장면의 이름을 표시합니다.";
+            }
+        }
+
         public static class VerboseCommand
         {
             public const string Summary = "Displays or sets the details for the message.";
