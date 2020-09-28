@@ -12,9 +12,10 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public DictionaryConfiguration(string name, IDictionary<TKey, TValue> dictionary, TKey key)
         {
-            this.Name = name;
-            this.dictionary = dictionary;
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
             this.key = key;
+            this.DefaultValue = dictionary[key];
         }
 
         public override Type Type => typeof(TValue);
@@ -30,7 +31,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void SetValue(TValue value)
         {
-           this.dictionary[this.key] = value;
+            this.dictionary[this.key] = value;
         }
     }
 }

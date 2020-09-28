@@ -11,23 +11,36 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public PropertyConfiguration(string name, object instance, PropertyInfo propertyInfo)
         {
-            this.Name = name;
-            this.instance = instance;
-            this.propertyInfo = propertyInfo;
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
+            this.propertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
+            this.DefaultValue = propertyInfo.GetValue(instance);
         }
 
         public PropertyConfiguration(string name, object instance, string propertyName)
         {
-            this.Name = name;
-            this.instance = instance;
+            if (propertyName == null)
+                throw new ArgumentNullException(nameof(propertyName));
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
+            this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
             this.propertyInfo = instance.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (this.propertyInfo == null)
+                throw new InvalidOperationException($"property cannot found: '{propertyName}'");
+            this.DefaultValue = this.propertyInfo.GetValue(instance);
         }
 
         public PropertyConfiguration(string name, Type type, string propertyName)
         {
-            this.Name = name;
+            if (propertyName == null)
+                throw new ArgumentNullException(nameof(propertyName));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+            this.Name = name ?? throw new ArgumentNullException(nameof(name)); ;
             this.instance = null;
             this.propertyInfo = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            if (this.propertyInfo == null)
+                throw new InvalidOperationException($"property cannot found: '{propertyName}'");
+            this.DefaultValue = this.propertyInfo.GetValue(instance);
         }
 
         public override Type Type => this.propertyInfo.PropertyType;
