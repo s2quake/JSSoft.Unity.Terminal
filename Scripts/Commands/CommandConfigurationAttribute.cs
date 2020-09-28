@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 // 
 // Copyright (c) 2020 Jeesu Choi
 // 
@@ -20,24 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Text;
-using JSSoft.Library.Commands;
-using UnityEngine;
+using System;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.VersionCommand.Summary)]
-    [CommandSummary(CommandStrings.VersionCommand.Summary_ko_KR, Locale = "ko-KR")]
-    public class VersionCommand : CommandBase
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Property)]
+    public class CommandConfigurationAttribute : Attribute
     {
-        protected override void OnExecute()
+        private string fullName = string.Empty;
+
+        public CommandConfigurationAttribute()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine($"Identifier: {Application.identifier}");
-            sb.AppendLine($"Version: {Application.version}");
-            sb.AppendLine($"ProductName: {Application.productName}");
-            sb.AppendLine($"Unity Version: {Application.unityVersion}");
-            this.Out.WriteLine(sb.ToString());
+        }
+
+        public CommandConfigurationAttribute(string name)
+        {
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
+        }
+
+        public string Name { get; } = string.Empty;
+
+        public string FullName
+        {
+            get => this.fullName;
+            set => this.fullName = value ?? throw new ArgumentNullException(nameof(value));
         }
     }
 }

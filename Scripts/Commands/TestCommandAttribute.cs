@@ -27,6 +27,5 @@ namespace JSSoft.Unity.Terminal.Commands
     [AttributeUsage(AttributeTargets.Class)]
     public class TestCommandAttribute : Attribute
     {
-        
     }
 }

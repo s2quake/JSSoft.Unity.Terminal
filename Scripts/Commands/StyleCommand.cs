@@ -22,14 +22,8 @@
 
 using System;
 using System.Linq;
-using System.ComponentModel;
-using System.Threading.Tasks;
-using JSSoft.Unity.Terminal;
 using JSSoft.Library.Commands;
-using JSSoft.Library.Threading;
-using UnityEngine;
 using System.Collections.Generic;
-using JSSoft.Unity.Terminal.Tasks;
 
 namespace JSSoft.Unity.Terminal.Commands
 {

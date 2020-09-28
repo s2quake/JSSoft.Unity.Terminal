@@ -21,15 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using JSSoft.Library.Threading;
-using JSSoft.Unity.Terminal;
-using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {

@@ -22,13 +22,10 @@
 
 using UnityEngine;
 using JSSoft.Library.Commands;
-using JSSoft.Unity.Terminal.Commands;
 using System.Linq;
-using JSSoft.Unity.Terminal;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
-using JSSoft.Unity.Terminal.Tasks;
 using System.IO;
 using UnityEngine.Events;
 

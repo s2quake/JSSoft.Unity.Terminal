@@ -20,11 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Threading.Tasks;
-using JSSoft.Unity.Terminal;
 using UnityEngine;
-using JSSoft.Library.Threading;
 using System.Collections.Generic;
 
 namespace JSSoft.Unity.Terminal.Commands

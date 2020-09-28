@@ -1,5 +1,28 @@
+// MIT License
+// 
+// Copyright (c) 2020 Jeesu Choi
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 using System;
 using System.Reflection;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -13,7 +36,7 @@ namespace JSSoft.Unity.Terminal.Commands
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
             this.fieldInfo = fieldInfo ?? throw new ArgumentNullException(nameof(fieldInfo));
-            this.DefaultValue = fieldInfo.GetValue(instance);
+            this.Initialize();
         }
 
         public FieldConfiguration(string name, object instance, string fieldName)
@@ -23,7 +46,7 @@ namespace JSSoft.Unity.Terminal.Commands
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
             this.fieldInfo = instance.GetType().GetField(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            this.DefaultValue = this.fieldInfo.GetValue(instance);
+            this.Initialize();
         }
 
         public FieldConfiguration(string name, Type type, string fieldName)
@@ -37,7 +60,7 @@ namespace JSSoft.Unity.Terminal.Commands
             this.fieldInfo = type.GetField(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (this.fieldInfo == null)
                 throw new InvalidOperationException($"property cannot found: '{fieldName}'");
-            this.DefaultValue = this.fieldInfo.GetValue(instance);
+            this.Initialize();
         }
 
         public override Type Type => this.fieldInfo.FieldType;
@@ -52,6 +75,15 @@ namespace JSSoft.Unity.Terminal.Commands
         protected override void SetValue(object value)
         {
             this.fieldInfo.SetValue(this.instance, value);
+        }
+
+        private void Initialize()
+        {
+            this.DefaultValue = this.fieldInfo.GetValue(instance);
+            if (this.fieldInfo.GetCustomAttribute(typeof(TooltipAttribute)) is TooltipAttribute tooltip)
+            {
+                this.Comment = tooltip.tooltip;
+            }
         }
     }
 }

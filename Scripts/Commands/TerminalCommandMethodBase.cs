@@ -22,11 +22,7 @@
 
 using System;
 using System.Threading.Tasks;
-using JSSoft.Unity.Terminal;
-using JSSoft.Unity.Terminal.Tasks;
 using JSSoft.Library.Commands;
-using JSSoft.Library.Threading;
-using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {

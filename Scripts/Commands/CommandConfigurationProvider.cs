@@ -21,15 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Text;
-using System.Threading.Tasks;
-using JSSoft.Unity.Terminal;
-using JSSoft.Unity.Terminal.Tasks;
-using JSSoft.Library.Commands;
-using JSSoft.Library.Threading;
-using UnityEngine;
 using System.Collections.Generic;
-using JSSoft.Library;
+using System.Reflection;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -45,6 +38,46 @@ namespace JSSoft.Unity.Terminal.Commands
                     throw new ArgumentException();
             }
             this.configList.Add(config);
+        }
+
+        public void AddInstance(object instance)
+        {
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+            var instanceType = instance.GetType();
+            if (Attribute.GetCustomAttribute(instanceType, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
+            {
+                if (attr.Name != string.Empty)
+                {
+                    this.AddFields(instance, attr.Name);
+                    this.AddProperties(instance, attr.Name);
+                }
+                else
+                {
+                    this.AddFields(instance, instanceType.Name);
+                    this.AddProperties(instance, instanceType.Name);
+                }
+            }
+        }
+
+        public void RemoveInstance(object instance)
+        {
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+            var instanceType = instance.GetType();
+            if (Attribute.GetCustomAttribute(instanceType, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
+            {
+                if (attr.Name != string.Empty)
+                {
+                    this.RemoveFields(instance, attr.Name);
+                    this.RemoveProperties(instance, attr.Name);
+                }
+                else
+                {
+                    this.RemoveFields(instance, instanceType.Name);
+                    this.RemoveProperties(instance, instanceType.Name);
+                }
+            }
         }
 
         public void Remove(ICommandConfiguration config)
@@ -65,5 +98,101 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         public IEnumerable<ICommandConfiguration> Configs => this.configList;
+
+        private void AddProperties(object instance, string rootName)
+        {
+            var instanceType = instance.GetType();
+            var properties = instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var item in properties)
+            {
+                if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
+                {
+                    if (attr.FullName != string.Empty)
+                    {
+                        this.Add(new PropertyConfiguration(attr.FullName, instance, item));
+                    }
+                    else if (attr.Name != string.Empty)
+                    {
+                        this.Add(new PropertyConfiguration($"{rootName}.{attr.Name}", instance, item));
+                    }
+                    else
+                    {
+                        this.Add(new PropertyConfiguration($"{rootName}.{item.Name}", instance, item));
+                    }
+                }
+            }
+        }
+
+        private void RemoveProperties(object instance, string rootName)
+        {
+            var instanceType = instance.GetType();
+            var properties = instance.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var item in properties)
+            {
+                if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
+                {
+                    if (attr.FullName != string.Empty)
+                    {
+                        this.Remove(attr.FullName);
+                    }
+                    else if (attr.Name != string.Empty)
+                    {
+                        this.Remove($"{rootName}.{attr.Name}");
+                    }
+                    else
+                    {
+                        this.Remove($"{rootName}.{item.Name}");
+                    }
+                }
+            }
+        }
+
+        private void AddFields(object instance, string rootName)
+        {
+            var instanceType = instance.GetType();
+            var fields = instance.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var item in fields)
+            {
+                if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
+                {
+                    if (attr.FullName != string.Empty)
+                    {
+                        this.Add(new FieldConfiguration(attr.FullName, instance, item));
+                    }
+                    else if (attr.Name != string.Empty)
+                    {
+                        this.Add(new FieldConfiguration($"{rootName}.{attr.Name}", instance, item));
+                    }
+                    else
+                    {
+                        this.Add(new FieldConfiguration($"{rootName}.{item.Name}", instance, item));
+                    }
+                }
+            }
+        }
+
+        private void RemoveFields(object instance, string rootName)
+        {
+            var instanceType = instance.GetType();
+            var fields = instance.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            foreach (var item in fields)
+            {
+                if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
+                {
+                    if (attr.FullName != string.Empty)
+                    {
+                        this.Remove(attr.FullName);
+                    }
+                    else if (attr.Name != string.Empty)
+                    {
+                        this.Remove($"{rootName}.{attr.Name}");
+                    }
+                    else
+                    {
+                        this.Remove($"{rootName}.{item.Name}");
+                    }
+                }
+            }
+        }
     }
 }
