@@ -46,7 +46,14 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)
         {
-            return GetScenes();
+            if (completionContext.MemberDescriptor.DescriptorName == nameof(SceneName))
+            {
+                var query = from item in GetScenes()
+                            where item.StartsWith(completionContext.Find)
+                            select item;
+                return query.ToArray();
+            }
+            return null;
         }
 
         [CommandSummary(CommandStrings.SceneCommand.IsList.Summary)]

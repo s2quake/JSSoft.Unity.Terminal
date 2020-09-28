@@ -44,8 +44,14 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)
         {
-            var styles = GetStyles();
-            return styles.Keys.ToArray();
+            if (completionContext.MemberDescriptor.DescriptorName == nameof(StyleName))
+            {
+                var query = from item in GetStyles().Keys
+                            where item.StartsWith(completionContext.Find)
+                            select item;
+                return query.ToArray();
+            }
+            return null;
         }
 
         [CommandSummary(CommandStrings.StyleCommand.IsList.Summary)]
