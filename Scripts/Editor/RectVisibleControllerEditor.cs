@@ -42,6 +42,7 @@ namespace JSSoft.Unity.Terminal.Editor
                 if (this.target is RectVisibleController controller)
                 {
                     controller.Show();
+                    EditorUtility.SetDirty(controller);
                 }
             }
             if (GUILayout.Button("Hide") == true)
@@ -49,6 +50,7 @@ namespace JSSoft.Unity.Terminal.Editor
                 if (this.target is RectVisibleController controller)
                 {
                     controller.Hide();
+                    EditorUtility.SetDirty(controller);
                 }
             }
             if (GUILayout.Button("Reset") == true)
@@ -56,6 +58,7 @@ namespace JSSoft.Unity.Terminal.Editor
                 if (this.target is RectVisibleController controller)
                 {
                     controller.ResetPosition();
+                    EditorUtility.SetDirty(controller);
                 }
             }
         }

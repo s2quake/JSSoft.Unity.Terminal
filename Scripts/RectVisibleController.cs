@@ -55,7 +55,17 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        public bool IsTriggered => this.isTrigger;
+        public bool? IsVisible
+        {
+            get
+            {
+                if (this.value == 0)
+                    return true;
+                else if (this.value == 1)
+                    return false;
+                return null;
+            }
+        }
 
         [FieldName(nameof(direction))]
         public RectVisibleDirection Direction

@@ -687,6 +687,8 @@ namespace JSSoft.Unity.Terminal
 
         internal void UpdateLayout()
         {
+            if (this.terminal == null)
+                return;
             var cursorIndex = this.terminal.CursorIndex;
             var size = this.rectTransform.rect.size;
             size.x = Math.Abs(size.x);
