@@ -46,7 +46,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected Task WriteAsync(string text, TerminalColor? foregroundColor, TerminalColor? backgroundColor)
         {
-            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            return this.Dispatcher.InvokeAsync(() =>
             {
                 if (foregroundColor != null)
                     this.Terminal.ForegroundColor = foregroundColor;
@@ -56,6 +56,11 @@ namespace JSSoft.Unity.Terminal.Commands
                 if (foregroundColor != null || backgroundColor != null)
                     this.Terminal.ResetColor();
             });
+        }
+
+        protected Task WriteLineAsync()
+        {
+            return this.WriteLineAsync(string.Empty);
         }
 
         protected Task WriteLineAsync(string text)
@@ -70,7 +75,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected Task WriteLineAsync(string text, TerminalColor? foregroundColor, TerminalColor? backgroundColor)
         {
-            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            return this.Dispatcher.InvokeAsync(() =>
             {
                 if (foregroundColor != null)
                     this.Terminal.ForegroundColor = foregroundColor;
@@ -84,7 +89,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected Task CompleteProgressAsync(string message)
         {
-            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            return this.Dispatcher.InvokeAsync(() =>
             {
                 var progressText = this.Terminal.Progress(message, 1);
                 this.Terminal.Progress(string.Empty, 0);
@@ -94,7 +99,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected Task CancelProgressAasync(string message)
         {
-            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            return this.Dispatcher.InvokeAsync(() =>
             {
                 var progressText = this.Terminal.ProgressText;
                 this.Terminal.Progress(string.Empty, 0);
@@ -104,7 +109,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected Task<string> SetProgressAsync(string message, float value)
         {
-            return this.Terminal.Dispatcher.InvokeAsync(() =>
+            return this.Dispatcher.InvokeAsync(() =>
             {
                 this.Terminal.Progress(message, value);
                 return this.Terminal.ProgressText;
@@ -114,5 +119,7 @@ namespace JSSoft.Unity.Terminal.Commands
         protected ITerminal Terminal { get; }
 
         protected ITerminalGrid Grid { get; }
+
+        protected TerminalDispatcher Dispatcher => this.Terminal.Dispatcher;
     }
 }

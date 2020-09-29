@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using UnityEngine;
 
@@ -55,7 +56,7 @@ namespace JSSoft.Unity.Terminal.Commands
                 throw new ArgumentNullException(nameof(fieldName));
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
-            this.Name = name ?? throw new ArgumentNullException(nameof(name)); ;
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.instance = null;
             this.fieldInfo = type.GetField(fieldName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (this.fieldInfo == null)
@@ -83,6 +84,10 @@ namespace JSSoft.Unity.Terminal.Commands
             if (this.fieldInfo.GetCustomAttribute(typeof(TooltipAttribute)) is TooltipAttribute tooltip)
             {
                 this.Comment = tooltip.tooltip;
+            }
+            if (this.fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute)) is DescriptionAttribute description)
+            {
+                this.Comment = description.Description;
             }
         }
     }

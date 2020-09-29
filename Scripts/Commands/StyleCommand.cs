@@ -94,7 +94,7 @@ namespace JSSoft.Unity.Terminal.Commands
             foreach (var item in styles.Keys)
             {
                 var isCurrent = styleName == item ? "*" : " ";
-                this.Out.WriteLine($"{isCurrent} {item}");
+                this.WriteLine($"{isCurrent} {item}");
             }
         }
 
@@ -110,11 +110,11 @@ namespace JSSoft.Unity.Terminal.Commands
             var style = grid.Style;
             if (style != null)
             {
-                this.Out.WriteLine(style.name);
+                this.WriteLine(style.name);
             }
             else
             {
-                this.Out.WriteLine("style is not applied.");
+                this.WriteLine("style is not applied.");
             }
         }
 
@@ -124,11 +124,11 @@ namespace JSSoft.Unity.Terminal.Commands
             if (styles.ContainsKey(this.StyleName) == true)
             {
                 grid.Style = styles[this.StyleName];
-                this.Out.WriteLine($"{this.StyleName} applied.");
+                this.WriteLine($"{this.StyleName} applied.");
             }
             else
             {
-                this.Out.WriteLine($"{this.StyleName} style does not exits.");
+                this.WriteLine($"{this.StyleName} style does not exits.");
             }
         }
 

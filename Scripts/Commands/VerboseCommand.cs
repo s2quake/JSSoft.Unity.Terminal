@@ -42,7 +42,7 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             var value = this.Value;
             if (value == null)
-                this.Terminal.AppendLine($"Verbose: {$"{this.Terminal.IsVerbose}".ToLower()}");
+                this.WriteLine($"Verbose: {$"{this.Terminal.IsVerbose}".ToLower()}");
             else
                 this.Terminal.IsVerbose = (bool)value;
         }

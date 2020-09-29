@@ -109,7 +109,7 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 sb.AppendLine($"property '{propertyName}' does not exists.");
             }
-            this.Terminal.AppendLine(sb.ToString());
+            this.WriteLine(sb.ToString());
         }
     }
 }

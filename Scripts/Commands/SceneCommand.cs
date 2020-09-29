@@ -86,9 +86,9 @@ namespace JSSoft.Unity.Terminal.Commands
                 var scenePath = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i);
                 var sceneName = Path.GetFileNameWithoutExtension(scenePath);
                 var isCurrent = activeScene.buildIndex == i ? "*" : " ";
-                this.Out.WriteLine($"{isCurrent}{i,2}: {sceneName}");
+                this.WriteLine($"{isCurrent}{i,2}: {sceneName}");
             }
-            this.Out.WriteLine();
+            this.WriteLine();
         }
 
         private void RemoveStyle(ITerminalGrid grid)
@@ -100,7 +100,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         private void ShowActiveScene()
         {
-            this.Out.WriteLine(SceneManager.GetActiveScene().name);
+            this.WriteLine(SceneManager.GetActiveScene().name);
         }
 
         private void LoadScene(string sceneName)

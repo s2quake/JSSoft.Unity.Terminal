@@ -26,6 +26,8 @@ using JSSoft.Library.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
+using UnityEngine;
+using JSSoft.Library;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -73,11 +75,11 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandSummary(CommandStrings.ConfigCommand.Value.Summary_ko_KR, Locale = "ko-KR")]
         public string Value { get; set; }
 
-        [CommandProperty("list")]
+        [CommandProperty("list", DefaultValue = "")]
         [CommandPropertyTrigger(nameof(ConfigName), "")]
         [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary)]
         [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary_ko_KR, Locale = "ko-KR")]
-        public bool ListSwitch { get; set; }
+        public string ListSwitch { get; set; }
 
         [CommandProperty("reset")]
         [CommandPropertyTrigger(nameof(ListSwitch), false)]
@@ -87,9 +89,9 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnExecute()
         {
-            if (this.ListSwitch == true)
+            if (this.ListSwitch != null)
             {
-                this.ShowList();
+                this.ShowList(this.ListSwitch);
             }
             else if (this.ResetSwitch == true)
             {
@@ -111,20 +113,23 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected IEnumerable<ICommandConfiguration> Configs => this.provider.Configs;
 
-        private void ShowList()
+        private void ShowList(string filter)
         {
             var sb = new StringBuilder();
-            foreach (var item in this.Configs)
+            var query = from item in this.Configs
+                        where filter == string.Empty || StringUtility.Glob(item.Name, filter, false)
+                        select item;
+            foreach (var item in query)
             {
-                sb.AppendLine($"{item.Name}={item.Value}");
+                sb.AppendLine($"{item.Name}={ConfigValueToString(item)}");
             }
-            this.Terminal.Append(sb.ToString());
+            this.Write(sb.ToString());
         }
 
         private void Show(string configName)
         {
             var config = this.GetConfiguration(configName);
-            this.Terminal.AppendLine($"{config.Value}");
+            this.WriteLine(ConfigValueToString(config));
         }
 
         private void Set(string configName, string value)
@@ -152,7 +157,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         private void ShowUsage()
         {
-            this.Terminal.AppendLine("type 'help config'");
+            this.WriteLine("type 'help config'");
         }
 
         private ICommandConfiguration GetConfiguration(string configName)
@@ -161,6 +166,13 @@ namespace JSSoft.Unity.Terminal.Commands
             if (config == null)
                 throw new ArgumentException($"{configName} does not existed property.");
             return config;
+        }
+
+        private static string ConfigValueToString(ICommandConfiguration config)
+        {
+            if (config.Type == typeof(bool))
+                return $"{config.Value}".ToLower();
+            return $"{config.Value}";
         }
     }
 }

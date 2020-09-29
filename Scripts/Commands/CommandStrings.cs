@@ -203,6 +203,12 @@ namespace JSSoft.Unity.Terminal.Commands
                 public const string Summary_ko_KR = "모든 속성의 이름과 값을 표시합니다.";
             }
 
+            public static class DetailSwitch
+            {
+                public const string Summary = "Displays details.";
+                public const string Summary_ko_KR = "자세히 표시합니다.";
+            }
+
             public static class ResetSwitch
             {
                 public const string Summary = "Returns the value of the property to its default value.";

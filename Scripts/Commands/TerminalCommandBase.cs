@@ -61,6 +61,11 @@ namespace JSSoft.Unity.Terminal.Commands
                 this.Terminal.ResetColor();
         }
 
+        protected void WriteLine()
+        {
+            this.WriteLine(string.Empty);
+        }
+
         protected void WriteLine(string text)
         {
             this.WriteLine(text, null);

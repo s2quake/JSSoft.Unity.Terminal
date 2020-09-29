@@ -94,7 +94,7 @@ namespace JSSoft.Unity.Terminal.Commands
             sb.AppendLine("current resolution: ");
             sb.AppendLine($"   {Screen.currentResolution}");
             sb.AppendLine();
-            this.Terminal.Append(sb.ToString());
+            this.Write(sb.ToString());
         }
 
         private void SetResolution()
@@ -106,7 +106,7 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 Screen.SetResolution(width, height, fullScreen);
             }
-            this.Terminal.AppendLine($"{Screen.width} x {Screen.height}");
+            this.WriteLine($"{Screen.width} x {Screen.height}");
         }
 
         private int PreferredWidth => Width != 0 ? Width : Screen.width;

@@ -58,7 +58,7 @@ namespace JSSoft.Unity.Terminal.Commands
                 throw new ArgumentNullException(nameof(propertyName));
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
-            this.Name = name ?? throw new ArgumentNullException(nameof(name)); ;
+            this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.instance = null;
             this.propertyInfo = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
             if (this.propertyInfo == null)

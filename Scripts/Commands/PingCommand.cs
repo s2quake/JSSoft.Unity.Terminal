@@ -59,21 +59,15 @@ namespace JSSoft.Unity.Terminal.Commands
             var count = this.Count;
             for (var i = 0; i < count; i++)
             {
-                var ping = await this.Terminal.Dispatcher.InvokeAsync(() => new Ping(address));
+                var ping = await this.Dispatcher.InvokeAsync(() => new Ping(address));
                 do
                 {
                     await Task.Delay(1000);
-                } while (await this.Terminal.Dispatcher.InvokeAsync(() => ping.isDone) == false);
-                await this.Terminal.Dispatcher.InvokeAsync(() =>
-                {
-                    this.Terminal.AppendLine($"{address}: {ping.time}");
-                    ping.DestroyPing();
-                });
+                } while (await this.Dispatcher.InvokeAsync(() => ping.isDone) == false);
+                await this.WriteLineAsync($"{address}: {ping.time}");
+                await this.Dispatcher.InvokeAsync(ping.DestroyPing);
             }
-            await this.Terminal.Dispatcher.InvokeAsync(() =>
-            {
-                this.Terminal.AppendLine();
-            });
+            await this.WriteLineAsync();
         }
     }
 }
