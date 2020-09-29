@@ -54,7 +54,7 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandSummary(CommandStrings.SceneCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("list")]
         [CommandPropertyTrigger(nameof(SceneName), "")]
-        public bool IsList { get; set; }
+        public bool ListSwitch { get; set; }
 
         [CommandSummary(CommandStrings.SceneCommand.SceneName.Summary)]
         [CommandSummary(CommandStrings.SceneCommand.SceneName.Summary_ko_KR, Locale = "ko-KR")]
@@ -63,7 +63,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnExecute()
         {
-            if (this.IsList == true)
+            if (this.ListSwitch == true)
             {
                 this.ShowSceneList();
             }

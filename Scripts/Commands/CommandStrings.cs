@@ -143,12 +143,6 @@ namespace JSSoft.Unity.Terminal.Commands
                 public const string Summary_ko_KR = "장면의 목록을 표시합니다.";
             }
 
-            // public static class IsRemove
-            // {
-            //     public const string Summary = "Removes the currently applied style.";
-            //     public const string Summary_ko_KR = "현재 적용된 스타일을 제거합니다.";
-            // }
-
             public static class SceneName
             {
                 public const string Summary = "Specifies the name or index of the scene to load. If not specified, displays the name of the active scene.";

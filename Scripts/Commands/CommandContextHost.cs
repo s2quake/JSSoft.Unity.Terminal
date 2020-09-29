@@ -116,6 +116,9 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnRun(string command)
         {
+            var commandInstance = this.commandContext.GetCommand(this.commandContext.Name, command);
+            if (commandInstance is IExecutableAsync && this.IsAsync == false)
+                throw new InvalidOperationException($"Asynchronous commands are not allowed. If you want to use an asynchronous command, set the IsAsync value to true: '{commandInstance.Name}'");
             this.commandContext.Execute(this.commandContext.Name, command);
         }
 
