@@ -132,10 +132,5 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         #endregion
-
-        [System.Serializable]
-        public class CollectCommandsEvent : UnityEvent<int>
-        {
-        }
     }
 }

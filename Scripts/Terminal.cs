@@ -281,7 +281,7 @@ namespace JSSoft.Unity.Terminal
 
         public static string NextCompletion(string[] completions, string text)
         {
-            completions = completions.OrderBy(item => item).ToArray();
+            completions = completions.ToArray();
             if (completions.Contains(text) == true)
             {
                 for (var i = 0; i < completions.Length; i++)
@@ -312,7 +312,7 @@ namespace JSSoft.Unity.Terminal
 
         public static string PrevCompletion(string[] completions, string text)
         {
-            completions = completions.OrderBy(item => item).ToArray();
+            completions = completions.ToArray();
             if (completions.Contains(text) == true)
             {
                 for (var i = completions.Length - 1; i >= 0; i--)
