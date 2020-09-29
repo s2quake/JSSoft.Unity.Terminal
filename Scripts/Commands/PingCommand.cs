@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using JSSoft.Library.Commands;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using JSSoft.Library.Commands;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands

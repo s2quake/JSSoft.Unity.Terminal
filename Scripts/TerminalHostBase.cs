@@ -21,11 +21,8 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.TextCore;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {

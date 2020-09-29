@@ -22,7 +22,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.TextCore;
 using UnityEngine.UI;
@@ -476,7 +475,7 @@ namespace JSSoft.Unity.Terminal
 
         private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
 
-                        
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)

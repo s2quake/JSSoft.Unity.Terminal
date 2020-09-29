@@ -21,15 +21,13 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.ComponentModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
-using System.IO;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace JSSoft.Unity.Terminal
 {

@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using JSSoft.Unity.Terminal;
 using JSSoft.Unity.Terminal.Editor;
+using System;
+using System.Collections.Generic;
 using UnityEditor;
 
 namespace JSSoft.Communication.Services.Editor

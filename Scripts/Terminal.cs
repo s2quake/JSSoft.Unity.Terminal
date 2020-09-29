@@ -20,18 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using JSSoft.Library.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using JSSoft.Library.Commands;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace JSSoft.Unity.Terminal
 {

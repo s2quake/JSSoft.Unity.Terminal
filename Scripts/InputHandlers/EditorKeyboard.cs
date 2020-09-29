@@ -21,9 +21,9 @@
 // SOFTWARE.
 
 #if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEditor;
 
 namespace JSSoft.Unity.Terminal.InputHandlers
 {

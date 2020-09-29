@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using JSSoft.Unity.Terminal;
-using UnityEngine;
-using UnityEngine.EventSystems;
+﻿using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {

@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Linq;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Text.RegularExpressions;
-using System.ComponentModel;
 
 namespace JSSoft.Unity.Terminal.InputHandlers
 {

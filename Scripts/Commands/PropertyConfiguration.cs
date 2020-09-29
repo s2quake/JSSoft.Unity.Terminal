@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using JSSoft.Library;
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using JSSoft.Library;
 
 namespace JSSoft.Unity.Terminal.Commands
 {

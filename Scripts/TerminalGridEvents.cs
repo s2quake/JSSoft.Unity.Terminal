@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace JSSoft.Unity.Terminal
 {

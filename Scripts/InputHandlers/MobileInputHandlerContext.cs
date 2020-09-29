@@ -21,11 +21,10 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using System.ComponentModel;
-using UnityEngine.UI;
 
 namespace JSSoft.Unity.Terminal.InputHandlers
 {

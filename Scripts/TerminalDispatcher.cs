@@ -20,10 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using JSSoft.Library.Threading;
 using System;
 using System.Threading.Tasks;
 using UnityEngine;
-using JSSoft.Library.Threading;
 
 namespace JSSoft.Unity.Terminal
 {

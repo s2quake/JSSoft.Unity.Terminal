@@ -20,14 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using JSSoft.Unity.Terminal.Commands;
+using JSSoft.Unity.Terminal.Fonts;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
-using JSSoft.Unity.Terminal.Commands;
-using JSSoft.Unity.Terminal.Fonts;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;

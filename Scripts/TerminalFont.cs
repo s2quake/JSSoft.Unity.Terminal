@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using JSSoft.Unity.Terminal.Fonts;
 using UnityEngine;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

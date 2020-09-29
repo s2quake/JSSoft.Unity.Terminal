@@ -20,16 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.ComponentModel;
-using System.Collections.Specialized;
-using System.Text;
-using System.IO;
 
 namespace JSSoft.Unity.Terminal
 {

@@ -30,7 +30,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public abstract string Name { get; }
 
-         public string Comment { get; set; } = string.Empty;
+        public string Comment { get; set; } = string.Empty;
 
         public object DefaultValue { get; set; } = DBNull.Value;
 

@@ -22,10 +22,8 @@
 
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.TextCore;
-using System.Collections.Generic;
-using System.Linq;
+using UnityEngine.UI;
 
 namespace JSSoft.Unity.Terminal
 {
