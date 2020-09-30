@@ -60,7 +60,7 @@ namespace JSSoft.Unity.Terminal
         public abstract IProgressGenerator ProgressGenerator { get; set; }
 
         public abstract TerminalDispatcher Dispatcher { get; }
-     
+
         public abstract event EventHandler Validated;
 
         public abstract event EventHandler Enabled;
@@ -108,6 +108,10 @@ namespace JSSoft.Unity.Terminal
         public abstract void Cancel();
 
         public abstract string Progress(string message, float value);
+
+        public abstract TerminalData Save();
+
+        public abstract void Load(TerminalData data);
 
         #region ITerminal
 

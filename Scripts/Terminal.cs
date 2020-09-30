@@ -374,6 +374,52 @@ namespace JSSoft.Unity.Terminal
             return this.progressText;
         }
 
+        public override TerminalData Save()
+        {
+            var data = new TerminalData()
+            {
+                Text = this.outputText,
+                Prompt = this.prompt,
+                Histories = this.histories.ToArray(),
+                HistoryIndex = this.historyIndex
+            };
+            data.Foregrounds = new TerminalColor?[this.outputText.Length];
+            data.Backgrounds = new TerminalColor?[this.outputText.Length];
+            for (var i = 0; i < data.Foregrounds.Length; i++)
+            {
+                data.Foregrounds[i] = this.outputBlock.GetForegroundColor(i);
+                data.Backgrounds[i] = this.outputBlock.GetBackgroundColor(i);
+            }
+            return data;
+        }
+
+        public override void Load(TerminalData data)
+        {
+            var length = this.outputText.Length;
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.outputText, data.Text, nameof(OutputText));
+            this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
+            this.notifier.SetField(ref this.prompt, data.Prompt, nameof(Prompt));
+            this.notifier.SetField(ref this.promptText, this.prompt, nameof(PromptText));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
+            this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
+            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
+            this.inputText = string.Empty;
+            this.completion = string.Empty;
+            this.outputBlock.Text = this.outputText;
+            for (var i = 0; i < data.Text.Length; i++)
+            {
+                this.outputBlock.SetForegroundColor(i, data.Foregrounds[i]);
+                this.outputBlock.SetBackgroundColor(i, data.Backgrounds[i]);
+            }
+            this.histories.Clear();
+            this.histories.AddRange(data.Histories);
+            this.historyIndex = data.HistoryIndex;
+            this.RefreshIndex();
+            this.InvokeTextChangedEvent(new TextChange(0, length));
+            this.notifier.End();
+        }
+
         public void InsertCharacter(params char[] characters)
         {
             if (this.isReadOnly == true)

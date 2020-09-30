@@ -60,6 +60,10 @@ namespace JSSoft.Unity.Terminal
 
         string Progress(string message, float value);
 
+        TerminalData Save();
+
+        void Load(TerminalData data);
+
         string Command { get; set; }
 
         string Prompt { get; set; }
