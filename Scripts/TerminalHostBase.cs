@@ -35,11 +35,11 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private bool useErrorForegroundColor = true;
         [SerializeField]
-        private bool useErrorBackgroundColor;
+        private bool useErrorBackgroundColor = false;
         [SerializeField]
         private TerminalColor errorForegroundColor = TerminalColor.Red;
         [SerializeField]
-        private TerminalColor errorBackgroundColor;
+        private TerminalColor errorBackgroundColor = TerminalColor.Black;
 
         private TerminalBase terminal;
         private TerminalGridBase grid;
