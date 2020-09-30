@@ -1160,13 +1160,13 @@ namespace JSSoft.Unity.Terminal
         {
             this.InputSystem.imeCompositionMode = IMECompositionMode.On;
             this.SetFocused(true);
-            this.InputHandler.Select(this, eventData);
+            this.InputHandler?.Select(this, eventData);
         }
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
             this.SetFocused(false);
-            this.InputHandler.Deselect(this, eventData);
+            this.InputHandler?.Deselect(this, eventData);
         }
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData) => this.InputHandler.BeginDrag(this, eventData);
