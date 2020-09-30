@@ -107,10 +107,16 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (int.TryParse(sceneName, out var index) == true)
             {
+                var scene = SceneManager.GetSceneByBuildIndex(index);
+                if (scene == null || scene.IsValid() == false)
+                    throw new ArgumentException($"invalid scene index: '{index}'");
                 SceneManager.LoadScene(index);
             }
             else
             {
+                var scene = SceneManager.GetSceneByName(sceneName);
+                if (scene == null || scene.IsValid() == false)
+                    throw new ArgumentException($"invalid scene name: '{sceneName}'");
                 SceneManager.LoadScene(sceneName);
             }
         }

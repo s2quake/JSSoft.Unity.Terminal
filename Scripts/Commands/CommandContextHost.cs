@@ -96,7 +96,6 @@ namespace JSSoft.Unity.Terminal.Commands
         protected override void OnException(Exception e, string message)
         {
             base.OnException(e, message);
-            UnityEngine.Debug.LogError(message);
         }
 
         protected virtual IEnumerable<ICommand> CollectCommands()

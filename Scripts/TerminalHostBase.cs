@@ -30,10 +30,19 @@ namespace JSSoft.Unity.Terminal
     [DisallowMultipleComponent]
     public class TerminalHostBase : MonoBehaviour, IServiceProvider
     {
-        private TerminalBase terminal;
-        private TerminalGridBase grid;
         [SerializeField]
         private bool isAsync = false;
+        [SerializeField]
+        private bool useErrorForegroundColor = true;
+        [SerializeField]
+        private bool useErrorBackgroundColor;
+        [SerializeField]
+        private TerminalColor errorForegroundColor = TerminalColor.Red;
+        [SerializeField]
+        private TerminalColor errorBackgroundColor;
+
+        private TerminalBase terminal;
+        private TerminalGridBase grid;
 
         public TerminalBase Terminal => this.terminal;
 
@@ -91,7 +100,12 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual void OnException(Exception e, string message)
         {
+            if (this.useErrorForegroundColor == true)
+                this.terminal.ForegroundColor = this.errorForegroundColor;
+            if (this.useErrorBackgroundColor == true)
+                this.terminal.BackgroundColor = this.errorBackgroundColor;
             this.terminal.AppendLine(message);
+            this.terminal.ResetColor();
         }
 
         protected virtual string GetExceptionMessage(Exception e)
