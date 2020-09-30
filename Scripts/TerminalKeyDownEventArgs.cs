@@ -25,9 +25,9 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {
-    public class TerminalKeyPreviewEventArgs : EventArgs
+    public class TerminalKeyDownEventArgs : EventArgs
     {
-        public TerminalKeyPreviewEventArgs(EventModifiers modifiers, KeyCode keyCode)
+        public TerminalKeyDownEventArgs(EventModifiers modifiers, KeyCode keyCode)
         {
             this.Modifiers = modifiers;
             this.KeyCode = keyCode;

@@ -295,9 +295,9 @@ namespace JSSoft.Unity.Terminal
             while (this.eventQueue.Any() == true)
             {
                 var item = this.eventQueue.Dequeue();
-                if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
+                if (this.OnKeyDown(item.Modifiers, item.KeyCode) == true)
                     continue;
-                if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
+                if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnKeyPress(item.Character) == false)
                 {
                     if (item.Character == '\n')
                     {
@@ -668,9 +668,11 @@ namespace JSSoft.Unity.Terminal
 
         public override event EventHandler Disabled;
 
-        public override event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        public override event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        public override event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        public override event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        public override event EventHandler<TerminalKeyPressEventArgs> KeyPress;
 
         internal TerminalCell GetCell(TerminalPoint point)
         {
@@ -740,14 +742,19 @@ namespace JSSoft.Unity.Terminal
             this.Disabled?.Invoke(this, e);
         }
 
-        protected virtual void OnKeyPreview(TerminalKeyPreviewEventArgs e)
+        protected virtual void OnPreviewKeyDown(TerminalKeyDownEventArgs e)
         {
-            this.KeyPreview?.Invoke(this, e);
+            this.PreviewKeyDown?.Invoke(this, e);
         }
 
-        protected virtual void OnKeyPressed(TerminalKeyPressEventArgs e)
+        protected virtual void OnKeyDown(TerminalKeyDownEventArgs e)
         {
-            this.KeyPressed?.Invoke(this, e);
+            this.KeyDown?.Invoke(this, e);
+        }
+
+        protected virtual void OnKeyPress(TerminalKeyPressEventArgs e)
+        {
+            this.KeyPress?.Invoke(this, e);
         }
 
 #if UNITY_EDITOR
@@ -818,19 +825,30 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
         {
-            var args = new TerminalKeyPreviewEventArgs(modifiers, keyCode);
-            this.OnKeyPreview(args);
+            var args = new TerminalKeyDownEventArgs(modifiers, keyCode);
+            this.OnPreviewKeyDown(args);
             if (args.Handled == true)
                 return true;
-            if (this.terminal.ProcessKeyEvent(modifiers, keyCode) == true)
+            if (this.terminal.ProcessKeyEvent(modifiers, keyCode, true) == true)
                 return true;
-            return this.KeyBindings.Process(this, modifiers, keyCode);
+            return this.KeyBindings.Process(this, modifiers, keyCode, true);
         }
 
-        protected virtual bool OnPreviewKeyPress(char character)
+        protected virtual bool OnKeyDown(EventModifiers modifiers, KeyCode keyCode)
+        {
+            var args = new TerminalKeyDownEventArgs(modifiers, keyCode);
+            this.OnKeyDown(args);
+            if (args.Handled == true)
+                return true;
+            if (this.terminal.ProcessKeyEvent(modifiers, keyCode, false) == true)
+                return true;
+            return this.KeyBindings.Process(this, modifiers, keyCode, false);
+        }
+
+        protected virtual bool OnKeyPress(char character)
         {
             var args = new TerminalKeyPressEventArgs(character);
-            this.OnKeyPressed(args);
+            this.OnKeyPress(args);
             if (args.Handled == true)
                 return true;
             if (character == '\t' || character == 27 || character == 25)
@@ -855,21 +873,6 @@ namespace JSSoft.Unity.Terminal
                     }
                 }
             }
-        }
-
-        protected virtual bool OnCheckCancel(EventModifiers modifiers, KeyCode keyCode)
-        {
-            if (TerminalEnvironment.IsMac == true)
-            {
-                if (this.terminal.IsExecuting == true && modifiers == EventModifiers.Control && keyCode == KeyCode.C)
-                    return true;
-            }
-            else if (TerminalEnvironment.IsWindows == true)
-            {
-                if (this.terminal.IsExecuting == true && modifiers == EventModifiers.Control && keyCode == KeyCode.C)
-                    return true;
-            }
-            return false;
         }
 
         private void InvokePropertyChangedEvent(string propertyName)
@@ -1211,11 +1214,7 @@ namespace JSSoft.Unity.Terminal
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
-                        if (this.OnCheckCancel(modifiers, keyCode) == true)
-                        {
-                            this.Terminal.Cancel();
-                        }
-                        else
+                        if (this.OnPreviewKeyDown(modifiers, keyCode) == false)
                         {
                             var keyInfo = new KeyInfo()
                             {

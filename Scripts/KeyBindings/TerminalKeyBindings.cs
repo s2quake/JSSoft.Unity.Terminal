@@ -87,7 +87,7 @@ namespace JSSoft.Unity.Terminal.KeyBindings
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
-            new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
+            new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t))
         };
 
         public static readonly IKeyBindingCollection PowerShellOnWindows = new KeyBindingCollection("PowerShell(Windows) Key Bindings", Common)

@@ -31,6 +31,8 @@ namespace JSSoft.Unity.Terminal
 
         bool Action(object obj);
 
+        bool IsPreview { get; }
+
         EventModifiers Modifiers { get; }
 
         KeyCode KeyCode { get; }

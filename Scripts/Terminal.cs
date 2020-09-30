@@ -397,9 +397,9 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
+        public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode, bool isPreview)
         {
-            return this.KeyBindings.Process(this, modifiers, keyCode);
+            return this.KeyBindings.Process(this, modifiers, keyCode, isPreview);
         }
 
         public void SetDispatcher(TerminalDispatcher dispatcher)

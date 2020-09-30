@@ -122,9 +122,11 @@ namespace JSSoft.Unity.Terminal
 
         public abstract event EventHandler Disabled;
 
-        public abstract event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        public abstract event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        public abstract event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        public abstract event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        public abstract event EventHandler<TerminalKeyPressEventArgs> KeyPress;
 
         public abstract string Copy();
 

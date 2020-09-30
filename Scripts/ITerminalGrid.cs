@@ -150,8 +150,10 @@ namespace JSSoft.Unity.Terminal
 
         event EventHandler Disabled;
 
-        event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        event EventHandler<TerminalKeyPressEventArgs> KeyPress;
     }
 }

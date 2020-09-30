@@ -43,6 +43,8 @@ namespace JSSoft.Unity.Terminal
 
         public Type Type => typeof(T);
 
+        public bool IsPreview { get; set; }
+
         #region IKeyBinding
 
         bool IKeyBinding.Action(object obj)
@@ -62,6 +64,8 @@ namespace JSSoft.Unity.Terminal
                 return false;
             return this.OnVerify((T)obj);
         }
+
+        bool IKeyBinding.IsPreview => this.IsPreview;
 
         #endregion
     }

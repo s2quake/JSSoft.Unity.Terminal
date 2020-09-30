@@ -40,16 +40,16 @@ namespace JSSoft.Unity.Terminal
         protected override void OnEnable()
         {
             base.OnEnable();
-            TerminalGridEvents.KeyPreview += Grid_KeyPreview;
+            TerminalGridEvents.KeyDown += Grid_KeyDown;
         }
 
         protected override void OnDisable()
         {
-            TerminalGridEvents.KeyPreview -= Grid_KeyPreview;
+            TerminalGridEvents.KeyDown -= Grid_KeyDown;
             base.OnDisable();
         }
 
-        private void Grid_KeyPreview(object sender, TerminalKeyPreviewEventArgs e)
+        private void Grid_KeyDown(object sender, TerminalKeyDownEventArgs e)
         {
             if (e.Modifiers == this.modifiers && e.KeyCode == this.keyCode && e.Handled == false)
             {
