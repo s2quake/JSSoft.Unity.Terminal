@@ -249,12 +249,11 @@ namespace JSSoft.Unity.Terminal
         public override void Scroll(int value)
         {
             var visibleIndex = this.VisibleIndex + value;
-            if (visibleIndex >= 0 && visibleIndex <= this.MaximumVisibleIndex)
-            {
-                this.IsScrolling = true;
-                this.VisibleIndex = visibleIndex;
-                this.IsScrolling = false;
-            }
+            visibleIndex = Math.Max(0, visibleIndex);
+            visibleIndex = Math.Min(this.MaximumVisibleIndex, visibleIndex);
+            this.IsScrolling = true;
+            this.VisibleIndex = visibleIndex;
+            this.IsScrolling = false;
         }
 
         public override string Copy()
@@ -1226,7 +1225,6 @@ namespace JSSoft.Unity.Terminal
                             };
                             this.eventQueue.Enqueue(keyInfo);
                             this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
-                            this.ScrollToCursor();
                         }
                     }
                 }

@@ -182,7 +182,7 @@ namespace JSSoft.Unity.Terminal
 
         private void VerticalScrollbar_OnValueChanged(float arg0)
         {
-            if (this.grid != null)
+            if (this.grid != null && this.grid.IsScrolling == false)
             {
                 this.UpdateVisibleIndex();
             }
