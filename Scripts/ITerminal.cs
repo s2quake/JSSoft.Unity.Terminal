@@ -56,6 +56,8 @@ namespace JSSoft.Unity.Terminal
 
         void MoveRight();
 
+        void Cancel();
+
         string Progress(string message, float value);
 
         string Command { get; set; }
@@ -94,6 +96,12 @@ namespace JSSoft.Unity.Terminal
 
         event EventHandler Validated;
 
+        event EventHandler Enabled;
+
+        event EventHandler Disabled;
+
+        event EventHandler CancellationRequested;
+
         event EventHandler<TerminalExecuteEventArgs> Executing;
 
         event EventHandler<TerminalExecutedEventArgs> Executed;
@@ -101,9 +109,5 @@ namespace JSSoft.Unity.Terminal
         event PropertyChangedEventHandler PropertyChanged;
 
         event EventHandler<TextChangedEventArgs> TextChanged;
-
-        event EventHandler Enabled;
-
-        event EventHandler Disabled;
     }
 }

@@ -60,8 +60,14 @@ namespace JSSoft.Unity.Terminal
         public abstract IProgressGenerator ProgressGenerator { get; set; }
 
         public abstract TerminalDispatcher Dispatcher { get; }
-
+     
         public abstract event EventHandler Validated;
+
+        public abstract event EventHandler Enabled;
+
+        public abstract event EventHandler Disabled;
+
+        public abstract event EventHandler CancellationRequested;
 
         public abstract event EventHandler<TerminalExecuteEventArgs> Executing;
 
@@ -70,10 +76,6 @@ namespace JSSoft.Unity.Terminal
         public abstract event PropertyChangedEventHandler PropertyChanged;
 
         public abstract event EventHandler<TextChangedEventArgs> TextChanged;
-
-        public abstract event EventHandler Enabled;
-
-        public abstract event EventHandler Disabled;
 
         public abstract void Append(string value);
 
@@ -102,6 +104,8 @@ namespace JSSoft.Unity.Terminal
         public abstract void ResetColor();
 
         public abstract void ResetOutput();
+
+        public abstract void Cancel();
 
         public abstract string Progress(string message, float value);
 

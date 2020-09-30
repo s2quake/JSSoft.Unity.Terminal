@@ -40,6 +40,7 @@ namespace JSSoft.Unity.Terminal
             terminal.Validated += Terminal_Validated;
             terminal.Enabled += Terminal_Enabled;
             terminal.Disabled += Terminal_Disabled;
+            terminal.CancellationRequested += Terminal_CancellationRequested;
             terminal.PropertyChanged += Terminal_PropertyChanged;
             terminal.TextChanged += Terminal_TextChanged;
             terminal.Executed += Terminal_Executed;
@@ -54,6 +55,7 @@ namespace JSSoft.Unity.Terminal
             terminal.Validated -= Terminal_Validated;
             terminal.Enabled -= Terminal_Enabled;
             terminal.Disabled -= Terminal_Disabled;
+            terminal.CancellationRequested -= Terminal_CancellationRequested;
             terminal.PropertyChanged -= Terminal_PropertyChanged;
             terminal.TextChanged -= Terminal_TextChanged;
             terminal.Executed -= Terminal_Executed;
@@ -66,6 +68,8 @@ namespace JSSoft.Unity.Terminal
 
         public static event EventHandler Disabled;
 
+        public static event EventHandler CancellationRequested;
+
         public static event PropertyChangedEventHandler PropertyChanged;
 
         public static event EventHandler<TextChangedEventArgs> TextChanged;
@@ -75,6 +79,21 @@ namespace JSSoft.Unity.Terminal
         private static void Terminal_Validated(object sender, EventArgs e)
         {
             Validated?.Invoke(sender, e);
+        }
+
+        private static void Terminal_Enabled(object sender, EventArgs e)
+        {
+            Enabled?.Invoke(sender, e);
+        }
+
+        private static void Terminal_Disabled(object sender, EventArgs e)
+        {
+            Disabled?.Invoke(sender, e);
+        }
+
+        private static void Terminal_CancellationRequested(object sender, EventArgs e)
+        {
+            CancellationRequested?.Invoke(sender, e);
         }
 
         private static void Terminal_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -90,16 +109,6 @@ namespace JSSoft.Unity.Terminal
         private static void Terminal_Executed(object sender, TerminalExecutedEventArgs e)
         {
             Executed?.Invoke(sender, e);
-        }
-
-        private static void Terminal_Enabled(object sender, EventArgs e)
-        {
-            Enabled?.Invoke(sender, e);
-        }
-
-        private static void Terminal_Disabled(object sender, EventArgs e)
-        {
-            Disabled?.Invoke(sender, e);
         }
     }
 }

@@ -168,6 +168,11 @@ namespace JSSoft.Unity.Terminal
                 this.CursorPosition++;
         }
 
+        public override void Cancel()
+        {
+            this.OnCancellationRequested(EventArgs.Empty);
+        }
+
         public override void ResetOutput()
         {
             var length = this.outputText.Length;
@@ -623,6 +628,8 @@ namespace JSSoft.Unity.Terminal
 
         public override event EventHandler Disabled;
 
+        public override event EventHandler CancellationRequested;
+
         internal TerminalColor? GetForegroundColor(int index)
         {
             if (this.outputBlock.Contains(index - this.outputIndex) == true)
@@ -688,6 +695,11 @@ namespace JSSoft.Unity.Terminal
         protected virtual void OnDisabled(EventArgs e)
         {
             this.Disabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnCancellationRequested(EventArgs e)
+        {
+            this.CancellationRequested?.Invoke(this, e);
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)

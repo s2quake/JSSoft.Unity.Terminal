@@ -858,6 +858,21 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        protected virtual bool OnCheckCancel(EventModifiers modifiers, KeyCode keyCode)
+        {
+            if (TerminalEnvironment.IsMac == true)
+            {
+                if (this.terminal.IsExecuting == true && modifiers == EventModifiers.Control && keyCode == KeyCode.C)
+                    return true;
+            }
+            else if (TerminalEnvironment.IsWindows == true)
+            {
+                if (this.terminal.IsExecuting == true && modifiers == EventModifiers.Control && keyCode == KeyCode.C)
+                    return true;
+            }
+            return false;
+        }
+
         private void InvokePropertyChangedEvent(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
@@ -1197,15 +1212,22 @@ namespace JSSoft.Unity.Terminal
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
-                        var keyInfo = new KeyInfo()
+                        if (this.OnCheckCancel(modifiers, keyCode) == true)
                         {
-                            KeyCode = item.keyCode,
-                            Modifiers = item.modifiers,
-                            Character = item.character,
-                        };
-                        this.eventQueue.Enqueue(keyInfo);
-                        this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
-                        this.ScrollToCursor();
+                            this.Terminal.Cancel();
+                        }
+                        else
+                        {
+                            var keyInfo = new KeyInfo()
+                            {
+                                KeyCode = item.keyCode,
+                                Modifiers = item.modifiers,
+                                Character = item.character,
+                            };
+                            this.eventQueue.Enqueue(keyInfo);
+                            this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
+                            this.ScrollToCursor();
+                        }
                     }
                 }
 
