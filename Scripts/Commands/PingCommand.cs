@@ -102,7 +102,7 @@ namespace JSSoft.Unity.Terminal.Commands
             var time = DateTime.Now;
             do
             {
-                await Task.Delay(100);
+                await Task.Delay(1);
                 if (cancellation.IsCancellationRequested == true)
                 {
                     await this.WriteLineAsync("The operation was canceled.");
