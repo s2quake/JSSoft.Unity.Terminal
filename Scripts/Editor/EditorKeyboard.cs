@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -178,4 +177,3 @@ namespace JSSoft.Unity.Terminal.Editor
         }
     }
 }
-#endif // UNITY_EDITOR
