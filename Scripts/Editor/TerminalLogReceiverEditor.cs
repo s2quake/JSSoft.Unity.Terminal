@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace JSSoft.Communication.Services.Editor
+namespace JSSoft.Unity.Terminal.Editor
 {
     [CustomEditor(typeof(TerminalLogReceiver))]
     public class TerminalLogReceiverEditor : UnityEditor.Editor

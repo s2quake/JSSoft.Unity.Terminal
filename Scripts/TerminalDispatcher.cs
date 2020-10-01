@@ -88,17 +88,25 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual void Update()
         {
-#if UNITY_EDITOR
-            if (Application.isPlaying && this.scheduler != null)
-#endif
+            if (Application.isEditor == true)
             {
-                var time = DateTime.Now;
-                var count = this.scheduler.Process(1000 / 60);
-                // var count = this.scheduler.ProcessAll();
-                if (count > 0)
-                {
-                    // Debug.Log(DateTime.Now - time);
-                }
+                if (Application.isPlaying && this.scheduler != null)
+                    this.Process();
+            }
+            else
+            {
+                this.Process();
+            }
+        }
+        
+        private void Process()
+        {
+            var time = DateTime.Now;
+            var count = this.scheduler.Process(1000 / 60);
+            // var count = this.scheduler.ProcessAll();
+            if (count > 0)
+            {
+                // Debug.Log(DateTime.Now - time);
             }
         }
 

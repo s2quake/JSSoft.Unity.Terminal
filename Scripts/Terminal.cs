@@ -775,7 +775,6 @@ namespace JSSoft.Unity.Terminal
             TerminalEvents.Unregister(this);
         }
 
-#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -786,7 +785,6 @@ namespace JSSoft.Unity.Terminal
             this.outputBlock.Text = this.outputText;
             this.OnValidated(EventArgs.Empty);
         }
-#endif
 
         protected virtual bool IsValidCharacter(char character)
         {

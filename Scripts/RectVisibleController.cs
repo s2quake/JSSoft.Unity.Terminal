@@ -94,13 +94,11 @@ namespace JSSoft.Unity.Terminal
             base.OnDisable();
         }
 
-#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
             this.UpdatePosition(true);
         }
-#endif
 
         protected virtual void Update()
         {

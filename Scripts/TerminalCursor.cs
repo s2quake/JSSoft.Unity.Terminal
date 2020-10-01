@@ -256,7 +256,6 @@ namespace JSSoft.Unity.Terminal
             this.terminalMesh.Fill(vh);
         }
 
-#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -265,7 +264,6 @@ namespace JSSoft.Unity.Terminal
             this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
             this.cursorTop = Math.Max(0, this.cursorTop);
         }
-#endif
 
         protected override void OnEnable()
         {

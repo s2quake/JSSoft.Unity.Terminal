@@ -792,13 +792,11 @@ namespace JSSoft.Unity.Terminal
             this.KeyPress?.Invoke(this, e);
         }
 
-#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
             this.UpdateColor();
         }
-#endif
 
         protected override void OnRectTransformDimensionsChange()
         {
@@ -913,11 +911,6 @@ namespace JSSoft.Unity.Terminal
         private void InvokePropertyChangedEvent(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void ValidateValue()
-        {
-            this.maxBufferHeight = Math.Max(this.bufferHeight, this.maxBufferHeight);
         }
 
         private void UpdateColor()

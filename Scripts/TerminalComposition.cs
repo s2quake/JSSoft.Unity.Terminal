@@ -188,7 +188,6 @@ namespace JSSoft.Unity.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-#if UNITY_EDITOR
         protected override void OnValidate()
         {
             base.OnValidate();
@@ -198,7 +197,6 @@ namespace JSSoft.Unity.Terminal
             this.rowIndex = Math.Max(0, this.rowIndex);
             this.OnValidated(EventArgs.Empty);
         }
-#endif
 
         protected override void Start()
         {

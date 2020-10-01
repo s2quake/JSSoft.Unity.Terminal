@@ -25,8 +25,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using JSSoft.Unity.Terminal.Fonts;
-#if UNITY_EDITOR
-#endif
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
