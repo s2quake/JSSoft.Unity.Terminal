@@ -26,9 +26,6 @@ using System.Collections.Generic;
 using JSSoft.Unity.Terminal.Fonts;
 using UnityEngine;
 using System.ComponentModel;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace JSSoft.Unity.Terminal
 {
@@ -193,11 +190,11 @@ namespace JSSoft.Unity.Terminal
             if (sender is TerminalFontDescriptor descriptor && this.DescriptorList.Contains(descriptor))
             {
                 this.UpdateSize();
-#if UNITY_EDITOR
-                EditorUtility.SetDirty(this);
-#endif
+                SetDirtyCallback?.Invoke(this);
             }
         }
+
+        internal static Action<TerminalFont> SetDirtyCallback { get; set; }
 
         #region IPropertyChangedNotifyable
 

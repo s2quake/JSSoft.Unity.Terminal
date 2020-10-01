@@ -25,7 +25,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace JSSoft.Unity.Terminal.InputHandlers
+namespace JSSoft.Unity.Terminal.Editor
 {
     class EditorKeyboard : TerminalKeyboardBase
     {

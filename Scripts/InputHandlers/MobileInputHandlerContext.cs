@@ -34,11 +34,7 @@ namespace JSSoft.Unity.Terminal.InputHandlers
         private const float scrollStopSpeed = 100.0f;
         private readonly float clickThreshold = 0.5f;
         private readonly Swiper swiper = new Swiper();
-#if UNITY_EDITOR
-        private readonly TerminalKeyboardBase keyboard = new EditorKeyboard();
-#else
-        private readonly TerminalKeyboardBase keyboard = new MobileKeyboard();
-#endif
+        private readonly TerminalKeyboardBase keyboard = KeyboardCreator();
         private InputSelections selections;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
@@ -422,5 +418,7 @@ namespace JSSoft.Unity.Terminal.InputHandlers
                 return 1;
             return (count % 3) + 1;
         }
+
+        internal static Func<TerminalKeyboardBase> KeyboardCreator { get; set; } = new Func<TerminalKeyboardBase>(() => new MobileKeyboard());
     }
 }

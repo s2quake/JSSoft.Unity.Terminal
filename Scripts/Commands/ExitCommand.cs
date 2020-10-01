@@ -41,11 +41,9 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnExecute()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            UnityEngine.Application.Quit();
-#endif
+            ExitAction();
         }
+
+        internal static System.Action ExitAction { get; set; } = new System.Action(UnityEngine.Application.Quit);
     }
 }
