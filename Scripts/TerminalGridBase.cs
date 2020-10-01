@@ -160,6 +160,10 @@ namespace JSSoft.Unity.Terminal
 
         public abstract void SelectAll();
 
+        public abstract TerminalGridData Save();
+
+        public abstract void Load(TerminalGridData data);
+
         public abstract Vector2 WorldToGrid(Vector2 position, Camera camera);
 
         #region ITerminalGrid

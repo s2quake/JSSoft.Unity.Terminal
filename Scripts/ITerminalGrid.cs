@@ -64,6 +64,10 @@ namespace JSSoft.Unity.Terminal
 
         void SelectAll();
 
+        TerminalGridData Save();
+
+        void Load(TerminalGridData data);
+
         ITerminal Terminal { get; }
 
         bool IsFocused { get; }

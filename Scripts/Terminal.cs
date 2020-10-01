@@ -380,8 +380,12 @@ namespace JSSoft.Unity.Terminal
             {
                 Text = this.outputText,
                 Prompt = this.prompt,
+                Command = this.command,
+                InputText = this.inputText,
+                Completion = this.completion,
+                CursorPosition = this.cursorPosition,
                 Histories = this.histories.ToArray(),
-                HistoryIndex = this.historyIndex
+                HistoryIndex = this.historyIndex,
             };
             data.Foregrounds = new TerminalColor?[this.outputText.Length];
             data.Backgrounds = new TerminalColor?[this.outputText.Length];
@@ -398,14 +402,13 @@ namespace JSSoft.Unity.Terminal
             var length = this.outputText.Length;
             this.notifier.Begin();
             this.notifier.SetField(ref this.outputText, data.Text, nameof(OutputText));
-            this.notifier.SetField(ref this.command, string.Empty, nameof(Command));
+            this.notifier.SetField(ref this.command, data.Command, nameof(Command));
             this.notifier.SetField(ref this.prompt, data.Prompt, nameof(Prompt));
-            this.notifier.SetField(ref this.promptText, this.prompt, nameof(PromptText));
-            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
+            this.notifier.SetField(ref this.promptText, data.Prompt + data.Command, nameof(PromptText));
+            this.notifier.SetField(ref this.cursorPosition, data.CursorPosition, nameof(CursorPosition));
             this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
-            this.notifier.SetField(ref this.cursorPosition, 0, nameof(CursorPosition));
-            this.inputText = string.Empty;
-            this.completion = string.Empty;
+            this.inputText = data.InputText;
+            this.completion = data.Completion;
             this.outputBlock.Text = this.outputText;
             for (var i = 0; i < data.Text.Length; i++)
             {

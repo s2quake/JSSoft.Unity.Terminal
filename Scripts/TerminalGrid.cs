@@ -118,7 +118,7 @@ namespace JSSoft.Unity.Terminal
             this.characterInfos = new TerminalCharacterInfoCollection(this);
             this.rows = new TerminalRowCollection(this, this.characterInfos);
             this.selections = new TerminalGridSelection(this);
-            this.selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
+            this.selections.CollectionChanged += Selections_CollectionChanged;
             this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
         }
 
@@ -287,6 +287,41 @@ namespace JSSoft.Unity.Terminal
             var range = new TerminalRange(p1, p2);
             this.Selections.Clear();
             this.Selections.Add(range);
+        }
+
+        public override TerminalGridData Save()
+        {
+            var data = new TerminalGridData()
+            {
+                TerminalData = (this.terminal ?? GetComponent<Terminal>()).Save(),
+                VisibleIndex = this.visibleIndex,
+                Selections = this.Selections.ToArray(),
+                BufferWidth = this.bufferWidth,
+                BufferHeight = this.bufferHeight,
+            };
+            return data;
+        }
+
+        public override void Load(TerminalGridData data)
+        {
+            this.terminal.Load(data.TerminalData);
+            if (this.bufferWidth != data.BufferWidth || this.bufferHeight != data.BufferHeight)
+            {
+                Debug.LogWarning($"BufferWidth or BufferHeight mismatch. Some data loads are ignored.");
+            }
+            else
+            {
+                // this.selections.CollectionChanged -= Selections_CollectionChanged;
+                this.VisibleIndex = data.VisibleIndex;
+                // this.scrollPos = data.VisibleIndex;
+                this.selections.Clear();
+                foreach (var item in data.Selections)
+                {
+                    this.selections.Add(item);
+                }
+                // this.selections.CollectionChanged += Selections_CollectionChanged;
+                // this.invoke
+            }
         }
 
         public void ProcessEvent()
@@ -795,7 +830,7 @@ namespace JSSoft.Unity.Terminal
             TerminalEvents.Executed += Terminal_Executed;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
-            this.Invoke(nameof(this.ScrollToCursor), float.Epsilon);
+            // this.Invoke(nameof(this.ScrollToCursor), float.Epsilon);
         }
 
         protected override void OnDisable()
@@ -1038,6 +1073,11 @@ namespace JSSoft.Unity.Terminal
                     this.SetLayoutDirty();
                     break;
             }
+        }
+
+        private void Selections_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.SelectionChanged?.Invoke(this, e);
         }
 
         private Vector2 GetParentSize()

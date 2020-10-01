@@ -26,26 +26,16 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {
-    public struct TerminalData
+    public struct TerminalGridData
     {
-        public string Text { get; set; }
+        public TerminalData TerminalData { get; set; }
 
-        public TerminalColor?[] Foregrounds { get; set; }
+        public int VisibleIndex { get; set; }
 
-        public TerminalColor?[] Backgrounds { get; set; }
+        public TerminalRange[] Selections { get; set; }
 
-        public string Prompt { get; set; }
+        public int BufferWidth { get; set; }
 
-        public string Command { get; set; }
-
-        public string InputText { get; set; }
-
-        public string Completion { get; set; }
-
-        public int CursorPosition { get; set; }
-
-        public string[] Histories { get; set; }
-
-        public int HistoryIndex { get; set; }
+        public int BufferHeight { get; set; }
     }
 }
