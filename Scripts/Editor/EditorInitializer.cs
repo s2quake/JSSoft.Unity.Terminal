@@ -44,8 +44,6 @@ namespace JSSoft.Unity.Terminal.Editor
             ExitCommand.ExitAction = new Action(() => UnityEditor.EditorApplication.isPlaying = false);
             TerminalFont.SetDirtyCallback = new Action<TerminalFont>((font) => EditorUtility.SetDirty(font));
             MobileInputHandlerContext.KeyboardCreator = new Func<TerminalKeyboardBase>(() => new EditorKeyboard());
-
-            Debug.Log("staddd  d tisdfsdf sdfc");
         }
     }
 }
