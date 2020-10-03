@@ -122,7 +122,7 @@ namespace JSSoft.Unity.Terminal
             base.OnDisable();
         }
 
-#if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER || UNITY_2020_1_OR_NEWER
         protected override void Update()
 #else
         protected virtual void Update()

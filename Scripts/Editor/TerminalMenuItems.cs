@@ -296,7 +296,7 @@ namespace JSSoft.Unity.Terminal.Editor
             scrollbarImage.sprite = backgroundSprite;
             scrollbarImage.color = TerminalGrid.DefaultScrollbarColor;
             scrollbarImage.type = Image.Type.Sliced;
-#if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER || UNITY_2020_1_OR_NEWER
             scrollbarImage.pixelsPerUnitMultiplier = 0.5f;
 #endif
             scrollbarRect.SetParent(terminalGridRect);
@@ -323,7 +323,7 @@ namespace JSSoft.Unity.Terminal.Editor
             handleImage.sprite = uiSprite;
             handleImage.color = TerminalGrid.DefaultScrollbarColor;
             handleImage.type = Image.Type.Sliced;
-#if UNITY_2019_3_OR_NEWER            
+#if UNITY_2019_3_OR_NEWER || UNITY_2020_1_OR_NEWER            
             handleImage.pixelsPerUnitMultiplier = 0.5f;
 #endif
             handleRect.SetParent(slidingAreaRect);
