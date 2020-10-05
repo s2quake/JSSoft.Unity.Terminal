@@ -4,6 +4,5 @@
     </assembly>
     <assembly fullname="JSSoft.Library.Commands" preserve="all" />
     <assembly fullname="JSSoft.Library" preserve="all" />
-    <assembly fullname="JSSoft.Library.Commands.resources" preserve="all" />
-    <assembly fullname="JSSoft.Library.resources" preserve="all" />
+    <assembly fullname="JSSoft.Unity.Terminal" preserve="all" />
 </linker>
