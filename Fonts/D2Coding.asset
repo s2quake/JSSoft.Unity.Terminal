@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   descriptorList:
   - {fileID: 11400000, guid: be05ad66cac14174584fcf086ca18261, type: 2}
-  width: 14
-  height: 30
+  width: 13
+  height: 26

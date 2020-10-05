@@ -21,8 +21,8 @@
 // SOFTWARE.
 
 using JSSoft.Library.Commands;
-using UnityEngine;
 using System.Text;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {

@@ -27,7 +27,7 @@ namespace JSSoft.Unity.Terminal
 {
     public interface IKeyBindingCollection : IEnumerable<IKeyBinding>
     {
-        bool Process(object obj, EventModifiers modifiers, KeyCode keyCode);
+        bool Process(object obj, EventModifiers modifiers, KeyCode keyCode, bool isImmediatable);
 
         int Count { get; }
     }

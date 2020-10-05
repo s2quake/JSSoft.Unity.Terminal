@@ -21,11 +21,12 @@
 // SOFTWARE.
 
 using JSSoft.Library.Commands;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
     [CommandSummary(CommandStrings.ExitCommand.Summary)]
-    [CommandSummary(CommandStrings.ExitCommand.Summary_ko_KR)]
+    [CommandSummary(CommandStrings.ExitCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ExitCommand : TerminalCommandBase
     {
         public ExitCommand(ITerminal terminal)
@@ -40,11 +41,9 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnExecute()
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            UnityEngine.Application.Quit();
-#endif
+            ExitAction();
         }
+
+        internal static System.Action ExitAction { get; set; } = new System.Action(UnityEngine.Application.Quit);
     }
 }

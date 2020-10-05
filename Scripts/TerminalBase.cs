@@ -21,10 +21,7 @@
 // SOFTWARE.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -66,6 +63,12 @@ namespace JSSoft.Unity.Terminal
 
         public abstract event EventHandler Validated;
 
+        public abstract event EventHandler Enabled;
+
+        public abstract event EventHandler Disabled;
+
+        public abstract event EventHandler CancellationRequested;
+
         public abstract event EventHandler<TerminalExecuteEventArgs> Executing;
 
         public abstract event EventHandler<TerminalExecutedEventArgs> Executed;
@@ -73,10 +76,6 @@ namespace JSSoft.Unity.Terminal
         public abstract event PropertyChangedEventHandler PropertyChanged;
 
         public abstract event EventHandler<TextChangedEventArgs> TextChanged;
-
-        public abstract event EventHandler Enabled;
-
-        public abstract event EventHandler Disabled;
 
         public abstract void Append(string value);
 
@@ -106,7 +105,13 @@ namespace JSSoft.Unity.Terminal
 
         public abstract void ResetOutput();
 
+        public abstract void Cancel();
+
         public abstract string Progress(string message, float value);
+
+        public abstract TerminalData Save();
+
+        public abstract void Load(TerminalData data);
 
         #region ITerminal
 

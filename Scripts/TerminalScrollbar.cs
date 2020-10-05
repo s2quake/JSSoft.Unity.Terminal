@@ -21,12 +21,12 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine;
-using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace JSSoft.Unity.Terminal
 {
@@ -122,7 +122,7 @@ namespace JSSoft.Unity.Terminal
             base.OnDisable();
         }
 
-#if UNITY_2019_3_OR_NEWER
+#if UNITY_2019_3_OR_NEWER || UNITY_2020_1_OR_NEWER
         protected override void Update()
 #else
         protected virtual void Update()
@@ -182,7 +182,7 @@ namespace JSSoft.Unity.Terminal
 
         private void VerticalScrollbar_OnValueChanged(float arg0)
         {
-            if (this.grid != null)
+            if (this.grid != null && this.grid.IsScrolling == false)
             {
                 this.UpdateVisibleIndex();
             }

@@ -20,9 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.ComponentModel;
-using System.Threading.Tasks;
 using JSSoft.Library.Commands;
+using System;
+using System.ComponentModel;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
@@ -31,6 +35,9 @@ namespace JSSoft.Unity.Terminal.Commands
     [CommandSummary(CommandStrings.PingCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class PingCommand : TerminalCommandAsyncBase
     {
+        private const string ipPattern = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+        private CancellationTokenSource cancellation;
+
         public PingCommand(ITerminal terminal)
             : base(terminal)
         {
@@ -53,21 +60,86 @@ namespace JSSoft.Unity.Terminal.Commands
             get; set;
         }
 
+        [CommandSummary(CommandStrings.PingCommand.Timeout.Summary)]
+        [CommandSummary(CommandStrings.PingCommand.Timeout.Summary_ko_KR, Locale = "ko-KR")]
+        [CommandProperty('w')]
+        [DefaultValue(4000)]
+        public int Timeout
+        {
+            get; set;
+        }
+
         protected override async Task OnExecuteAsync()
         {
-            var address = this.Address;
+            var address = GetIPAddress(this.Address);
             var count = this.Count;
-            for (var i = 0; i < count; i++)
+            this.cancellation = new CancellationTokenSource();
+            this.Terminal.CancellationRequested += Terminal_CancellationRequested;
+            try
             {
-                var ping = await this.Dispatcher.InvokeAsync(() => new Ping(address));
-                do
+                for (var i = 0; i < count; i++)
                 {
-                    await Task.Delay(1000);
-                } while (await this.Dispatcher.InvokeAsync(() => ping.isDone) == false);
-                await this.WriteLineAsync($"{address}: {ping.time}");
-                await this.Dispatcher.InvokeAsync(ping.DestroyPing);
+                    if (await this.PingAsync(address, this.cancellation.Token) == false)
+                        return;
+                }
             }
-            await this.WriteLineAsync();
+            finally
+            {
+                this.Terminal.CancellationRequested -= Terminal_CancellationRequested;
+                this.cancellation = null;
+                await this.WriteLineAsync();
+            }
+        }
+        
+        private void Terminal_CancellationRequested(object sender, EventArgs e)
+        {
+            this.cancellation.Cancel();
+        }
+
+        private async Task<bool> PingAsync(string address, CancellationToken cancellation)
+        {
+            var ping = await this.Dispatcher.InvokeAsync(() => new Ping(address));
+            var time = DateTime.Now;
+            do
+            {
+                await Task.Delay(1);
+                if (cancellation.IsCancellationRequested == true)
+                {
+                    await this.WriteLineAsync("The operation was canceled.");
+                    return false;
+                }
+            } while (await this.Dispatcher.InvokeAsync(() => ping.isDone) == false && (DateTime.Now - time).TotalMilliseconds < this.Timeout);
+            if (ping.isDone == true)
+                await this.WriteLineAsync($"{address}: {ping.time}");
+            else
+                await this.WriteLineAsync($"{address}: timeout");
+            await this.Dispatcher.InvokeAsync(ping.DestroyPing);
+            return true;
+        }
+
+        private static string GetIPAddress(string address)
+        {
+            if (Regex.IsMatch(address, ipPattern) == true)
+            {
+                return address;
+            }
+            else if (Uri.TryCreate(address, UriKind.Absolute, out var uri) == true)
+            {
+                var ipEntry = Dns.GetHostEntry(uri.Host);
+                if (ipEntry.AddressList[0] != null)
+                {
+                    return $"{ipEntry.AddressList[0]}";
+                }
+            }
+            else
+            {
+                var ipEntry = Dns.GetHostEntry(address);
+                if (ipEntry.AddressList[0] != null)
+                {
+                    return $"{ipEntry.AddressList[0]}";
+                }
+            }
+            throw new NotImplementedException($"'{address}' is invalid address");
         }
     }
 }

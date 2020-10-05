@@ -20,18 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using JSSoft.Library.Commands;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using JSSoft.Library.Commands;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace JSSoft.Unity.Terminal
 {
@@ -173,6 +168,11 @@ namespace JSSoft.Unity.Terminal
                 this.CursorPosition++;
         }
 
+        public override void Cancel()
+        {
+            this.OnCancellationRequested(EventArgs.Empty);
+        }
+
         public override void ResetOutput()
         {
             var length = this.outputText.Length;
@@ -281,7 +281,7 @@ namespace JSSoft.Unity.Terminal
 
         public static string NextCompletion(string[] completions, string text)
         {
-            completions = completions.OrderBy(item => item).ToArray();
+            completions = completions.ToArray();
             if (completions.Contains(text) == true)
             {
                 for (var i = 0; i < completions.Length; i++)
@@ -312,7 +312,7 @@ namespace JSSoft.Unity.Terminal
 
         public static string PrevCompletion(string[] completions, string text)
         {
-            completions = completions.OrderBy(item => item).ToArray();
+            completions = completions.ToArray();
             if (completions.Contains(text) == true)
             {
                 for (var i = completions.Length - 1; i >= 0; i--)
@@ -374,6 +374,55 @@ namespace JSSoft.Unity.Terminal
             return this.progressText;
         }
 
+        public override TerminalData Save()
+        {
+            var data = new TerminalData()
+            {
+                Text = this.outputText,
+                Prompt = this.prompt,
+                Command = this.command,
+                InputText = this.inputText,
+                Completion = this.completion,
+                CursorPosition = this.cursorPosition,
+                Histories = this.histories.ToArray(),
+                HistoryIndex = this.historyIndex,
+            };
+            data.Foregrounds = new TerminalColor?[this.outputText.Length];
+            data.Backgrounds = new TerminalColor?[this.outputText.Length];
+            for (var i = 0; i < data.Foregrounds.Length; i++)
+            {
+                data.Foregrounds[i] = this.outputBlock.GetForegroundColor(i);
+                data.Backgrounds[i] = this.outputBlock.GetBackgroundColor(i);
+            }
+            return data;
+        }
+
+        public override void Load(TerminalData data)
+        {
+            var length = this.outputText.Length;
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.outputText, data.Text, nameof(OutputText));
+            this.notifier.SetField(ref this.command, data.Command, nameof(Command));
+            this.notifier.SetField(ref this.prompt, data.Prompt, nameof(Prompt));
+            this.notifier.SetField(ref this.promptText, data.Prompt + data.Command, nameof(PromptText));
+            this.notifier.SetField(ref this.cursorPosition, data.CursorPosition, nameof(CursorPosition));
+            this.notifier.SetField(ref this.text, Combine(this.outputText, this.progressText, this.promptText), nameof(Text));
+            this.inputText = data.InputText;
+            this.completion = data.Completion;
+            this.outputBlock.Text = this.outputText;
+            for (var i = 0; i < data.Text.Length; i++)
+            {
+                this.outputBlock.SetForegroundColor(i, data.Foregrounds[i]);
+                this.outputBlock.SetBackgroundColor(i, data.Backgrounds[i]);
+            }
+            this.histories.Clear();
+            this.histories.AddRange(data.Histories);
+            this.historyIndex = data.HistoryIndex;
+            this.RefreshIndex();
+            this.InvokeTextChangedEvent(new TextChange(0, length));
+            this.notifier.End();
+        }
+
         public void InsertCharacter(params char[] characters)
         {
             if (this.isReadOnly == true)
@@ -397,9 +446,9 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode)
+        public bool ProcessKeyEvent(EventModifiers modifiers, KeyCode keyCode, bool isPreview)
         {
-            return this.KeyBindings.Process(this, modifiers, keyCode);
+            return this.KeyBindings.Process(this, modifiers, keyCode, isPreview);
         }
 
         public void SetDispatcher(TerminalDispatcher dispatcher)
@@ -628,6 +677,8 @@ namespace JSSoft.Unity.Terminal
 
         public override event EventHandler Disabled;
 
+        public override event EventHandler CancellationRequested;
+
         internal TerminalColor? GetForegroundColor(int index)
         {
             if (this.outputBlock.Contains(index - this.outputIndex) == true)
@@ -703,6 +754,11 @@ namespace JSSoft.Unity.Terminal
         protected virtual void OnDisabled(EventArgs e)
         {
             this.Disabled?.Invoke(this, e);
+        }
+
+        protected virtual void OnCancellationRequested(EventArgs e)
+        {
+            this.CancellationRequested?.Invoke(this, e);
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)

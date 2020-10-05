@@ -35,16 +35,11 @@ namespace JSSoft.Unity.Terminal
         public override void OnPointerDown(PointerEventData eventData)
         {
             base.OnPointerDown(eventData);
-            // Debug.Log("qwerwqer");
         }
 
         public override void OnSelect(BaseEventData eventData)
         {
             base.OnSelect(eventData);
-            if (this.grid != null)
-            {
-                Debug.Log("yes");
-            }
         }
 
         protected override void OnEnable()

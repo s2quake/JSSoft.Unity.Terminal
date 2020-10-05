@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using JSSoft.Unity.Terminal;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace JSSoft.Unity.Terminal
@@ -102,15 +99,23 @@ namespace JSSoft.Unity.Terminal
             if (Application.isPlaying == false)
                 return;
             var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
-            if (this.isTrigger == true && stateInfo.normalizedTime >= stateInfo.length)
+            var length = stateInfo.IsName(StateHide) || stateInfo.IsName(StateShow) ? stateInfo.length : 0;
+            if (this.isTrigger == true && stateInfo.normalizedTime >= length)
             {
                 if (stateInfo.IsName(StateHide) != true && this.value <= 0)
                 {
-                    this.animator.ResetTrigger(StateShow);
-                    this.animator.SetTrigger(StateHide);
-                    if (EventSystem.current.currentSelectedGameObject != null)
-                        this.grid = EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>();
-                    EventSystem.current.SetSelectedGameObject(null);
+                    if (this.grid != null && EventSystem.current.currentSelectedGameObject == null)
+                    {
+                        EventSystem.current.SetSelectedGameObject(this.grid.gameObject);
+                    }
+                    else
+                    {
+                        this.animator.ResetTrigger(StateShow);
+                        this.animator.SetTrigger(StateHide);
+                        if (EventSystem.current.currentSelectedGameObject != null)
+                            this.grid = EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>();
+                        EventSystem.current.SetSelectedGameObject(null);
+                    }
                 }
                 else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
                 {

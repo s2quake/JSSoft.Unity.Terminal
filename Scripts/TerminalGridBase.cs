@@ -21,14 +21,11 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.ComponentModel;
-using System.Collections.Specialized;
-using JSSoft.Unity.Terminal.InputHandlers;
 
 namespace JSSoft.Unity.Terminal
 {
@@ -125,9 +122,11 @@ namespace JSSoft.Unity.Terminal
 
         public abstract event EventHandler Disabled;
 
-        public abstract event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        public abstract event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        public abstract event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        public abstract event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        public abstract event EventHandler<TerminalKeyPressEventArgs> KeyPress;
 
         public abstract string Copy();
 
@@ -160,6 +159,10 @@ namespace JSSoft.Unity.Terminal
         public abstract void ScrollToTop();
 
         public abstract void SelectAll();
+
+        public abstract TerminalGridData Save();
+
+        public abstract void Load(TerminalGridData data);
 
         public abstract Vector2 WorldToGrid(Vector2 position, Camera camera);
 

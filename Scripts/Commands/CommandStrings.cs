@@ -64,6 +64,12 @@ namespace JSSoft.Unity.Terminal.Commands
                 public const string Summary = "Specifies the number of pings. The default is 3.";
                 public const string Summary_ko_KR = "Ping의 횟수를 지정합니다. 기본값은 3 입니다.";
             }
+
+            public static class Timeout
+            {
+                public const string Summary = "Specify the maximum response time. Default value is 4000 (4 seconds).";
+                public const string Summary_ko_KR = "최대 응답 시간을 지정하십시오. 기본값은 4000(4초) 입니다.";
+            }
         }
 
         public static class ResetCommand
@@ -142,12 +148,6 @@ namespace JSSoft.Unity.Terminal.Commands
                 public const string Summary = "Displays a list of scene.";
                 public const string Summary_ko_KR = "장면의 목록을 표시합니다.";
             }
-
-            // public static class IsRemove
-            // {
-            //     public const string Summary = "Removes the currently applied style.";
-            //     public const string Summary_ko_KR = "현재 적용된 스타일을 제거합니다.";
-            // }
 
             public static class SceneName
             {

@@ -26,7 +26,7 @@ namespace JSSoft.Unity.Terminal.InputHandlers
     {
         public PowershellInputHandler()
         {
-            
+
         }
 
         protected override PowershellInputHandlerContext CreateContext(ITerminalGrid grid)

@@ -22,8 +22,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace JSSoft.Unity.Terminal
 {
@@ -46,8 +46,9 @@ namespace JSSoft.Unity.Terminal
             grid.PropertyChanged += Grid_PropertyChanged;
             grid.Enabled += Grid_Enabled;
             grid.Disabled += Grid_Disabled;
-            grid.KeyPreview += Grid_KeyPreview;
-            grid.KeyPressed += Grid_KeyPressed;
+            grid.PreviewKeyDown += Grid_PreviewKeyDown;
+            grid.KeyDown += Grid_KeyDown;
+            grid.KeyPress += Grid_KeyPress;
         }
 
         public static void Unregister(ITerminalGrid grid)
@@ -64,8 +65,9 @@ namespace JSSoft.Unity.Terminal
             grid.PropertyChanged -= Grid_PropertyChanged;
             grid.Enabled -= Grid_Enabled;
             grid.Disabled -= Grid_Disabled;
-            grid.KeyPreview -= Grid_KeyPreview;
-            grid.KeyPressed -= Grid_KeyPressed;
+            grid.PreviewKeyDown -= Grid_PreviewKeyDown;
+            grid.KeyDown -= Grid_KeyDown;
+            grid.KeyPress -= Grid_KeyPress;
             grids.Remove(grid);
         }
 
@@ -85,9 +87,11 @@ namespace JSSoft.Unity.Terminal
 
         public static event EventHandler Disabled;
 
-        public static event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        public static event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        public static event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        public static event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        public static event EventHandler<TerminalKeyPressEventArgs> KeyPress;
 
         private static void Grid_LayoutChanged(object sender, EventArgs e)
         {
@@ -129,14 +133,19 @@ namespace JSSoft.Unity.Terminal
             Disabled?.Invoke(sender, e);
         }
 
-        private static void Grid_KeyPreview(object sender, TerminalKeyPreviewEventArgs e)
+        private static void Grid_PreviewKeyDown(object sender, TerminalKeyDownEventArgs e)
         {
-            KeyPreview?.Invoke(sender, e);
+            PreviewKeyDown?.Invoke(sender, e);
         }
 
-        private static void Grid_KeyPressed(object sender, TerminalKeyPressEventArgs e)
+        private static void Grid_KeyDown(object sender, TerminalKeyDownEventArgs e)
         {
-            KeyPressed?.Invoke(sender, e);
+            KeyDown?.Invoke(sender, e);
+        }
+
+        private static void Grid_KeyPress(object sender, TerminalKeyPressEventArgs e)
+        {
+            KeyPress?.Invoke(sender, e);
         }
     }
 }

@@ -20,14 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Text;
-using JSSoft.Library.Commands;
-using System.Collections.Generic;
-using System.Linq;
-using System.ComponentModel;
-using UnityEngine;
 using JSSoft.Library;
+using JSSoft.Library.Commands;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -79,19 +78,19 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandPropertyTrigger(nameof(ConfigName), "")]
         [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary)]
         [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary_ko_KR, Locale = "ko-KR")]
-        public string ListSwitch { get; set; }
+        public string ListPattern { get; set; }
 
         [CommandProperty("reset")]
-        [CommandPropertyTrigger(nameof(ListSwitch), false)]
+        [CommandPropertyTrigger(nameof(ListPattern), false)]
         [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary)]
         [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public bool ResetSwitch { get; set; }
 
         protected override void OnExecute()
         {
-            if (this.ListSwitch != null)
+            if (this.ListPattern != null)
             {
-                this.ShowList(this.ListSwitch);
+                this.ShowList(this.ListPattern);
             }
             else if (this.ResetSwitch == true)
             {

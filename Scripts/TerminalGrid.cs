@@ -21,15 +21,13 @@
 // SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using System.ComponentModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
-using System.IO;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace JSSoft.Unity.Terminal
 {
@@ -121,7 +119,7 @@ namespace JSSoft.Unity.Terminal
             this.characterInfos = new TerminalCharacterInfoCollection(this);
             this.rows = new TerminalRowCollection(this, this.characterInfos);
             this.selections = new TerminalGridSelection(this);
-            this.selections.CollectionChanged += (s, e) => this.SelectionChanged?.Invoke(this, e);
+            this.selections.CollectionChanged += Selections_CollectionChanged;
             this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
         }
 
@@ -252,12 +250,11 @@ namespace JSSoft.Unity.Terminal
         public override void Scroll(int value)
         {
             var visibleIndex = this.VisibleIndex + value;
-            if (visibleIndex >= 0 && visibleIndex <= this.MaximumVisibleIndex)
-            {
-                this.IsScrolling = true;
-                this.VisibleIndex = visibleIndex;
-                this.IsScrolling = false;
-            }
+            visibleIndex = Math.Max(0, visibleIndex);
+            visibleIndex = Math.Min(this.MaximumVisibleIndex, visibleIndex);
+            this.IsScrolling = true;
+            this.VisibleIndex = visibleIndex;
+            this.IsScrolling = false;
         }
 
         public override string Copy()
@@ -293,15 +290,50 @@ namespace JSSoft.Unity.Terminal
             this.Selections.Add(range);
         }
 
+        public override TerminalGridData Save()
+        {
+            var data = new TerminalGridData()
+            {
+                TerminalData = (this.terminal ?? GetComponent<Terminal>()).Save(),
+                VisibleIndex = this.visibleIndex,
+                Selections = this.Selections.ToArray(),
+                BufferWidth = this.bufferWidth,
+                BufferHeight = this.bufferHeight,
+            };
+            return data;
+        }
+
+        public override void Load(TerminalGridData data)
+        {
+            this.terminal.Load(data.TerminalData);
+            if (this.bufferWidth != data.BufferWidth || this.bufferHeight != data.BufferHeight)
+            {
+                Debug.LogWarning($"BufferWidth or BufferHeight mismatch. Some data loads are ignored.");
+            }
+            else
+            {
+                // this.selections.CollectionChanged -= Selections_CollectionChanged;
+                this.VisibleIndex = data.VisibleIndex;
+                // this.scrollPos = data.VisibleIndex;
+                this.selections.Clear();
+                foreach (var item in data.Selections)
+                {
+                    this.selections.Add(item);
+                }
+                // this.selections.CollectionChanged += Selections_CollectionChanged;
+                // this.invoke
+            }
+        }
+
         public void ProcessEvent()
         {
             var itemList = new List<char>();
             while (this.eventQueue.Any() == true)
             {
                 var item = this.eventQueue.Dequeue();
-                if (this.OnPreviewKeyDown(item.Modifiers, item.KeyCode) == true)
+                if (this.OnKeyDown(item.Modifiers, item.KeyCode) == true)
                     continue;
-                if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnPreviewKeyPress(item.Character) == false)
+                if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnKeyPress(item.Character) == false)
                 {
                     if (item.Character == '\n')
                     {
@@ -672,9 +704,11 @@ namespace JSSoft.Unity.Terminal
 
         public override event EventHandler Disabled;
 
-        public override event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        public override event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        public override event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        public override event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        public override event EventHandler<TerminalKeyPressEventArgs> KeyPress;
 
         internal TerminalCell GetCell(TerminalPoint point)
         {
@@ -744,14 +778,19 @@ namespace JSSoft.Unity.Terminal
             this.Disabled?.Invoke(this, e);
         }
 
-        protected virtual void OnKeyPreview(TerminalKeyPreviewEventArgs e)
+        protected virtual void OnPreviewKeyDown(TerminalKeyDownEventArgs e)
         {
-            this.KeyPreview?.Invoke(this, e);
+            this.PreviewKeyDown?.Invoke(this, e);
         }
 
-        protected virtual void OnKeyPressed(TerminalKeyPressEventArgs e)
+        protected virtual void OnKeyDown(TerminalKeyDownEventArgs e)
         {
-            this.KeyPressed?.Invoke(this, e);
+            this.KeyDown?.Invoke(this, e);
+        }
+
+        protected virtual void OnKeyPress(TerminalKeyPressEventArgs e)
+        {
+            this.KeyPress?.Invoke(this, e);
         }
 
         protected override void OnRectTransformDimensionsChange()
@@ -814,19 +853,30 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual bool OnPreviewKeyDown(EventModifiers modifiers, KeyCode keyCode)
         {
-            var args = new TerminalKeyPreviewEventArgs(modifiers, keyCode);
-            this.OnKeyPreview(args);
+            var args = new TerminalKeyDownEventArgs(modifiers, keyCode);
+            this.OnPreviewKeyDown(args);
             if (args.Handled == true)
                 return true;
-            if (this.terminal.ProcessKeyEvent(modifiers, keyCode) == true)
+            if (this.terminal.ProcessKeyEvent(modifiers, keyCode, true) == true)
                 return true;
-            return this.KeyBindings.Process(this, modifiers, keyCode);
+            return this.KeyBindings.Process(this, modifiers, keyCode, true);
         }
 
-        protected virtual bool OnPreviewKeyPress(char character)
+        protected virtual bool OnKeyDown(EventModifiers modifiers, KeyCode keyCode)
+        {
+            var args = new TerminalKeyDownEventArgs(modifiers, keyCode);
+            this.OnKeyDown(args);
+            if (args.Handled == true)
+                return true;
+            if (this.terminal.ProcessKeyEvent(modifiers, keyCode, false) == true)
+                return true;
+            return this.KeyBindings.Process(this, modifiers, keyCode, false);
+        }
+
+        protected virtual bool OnKeyPress(char character)
         {
             var args = new TerminalKeyPressEventArgs(character);
-            this.OnKeyPressed(args);
+            this.OnKeyPress(args);
             if (args.Handled == true)
                 return true;
             if (character == '\t' || character == 27 || character == 25)
@@ -856,11 +906,6 @@ namespace JSSoft.Unity.Terminal
         private void InvokePropertyChangedEvent(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void ValidateValue()
-        {
-            this.maxBufferHeight = Math.Max(this.bufferHeight, this.maxBufferHeight);
         }
 
         private void UpdateColor()
@@ -1018,6 +1063,11 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        private void Selections_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.SelectionChanged?.Invoke(this, e);
+        }
+
         private Vector2 GetParentSize()
         {
             if (this.rectTransform.parent is RectTransform parent)
@@ -1143,13 +1193,13 @@ namespace JSSoft.Unity.Terminal
         {
             this.InputSystem.imeCompositionMode = IMECompositionMode.On;
             this.SetFocused(true);
-            this.InputHandler.Select(this, eventData);
+            this.InputHandler?.Select(this, eventData);
         }
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
             this.SetFocused(false);
-            this.InputHandler.Deselect(this, eventData);
+            this.InputHandler?.Deselect(this, eventData);
         }
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData) => this.InputHandler.BeginDrag(this, eventData);
@@ -1197,15 +1247,17 @@ namespace JSSoft.Unity.Terminal
                     {
                         var keyCode = item.keyCode;
                         var modifiers = item.modifiers;
-                        var keyInfo = new KeyInfo()
+                        if (this.OnPreviewKeyDown(modifiers, keyCode) == false)
                         {
-                            KeyCode = item.keyCode,
-                            Modifiers = item.modifiers,
-                            Character = item.character,
-                        };
-                        this.eventQueue.Enqueue(keyInfo);
-                        this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
-                        this.ScrollToCursor();
+                            var keyInfo = new KeyInfo()
+                            {
+                                KeyCode = item.keyCode,
+                                Modifiers = item.modifiers,
+                                Character = item.character,
+                            };
+                            this.eventQueue.Enqueue(keyInfo);
+                            this.CompositionString = this.InputSystem != null ? this.InputSystem.compositionString : Input.compositionString;
+                        }
                     }
                 }
 

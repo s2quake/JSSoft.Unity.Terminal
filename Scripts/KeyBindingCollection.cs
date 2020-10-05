@@ -49,20 +49,20 @@ namespace JSSoft.Unity.Terminal
 
         public void Add(IKeyBinding item)
         {
-            var key = $"{item.Modifiers}+{item.KeyCode}";
+            var key = $"{item.Modifiers}+{item.KeyCode}+{item.IsPreview}";
             this.itemByKey.Add(key, item);
         }
 
-        public bool Process(object obj, EventModifiers modifiers, KeyCode keyCode)
+        public bool Process(object obj, EventModifiers modifiers, KeyCode keyCode, bool isPreview)
         {
-            var key = $"{modifiers}+{keyCode}";
+            var key = $"{modifiers}+{keyCode}+{isPreview}";
             if (this.itemByKey.ContainsKey(key) == true)
             {
                 var binding = this.itemByKey[key];
                 if (binding.Verify(obj) == true && binding.Action(obj) == true)
                     return true;
             }
-            if (this.BaseBindings != null && this.BaseBindings.Process(obj, modifiers, keyCode) == true)
+            if (this.BaseBindings != null && this.BaseBindings.Process(obj, modifiers, keyCode, isPreview) == true)
             {
                 return true;
             }

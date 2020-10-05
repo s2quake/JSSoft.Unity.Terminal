@@ -21,34 +21,31 @@
 // SOFTWARE.
 
 using UnityEngine;
-#if UNITY_EDITOR
-using UnityEditor;
-#endif
 
 namespace JSSoft.Unity.Terminal
 {
     public static class TerminalEnvironment
     {
-        public static bool IsMac => (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
+        static TerminalEnvironment()
+        {
+            IsMac = (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
+            IsWindows = (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+            IsIPhone = (Application.platform == RuntimePlatform.IPhonePlayer);
+            IsAndroid = (Application.platform == RuntimePlatform.Android);
+            IsStandalone = IsMac == true || IsWindows == true;
+            IsMobile = IsIPhone == true || IsAndroid == true;
+        }
 
-        public static bool IsWindows => (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+        public static bool IsMac { get; }
 
-        public static bool IsIPhone => (Application.platform == RuntimePlatform.IPhonePlayer);
+        public static bool IsWindows { get; }
 
-        public static bool IsAndroid => (Application.platform == RuntimePlatform.Android);
+        public static bool IsIPhone { get; }
 
-#if UNITY_EDITOR
-        public static bool IsStandalone => EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneOSX ||
-                                           EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows ||
-                                           EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64;
+        public static bool IsAndroid { get; }
 
-        public static bool IsMobile => EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ||
-                                       EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS;
-#else
-        public static bool IsStandalone => IsMac == true || IsWindows == true;
+        public static bool IsStandalone {get; internal set;}
 
-        public static bool IsMobile => IsIPhone == true || IsAndroid == true;
-#endif
-
+        public static bool IsMobile {get; internal set;}
     }
 }

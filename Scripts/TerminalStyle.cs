@@ -295,7 +295,7 @@ namespace JSSoft.Unity.Terminal
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
-                        
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)

@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 using System;
-using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {

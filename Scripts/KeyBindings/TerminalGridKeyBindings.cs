@@ -20,11 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using KeyBinding = JSSoft.Unity.Terminal.KeyBinding<JSSoft.Unity.Terminal.ITerminalGrid>;
 
@@ -55,6 +51,7 @@ namespace JSSoft.Unity.Terminal.KeyBindings
             new KeyBinding(EventModifiers.Command, KeyCode.C, (g) => GUIUtility.systemCopyBuffer = g.Copy()),
             new KeyBinding(EventModifiers.Command, KeyCode.V, (g) => g.Paste(GUIUtility.systemCopyBuffer)),
             new KeyBinding(EventModifiers.Command, KeyCode.A, (g) => g.SelectAll()),
+            new KeyBinding(EventModifiers.Control, KeyCode.C, (g) => Cancel(g), (g) => CanCancel(g)) { IsPreview = true}
         };
 
         public static readonly IKeyBindingCollection TerminalOnWindows = new KeyBindingCollection("Terminal(Windows) Grid Key Bindings", Common)
@@ -66,6 +63,21 @@ namespace JSSoft.Unity.Terminal.KeyBindings
             new KeyBinding(EventModifiers.Control, KeyCode.C, (g) => GUIUtility.systemCopyBuffer = g.Copy()),
             new KeyBinding(EventModifiers.Control, KeyCode.V, (g) => g.Paste(GUIUtility.systemCopyBuffer)),
             new KeyBinding(EventModifiers.Control, KeyCode.A, (g) => g.SelectAll()),
+            new KeyBinding(EventModifiers.Control, KeyCode.C, (g) => Cancel(g), (g) => CanCancel(g)) { IsPreview = true}
         };
+
+        private static void Cancel(ITerminalGrid grid)
+        {
+            var terminal = grid.Terminal;
+            terminal.Cancel();
+        }
+
+        private static bool CanCancel(ITerminalGrid grid)
+        {
+            var terminal = grid.Terminal;
+            if (terminal.IsExecuting == true && grid.Selections.Any() == false)
+                return true;
+            return false;
+        }
     }
 }

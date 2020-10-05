@@ -20,12 +20,5 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Linq;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine;
-using System.Threading.Tasks;
-using System.ComponentModel;
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("JSSoft.Unity.Terminal.Editor")]

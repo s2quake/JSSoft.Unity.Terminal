@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
-using System.Linq;
 using JSSoft.Library.Commands;
+using System;
 using System.Collections.Generic;
-using UnityEngine.SceneManagement;
 using System.IO;
+using System.Linq;
+using UnityEngine.SceneManagement;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -54,7 +54,7 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandSummary(CommandStrings.SceneCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty("list")]
         [CommandPropertyTrigger(nameof(SceneName), "")]
-        public bool IsList { get; set; }
+        public bool ListSwitch { get; set; }
 
         [CommandSummary(CommandStrings.SceneCommand.SceneName.Summary)]
         [CommandSummary(CommandStrings.SceneCommand.SceneName.Summary_ko_KR, Locale = "ko-KR")]
@@ -63,7 +63,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnExecute()
         {
-            if (this.IsList == true)
+            if (this.ListSwitch == true)
             {
                 this.ShowSceneList();
             }
@@ -107,10 +107,16 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (int.TryParse(sceneName, out var index) == true)
             {
+                var scene = SceneManager.GetSceneByBuildIndex(index);
+                if (scene == null)
+                    throw new ArgumentException($"invalid scene index: '{index}'");
                 SceneManager.LoadScene(index);
             }
             else
             {
+                var scene = SceneManager.GetSceneByName(sceneName);
+                if (scene == null)
+                    throw new ArgumentException($"invalid scene name: '{sceneName}'");
                 SceneManager.LoadScene(sceneName);
             }
         }

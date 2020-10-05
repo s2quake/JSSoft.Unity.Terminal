@@ -24,7 +24,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
@@ -64,6 +63,10 @@ namespace JSSoft.Unity.Terminal
         void Paste(string text);
 
         void SelectAll();
+
+        TerminalGridData Save();
+
+        void Load(TerminalGridData data);
 
         ITerminal Terminal { get; }
 
@@ -151,8 +154,10 @@ namespace JSSoft.Unity.Terminal
 
         event EventHandler Disabled;
 
-        event EventHandler<TerminalKeyPreviewEventArgs> KeyPreview;
+        event EventHandler<TerminalKeyDownEventArgs> PreviewKeyDown;
 
-        event EventHandler<TerminalKeyPressEventArgs> KeyPressed;
+        event EventHandler<TerminalKeyDownEventArgs> KeyDown;
+
+        event EventHandler<TerminalKeyPressEventArgs> KeyPress;
     }
 }

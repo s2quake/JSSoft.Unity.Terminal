@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System;
 using JSSoft.Library.Commands;
+using System;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -39,7 +39,7 @@ namespace JSSoft.Unity.Terminal.Commands
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
-        
+
         protected void Write(string text)
         {
             this.Write(text, null);

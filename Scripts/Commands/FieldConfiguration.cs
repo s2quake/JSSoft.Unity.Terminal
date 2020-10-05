@@ -22,6 +22,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ namespace JSSoft.Unity.Terminal.Commands
     {
         private readonly object instance;
         private readonly FieldInfo fieldInfo;
+        private RangeAttribute range;
 
         public FieldConfiguration(string name, object instance, FieldInfo fieldInfo)
         {
@@ -75,7 +77,25 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void SetValue(object value)
         {
+            this.Validate(value);
             this.fieldInfo.SetValue(this.instance, value);
+        }
+
+        private void Validate(object value)
+        {
+            if (this.range != null && typeof(IConvertible).IsAssignableFrom(this.Type) == true)
+            {
+                if (value is IConvertible convertible)
+                {
+                    var v = convertible.ToSingle(CultureInfo.CurrentUICulture);
+                    var min = this.range.min;
+                    var max = this.range.max;
+                    if (v < min || v > max)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(value), $"The value is out of range. {min} <= value <= {max}");
+                    }
+                }
+            }
         }
 
         private void Initialize()
@@ -85,9 +105,13 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 this.Comment = tooltip.tooltip;
             }
-            if (this.fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute)) is DescriptionAttribute description)
+            else if (this.fieldInfo.GetCustomAttribute(typeof(DescriptionAttribute)) is DescriptionAttribute description)
             {
                 this.Comment = description.Description;
+            }
+            if (this.fieldInfo.GetCustomAttribute(typeof(RangeAttribute)) is RangeAttribute range)
+            {
+                this.range = range;
             }
         }
     }

@@ -22,7 +22,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.TextCore;
 using UnityEngine.UI;
