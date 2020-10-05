@@ -30,7 +30,7 @@ namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    public class TerminalComposition : UIBehaviour, INotifyValidated, IPropertyChangedNotifyable
+    public class TerminalComposition : UIBehaviour, INotifyValidated, IPropertyChangedNotifyable, IValidatable
     {
         private static readonly int[] backgroundTriangles = new int[6] { 0, 1, 2, 2, 3, 0 };
         private static readonly int[] foregroundTriangles = new int[6] { 4, 5, 6, 6, 7, 4 };
@@ -188,18 +188,6 @@ namespace JSSoft.Unity.Terminal
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            this.columnIndex = Math.Min(this.BufferWidth - 1, this.columnIndex);
-            this.columnIndex = Math.Max(0, this.columnIndex);
-            this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
-            this.rowIndex = Math.Max(0, this.rowIndex);
-            this.OnValidated(EventArgs.Empty);
-        }
-#endif
-
         protected override void Start()
         {
         }
@@ -324,11 +312,29 @@ namespace JSSoft.Unity.Terminal
 
         private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
 
+        internal void Validate()
+        {
+            this.columnIndex = Math.Min(this.BufferWidth - 1, this.columnIndex);
+            this.columnIndex = Math.Max(0, this.columnIndex);
+            this.rowIndex = Math.Min(this.BufferHeight - 1, this.rowIndex);
+            this.rowIndex = Math.Max(0, this.rowIndex);
+            this.OnValidated(EventArgs.Empty);
+        }
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
         {
             this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
+
+        #region IValidatable
+
+        void IValidatable.Validate()
+        {
+            this.Validate();
         }
 
         #endregion

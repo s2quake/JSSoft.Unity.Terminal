@@ -30,7 +30,7 @@ using UnityEngine.UI;
 namespace JSSoft.Unity.Terminal
 {
     [RequireComponent(typeof(CanvasRenderer))]
-    public class TerminalCursor : MaskableGraphic, INotifyValidated, IPropertyChangedNotifyable
+    public class TerminalCursor : MaskableGraphic, INotifyValidated, IPropertyChangedNotifyable, IValidatable
     {
         [SerializeField]
         private TerminalGrid grid = null;
@@ -257,17 +257,6 @@ namespace JSSoft.Unity.Terminal
             this.terminalMesh.Fill(vh);
         }
 
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            this.cursorLeft = Math.Min(this.BufferWidth - 1, this.cursorLeft);
-            this.cursorLeft = Math.Max(0, this.cursorLeft);
-            this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
-            this.cursorTop = Math.Max(0, this.cursorTop);
-        }
-#endif
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -476,12 +465,28 @@ namespace JSSoft.Unity.Terminal
 
         private int BufferHeight => this.grid != null ? this.grid.BufferHeight : 0;
 
-                        
+        internal void Validate()
+        {
+            this.cursorLeft = Math.Min(this.BufferWidth - 1, this.cursorLeft);
+            this.cursorLeft = Math.Max(0, this.cursorLeft);
+            this.cursorTop = Math.Min(this.BufferHeight - 1, this.cursorTop);
+            this.cursorTop = Math.Max(0, this.cursorTop);
+        }
+
         #region IPropertyChangedNotifyable
 
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
         {
             this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
+
+        #region IValidatable
+
+        void IValidatable.Validate()
+        {
+            this.Validate();
         }
 
         #endregion

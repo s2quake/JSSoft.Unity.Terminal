@@ -36,7 +36,7 @@ using UnityEngine.EventSystems;
 namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
-    public class Terminal : TerminalBase, INotifyValidated, IPropertyChangedNotifyable
+    public class Terminal : TerminalBase, INotifyValidated, IPropertyChangedNotifyable, IValidatable
     {
         private readonly List<string> histories = new List<string>();
         private readonly List<string> completions = new List<string>();
@@ -670,6 +670,16 @@ namespace JSSoft.Unity.Terminal
             return null;
         }
 
+        internal void Validate()
+        {
+            this.inputText = this.command;
+            this.promptText = this.prompt + this.command;
+            this.text = Combine(this.outputText, this.progressText, this.promptText);
+            this.cursorPosition = this.command.Length;
+            this.outputBlock.Text = this.outputText;
+            this.OnValidated(EventArgs.Empty);
+        }
+
         protected virtual void OnValidated(EventArgs e)
         {
             this.Validated?.Invoke(this, EventArgs.Empty);
@@ -718,19 +728,6 @@ namespace JSSoft.Unity.Terminal
             this.OnDisabled(EventArgs.Empty);
             TerminalEvents.Unregister(this);
         }
-
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            this.inputText = this.command;
-            this.promptText = this.prompt + this.command;
-            this.text = Combine(this.outputText, this.progressText, this.promptText);
-            this.cursorPosition = this.command.Length;
-            this.outputBlock.Text = this.outputText;
-            this.OnValidated(EventArgs.Empty);
-        }
-#endif
 
         protected virtual bool IsValidCharacter(char character)
         {
@@ -902,6 +899,15 @@ namespace JSSoft.Unity.Terminal
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
         {
             this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
+
+        #region IValidatable
+
+        void IValidatable.Validate()
+        {
+            this.Validate();
         }
 
         #endregion

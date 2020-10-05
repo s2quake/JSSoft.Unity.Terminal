@@ -52,7 +52,8 @@ namespace JSSoft.Unity.Terminal
         IUpdateSelectedHandler,
         ISelectHandler,
         IDeselectHandler,
-        IPropertyChangedNotifyable
+        IPropertyChangedNotifyable,
+        IValidatable
     {
         [SerializeField]
         private TerminalFont font = null;
@@ -753,14 +754,6 @@ namespace JSSoft.Unity.Terminal
             this.KeyPressed?.Invoke(this, e);
         }
 
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            this.UpdateColor();
-        }
-#endif
-
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
@@ -784,6 +777,7 @@ namespace JSSoft.Unity.Terminal
             this.terminal.defaultProgressGenerator = new ProgressGenerator(this);
             this.text = this.terminal.Text;
             this.UpdateLayout();
+            this.UpdateColor();
             TerminalGridEvents.Register(this);
             TerminalEvents.Validated += Terminal_Validated;
             TerminalEvents.PropertyChanged += Terminal_PropertyChanged;
@@ -791,7 +785,6 @@ namespace JSSoft.Unity.Terminal
             TerminalEvents.Executed += Terminal_Executed;
             TerminalValidationEvents.Validated += Object_Validated;
             this.OnEnabled(EventArgs.Empty);
-            this.Invoke(nameof(this.ScrollToCursor), float.Epsilon);
         }
 
         protected override void OnDisable()
@@ -1139,6 +1132,11 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        internal void Validate()
+        {
+            this.UpdateColor();
+        }
+
         #region implemetations
 
         void ISelectHandler.OnSelect(BaseEventData eventData)
@@ -1225,6 +1223,15 @@ namespace JSSoft.Unity.Terminal
         void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
         {
             this.InvokePropertyChangedEvent(propertyName);
+        }
+
+        #endregion
+
+        #region IValidatable
+
+        void IValidatable.Validate()
+        {
+            this.Validate();
         }
 
         #endregion

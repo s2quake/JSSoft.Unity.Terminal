@@ -38,6 +38,7 @@ namespace JSSoft.Unity.Terminal.Editor
         private readonly List<EditorProperty> propertyList = new List<EditorProperty>();
         private readonly List<string> nameList = new List<string>();
         private readonly SerializedProperty scriptProperty;
+        private bool isModified;
 
         public EditorPropertyNotifier(UnityEditor.Editor editor)
             : this(editor, (items) => InvokeEvent(editor, items))
@@ -105,7 +106,7 @@ namespace JSSoft.Unity.Terminal.Editor
         {
             this.nameList.Clear();
             this.serializedObject.Update();
-
+            this.isModified = false;
         }
 
         public void End()
@@ -118,6 +119,10 @@ namespace JSSoft.Unity.Terminal.Editor
                     this.OnPropertyChanged(new PropertyChangedEventArgs(item));
                 }
                 this.nameList.Clear();
+            }
+            if (this.isModified == true)
+            {
+                this.InvokeValidate();
             }
         }
 
@@ -150,6 +155,8 @@ namespace JSSoft.Unity.Terminal.Editor
             return propertyInfo.Property;
         }
 
+        public bool IsModified => this.isModified;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
@@ -164,9 +171,22 @@ namespace JSSoft.Unity.Terminal.Editor
             EditorGUI.BeginChangeCheck();
             EditorGUILayout.PropertyField(property, includeChildren);
             this.serializedObject.ApplyModifiedProperties();
-            if (EditorGUI.EndChangeCheck() && propertyInfo.CanNotify == true)
+            if (EditorGUI.EndChangeCheck())
             {
-                this.nameList.Add(propertyInfo.Name);
+                if (propertyInfo.CanNotify == true)
+                    this.nameList.Add(propertyInfo.Name);
+                this.isModified = true;
+            }
+        }
+
+        private void InvokeValidate()
+        {
+            foreach (var target in this.editor.targets)
+            {
+                if (target is IValidatable obj)
+                {
+                    obj.Validate();
+                }
             }
         }
 

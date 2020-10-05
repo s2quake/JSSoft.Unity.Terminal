@@ -8,7 +8,7 @@ namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(Animator))]
-    public class RectVisibleController : UIBehaviour
+    public class RectVisibleController : UIBehaviour, IValidatable
     {
         public const string StateNone = "None";
         public const string StateHide = "Hide";
@@ -97,14 +97,6 @@ namespace JSSoft.Unity.Terminal
             base.OnDisable();
         }
 
-#if UNITY_EDITOR
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            this.UpdatePosition(true);
-        }
-#endif
-
         protected virtual void Update()
         {
             if (Application.isPlaying == false)
@@ -142,35 +134,52 @@ namespace JSSoft.Unity.Terminal
             if (this.value != this.value2 || force == true)
             {
                 var rect = this.GetComponent<RectTransform>();
-                var pos = this.position;
-                var direction = this.direction;
-                var value = this.value;
-                switch (direction)
+                if (rect != null)
                 {
-                    case RectVisibleDirection.Left:
-                        {
-                            pos = new Vector2(-rect.rect.width * value, pos.y);
-                        }
-                        break;
-                    case RectVisibleDirection.Top:
-                        {
-                            pos = new Vector2(pos.x, rect.rect.height * value);
-                        }
-                        break;
-                    case RectVisibleDirection.Right:
-                        {
-                            pos = new Vector2(rect.rect.width * value, pos.y);
-                        }
-                        break;
-                    case RectVisibleDirection.Bottom:
-                        {
-                            pos = new Vector2(pos.x, -rect.rect.height * value);
-                        }
-                        break;
+                    var pos = this.position;
+                    var direction = this.direction;
+                    var value = this.value;
+                    switch (direction)
+                    {
+                        case RectVisibleDirection.Left:
+                            {
+                                pos = new Vector2(-rect.rect.width * value, pos.y);
+                            }
+                            break;
+                        case RectVisibleDirection.Top:
+                            {
+                                pos = new Vector2(pos.x, rect.rect.height * value);
+                            }
+                            break;
+                        case RectVisibleDirection.Right:
+                            {
+                                pos = new Vector2(rect.rect.width * value, pos.y);
+                            }
+                            break;
+                        case RectVisibleDirection.Bottom:
+                            {
+                                pos = new Vector2(pos.x, -rect.rect.height * value);
+                            }
+                            break;
+                    }
+                    rect.anchoredPosition = pos;
+                    this.value2 = value;
                 }
-                rect.anchoredPosition = pos;
-                this.value2 = value;
             }
         }
+
+        internal void Validate()
+        {
+            this.UpdatePosition(true);
+        }
+
+        #region IValidatable
+
+        void IValidatable.Validate()
+        {
+            this.Validate();
+        }
+
+        #endregion
     }
 }
