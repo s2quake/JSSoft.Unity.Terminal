@@ -52,6 +52,7 @@ namespace JSSoft.Unity.Terminal.Commands
             this.Initialize();
         }
 
+        [Obsolete("Failed to get static property information from ios.")]
         public PropertyConfiguration(string name, Type type, string propertyName)
         {
             if (propertyName == null)
@@ -60,7 +61,7 @@ namespace JSSoft.Unity.Terminal.Commands
                 throw new ArgumentNullException(nameof(type));
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.instance = null;
-            this.propertyInfo = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            this.propertyInfo = type.GetProperty(propertyName, BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
             if (this.propertyInfo == null)
                 throw new InvalidOperationException($"property cannot found: '{propertyName}'");
             this.Initialize();
