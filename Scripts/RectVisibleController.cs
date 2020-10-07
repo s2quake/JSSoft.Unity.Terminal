@@ -52,6 +52,8 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        public bool CanToggle => this.isTrigger == false;
+
         public bool? IsVisible
         {
             get
@@ -100,30 +102,30 @@ namespace JSSoft.Unity.Terminal
                 return;
             var stateInfo = this.animator.GetCurrentAnimatorStateInfo(0);
             var length = stateInfo.IsName(StateHide) || stateInfo.IsName(StateShow) ? stateInfo.length : 0;
-            if (this.isTrigger == true && stateInfo.normalizedTime >= length)
+            if (this.isTrigger == true)
             {
-                if (stateInfo.IsName(StateHide) != true && this.value <= 0)
+                if (stateInfo.IsName(StateHide) != true)
                 {
-                    if (this.grid != null && this.grid.IsFocused == false)
-                    {
-                        CurrentGrid = this.grid;
-                    }
-                    else
-                    {
-                        this.animator.ResetTrigger(StateShow);
-                        this.animator.SetTrigger(StateHide);
-                        CurrentGrid = null;
-                    }
+                    this.animator.ResetTrigger(StateShow);
+                    this.animator.SetTrigger(StateHide);
+                    this.grid = CurrentGrid;
+                    CurrentGrid = null;
                 }
-                else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
+                else if (stateInfo.IsName(StateShow) != true)
                 {
                     this.animator.ResetTrigger(StateHide);
                     this.animator.SetTrigger(StateShow);
                     if (this.grid != null)
                         CurrentGrid = this.grid;
                 }
+                // this.isTrigger = false;
+            }
+            if (this.isTrigger == true && stateInfo.normalizedTime >= length)
+            {
                 this.isTrigger = false;
             }
+
+            // this.isTrigger = stateInfo.normalizedTime >= length;
             this.UpdatePosition();
         }
 
