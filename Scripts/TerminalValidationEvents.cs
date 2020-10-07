@@ -35,7 +35,7 @@ namespace JSSoft.Unity.Terminal
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
             if (objs.Contains(obj) == true)
-                throw new ArgumentException($"{nameof(obj)} is already exists.");
+                return;
             objs.Add(obj);
             obj.Enabled += Object_Enabled;
             obj.Disabled += Object_Disabled;
@@ -48,7 +48,7 @@ namespace JSSoft.Unity.Terminal
             if (obj == null)
                 throw new ArgumentNullException(nameof(obj));
             if (objs.Contains(obj) == false)
-                throw new ArgumentException($"{nameof(obj)} does not exists.");
+                return;
             obj.Enabled -= Object_Enabled;
             obj.Disabled -= Object_Disabled;
             obj.Validated -= Object_Validated;

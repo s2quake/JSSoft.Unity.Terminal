@@ -104,17 +104,15 @@ namespace JSSoft.Unity.Terminal
             {
                 if (stateInfo.IsName(StateHide) != true && this.value <= 0)
                 {
-                    if (this.grid != null && EventSystem.current.currentSelectedGameObject == null)
+                    if (this.grid != null && this.grid.IsFocused == false)
                     {
-                        EventSystem.current.SetSelectedGameObject(this.grid.gameObject);
+                        CurrentGrid = this.grid;
                     }
                     else
                     {
                         this.animator.ResetTrigger(StateShow);
                         this.animator.SetTrigger(StateHide);
-                        if (EventSystem.current.currentSelectedGameObject != null)
-                            this.grid = EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>();
-                        EventSystem.current.SetSelectedGameObject(null);
+                        CurrentGrid = null;
                     }
                 }
                 else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
@@ -122,7 +120,7 @@ namespace JSSoft.Unity.Terminal
                     this.animator.ResetTrigger(StateHide);
                     this.animator.SetTrigger(StateShow);
                     if (this.grid != null)
-                        EventSystem.current.SetSelectedGameObject(this.grid.gameObject);
+                        CurrentGrid = this.grid;
                 }
                 this.isTrigger = false;
             }
@@ -170,6 +168,19 @@ namespace JSSoft.Unity.Terminal
                     rect.anchoredPosition = pos;
                     this.value2 = value;
                 }
+            }
+        }
+
+        private static TerminalGridBase CurrentGrid
+        {
+            get => EventSystem.current.currentSelectedGameObject != null ? EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>() : null;
+            set
+            {
+                var currentGrid = EventSystem.current.currentSelectedGameObject != null ? EventSystem.current.currentSelectedGameObject.GetComponent<TerminalGridBase>() : null;
+                if (value != null)
+                    EventSystem.current.SetSelectedGameObject(value.gameObject);
+                else if (currentGrid != null)
+                    EventSystem.current.SetSelectedGameObject(null);
             }
         }
 
