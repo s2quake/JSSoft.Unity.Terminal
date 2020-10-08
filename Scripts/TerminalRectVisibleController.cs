@@ -31,10 +31,16 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual void OnGUI()
         {
-            if (Event.current is Event current && current.modifiers == this.modifiers && Input.GetKeyDown(this.keyCode) == true)
+            if (Event.current is Event current && current.type == EventType.KeyDown && current.modifiers == this.modifiers && Input.GetKeyDown(this.keyCode) == true)
             {
-                if (this.CanToggle == true)
+                if (this.Grid != null && this.Grid.IsFocused == false && this.IsVisible == true)
+                {
+                    this.Grid.Focus();
+                }
+                else if (this.CanToggle == true)
+                {
                     this.Toggle();
+                }
             }
         }
 
