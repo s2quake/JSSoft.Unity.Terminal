@@ -108,7 +108,8 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.animator.ResetTrigger(StateShow);
                     this.animator.SetTrigger(StateHide);
-                    this.grid = CurrentGrid;
+                    if (CurrentGrid != null)
+                        this.grid = CurrentGrid;
                     CurrentGrid = null;
                 }
                 else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
@@ -123,8 +124,6 @@ namespace JSSoft.Unity.Terminal
             {
                 this.isTrigger = false;
             }
-
-            // this.isTrigger = stateInfo.normalizedTime >= length;
             this.UpdatePosition();
         }
 
