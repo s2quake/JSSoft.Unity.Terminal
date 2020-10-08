@@ -23,7 +23,6 @@
 
 using System.Reflection;
 
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("JSSoft.Unity.Terminal.Editor")]
 [assembly: AssemblyCompany("s2quake")]
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
@@ -31,9 +30,9 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 [assembly: AssemblyCopyright("Copyright (c) 2020 Jeesu Choi")]
-[assembly: AssemblyDescription("Terminal for Unity")]
+[assembly: AssemblyDescription("Terminal Editor for Unity")]
 [assembly: AssemblyFileVersion("1.0.0")]
 [assembly: AssemblyInformationalVersion("1.0.0")]
-[assembly: AssemblyProduct("JSSoft.Unity.Terminal")]
-[assembly: AssemblyTitle("JSSoft.Unity.Terminal")]
+[assembly: AssemblyProduct("JSSoft.Unity.Terminal.Editor")]
+[assembly: AssemblyTitle("JSSoft.Unity.Terminal.Editor")]
 [assembly: AssemblyVersion("1.0.0.0")]
