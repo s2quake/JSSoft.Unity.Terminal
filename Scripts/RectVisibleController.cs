@@ -104,21 +104,20 @@ namespace JSSoft.Unity.Terminal
             var length = stateInfo.IsName(StateHide) || stateInfo.IsName(StateShow) ? stateInfo.length : 0;
             if (this.isTrigger == true)
             {
-                if (stateInfo.IsName(StateHide) != true)
+                if (stateInfo.IsName(StateHide) != true && this.value <= 0)
                 {
                     this.animator.ResetTrigger(StateShow);
                     this.animator.SetTrigger(StateHide);
                     this.grid = CurrentGrid;
                     CurrentGrid = null;
                 }
-                else if (stateInfo.IsName(StateShow) != true)
+                else if (stateInfo.IsName(StateShow) != true && this.value >= 1)
                 {
                     this.animator.ResetTrigger(StateHide);
                     this.animator.SetTrigger(StateShow);
                     if (this.grid != null)
                         CurrentGrid = this.grid;
                 }
-                // this.isTrigger = false;
             }
             if (this.isTrigger == true && stateInfo.normalizedTime >= length)
             {
