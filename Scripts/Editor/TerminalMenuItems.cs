@@ -86,7 +86,7 @@ namespace JSSoft.Unity.Terminal.Editor
             }
         }
 
-        [MenuItem("Terminal/Create Font Descriptor", true)]
+        [MenuItem("Assets/Create/Terminal/Create Font Descriptor", true)]
         private static bool ValidateCreateFontDescriptor()
         {
             var obj = Selection.activeObject;
