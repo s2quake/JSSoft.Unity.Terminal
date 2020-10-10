@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   styleName: 
   font: {fileID: 11400000, guid: 98354bfe6de68134291be3bf56feb63f, type: 2}
-  backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 1}
+  backgroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 0.9411765}
   foregroundColor: {r: 0.15686275, g: 0.99607843, b: 0.078431375, a: 1}
   selectionColor: {r: 0, g: 0, b: 0.9137255, a: 1}
   cursorColor: {r: 0.21960784, g: 0.99607843, b: 0.15294118, a: 1}

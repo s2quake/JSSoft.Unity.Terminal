@@ -117,18 +117,6 @@ namespace JSSoft.Unity.Terminal.Editor
             }
         }
 
-        // [MenuItem("Terminal/Test")]
-        // public static void Test()
-        // {
-        //     var obj = Selection.activeObject;
-        //     if (obj is GameObject gameObject)
-        //     {
-        //         var text = gameObject.GetComponent<Text>();
-        //         var path = AssetDatabase.GetAssetPath(text.font);
-        //         Debug.Log(path);
-        //     }
-        // }
-
         [MenuItem("GameObject/UI/Terminals/Terminal")]
         private static void CreateTerminalUI()
         {

@@ -1,9 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {
     public class TerminalRectVisibleController : RectVisibleController
     {
+        private readonly List<TerminalGridBase> gridList = new List<TerminalGridBase>();
+
         [SerializeField]
         private KeyCode keyCode = KeyCode.BackQuote;
         [SerializeField]
@@ -33,6 +37,7 @@ namespace JSSoft.Unity.Terminal
         {
             if (Event.current is Event current && current.type == EventType.KeyDown && current.modifiers == this.modifiers && Input.GetKeyDown(this.keyCode) == true)
             {
+                
                 if (this.Grid != null && this.Grid.IsFocused == false && this.IsVisible == true)
                 {
                     this.Grid.Focus();
@@ -48,11 +53,15 @@ namespace JSSoft.Unity.Terminal
         {
             base.OnEnable();
             TerminalGridEvents.KeyDown += Grid_KeyDown;
+            TerminalGridEvents.GotFocus += Grid_GotFocus;
+            this.gridList.AddRange(this.GetComponentsInChildren<TerminalGridBase>());
         }
 
         protected override void OnDisable()
         {
             TerminalGridEvents.KeyDown -= Grid_KeyDown;
+            TerminalGridEvents.GotFocus -= Grid_GotFocus;
+             this.gridList.Clear();
             base.OnDisable();
         }
 
@@ -61,6 +70,14 @@ namespace JSSoft.Unity.Terminal
             if (e.Modifiers == this.modifiers && e.KeyCode == this.keyCode && e.Handled == false)
             {
                 e.Handled = true;
+            }
+        }
+
+        private void Grid_GotFocus(object sender, EventArgs e)
+        {
+            if (sender is TerminalGridBase grid && this.gridList.Contains(grid) == true)
+            {
+                this.Grid = grid;
             }
         }
     }
