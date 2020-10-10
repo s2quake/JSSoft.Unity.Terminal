@@ -79,7 +79,8 @@ namespace JSSoft.Unity.Terminal.InputHandlers
             if (eventData.button == PointerEventData.InputButton.Left && downPoint != TerminalPoint.Invalid)
             {
                 this.Selections.Clear();
-                this.Selections.Add(this.SelectingRange);
+                if (this.SelectingRange != TerminalRange.Empty)
+                    this.Selections.Add(this.SelectingRange);
                 this.SelectingRange = TerminalRange.Empty;
                 this.downPoint = TerminalPoint.Invalid;
             }
