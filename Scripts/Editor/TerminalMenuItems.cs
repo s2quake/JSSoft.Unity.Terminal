@@ -34,7 +34,7 @@ using UnityEngine.UI;
 
 namespace JSSoft.Unity.Terminal.Editor
 {
-    public static class TerminalMeniItems
+    public static class TerminalMenuItems
     {
         private static Func<Type, Type> typeResolver;
 
@@ -42,6 +42,21 @@ namespace JSSoft.Unity.Terminal.Editor
         {
             get => typeResolver ?? defaultTypeResolver;
             set => typeResolver = value;
+        }
+
+        public static T FindAsset<T>(string path) where T : class
+        {
+            var name = Path.GetFileNameWithoutExtension(path);
+            var items = AssetDatabase.FindAssets($"{name} t:{typeof(T).Name}");
+            foreach (var item in items)
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath(item);
+                if (assetPath.EndsWith(path) == true)
+                {
+                    return AssetDatabase.LoadAssetAtPath(assetPath, typeof(T)) as T;
+                }
+            }
+            throw new ArgumentException($"cannot found asset: '{path}'", nameof(path));
         }
 
         private static readonly Func<Type, Type> defaultTypeResolver = new Func<Type, Type>((type) => type);
@@ -170,8 +185,8 @@ namespace JSSoft.Unity.Terminal.Editor
 
             var backgroundSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/Background.psd");
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
-            var font = AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Fonts/NanumGothicCoding.asset", typeof(TerminalFont)) as TerminalFont;
-            var controller = AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Animations/TerminalScrollbar/TerminalScrollbar.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+            var font = FindAsset<TerminalFont>("Fonts/NanumGothicCoding.asset");
+            var controller = FindAsset<RuntimeAnimatorController>("Animations/TerminalScrollbar/TerminalScrollbar.controller");
             var types = new List<Type>()
             {
                 { typeof(Terminal) },
@@ -342,7 +357,7 @@ namespace JSSoft.Unity.Terminal.Editor
                 { typeof(TerminalRectVisibleController) },
             };
 
-            var controllerAsset = AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Animations/RectVisibleController/RectVisibleController.controller", typeof(RuntimeAnimatorController)) as RuntimeAnimatorController;
+            var controllerAsset = FindAsset<RuntimeAnimatorController>("Animations/RectVisibleController/RectVisibleController.controller");
 
             var terminalRootObj = new GameObject("TerminalRoot", types.ToArray()) { layer = canvas.gameObject.layer };
             var terminalRootRect = terminalRootObj.GetComponent<RectTransform>();
@@ -441,18 +456,18 @@ namespace JSSoft.Unity.Terminal.Editor
                 var stylesObject = new GameObject(nameof(TerminalStyles), typeof(TerminalStyles), typeof(RectTransform));
                 var stylesRect = stylesObject.GetComponent<RectTransform>();
                 styles = stylesObject.GetComponent<TerminalStyles>();
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Basic.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Grass.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/HomeBrew.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Man Page.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Novel.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Ocean.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Pro.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Red Sands.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Silver Aerogel.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Solid Colors.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/Console.asset", typeof(TerminalStyle)) as TerminalStyle);
-                styles.Styles.Add(AssetDatabase.LoadAssetAtPath("Assets/Plugins/JSSoft.Unity.Terminal/Styles/PowerShell.asset", typeof(TerminalStyle)) as TerminalStyle);
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Basic.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Grass.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Homebrew.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Man Page.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Novel.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Ocean.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Pro.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Red Sands.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Silver Aerogel.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Solid Colors.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/Console.asset"));
+                styles.Styles.Add(FindAsset<TerminalStyle>("Styles/PowerShell.asset"));
                 stylesRect.SetParent(canvasRect);
             }
             return styles;

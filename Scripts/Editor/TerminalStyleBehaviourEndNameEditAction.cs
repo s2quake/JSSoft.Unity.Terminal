@@ -23,6 +23,7 @@
 using System.IO;
 using UnityEditor;
 using UnityEditor.ProjectWindowCallback;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Editor
 {
@@ -30,7 +31,8 @@ namespace JSSoft.Unity.Terminal.Editor
     {
         public override void Action(int instanceId, string pathName, string resourceFile)
         {
-            var text = File.ReadAllText("Assets/JSSoft Terminal/Scripts/Editor/TerminalStyleBehaviour.txt");
+            var textAsset = TerminalMenuItems.FindAsset<TextAsset>("Behaviours/TerminalStyleBehaviour.txt");
+            var text = textAsset.text;
             var name = Path.GetFileNameWithoutExtension(pathName);
             var code = text.Replace("public class TerminalBehaviour", $"public class {name}");
             File.WriteAllText(pathName, code);
