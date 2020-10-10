@@ -61,7 +61,7 @@ namespace JSSoft.Unity.Terminal.Editor
 
         private static readonly Func<Type, Type> defaultTypeResolver = new Func<Type, Type>((type) => type);
 
-        [MenuItem("Terminal/Create Font Descriptor")]
+        [MenuItem("Assets/Create/Terminal/Create Font Descriptor")]
         private static void CreateFontDescriptor()
         {
             var obj = Selection.activeObject;
