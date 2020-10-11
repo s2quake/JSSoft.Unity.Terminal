@@ -29,35 +29,36 @@ namespace JSSoft.Unity.Terminal.Commands
 {
     public class CommandConfiguration<T> : CommandConfigurationBase
     {
-        private readonly Func<T> getter;
-        private readonly Action<T> setter;
+        private readonly Func<object, T> getter;
+        private readonly Action<object, T> setter;
 
-        public CommandConfiguration(string name, Func<T> getter, Action<T> setter)
+        public CommandConfiguration(string name, Func<object, T> getter, Action<object, T> setter)
         {
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.getter = getter ?? throw new ArgumentNullException(nameof(getter));
             this.setter = setter ?? throw new ArgumentNullException(nameof(setter));
-            this.DefaultValue = getter();
         }
 
         public override Type Type => typeof(T);
 
         public override string Name { get; }
 
+        public object UserData { get; set; }
+
         protected override object GetValue()
         {
-            return this.getter();
+            return this.getter(this.UserData);
         }
 
         protected override void SetValue(object value)
         {
             if (value is T v)
             {
-                this.setter(v);
+                this.setter(this.UserData, v);
             }
             else if (object.Equals(value, default(T)))
             {
-                this.setter(default(T));
+                this.setter(this.UserData, default(T));
             }
             else
             {

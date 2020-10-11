@@ -310,6 +310,7 @@ namespace JSSoft.Unity.Terminal.Editor
             scrollbarRect.localPosition = new Vector3(0, 0);
             scrollbarRect.SetInsetAndSizeFromParentEdge(RectTransform.Edge.Right, terminalPadding.Right, 20);
             animator.runtimeAnimatorController = controller;
+            animator.updateMode = AnimatorUpdateMode.UnscaledTime;
 
             var slidingAreaObj = new GameObject("Sliding Area", typeof(RectTransform)) { layer = canvas.gameObject.layer };
             var slidingAreaRect = slidingAreaObj.GetComponent<RectTransform>();
@@ -365,6 +366,7 @@ namespace JSSoft.Unity.Terminal.Editor
             var terminalKeyboardLayout = terminalRootObj.GetComponent<TerminalKeyboardLayoutGroup>();
             var temrinalAnimator = terminalRootObj.GetComponent<Animator>();
             temrinalAnimator.runtimeAnimatorController = controllerAsset;
+            temrinalAnimator.updateMode = AnimatorUpdateMode.UnscaledTime;
             terminalVertLayout.padding = new RectOffset(2, 2, 2, 2);
             terminalVertLayout.childControlWidth = true;
             terminalVertLayout.childControlHeight = true;
