@@ -36,6 +36,8 @@ namespace JSSoft.Unity.Terminal.Commands
 
         object Value { get; set; }
 
+        bool IsEnabled { get; set; }
+
         event EventHandler Changed;
     }
 }

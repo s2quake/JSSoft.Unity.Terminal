@@ -44,6 +44,8 @@ namespace JSSoft.Unity.Terminal.Commands
             }
         }
 
+        public bool IsEnabled { get; set; } = true;
+
         public event EventHandler Changed;
 
         protected abstract void SetValue(object value);
@@ -75,6 +77,8 @@ namespace JSSoft.Unity.Terminal.Commands
                 this.OnChanged(EventArgs.Empty);
             }
         }
+
+        public bool IsEnabled { get; set; } = true;
 
         public event EventHandler Changed;
 

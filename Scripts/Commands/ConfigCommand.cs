@@ -116,6 +116,7 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             var sb = new StringBuilder();
             var query = from item in this.Configs
+                        where item.IsEnabled == true
                         where filter == string.Empty || StringUtility.Glob(item.Name, filter, false)
                         select item;
             foreach (var item in query)
@@ -161,7 +162,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         private ICommandConfiguration GetConfiguration(string configName)
         {
-            var config = this.Configs.FirstOrDefault(item => item.Name == configName);
+            var config = this.Configs.FirstOrDefault(item => item.IsEnabled == true && item.Name == configName);
             if (config == null)
                 throw new ArgumentException($"{configName} does not existed property.");
             return config;
