@@ -8,15 +8,15 @@
 
 # 만들기
 
-### 터미널
-    
+## 터미널
+
     GameObject -> UI -> Terminals -> Terminal
 
-### 터미널 + 명령어
+## 터미널 + 명령어
 
     GameObject -> UI -> Terminals -> Terminal - Commands
 
-### 터미널 레이아웃
+## 터미널 레이아웃
 
     GameObject -> UI -> Terminals -> TerminalLayout
 
@@ -29,6 +29,8 @@
     GameObject -> UI -> Terminals -> Terminal Full - Commands
 
 # 터미널 보이기 / 감추기
+
+![RectVisibleController](./Documents/RectVisibleController.gif)
 
     GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
 
@@ -47,11 +49,12 @@
     Hierarchy 창에서 Canvas/TerminalRoot/TerminalLayout/Terminal 객체 선택
 
     Inspector 창에서 Add Component 클릭후 Terminal Log Receiver 추가
-    
+
 # 명령어 추가하기
 
-### 명령어 만들기
-```csharp
+## 명령어 만들기
+
+    ```csharp
 using JSSoft.Unity.Terminal;
 using JSSoft.Unity.Terminal.Commands;
 using UnityEngine.SceneManagement;
@@ -68,10 +71,11 @@ public class RestartCommand : TerminalCommandBase
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
-```
+    ```
 
-### 명령어 제공자 만들기
-```csharp
+## 명령어 제공자 만들기
+
+    ```csharp
 using System.Collections.Generic;
 using JSSoft.Library.Commands;
 using JSSoft.Unity.Terminal;
@@ -101,7 +105,7 @@ public class CommandSystem : MonoBehaviour, ICommandProvider
 
     #endregion
 }
-```
+    ```
 
 ### 컴포넌트 추가하기
 
@@ -115,8 +119,9 @@ public class CommandSystem : MonoBehaviour, ICommandProvider
 
 # 터미널 속성 만들기
 
-### 속성 만들기
-```csharp
+## 속성 만들기
+
+    ```csharp
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -131,16 +136,18 @@ public class TestConfiguration : MonoBehaviour
 
     private void Awake()
     {
+        var config = new FieldConfiguration("test.value", this, nameof(value));
         if (this.configSystem != null)
         {
-            this.configSystem.AddConfig(new FieldConfiguration("test.value", this, nameof(value)) { DefaultValue = this.value });
+            this.configSystem.AddConfig(config);
         }
     }
 }
-```
+    ```
 
-### 속성 제공자 만들기
-```csharp
+## 속성 제공자 만들기
+
+    ```csharp
 using System.Collections.Generic;
 using JSSoft.Library.Commands;
 using JSSoft.Unity.Terminal;
@@ -168,9 +175,9 @@ public class ConfigurationSystem : MonoBehaviour, ICommandConfigurationProvider
 
     #endregion
 }
-```
+    ```
 
-### 속성 제공자 컴포넌트 추가하기
+## 속성 제공자 컴포넌트 추가하기
 
     GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
 
@@ -178,8 +185,7 @@ public class ConfigurationSystem : MonoBehaviour, ICommandConfigurationProvider
 
     Inspector 창에서 Add Component 클릭후 Configuration System 추가
 
-
-### 속성 객체 만들기
+## 속성 객체 만들기
 
     GameObject -> Create Empty로 객체 생성
 
@@ -189,7 +195,7 @@ public class ConfigurationSystem : MonoBehaviour, ICommandConfigurationProvider
 
     Test Configuration 컴포넌트의 Config System 의 값을 Terminal로 선택
 
-### 런타임상에서 속성 사용하기
+## 런타임상에서 속성 사용하기
 
     Play후 프롬프트에서 config --list 실행하여 config의 값을 확인
 
