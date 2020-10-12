@@ -52,9 +52,11 @@
 
 # 명령어 추가하기
 
+![RestartCommand](./Documents/RestartCommand.gif)
+
 ## 명령어 만들기
 
-    ```csharp
+```csharp
 using JSSoft.Unity.Terminal;
 using JSSoft.Unity.Terminal.Commands;
 using UnityEngine.SceneManagement;
@@ -69,13 +71,14 @@ public class RestartCommand : TerminalCommandBase
     protected override void OnExecute()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        this.WriteLine("Scene restarted.");
     }
 }
-    ```
+```
 
 ## 명령어 제공자 만들기
 
-    ```csharp
+```csharp
 using System.Collections.Generic;
 using JSSoft.Library.Commands;
 using JSSoft.Unity.Terminal;
@@ -105,7 +108,7 @@ public class CommandSystem : MonoBehaviour, ICommandProvider
 
     #endregion
 }
-    ```
+```
 
 ### 컴포넌트 추가하기
 
@@ -119,9 +122,11 @@ public class CommandSystem : MonoBehaviour, ICommandProvider
 
 # 터미널 속성 만들기
 
+![ConfigCommand](./Documents/ConfigCommand.gif)
+
 ## 속성 만들기
 
-    ```csharp
+```csharp
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -143,11 +148,11 @@ public class TestConfiguration : MonoBehaviour
         }
     }
 }
-    ```
+```
 
 ## 속성 제공자 만들기
 
-    ```csharp
+```csharp
 using System.Collections.Generic;
 using JSSoft.Library.Commands;
 using JSSoft.Unity.Terminal;
@@ -175,7 +180,7 @@ public class ConfigurationSystem : MonoBehaviour, ICommandConfigurationProvider
 
     #endregion
 }
-    ```
+```
 
 ## 속성 제공자 컴포넌트 추가하기
 
