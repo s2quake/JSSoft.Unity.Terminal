@@ -29,6 +29,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Serialization;
 using UnityEditor;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -136,44 +137,59 @@ namespace JSSoft.Unity.Terminal.Editor
         private static void CreateTerminalUI()
         {
             var canvas = PrepareCanvas();
-            CreateTerminal(canvas);
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalGridObj = CreateTerminal(canvas);
+            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal - Commands")]
         private static void CreateTerminalUICommands()
         {
             var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
             var terminalGridObj = CreateTerminal(canvas);
             terminalGridObj.AddComponent<CommandContextHost>();
+            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal - Commands");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Layout")]
         private static void CreateTerminalUILayout()
         {
             var canvas = PrepareCanvas();
-            CreateTerminalLayout(canvas);
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalLayoutObj = CreateTerminalLayout(canvas);
+            Undo.RegisterCreatedObjectUndo (terminalLayoutObj, "Create Terminal Layout");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Full")]
         private static void CreateTerminalUIFull()
         {
             var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
             var terminalLayoutObj = CreateTerminalLayout(canvas);
             var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
             var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
+            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal Full");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Full - Commands")]
         private static void CreateTerminalUIFullCommands()
         {
             var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
             var terminalLayoutObj = CreateTerminalLayout(canvas);
             var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
             var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
             terminalGridObj.AddComponent<CommandContextHost>();
             PrepareStyles(canvas);
+            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal Full - Commands");
         }
 
         private static GameObject CreateTerminal(Canvas canvas)
@@ -406,24 +422,37 @@ namespace JSSoft.Unity.Terminal.Editor
 
         private static Canvas PrepareCanvas()
         {
-            if (Selection.activeGameObject != null)
+            if (PrefabStageUtility.GetCurrentPrefabStage() == null)
             {
-                if (Selection.activeGameObject.GetComponentInParent<Canvas>() is Canvas canvas)
+                if (Selection.activeGameObject != null)
                 {
+                    if (Selection.activeGameObject.GetComponentInParent<Canvas>() is Canvas canvas && PrefabUtility.GetCorrespondingObjectFromSource(Selection.activeGameObject) == null)
+                    {
+                        return canvas;
+                    }
+                }
+                else
+                {
+                    var canvas = GameObject.FindObjectOfType<Canvas>();
+                    if (canvas == null)
+                    {
+                        EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
+                        canvas = GameObject.FindObjectOfType<Canvas>();
+                    }
                     return canvas;
                 }
-                return null;
             }
             else
             {
-                var canvas = GameObject.FindObjectOfType<Canvas>();
-                if (canvas == null)
+                if (Selection.activeGameObject != null)
                 {
-                    EditorApplication.ExecuteMenuItem("GameObject/UI/Canvas");
-                    canvas = GameObject.FindObjectOfType<Canvas>();
+                    if (Selection.activeGameObject.GetComponentInParent<Canvas>() is Canvas canvas)
+                    {
+                        return canvas;
+                    }
                 }
-                return canvas;
             }
+            return null;
         }
 
         private static RectTransform PrepareParent()
