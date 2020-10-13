@@ -81,7 +81,7 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             var activeScene = SceneManager.GetActiveScene();
             var sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
-            for (int i = 0; i < sceneCount; i++)
+            for (var i = 0; i < sceneCount; i++)
             {
                 var scenePath = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i);
                 var sceneName = Path.GetFileNameWithoutExtension(scenePath);
@@ -125,7 +125,7 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             var sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
             var sceneList = new List<string>(sceneCount);
-            for (int i = 0; i < sceneCount; i++)
+            for (var i = 0; i < sceneCount; i++)
             {
                 var scenePath = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i);
                 var sceneName = Path.GetFileNameWithoutExtension(scenePath);
