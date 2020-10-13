@@ -38,8 +38,6 @@ namespace JSSoft.Unity.Terminal.Commands
             yield return new StyleCommand(terminal);
             yield return new InternetProtocolCommand(terminal);
             yield return new SceneCommand(terminal);
-
-            yield return new TestCommand(terminal);
         }
     }
 }
