@@ -113,6 +113,7 @@ namespace JSSoft.Unity.Terminal
         private int bufferWidth;
         private int bufferHeight;
         private string text;
+        private bool scrollFlag;
 
         public TerminalGrid()
         {
@@ -813,6 +814,7 @@ namespace JSSoft.Unity.Terminal
         {
             base.OnEnable();
             this.terminal = this.GetComponent<Terminal>();
+            this.terminal.Worked += Terminal_Worked;
             this.terminal.defaultProgressGenerator = new ProgressGenerator(this);
             this.text = this.terminal.Text;
             this.UpdateLayout();
@@ -833,6 +835,7 @@ namespace JSSoft.Unity.Terminal
             TerminalEvents.TextChanged -= Terminal_TextChanged;
             TerminalEvents.Executed -= Terminal_Executed;
             TerminalValidationEvents.Validated -= Object_Validated;
+            this.terminal.Worked -= Terminal_Worked;
             this.terminal = null;
             base.OnDisable();
             this.OnDisabled(EventArgs.Empty);
@@ -901,6 +904,11 @@ namespace JSSoft.Unity.Terminal
                     }
                 }
             }
+        }
+
+        private void ProcessEvent(bool scroll)
+        {
+
         }
 
         private void InvokePropertyChangedEvent(string propertyName)
@@ -1027,8 +1035,6 @@ namespace JSSoft.Unity.Terminal
                 this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
                 this.notifier.End();
                 this.Selections.Clear();
-                if (scroll == true)
-                    this.ScrollToCursor();
             }
         }
 
@@ -1037,6 +1043,15 @@ namespace JSSoft.Unity.Terminal
             if (sender is Terminal terminal && terminal == this.terminal)
             {
                 this.ScrollToCursor();
+            }
+        }
+
+        private void Terminal_Worked(object sender, EventArgs e)
+        {
+            if (this.scrollFlag == true)
+            {
+                this.ScrollToCursor();
+                this.scrollFlag = false;
             }
         }
 
@@ -1260,12 +1275,15 @@ namespace JSSoft.Unity.Terminal
                         }
                     }
                 }
-
                 eventData.Use();
             }
             if (this.terminal.IsExecuting == false)
+            {
+                this.scrollFlag = true;
                 this.ProcessEvent();
+            }
             this.InputHandler.Update(this, eventData);
+            this.scrollFlag = false;
         }
 
         #endregion

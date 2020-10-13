@@ -160,12 +160,14 @@ namespace JSSoft.Unity.Terminal
         {
             if (this.CursorPosition > 0)
                 this.CursorPosition--;
+            this.InvokeWorked();
         }
 
         public override void MoveRight()
         {
             if (this.CursorPosition < this.Command.Length)
                 this.CursorPosition++;
+            this.InvokeWorked();
         }
 
         public override void Cancel()
@@ -204,11 +206,13 @@ namespace JSSoft.Unity.Terminal
         public override void NextCompletion()
         {
             this.CompletionImpl(NextCompletion);
+            this.InvokeWorked();
         }
 
         public override void PrevCompletion()
         {
             this.CompletionImpl(PrevCompletion);
+            this.InvokeWorked();
         }
 
         public override void Delete()
@@ -225,6 +229,7 @@ namespace JSSoft.Unity.Terminal
                 this.InvokeTextChangedEvent(new TextChange(index, -1));
                 this.notifier.End();
             }
+            this.InvokeWorked();
         }
 
         public override void Backspace()
@@ -243,6 +248,7 @@ namespace JSSoft.Unity.Terminal
                 this.InvokeTextChangedEvent(new TextChange(index, -length));
                 this.notifier.End();
             }
+            this.InvokeWorked();
         }
 
         public override void NextHistory()
@@ -252,6 +258,7 @@ namespace JSSoft.Unity.Terminal
                 this.historyIndex++;
                 this.Command = this.histories[this.historyIndex];
             }
+            this.InvokeWorked();
         }
 
         public override void PrevHistory()
@@ -266,6 +273,7 @@ namespace JSSoft.Unity.Terminal
                 this.historyIndex = 0;
                 this.Command = this.histories[this.historyIndex];
             }
+            this.InvokeWorked();
         }
 
         public static Match[] MatchCompletion(string text)
@@ -443,6 +451,7 @@ namespace JSSoft.Unity.Terminal
                 this.commandBlock.Highlight(this.SyntaxHighlighter, TerminalTextType.Command);
                 this.InvokeTextChangedEvent(new TextChange(index, text.Length));
                 this.notifier.End();
+                this.InvokeWorked();
             }
         }
 
@@ -679,6 +688,8 @@ namespace JSSoft.Unity.Terminal
 
         public override event EventHandler CancellationRequested;
 
+        internal event EventHandler Worked;
+
         internal TerminalColor? GetForegroundColor(int index)
         {
             if (this.outputBlock.Contains(index - this.outputIndex) == true)
@@ -809,6 +820,11 @@ namespace JSSoft.Unity.Terminal
         internal static int CombineLength(string outputText, string progressMessage = "", string promptText = "")
         {
             return Combine(outputText, progressMessage, promptText).Length;
+        }
+
+        private void InvokeWorked()
+        {
+            this.Worked?.Invoke(this, EventArgs.Empty);
         }
 
         private void InvokePropertyChangedEvent(string propertyName)
