@@ -41,6 +41,7 @@ namespace JSSoft.Unity.Terminal
 
         private readonly List<ITerminalCell> cellList = new List<ITerminalCell>();
         private readonly Dictionary<Texture2D, TerminalForegroundItem> itemByTexture = new Dictionary<Texture2D, TerminalForegroundItem>();
+        private readonly List<TerminalForegroundItem> itemsToDelete = new List<TerminalForegroundItem>();
 
         private int visibleIndex;
         private string text = string.Empty;
@@ -143,6 +144,7 @@ namespace JSSoft.Unity.Terminal
                         break;
                     case nameof(ITerminalGrid.ForegroundColor):
                         {
+                            Debug.Log("wer");
                             this.SetDirty(true);
                         }
                         break;
@@ -211,12 +213,25 @@ namespace JSSoft.Unity.Terminal
                 }
             }
             var items = itemByTexture.Values.ToArray();
+            this.itemsToDelete.Clear();
             foreach (var item in items)
             {
-                GameObject.DestroyImmediate(item.gameObject);
+                var rect = item.GetComponent<RectTransform>();
+                rect.SetParent(null);
+                this.itemsToDelete.Add(item);
             }
             this.CollectChilds();
             this.SetDirty(true);
+            this.Invoke(nameof(DeleteItems), float.Epsilon);
+        }
+
+        private void DeleteItems()
+        {
+            foreach (var item in this.itemsToDelete)
+            {
+                GameObject.DestroyImmediate(item.gameObject);
+            }
+            this.itemsToDelete.Clear();
         }
 
         private void CollectChilds()

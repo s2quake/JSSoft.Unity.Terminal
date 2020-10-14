@@ -345,6 +345,7 @@ namespace JSSoft.Unity.Terminal
             this.notifier.SetField(ref this.isCursorVisible, data.IsCursorVisible, nameof(IsCursorVisible));
             this.notifier.SetField(ref this.compositionString, data.CompositionString, nameof(CompositionString));
             this.notifier.SetField(ref this.padding, data.Padding, nameof(Padding));
+            this.scrollPos = this.visibleIndex;
             this.notifier.SetField(ref this.style, data.Style, nameof(Style));
             this.notifier.End();
             this.behaviourList.Clear();
@@ -363,6 +364,7 @@ namespace JSSoft.Unity.Terminal
                 }
             }
             this.UpdateColor();
+            this.SetLayoutDirty();
         }
 
         public void ProcessEvent()

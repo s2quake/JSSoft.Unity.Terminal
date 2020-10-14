@@ -164,6 +164,10 @@ namespace JSSoft.Unity.Terminal
                 if (this.isScrolling == false)
                     this.UpdateScrollbarValue();
             }
+            else if (propertyName == nameof(ITerminalGrid.IsScrollForwardEnabled))
+            {
+                this.UpdateScrollbarSize();
+            }
             else if (propertyName == nameof(ITerminalGrid.Text))
             {
                 this.UpdateScrollbarVisible();
