@@ -66,7 +66,8 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private TerminalColorPalette colorPalette;
         [SerializeField]
-        private int visibleIndex;[SerializeField]
+        private int visibleIndex;
+        [SerializeField]
         [Range(5, 1000)]
         private int maxBufferHeight = 500;
 
@@ -296,10 +297,28 @@ namespace JSSoft.Unity.Terminal
             var data = new TerminalGridData()
             {
                 TerminalData = (this.terminal ?? GetComponent<Terminal>()).Save(),
-                VisibleIndex = this.visibleIndex,
                 Selections = this.Selections.ToArray(),
                 BufferWidth = this.bufferWidth,
                 BufferHeight = this.bufferHeight,
+                Font = this.font,
+                BackgroundColor = this.backgroundColor,
+                ForegroundColor = this.foregroundColor,
+                SelectionColor = this.selectionColor,
+                CursorColor = this.cursorColor,
+                ColorPalette = this.colorPalette,
+                VisibleIndex = this.visibleIndex,
+                MaxBufferHeight = this.maxBufferHeight,
+                CursorStyle = this.cursorStyle,
+                CursorThickness = this.cursorThickness,
+                IsCursorBlinkable = this.isCursorBlinkable,
+                CursorBlinkDelay = this.cursorBlinkDelay,
+                IsScrollForwardEnabled = this.isScrollForwardEnabled,
+                Behaviours = this.behaviourList.ToArray(),
+                CursorPoint = this.cursorPoint,
+                IsCursorVisible = this.isCursorVisible,
+                CompositionString = this.compositionString,
+                Padding = this.padding,
+                Style = this.style
             };
             return data;
         }
@@ -307,23 +326,43 @@ namespace JSSoft.Unity.Terminal
         public override void Load(TerminalGridData data)
         {
             this.terminal.Load(data.TerminalData);
+
+            this.notifier.Begin();
+            this.notifier.SetField(ref this.font, data.Font, nameof(Font));
+            this.notifier.SetField(ref this.backgroundColor, data.BackgroundColor, nameof(BackgroundColor));
+            this.notifier.SetField(ref this.foregroundColor, data.ForegroundColor, nameof(ForegroundColor));
+            this.notifier.SetField(ref this.selectionColor, data.SelectionColor, nameof(SelectionColor));
+            this.notifier.SetField(ref this.cursorColor, data.CursorColor, nameof(CursorColor));
+            this.notifier.SetField(ref this.colorPalette, data.ColorPalette, nameof(ColorPalette));
+            this.notifier.SetField(ref this.visibleIndex, data.VisibleIndex, nameof(VisibleIndex));
+            this.notifier.SetField(ref this.maxBufferHeight, data.MaxBufferHeight, nameof(MaxBufferHeight));
+            this.notifier.SetField(ref this.cursorStyle, data.CursorStyle, nameof(CursorStyle));
+            this.notifier.SetField(ref this.cursorThickness, data.CursorThickness, nameof(CursorThickness));
+            this.notifier.SetField(ref this.isCursorBlinkable, data.IsCursorBlinkable, nameof(IsCursorBlinkable));
+            this.notifier.SetField(ref this.cursorBlinkDelay, data.CursorBlinkDelay, nameof(CursorBlinkDelay));
+            this.notifier.SetField(ref this.isScrollForwardEnabled, data.IsScrollForwardEnabled, nameof(IsScrollForwardEnabled));
+            this.notifier.SetField(ref this.cursorPoint, data.CursorPoint, nameof(CursorPoint));
+            this.notifier.SetField(ref this.isCursorVisible, data.IsCursorVisible, nameof(IsCursorVisible));
+            this.notifier.SetField(ref this.compositionString, data.CompositionString, nameof(CompositionString));
+            this.notifier.SetField(ref this.padding, data.Padding, nameof(Padding));
+            this.notifier.SetField(ref this.style, data.Style, nameof(Style));
+            this.notifier.End();
+            this.behaviourList.Clear();
+            this.behaviourList.AddRange(data.Behaviours);
+
             if (this.bufferWidth != data.BufferWidth || this.bufferHeight != data.BufferHeight)
             {
                 Debug.LogWarning($"BufferWidth or BufferHeight mismatch. Some data loads are ignored.");
             }
             else
             {
-                // this.selections.CollectionChanged -= Selections_CollectionChanged;
-                this.VisibleIndex = data.VisibleIndex;
-                // this.scrollPos = data.VisibleIndex;
                 this.selections.Clear();
                 foreach (var item in data.Selections)
                 {
                     this.selections.Add(item);
                 }
-                // this.selections.CollectionChanged += Selections_CollectionChanged;
-                // this.invoke
             }
+            this.UpdateColor();
         }
 
         public void ProcessEvent()
