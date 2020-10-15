@@ -82,19 +82,13 @@ namespace JSSoft.Unity.Terminal.KeyBindings
 
         public static readonly IKeyBindingCollection TerminalOnWindows = new KeyBindingCollection("Terminal(Windows) Key Bindings", Common)
         {
+            new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Command = string.Empty),
             new KeyBinding(EventModifiers.Alt, KeyCode.U, (t) => DeleteToFirst(t)),
             new KeyBinding(EventModifiers.Alt, KeyCode.K, (t) => DeleteToLast(t)),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t))
-        };
-
-        public static readonly IKeyBindingCollection PowerShellOnWindows = new KeyBindingCollection("PowerShell(Windows) Key Bindings", Common)
-        {
-            new KeyBinding(EventModifiers.None, KeyCode.Escape, (t) => t.Command = string.Empty),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.CursorPosition = 0),
-            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.CursorPosition = t.Command.Length),
         };
 
         private static int PrevWord(ITerminal terminal)
