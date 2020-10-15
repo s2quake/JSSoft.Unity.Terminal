@@ -50,6 +50,7 @@ namespace JSSoft.Unity.Terminal.Editor
         protected override void OnDisable()
         {
             base.OnDisable();
+            this.notifier.Dispose();
             this.notifier = null;
         }
     }

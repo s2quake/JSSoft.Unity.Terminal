@@ -140,7 +140,7 @@ namespace JSSoft.Unity.Terminal.Editor
             if (canvas == null)
                 throw new InvalidOperationException("cannot found Canvas.");
             var terminalGridObj = CreateTerminal(canvas);
-            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal");
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal - Commands")]
@@ -151,7 +151,7 @@ namespace JSSoft.Unity.Terminal.Editor
                 throw new InvalidOperationException("cannot found Canvas.");
             var terminalGridObj = CreateTerminal(canvas);
             terminalGridObj.AddComponent<CommandContextHost>();
-            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal - Commands");
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal - Commands");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Layout")]
@@ -161,7 +161,7 @@ namespace JSSoft.Unity.Terminal.Editor
             if (canvas == null)
                 throw new InvalidOperationException("cannot found Canvas.");
             var terminalLayoutObj = CreateTerminalLayout(canvas);
-            Undo.RegisterCreatedObjectUndo (terminalLayoutObj, "Create Terminal Layout");
+            Undo.RegisterCreatedObjectUndo(terminalLayoutObj, "Create Terminal Layout");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Full")]
@@ -174,7 +174,7 @@ namespace JSSoft.Unity.Terminal.Editor
             var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
             var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
-            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal Full");
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Full");
         }
 
         [MenuItem("GameObject/UI/Terminals/Terminal Full - Commands")]
@@ -189,7 +189,7 @@ namespace JSSoft.Unity.Terminal.Editor
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
             terminalGridObj.AddComponent<CommandContextHost>();
             PrepareStyles(canvas);
-            Undo.RegisterCreatedObjectUndo (terminalGridObj, "Create Terminal Full - Commands");
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Full - Commands");
         }
 
         private static GameObject CreateTerminal(Canvas canvas)

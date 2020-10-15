@@ -43,6 +43,7 @@ namespace JSSoft.Unity.Terminal.Editor
 
         public void OnDisable()
         {
+            this.notifier.Dispose();
             this.notifier = null;
         }
 

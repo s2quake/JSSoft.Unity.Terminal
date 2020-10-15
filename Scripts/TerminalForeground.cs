@@ -144,7 +144,6 @@ namespace JSSoft.Unity.Terminal
                         break;
                     case nameof(ITerminalGrid.ForegroundColor):
                         {
-                            Debug.Log("wer");
                             this.SetDirty(true);
                         }
                         break;

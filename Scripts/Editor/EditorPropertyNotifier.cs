@@ -29,15 +29,16 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Editor
 {
-    public class EditorPropertyNotifier
+    public class EditorPropertyNotifier : IDisposable
     {
         private readonly UnityEditor.Editor editor;
         private readonly SerializedObject serializedObject;
         private readonly Action<string[]> action;
         private readonly Dictionary<string, EditorProperty> propertyByName = new Dictionary<string, EditorProperty>();
         private readonly List<EditorProperty> propertyList = new List<EditorProperty>();
-        private readonly List<string> nameList = new List<string>();
+        private readonly List<string> propertyNameList = new List<string>();
         private readonly SerializedProperty scriptProperty;
+        private string[] lastPropertyNames = new string[] { };
         private bool isModified;
 
         public EditorPropertyNotifier(UnityEditor.Editor editor)
@@ -51,6 +52,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.serializedObject = editor.serializedObject;
             this.action = action ?? throw new ArgumentNullException(nameof(action));
             this.scriptProperty = this.serializedObject.FindProperty("m_Script");
+            Undo.undoRedoPerformed += Undo_undoRedoPerformed;
         }
 
         public void Add(string propertyName)
@@ -104,21 +106,21 @@ namespace JSSoft.Unity.Terminal.Editor
 
         public void Begin()
         {
-            this.nameList.Clear();
+            this.propertyNameList.Clear();
             this.serializedObject.Update();
             this.isModified = false;
         }
 
         public void End()
         {
-            if (this.nameList.Any())
+            if (this.propertyNameList.Any())
             {
-                this.action(this.nameList.ToArray());
-                foreach (var item in this.nameList)
+                this.action(this.propertyNameList.ToArray());
+                foreach (var item in this.propertyNameList)
                 {
                     this.OnPropertyChanged(new PropertyChangedEventArgs(item));
                 }
-                this.nameList.Clear();
+                this.lastPropertyNames = this.propertyNameList.ToArray();
             }
             if (this.isModified == true)
             {
@@ -155,6 +157,11 @@ namespace JSSoft.Unity.Terminal.Editor
             return propertyInfo.Property;
         }
 
+        public void Dispose()
+        {
+            Undo.undoRedoPerformed -= Undo_undoRedoPerformed;
+        }
+
         public bool IsModified => this.isModified;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -174,7 +181,7 @@ namespace JSSoft.Unity.Terminal.Editor
             if (EditorGUI.EndChangeCheck())
             {
                 if (propertyInfo.CanNotify == true)
-                    this.nameList.Add(propertyInfo.Name);
+                    this.propertyNameList.Add(propertyInfo.Name);
                 this.isModified = true;
             }
         }
@@ -201,6 +208,15 @@ namespace JSSoft.Unity.Terminal.Editor
                         obj.InvokePropertyChangedEvent(propertyName);
                     }
                 }
+            }
+        }
+
+        private void Undo_undoRedoPerformed()
+        {
+            if (this.lastPropertyNames.Any() == true)
+            {
+                InvokeEvent(this.editor, this.lastPropertyNames);
+                this.lastPropertyNames = new string[] { };
             }
         }
     }

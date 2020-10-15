@@ -86,7 +86,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalGrid.IsCursorBlinkable));
             this.notifier.Add(nameof(TerminalGrid.CursorBlinkDelay));
             this.notifier.Add(nameof(TerminalGrid.IsScrollForwardEnabled));
-            this.notifier.Add(nameof(TerminalGrid.BehaviourList), EditorPropertyUsage.DisallowNotification);
+            this.notifier.Add(nameof(TerminalGrid.BehaviourList), EditorPropertyUsage.DisallowNotification | EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalGrid.MaxBufferHeight));
             this.notifier.Add(nameof(TerminalGrid.Padding), EditorPropertyUsage.IncludeChildren);
             this.notifier.PropertyChanged += Notifier_PropertyChanged;
@@ -94,6 +94,7 @@ namespace JSSoft.Unity.Terminal.Editor
 
         protected virtual void OnDisable()
         {
+            this.notifier.Dispose();
             this.notifier = null;
         }
 

@@ -123,6 +123,7 @@ namespace JSSoft.Unity.Terminal
             this.selections = new TerminalGridSelection(this);
             this.selections.CollectionChanged += Selections_CollectionChanged;
             this.notifier = new PropertyNotifier(this.InvokePropertyChangedEvent);
+            this.PropertyChanged += TerminalGrid_PropertyChanged;
         }
 
         public override Vector2 WorldToGrid(Vector2 position, Camera camera)
@@ -599,9 +600,7 @@ namespace JSSoft.Unity.Terminal
                 if (this.style != value)
                 {
                     this.style = value;
-                    this.UpdateColor();
                     this.InvokePropertyChangedEvent(nameof(Style));
-                    this.SetLayoutDirty();
                 }
             }
         }
@@ -1115,6 +1114,19 @@ namespace JSSoft.Unity.Terminal
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
                     this.SetLayoutDirty();
+                    break;
+            }
+        }
+
+        private void TerminalGrid_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case nameof(Style):
+                    {
+                        this.UpdateColor();
+                        this.SetLayoutDirty();
+                    }
                     break;
             }
         }
