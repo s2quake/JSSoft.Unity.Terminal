@@ -1075,6 +1075,8 @@ namespace JSSoft.Unity.Terminal
                 this.notifier.SetField(ref this.visibleIndex, TerminalGridValidator.GetVisibleIndex(this), nameof(VisibleIndex));
                 this.notifier.End();
                 this.Selections.Clear();
+                if (scroll == true)
+                    this.ScrollToCursor();
             }
         }
 
