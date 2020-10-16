@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEngine.SceneManagement;
 
 namespace JSSoft.Unity.Terminal.Commands
@@ -79,6 +80,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         private void ShowSceneList()
         {
+            var sb = new StringBuilder();
             var activeScene = SceneManager.GetActiveScene();
             var sceneCount = UnityEngine.SceneManagement.SceneManager.sceneCountInBuildSettings;
             for (var i = 0; i < sceneCount; i++)
@@ -86,9 +88,9 @@ namespace JSSoft.Unity.Terminal.Commands
                 var scenePath = UnityEngine.SceneManagement.SceneUtility.GetScenePathByBuildIndex(i);
                 var sceneName = Path.GetFileNameWithoutExtension(scenePath);
                 var isCurrent = activeScene.buildIndex == i ? "*" : " ";
-                this.WriteLine($"{isCurrent}{i,2}: {sceneName}");
+                sb.AppendLine($"{isCurrent}{i,2}: {sceneName}");
             }
-            this.WriteLine();
+            this.WriteLine(sb.ToString());
         }
 
         private void RemoveStyle(ITerminalGrid grid)

@@ -21,7 +21,11 @@
 // SOFTWARE.
 
 using JSSoft.Library.Commands;
+using System;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
@@ -30,22 +34,19 @@ namespace JSSoft.Unity.Terminal.Commands
     [CommandSummary(CommandStrings.ResolutionCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ResolutionCommand : TerminalCommandBase
     {
+        private const string fullPattern = @"(\d+)\s*x\s*(\d+)\s*@\s*(\d+)\s*(?:hz)?";
+        private const string shortPattern = @"(\d+)\s*x\s*(\d+)";
+
         public ResolutionCommand(ITerminal terminal)
             : base(terminal)
         {
         }
 
-        [CommandSummary(CommandStrings.ResolutionCommand.Width.Summary)]
-        [CommandSummary(CommandStrings.ResolutionCommand.Width.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty]
+        [CommandSummary(CommandStrings.ResolutionCommand.Resolution.Summary)]
+        [CommandSummary(CommandStrings.ResolutionCommand.Resolution.Summary_ko_KR, Locale = "ko-KR")]
+        [CommandPropertyRequired(DefaultValue = "")]
         [CommandPropertyTrigger(nameof(IsList), false)]
-        public int Width { get; set; }
-
-        [CommandSummary(CommandStrings.ResolutionCommand.Height.Summary)]
-        [CommandSummary(CommandStrings.ResolutionCommand.Height.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty]
-        [CommandPropertyTrigger(nameof(IsList), false)]
-        public int Height { get; set; }
+        public string Resolution { get; set; }
 
         [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary)]
         [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary_ko_KR, Locale = "ko-KR")]
@@ -66,6 +67,17 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandProperty("list")]
         public bool IsList { get; set; }
 
+        public override string[] GetCompletions(CommandCompletionContext completionContext)
+        {
+            if (completionContext.MemberDescriptor.DescriptorName == nameof(Resolution))
+            {
+                var query = from item in Screen.resolutions
+                            select $"{item}";
+                return query.ToArray();
+            }
+            return null;
+        }
+
         protected override void OnExecute()
         {
             this.Execute();
@@ -75,43 +87,77 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (this.IsList == true)
             {
-                this.ShowList();
+                this.ShowResolutionList();
+            }
+            else if (this.IsFullScreen == true || this.IsWindowMode == true)
+            {
+                this.SetFullScreenMode();
+            }
+            else if (this.Resolution == string.Empty)
+            {
+                this.ShowCurrentResolution();
             }
             else
             {
-                this.SetResolution();
+                this.SetResolution(this.Resolution);
             }
         }
 
-        private void ShowList()
+        private void ShowResolutionList()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("available resolutions: ");
-            foreach (var item in Screen.resolutions)
+            for (var i = 0; i < Screen.resolutions.Length; i++)
             {
-                sb.AppendLine($"   {item}");
+                var item = Screen.resolutions[i];
+                var isCurrent = $"{Screen.currentResolution}" == $"{item}" ? "*" : " ";
+                sb.AppendLine($"{isCurrent}{i,2}: {item}");
             }
-            sb.AppendLine("current resolution: ");
-            sb.AppendLine($"   {Screen.currentResolution}");
-            sb.AppendLine();
-            this.Write(sb.ToString());
+            this.WriteLine(sb.ToString());
         }
 
-        private void SetResolution()
+        private void SetFullScreenMode()
         {
-            var width = this.PreferredWidth;
-            var height = this.PreferredHeight;
             var fullScreen = this.PreferredFullScreen;
-            if (width != Screen.width || height != Screen.height || fullScreen != Screen.fullScreen)
-            {
-                Screen.SetResolution(width, height, fullScreen);
-            }
-            this.WriteLine($"{Screen.width} x {Screen.height}");
+            var width = Screen.width;
+            var height = Screen.height;
+            var hz = Screen.currentResolution.refreshRate;
+            Screen.SetResolution(width, height, fullScreen, hz);
         }
 
-        private int PreferredWidth => Width != 0 ? Width : Screen.width;
+        private void ShowCurrentResolution()
+        {
+            this.WriteLine($"{Screen.width} x {Screen.height} @ {Screen.currentResolution.refreshRate}Hz");
+        }
 
-        private int PreferredHeight => Height != 0 ? Height : Screen.height;
+        private void SetResolution(string resolution)
+        {
+            var fullScreen = this.PreferredFullScreen;
+            if (int.TryParse(resolution, out var index) == true)
+            {
+                if (index < 0 || index >= Screen.resolutions.Length)
+                    throw new ArgumentException($"invalid resolution index: '{index}'");
+                var item = Screen.resolutions[index];
+                Screen.SetResolution(item.width, item.height, fullScreen, item.refreshRate);
+            }
+            else if (Regex.Match(resolution, fullPattern, RegexOptions.IgnoreCase) is Match match1 && match1.Success == true)
+            {
+                var width = int.Parse(match1.Groups[1].Value);
+                var height = int.Parse(match1.Groups[2].Value);
+                var hz = int.Parse(match1.Groups[3].Value);
+                Screen.SetResolution(width, height, fullScreen, hz);
+            }
+            else if (Regex.Match(resolution, shortPattern, RegexOptions.IgnoreCase) is Match match2 && match2.Success == true)
+            {
+                var width = int.Parse(match2.Groups[1].Value);
+                var height = int.Parse(match2.Groups[2].Value);
+                var hz = Screen.currentResolution.refreshRate;
+                Screen.SetResolution(width, height, fullScreen, hz);
+            }
+            else
+            {
+                throw new ArgumentException($"invalid resolution format: '{resolution}'");
+            }
+        }
 
         private bool PreferredFullScreen
         {
