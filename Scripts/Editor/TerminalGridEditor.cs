@@ -27,6 +27,7 @@ using UnityEngine;
 namespace JSSoft.Unity.Terminal.Editor
 {
     [CustomEditor(typeof(TerminalGrid))]
+    [CanEditMultipleObjects]
     public class TerminalGridEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;

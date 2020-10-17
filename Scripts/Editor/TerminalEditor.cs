@@ -25,6 +25,7 @@ using UnityEditor;
 namespace JSSoft.Unity.Terminal.Editor
 {
     [CustomEditor(typeof(Terminal))]
+    [CanEditMultipleObjects]
     public class TerminalEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
