@@ -172,6 +172,8 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (config.Type == typeof(bool))
                 return $"{config.Value}".ToLower();
+            if (config.Type == typeof(string) && config.Value != null)
+                return $"\"{config.Value}\"";
             return $"{config.Value}";
         }
     }

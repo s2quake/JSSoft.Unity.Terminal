@@ -42,41 +42,47 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public void AddInstance(object instance)
         {
+            this.AddInstance(instance, string.Empty);
+        }
+
+        public void AddInstance(object instance, string instanceName)
+        {
             if (instance == null)
                 throw new ArgumentNullException(nameof(instance));
+            if (instanceName == null)
+                throw new ArgumentNullException(nameof(instanceName));
             var instanceType = instance.GetType();
             if (Attribute.GetCustomAttribute(instanceType, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
             {
                 if (attr.Name != string.Empty)
-                {
-                    this.AddFields(instance, attr.Name);
-                    this.AddProperties(instance, attr.Name);
-                }
-                else
-                {
-                    this.AddFields(instance, instanceType.Name);
-                    this.AddProperties(instance, instanceType.Name);
-                }
+                    instanceName = attr.Name;
+                if (instanceName == string.Empty)
+                    instanceName = instanceType.Name;
+                this.AddFields(instance, instanceName);
+                this.AddProperties(instance, instanceName);
             }
         }
 
         public void RemoveInstance(object instance)
         {
+            this.RemoveInstance(instance, string.Empty);
+        }
+
+        public void RemoveInstance(object instance, string instanceName)
+        {
             if (instance == null)
                 throw new ArgumentNullException(nameof(instance));
+                if (instanceName == null)
+                throw new ArgumentNullException(nameof(instanceName));
             var instanceType = instance.GetType();
             if (Attribute.GetCustomAttribute(instanceType, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
             {
                 if (attr.Name != string.Empty)
-                {
-                    this.RemoveFields(instance, attr.Name);
-                    this.RemoveProperties(instance, attr.Name);
-                }
-                else
-                {
-                    this.RemoveFields(instance, instanceType.Name);
-                    this.RemoveProperties(instance, instanceType.Name);
-                }
+                    instanceName = attr.Name;
+                if (instanceName == string.Empty)
+                    instanceName = instanceType.Name;
+                this.RemoveFields(instance, instanceName);
+                this.RemoveProperties(instance, instanceName);
             }
         }
 
@@ -107,11 +113,7 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
                 {
-                    if (attr.FullName != string.Empty)
-                    {
-                        this.Add(new PropertyConfiguration(attr.FullName, instance, item));
-                    }
-                    else if (attr.Name != string.Empty)
+                    if (attr.Name != string.Empty)
                     {
                         this.Add(new PropertyConfiguration($"{rootName}.{attr.Name}", instance, item));
                     }
@@ -131,11 +133,7 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
                 {
-                    if (attr.FullName != string.Empty)
-                    {
-                        this.Remove(attr.FullName);
-                    }
-                    else if (attr.Name != string.Empty)
+                    if (attr.Name != string.Empty)
                     {
                         this.Remove($"{rootName}.{attr.Name}");
                     }
@@ -155,11 +153,7 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
                 {
-                    if (attr.FullName != string.Empty)
-                    {
-                        this.Add(new FieldConfiguration(attr.FullName, instance, item));
-                    }
-                    else if (attr.Name != string.Empty)
+                    if (attr.Name != string.Empty)
                     {
                         this.Add(new FieldConfiguration($"{rootName}.{attr.Name}", instance, item));
                     }
@@ -179,11 +173,7 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 if (Attribute.GetCustomAttribute(item, typeof(CommandConfigurationAttribute)) is CommandConfigurationAttribute attr)
                 {
-                    if (attr.FullName != string.Empty)
-                    {
-                        this.Remove(attr.FullName);
-                    }
-                    else if (attr.Name != string.Empty)
+                    if (attr.Name != string.Empty)
                     {
                         this.Remove($"{rootName}.{attr.Name}");
                     }

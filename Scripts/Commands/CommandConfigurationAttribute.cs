@@ -27,8 +27,6 @@ namespace JSSoft.Unity.Terminal.Commands
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Field | AttributeTargets.Property)]
     public class CommandConfigurationAttribute : Attribute
     {
-        private string fullName = string.Empty;
-
         public CommandConfigurationAttribute()
         {
         }
@@ -39,11 +37,5 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         public string Name { get; } = string.Empty;
-
-        public string FullName
-        {
-            get => this.fullName;
-            set => this.fullName = value ?? throw new ArgumentNullException(nameof(value));
-        }
     }
 }
