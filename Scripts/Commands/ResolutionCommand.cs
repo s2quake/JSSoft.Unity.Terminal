@@ -72,7 +72,9 @@ namespace JSSoft.Unity.Terminal.Commands
             if (completionContext.MemberDescriptor.DescriptorName == nameof(Resolution))
             {
                 var query = from item in Screen.resolutions
-                            select $"{item}";
+                            let text = $"{item}"
+                            where text.StartsWith(completionContext.Find)
+                            select text;
                 return query.ToArray();
             }
             return null;
@@ -89,13 +91,16 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 this.ShowResolutionList();
             }
-            else if (this.IsFullScreen == true || this.IsWindowMode == true)
-            {
-                this.SetFullScreenMode();
-            }
             else if (this.Resolution == string.Empty)
             {
-                this.ShowCurrentResolution();
+                if (this.IsFullScreen == true || this.IsWindowMode == true)
+                {
+                    this.SetFullScreenMode();
+                }
+                else
+                {
+                    this.ShowCurrentResolution();
+                }
             }
             else
             {
