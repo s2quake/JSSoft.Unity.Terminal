@@ -37,6 +37,8 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.PropertyField(nameof(RectVisibleController.Grid));
             this.notifier.PropertyField(nameof(TerminalRectVisibleController.Direction));
             this.notifier.End();
+
+            GUI.enabled = Application.isPlaying == false;
             if (GUILayout.Button("Show") == true)
             {
                 if (this.target is RectVisibleController controller)
@@ -61,6 +63,7 @@ namespace JSSoft.Unity.Terminal.Editor
                     EditorUtility.SetDirty(controller);
                 }
             }
+            GUI.enabled = true;
         }
 
         protected virtual void OnEnable()

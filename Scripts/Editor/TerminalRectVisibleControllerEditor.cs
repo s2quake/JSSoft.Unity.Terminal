@@ -39,6 +39,8 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.PropertyField(nameof(TerminalRectVisibleController.KeyCode));
             this.notifier.PropertyField(nameof(TerminalRectVisibleController.Modifiers));
             this.notifier.End();
+            
+            GUI.enabled = Application.isPlaying == false;
             if (GUILayout.Button("Show") == true)
             {
                 if (this.target is TerminalRectVisibleController controller)
@@ -63,6 +65,7 @@ namespace JSSoft.Unity.Terminal.Editor
                     EditorUtility.SetDirty(controller);
                 }
             }
+            GUI.enabled = true;
         }
 
         protected virtual void OnEnable()
