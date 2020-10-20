@@ -123,7 +123,6 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-
         private void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
         {
             if (this.terminal.Dispatcher != null)
@@ -149,8 +148,8 @@ namespace JSSoft.Unity.Terminal
             catch (Exception ex)
             {
                 var message = this.GetExceptionMessage(ex);
-                this.OnException(ex, message);
                 e.Fail(ex);
+                this.OnException(ex, message);
             }
         }
 
@@ -163,5 +162,4 @@ namespace JSSoft.Unity.Terminal
 
         #endregion
     }
-
 }

@@ -69,7 +69,7 @@ namespace JSSoft.Unity.Terminal.Commands
             get; set;
         }
 
-        protected override async Task OnExecuteAsync()
+        protected override async Task OnExecuteAsync(CancellationToken cancellation)
         {
             var address = GetIPAddress(this.Address);
             var count = this.Count;

@@ -32,12 +32,13 @@ namespace JSSoft.Unity.Terminal.Commands
 {
     public class CommandContextHost : TerminalHostBase, ICommandCompletor
     {
-        private CommandContext commandContext;
         [TextArea(5, 10)]
         [SerializeField]
         private string text = "type 'help' to help.";
         [SerializeField]
         private bool isTest = false;
+        
+        private CommandContext commandContext;
         private TextWriter consoleWriter;
         private ICommandProvider commandProvider;
         private ICommandConfigurationProvider configurationProvider;
