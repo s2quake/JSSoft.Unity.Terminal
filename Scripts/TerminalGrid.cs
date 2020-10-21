@@ -37,7 +37,6 @@ namespace JSSoft.Unity.Terminal
     [DisallowMultipleComponent]
     [ExecuteAlways]
     [SelectionBase]
-    [DefaultExecutionOrder(-198)]
     public class TerminalGrid : TerminalGridBase,
         IBeginDragHandler,
         IDragHandler,

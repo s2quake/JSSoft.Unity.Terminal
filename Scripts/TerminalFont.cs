@@ -30,7 +30,6 @@ using System.ComponentModel;
 namespace JSSoft.Unity.Terminal
 {
     [CreateAssetMenu(menuName = "Terminal/Font")]
-    [DefaultExecutionOrder(-200)]
     public class TerminalFont : ScriptableObject, INotifyValidated, IPropertyChangedNotifyable
     {
         [SerializeField]

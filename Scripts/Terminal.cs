@@ -31,7 +31,6 @@ using UnityEngine;
 namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
-    [DefaultExecutionOrder(-199)]
     public class Terminal : TerminalBase, INotifyValidated, IPropertyChangedNotifyable, IValidatable
     {
         private readonly List<string> histories = new List<string>();

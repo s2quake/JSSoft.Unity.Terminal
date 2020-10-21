@@ -31,7 +31,6 @@ namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(RectTransform))]
-    [DefaultExecutionOrder(-197)]
     public class TerminalForeground : UIBehaviour
     {
         [SerializeField]
