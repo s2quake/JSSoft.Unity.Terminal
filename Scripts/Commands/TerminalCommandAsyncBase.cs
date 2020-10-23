@@ -29,38 +29,11 @@ namespace JSSoft.Unity.Terminal.Commands
 {
     public abstract class TerminalCommandAsyncBase : CommandAsyncBase
     {
-        private CancellationTokenSource cancellation;
-
         protected TerminalCommandAsyncBase(ITerminal terminal)
         {
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            this.Terminal.CancellationRequested += Terminal_CancellationRequested;
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
-
-        protected override sealed async Task OnExecuteAsync()
-        {
-            this.cancellation = new CancellationTokenSource();
-            try
-            {
-                await this.OnExecuteAsync(this.cancellation.Token);
-            }
-            finally
-            {
-                await this.Dispatcher.InvokeAsync(() =>
-                {
-                    var progressText = this.Terminal.ProgressText;
-                    if (progressText != string.Empty)
-                    {
-                        this.Terminal.Progress(string.Empty, 0);
-                        this.Out.WriteLine(progressText);
-                    }
-                });
-                this.cancellation = null;
-            }
-        }
-
-        protected abstract Task OnExecuteAsync(CancellationToken cancellation);
 
         protected Task WriteAsync(string text)
         {
@@ -144,23 +117,10 @@ namespace JSSoft.Unity.Terminal.Commands
             });
         }
 
-        protected virtual void OnCancellationRequested()
-        {
-            if (this.cancellation != null && this.cancellation.IsCancellationRequested == false)
-            {
-                this.cancellation.Cancel();
-            }
-        }
-
         protected ITerminal Terminal { get; }
 
         protected ITerminalGrid Grid { get; }
 
         protected TerminalDispatcher Dispatcher => this.Terminal.Dispatcher;
-
-        private void Terminal_CancellationRequested(object sender, EventArgs e)
-        {
-            this.OnCancellationRequested();
-        }
     }
 }

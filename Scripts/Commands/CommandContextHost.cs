@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ namespace JSSoft.Unity.Terminal.Commands
         private string text = "type 'help' to help.";
         [SerializeField]
         private bool isTest = false;
-        
+
         private CommandContext commandContext;
         private TextWriter consoleWriter;
         private ICommandProvider commandProvider;
@@ -121,9 +122,33 @@ namespace JSSoft.Unity.Terminal.Commands
             this.commandContext.Execute(this.commandContext.Name, command);
         }
 
-        protected override Task OnRunAsync(string command)
+        protected override async Task OnRunAsync(string command)
         {
-            return this.commandContext.ExecuteAsync(this.commandContext.Name, command);
+            var cancellation = new CancellationTokenSource();
+            this.Terminal.CancellationRequested += Terminal_CancellationRequested;
+            try
+            {
+                await this.commandContext.ExecuteAsync(this.commandContext.Name, command, cancellation.Token);
+            }
+            finally
+            {
+                this.Terminal.CancellationRequested -= Terminal_CancellationRequested;
+                await this.Terminal.Dispatcher.InvokeAsync(() =>
+                {
+                    var progressText = this.Terminal.ProgressText;
+                    if (progressText != string.Empty)
+                    {
+                        this.Terminal.Progress(string.Empty, 0);
+                        this.Terminal.AppendLine(progressText);
+                    }
+                });
+            }
+
+            void Terminal_CancellationRequested(object sender, EventArgs e)
+            {
+                if (cancellation.IsCancellationRequested == false)
+                    cancellation.Cancel();
+            }
         }
 
         #region ICommandCompletor
