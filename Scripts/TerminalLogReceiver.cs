@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
+using System.Text.RegularExpressions;
 using JSSoft.Library.Threading;
 using JSSoft.Unity.Terminal;
 using UnityEngine;
@@ -40,6 +42,8 @@ namespace JSSoft.Unity.Terminal
         private TerminalColor foregroundColor;
         [SerializeField]
         private TerminalColor backgroundColor;
+        [SerializeField]
+        private string pattern = string.Empty;
         private Dispatcher dispatcher;
 
         public TerminalLogReceiver()
@@ -111,6 +115,21 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        [FieldName(nameof(pattern))]
+        public string Pattern
+        {
+            get => this.pattern;
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                if (this.pattern != value)
+                {
+                    this.pattern = value;
+                }
+            }
+        }
+
         protected virtual void OnEnable()
         {
             this.dispatcher = Dispatcher.Current;
@@ -140,18 +159,20 @@ namespace JSSoft.Unity.Terminal
 
         private void SendMessage(string condition, string stackTrace, LogType type)
         {
-            if (this.logType == type)
-            {
-                var foregroundColor = this.terminal.ForegroundColor;
-                var backgroundColor = this.terminal.BackgroundColor;
-                if (this.useForegroundColor == true)
-                    this.terminal.ForegroundColor = this.foregroundColor;
-                if (this.useBackgroundColor == true)
-                    this.terminal.BackgroundColor = this.backgroundColor;
-                this.terminal.AppendLine(condition);
-                this.terminal.ForegroundColor = foregroundColor;
-                this.terminal.BackgroundColor = backgroundColor;
-            }
+            if (this.logType != type)
+                return;
+            if (this.pattern != string.Empty && Regex.IsMatch(condition, this.pattern) == false)
+                return;
+                
+            var foregroundColor = this.terminal.ForegroundColor;
+            var backgroundColor = this.terminal.BackgroundColor;
+            if (this.useForegroundColor == true)
+                this.terminal.ForegroundColor = this.foregroundColor;
+            if (this.useBackgroundColor == true)
+                this.terminal.BackgroundColor = this.backgroundColor;
+            this.terminal.AppendLine(condition);
+            this.terminal.ForegroundColor = foregroundColor;
+            this.terminal.BackgroundColor = backgroundColor;
         }
     }
 }

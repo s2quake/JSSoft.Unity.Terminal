@@ -33,13 +33,15 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private bool isAsync = false;
         [SerializeField]
-        private bool useErrorForegroundColor = true;
+        private bool logException = true;
         [SerializeField]
-        private bool useErrorBackgroundColor = false;
+        private bool useExceptionForegroundColor = true;
         [SerializeField]
-        private TerminalColor errorForegroundColor = TerminalColor.Red;
+        private bool useExceptionBackgroundColor = false;
         [SerializeField]
-        private TerminalColor errorBackgroundColor = TerminalColor.Black;
+        private TerminalColor exceptionForegroundColor = TerminalColor.Red;
+        [SerializeField]
+        private TerminalColor exceptionBackgroundColor = TerminalColor.Black;
 
         private TerminalBase terminal;
         private TerminalGridBase grid;
@@ -52,6 +54,36 @@ namespace JSSoft.Unity.Terminal
         {
             get => this.isAsync;
             set => this.isAsync = value;
+        }
+
+        public bool ExceptionRedirection
+        {
+            get => this.logException;
+            set => this.logException = value;
+        }
+
+        public bool UseExceptionForegroundColor
+        {
+            get => this.useExceptionForegroundColor;
+            set => this.useExceptionForegroundColor = value;
+        }
+
+        public bool UseExceptionBackgroundColor
+        {
+            get => this.useExceptionBackgroundColor;
+            set => this.useExceptionBackgroundColor = value;
+        }
+
+        public TerminalColor ExceptionForegroundColor
+        {
+            get => this.exceptionForegroundColor;
+            set => this.exceptionForegroundColor = value;
+        }
+
+        public TerminalColor ExceptionBackgroundColor
+        {
+            get => this.exceptionBackgroundColor;
+            set => this.exceptionBackgroundColor = value;
         }
 
         protected virtual void Awake()
@@ -100,12 +132,14 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual void OnException(Exception e, string message)
         {
-            if (this.useErrorForegroundColor == true)
-                this.terminal.ForegroundColor = this.errorForegroundColor;
-            if (this.useErrorBackgroundColor == true)
-                this.terminal.BackgroundColor = this.errorBackgroundColor;
+            if (this.useExceptionForegroundColor == true)
+                this.terminal.ForegroundColor = this.exceptionForegroundColor;
+            if (this.useExceptionBackgroundColor == true)
+                this.terminal.BackgroundColor = this.exceptionBackgroundColor;
             this.terminal.AppendLine(message);
             this.terminal.ResetColor();
+            if (this.logException == true)
+                Debug.LogException(e);
         }
 
         protected virtual string GetExceptionMessage(Exception e)

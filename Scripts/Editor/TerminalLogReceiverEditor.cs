@@ -59,6 +59,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.PropertyField(nameof(TerminalLogReceiver.UseBackgroundColor));
             if (useBackgroundColorProperty.boolValue == true)
                 this.notifier.PropertyField(nameof(TerminalLogReceiver.BackgroundColor));
+            this.notifier.PropertyField(nameof(TerminalLogReceiver.Pattern));
             this.notifier.End();
         }
 
@@ -70,6 +71,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalLogReceiver.UseBackgroundColor));
             this.notifier.Add(nameof(TerminalLogReceiver.ForegroundColor));
             this.notifier.Add(nameof(TerminalLogReceiver.BackgroundColor));
+            this.notifier.Add(nameof(TerminalLogReceiver.Pattern));
         }
 
         protected virtual void OnDisable()
