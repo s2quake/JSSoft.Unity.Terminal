@@ -41,6 +41,8 @@ namespace JSSoft.Unity.Terminal.Commands
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
 
+        public new CommandContext CommandContext => base.CommandContext as CommandContext;
+
         protected void Write(string text)
         {
             this.Write(text, null);

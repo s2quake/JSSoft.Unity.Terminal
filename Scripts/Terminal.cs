@@ -34,7 +34,6 @@ namespace JSSoft.Unity.Terminal
     public class Terminal : TerminalBase, INotifyValidated, IPropertyChangedNotifyable, IValidatable
     {
         private readonly List<string> histories = new List<string>();
-        private readonly List<string> completions = new List<string>();
         private readonly PropertyNotifier notifier;
         private readonly TerminalBlock outputBlock = new TerminalBlock();
         private readonly TerminalBlock progressBlock = new TerminalBlock();
