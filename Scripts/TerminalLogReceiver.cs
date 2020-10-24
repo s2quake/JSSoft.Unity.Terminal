@@ -144,6 +144,11 @@ namespace JSSoft.Unity.Terminal
             this.terminal = null;
         }
 
+        protected virtual bool VerifyPattern(string message, string pattern)
+        {
+            return Regex.IsMatch(message, pattern);
+        }
+
         private void Application_LogMessageReceived(string condition, string stackTrace, LogType type)
         {
             this.SendMessage(condition, stackTrace, type);
@@ -161,9 +166,9 @@ namespace JSSoft.Unity.Terminal
         {
             if (this.logType != type)
                 return;
-            if (this.pattern != string.Empty && Regex.IsMatch(condition, this.pattern) == false)
+            if (this.pattern != string.Empty && this.VerifyPattern(condition, this.pattern) == false)
                 return;
-                
+
             var foregroundColor = this.terminal.ForegroundColor;
             var backgroundColor = this.terminal.BackgroundColor;
             if (this.useForegroundColor == true)

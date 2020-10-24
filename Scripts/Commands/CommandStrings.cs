@@ -215,5 +215,29 @@ ex3) resolution 1024x768@60hz";
                 public const string Summary_ko_KR = "속성의 값을 기본값으로 되돌립니다.";
             }
         }
+
+        public static class DateCommand
+        {
+            public const string Summary = "Displays the date and time.";
+            public const string Summary_ko_KR = "날짜와 시간을 표시합니다.";
+
+            public static class Format
+            {
+                public const string Summary = "Specifies the format to display the date and time.";
+                public const string Summary_ko_KR = "날짜와 시간을 표시할 서식을 지정합니다.";
+            }
+
+            public static class Locale
+            {
+                public const string Summary = "Specifies the culture to display the date and time.";
+                public const string Summary_ko_KR = "날짜와 시간을 표시할 문화권을 지정합니다.";
+            }
+
+            public static class UTC
+            {
+                public const string Summary = "Displays the date and time as UTC.";
+                public const string Summary_ko_KR = "날짜와 시간을 UTC로 표시합니다.";
+            }
+        }
     }
 }
