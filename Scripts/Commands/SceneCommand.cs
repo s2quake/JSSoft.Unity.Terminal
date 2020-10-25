@@ -53,7 +53,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandSummary(CommandStrings.SceneCommand.IsList.Summary)]
         [CommandSummary(CommandStrings.SceneCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty("list")]
+        [CommandPropertySwitch("list")]
         [CommandPropertyTrigger(nameof(SceneName), "")]
         public bool ListSwitch { get; set; }
 

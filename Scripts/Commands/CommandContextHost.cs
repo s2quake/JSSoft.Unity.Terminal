@@ -36,8 +36,6 @@ namespace JSSoft.Unity.Terminal.Commands
         [TextArea(5, 10)]
         [SerializeField]
         private string text = "type 'help' to help.";
-        [SerializeField]
-        private bool isTest = false;
 
         private CommandContext commandContext;
         private TextWriter consoleWriter;
@@ -72,8 +70,8 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             base.Start();
             var query = from item in this.CollectCommands()
-                        where this.isTest == true ||
-                              Attribute.GetCustomAttribute(item.GetType(), typeof(TestCommandAttribute)) is null
+                        where Application.isEditor == true ||
+                              Attribute.GetCustomAttribute(item.GetType(), typeof(DebugCommandAttribute)) is null
                         select item;
             this.commandContext = new CommandContext(this.Terminal, query.ToArray());
             this.commandContext.Out = new CommandWriter(this.Terminal);

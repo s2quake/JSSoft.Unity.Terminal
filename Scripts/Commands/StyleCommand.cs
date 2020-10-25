@@ -50,14 +50,14 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandSummary(CommandStrings.StyleCommand.IsList.Summary)]
         [CommandSummary(CommandStrings.StyleCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty("list")]
+        [CommandPropertySwitch("list")]
         [CommandPropertyTrigger(nameof(IsRemove), false)]
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsList { get; set; }
 
         [CommandSummary(CommandStrings.StyleCommand.IsRemove.Summary)]
         [CommandSummary(CommandStrings.StyleCommand.IsRemove.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty("remove")]
+        [CommandPropertySwitch("remove")]
         [CommandPropertyTrigger(nameof(IsList), false)]
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsRemove { get; set; }

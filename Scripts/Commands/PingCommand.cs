@@ -53,8 +53,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandSummary(CommandStrings.PingCommand.Count.Summary)]
         [CommandSummary(CommandStrings.PingCommand.Count.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty]
-        [DefaultValue(3)]
+        [CommandProperty(InitValue = 3)]
         public int Count
         {
             get; set;
@@ -62,8 +61,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandSummary(CommandStrings.PingCommand.Timeout.Summary)]
         [CommandSummary(CommandStrings.PingCommand.Timeout.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty('w')]
-        [DefaultValue(4000)]
+        [CommandProperty('w', InitValue = 4000)]
         public int Timeout
         {
             get; set;

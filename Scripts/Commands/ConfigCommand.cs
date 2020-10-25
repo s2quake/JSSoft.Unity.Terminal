@@ -80,7 +80,7 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public string ListPattern { get; set; }
 
-        [CommandProperty("reset")]
+        [CommandPropertySwitch("reset")]
         [CommandPropertyTrigger(nameof(ListPattern), false)]
         [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary)]
         [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary_ko_KR, Locale = "ko-KR")]

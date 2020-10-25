@@ -45,7 +45,7 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandSummary(CommandStrings.DateCommand.Locale.Summary_ko_KR, Locale = "ko-KR")]
         public string Locale { get; set; }
 
-        [CommandProperty]
+        [CommandPropertySwitch]
         [CommandSummary(CommandStrings.DateCommand.UTC.Summary)]
         [CommandSummary(CommandStrings.DateCommand.UTC.Summary_ko_KR, Locale = "ko-KR")]
         public bool UTC { get; set; }

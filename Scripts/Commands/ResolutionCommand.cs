@@ -32,6 +32,7 @@ namespace JSSoft.Unity.Terminal.Commands
 {
     [CommandSummary(CommandStrings.ResolutionCommand.Summary)]
     [CommandSummary(CommandStrings.ResolutionCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [CommandExample(CommandStrings.ResolutionCommand.Example)]
     public class ResolutionCommand : TerminalCommandBase
     {
         private const string fullPattern = @"(\d+)\s*x\s*(\d+)\s*@\s*(\d+)\s*(?:hz)?";
@@ -50,21 +51,21 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary)]
         [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty("window")]
+        [CommandPropertySwitch("window")]
         [CommandPropertyTrigger(nameof(IsFullScreen), false)]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public bool IsWindowMode { get; set; }
 
         [CommandSummary(CommandStrings.ResolutionCommand.IsFullScreen.Summary)]
         [CommandSummary(CommandStrings.ResolutionCommand.IsFullScreen.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty("full")]
+        [CommandPropertySwitch("full")]
         [CommandPropertyTrigger(nameof(IsWindowMode), false)]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public bool IsFullScreen { get; set; }
 
         [CommandSummary(CommandStrings.ResolutionCommand.IsList.Summary)]
         [CommandSummary(CommandStrings.ResolutionCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
-        [CommandProperty("list")]
+        [CommandPropertySwitch("list")]
         public bool IsList { get; set; }
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)

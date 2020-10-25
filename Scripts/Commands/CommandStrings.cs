@@ -83,16 +83,15 @@ namespace JSSoft.Unity.Terminal.Commands
             public const string Summary = "Change resolution properties.";
             public const string Summary_ko_KR = "해상도 속성을 변경합니다.";
 
+            public const string Example = @"resolution 3
+resolution 1024x768
+resolution 1024x768@60hz";
+
             public static class Resolution
             {
-                public const string Summary = @"Specifies the index or format of the resolution.
-ex1) resolution 3
-ex2) resolution 1024x768
-ex3) resolution 1024x768@60hz";
-                public const string Summary_ko_KR = @"해상도의 색인 또는 서식을 지정합니다.
-예1) resolution 3
-예2) resolution 1024x768
-예3) resolution 1024x768@60hz";
+                public const string Summary = @"Specifies the index or format of the resolution.";
+                public const string Summary_ko_KR = @"해상도의 색인 또는 서식을 지정합니다.";
+
             }
 
             public static class IsWindowMode
