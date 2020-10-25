@@ -101,9 +101,9 @@ namespace JSSoft.Unity.Terminal.Commands
 
         #region ICommandProvider
 
-        IEnumerable<ICommand> ICommandProvider.Provide(ITerminal terminal)
+        IEnumerable<ICommand> ICommandProvider.Provide(ITerminal terminal, ICommandConfigurationProvider configurationProvider)
         {
-            foreach (var item in commands.Provide(terminal))
+            foreach (var item in commands.Provide(terminal, configurationProvider))
             {
                 yield return item;
             }

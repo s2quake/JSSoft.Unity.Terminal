@@ -27,7 +27,7 @@ namespace JSSoft.Unity.Terminal.Commands
 {
     public class CommandProvider : ICommandProvider
     {
-        public virtual IEnumerable<ICommand> Provide(ITerminal terminal)
+        public virtual IEnumerable<ICommand> Provide(ITerminal terminal, ICommandConfigurationProvider configurationProvider)
         {
             yield return new ResetCommand(terminal);
             yield return new InfoCommand(terminal);
@@ -39,6 +39,8 @@ namespace JSSoft.Unity.Terminal.Commands
             yield return new InternetProtocolCommand(terminal);
             yield return new SceneCommand(terminal);
             yield return new DateCommand(terminal);
+
+            yield return new ConfigCommand(terminal, configurationProvider);
         }
     }
 }

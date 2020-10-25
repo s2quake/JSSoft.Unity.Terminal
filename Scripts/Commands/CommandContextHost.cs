@@ -102,11 +102,11 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected virtual IEnumerable<ICommand> CollectCommands()
         {
-            foreach (var item in (this.CommandProvider ?? new CommandProvider()).Provide(this.Terminal))
+            var configurationProvider = this.ConfigurationProvider ?? new CommandConfigurationProvider();
+            foreach (var item in (this.CommandProvider ?? new CommandProvider()).Provide(this.Terminal, configurationProvider))
             {
                 yield return item;
             }
-            yield return new ConfigCommand(this.Terminal, this.ConfigurationProvider ?? new CommandConfigurationProvider());
         }
 
         protected virtual string[] GetCompletion(string[] items, string find)

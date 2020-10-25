@@ -27,6 +27,6 @@ namespace JSSoft.Unity.Terminal.Commands
 {
     public interface ICommandProvider
     {
-        IEnumerable<ICommand> Provide(ITerminal terminal);
+        IEnumerable<ICommand> Provide(ITerminal terminal, ICommandConfigurationProvider configurationProvider);
     }
 }
