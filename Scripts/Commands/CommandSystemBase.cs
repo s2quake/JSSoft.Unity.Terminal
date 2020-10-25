@@ -24,6 +24,7 @@ using JSSoft.Library.Commands;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -77,6 +78,13 @@ namespace JSSoft.Unity.Terminal.Commands
             commandContext.CommandProvider = this;
             commandContext.ConfigurationProvider = this;
             terminalGrid.LayoutChanged += TerminalGrid_LayoutChanged;
+        }
+
+        protected virtual void OnEnable()
+        {
+            var commandContext = GetComponent<CommandContextHost>();
+            var terminal = commandContext.Terminal;
+            terminal.Prompt = $"{SceneManager.GetActiveScene().name}:$ ";
         }
 
         protected virtual void OnDestroy()
