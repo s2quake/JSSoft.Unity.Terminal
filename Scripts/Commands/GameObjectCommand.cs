@@ -43,8 +43,39 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
+        public override string[] GetCompletions(CommandMethodDescriptor methodDescriptor, CommandMemberDescriptor memberDescriptor, string find)
+        {
+            if (memberDescriptor.DescriptorName == "path")
+            {
+                var ss = find.Split('/');
+                if (ss.Length == 0)
+                {
+                    var query = from item in SceneManager.GetActiveScene().GetRootGameObjects()
+                                where item.name.StartsWith(find)
+                                select item.name;
+                    return query.ToArray();
+                }
+                else
+                {
+                    var s = string.Join("/", ss.Take(ss.Length - 1));
+                    if (s == string.Empty)
+                        s = "/";
+                    var gameObject = GameObjectUtility.Find(s);
+                    if (gameObject != null)
+                    {
+                        var query = from item in GameObjectUtility.GetChilds(gameObject)
+                                    let path = s + "/" + item.name
+                                    where path.StartsWith(find)
+                                    select path;
+                        return query.ToArray();
+                    }
+                }
+            }
+            return base.GetCompletions(methodDescriptor, memberDescriptor, find);
+        }
+
         [CommandMethod(Aliases = new string[] { "new" })]
-        public void Create()
+        public void Create(string path, string name)
         {
 
         }
@@ -68,17 +99,25 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "on" })]
-        public void Activate()
+        public void Activate(string path)
         {
-
+            var gameObject = GameObject.Find(path);
+            if (gameObject != null)
+            {
+                gameObject.SetActive(true);
+            }
+            else
+            {
+                throw new ArgumentException($"invalid path: '{path}'");
+            }
         }
 
         [CommandMethod(Aliases = new string[] { "off" })]
-        public void Deactivate(string path = "/")
+        public void Deactivate(string path)
         {
-            if (this.Find(path) is Transform transform)
+            var gameObject = GameObject.Find(path);
+            if (gameObject != null)
             {
-                var gameObject = transform.gameObject;
                 gameObject.SetActive(false);
             }
             else
@@ -88,109 +127,40 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod("list", Aliases = new string[] { "ls" })]
-        public void ShowList(string path = "/")
+        [CommandMethodProperty(nameof(IsRecursive))]
+        public void ShowList(string path)
         {
-            if (path != "/")
-                NameValidator.ValidateItemPath(path);
-
-            var ss = StringUtility.Split(path, '/');
-            var scene = SceneManager.GetActiveScene();
             var sb = new StringBuilder();
-            if (this.Find(scene, ss, 0) is object obj)
-            {
-                foreach (var item in GetTransforms(obj))
-                {
-                    sb.AppendLine(item.name);
-                }
-            }
+            var obj = GameObjectUtility.Find(path);
+            var isRecursive = this.IsRecursive;
+            ShowRecursive(sb, obj, path, isRecursive);
             this.Write(sb.ToString());
         }
 
-        private object Find(string path)
+        [CommandPropertySwitch("recursive", 'r')]
+        public bool IsRecursive
         {
-            if (path != "/")
-                NameValidator.ValidateItemPath(path);
-            var ss = StringUtility.Split(path, '/');
-            var scene = SceneManager.GetActiveScene();
-            var sb = new StringBuilder();
-            return this.Find(scene, ss, 0);
+            get; set;
         }
 
-        private static IEnumerable<Transform> GetTransforms(Scene scene)
+        private static void ShowRecursive(StringBuilder sb, object obj, string path, bool isRecursive)
         {
-            foreach (var item in scene.GetRootGameObjects())
+            if (isRecursive == true)
             {
-                yield return item.transform;
+                sb.AppendLine($"path: {path}:");
             }
-        }
-
-        private static IEnumerable<Transform> GetTransforms(Transform transform)
-        {
-            for (var i = 0; i < transform.childCount; i++)
+            foreach (var item in GameObjectUtility.GetChilds(obj))
             {
-                yield return transform.GetChild(i);
+                sb.AppendLine(item.name);
             }
-        }
+            sb.AppendLine();
 
-        private static IEnumerable<Transform> GetTransforms(object obj)
-        {
-            if (obj is Scene scene)
+            if (isRecursive)
             {
-                foreach (var item in GetTransforms(scene))
+                var parentPath = path == "/" ? string.Empty : path;
+                foreach (var item in GameObjectUtility.GetChilds(obj))
                 {
-                    yield return item;
-                }
-            }
-            else if (obj is Transform transform)
-            {
-                foreach (var item in GetTransforms(transform))
-                {
-                    yield return item;
-                }
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        private object Find(object obj, string[] ss, int index)
-        {
-            if (index >= ss.Length)
-            {
-                return obj;
-            }
-            else
-            {
-                var s = ss[index];
-                foreach (var item in GetTransforms(obj))
-                {
-                    if (item.name == s)
-                    {
-                        return this.Find(item, ss, index + 1);
-                    }
-                }
-            }
-            return null;
-        }
-
-
-        private IEnumerable<string> CollectPath(Transform transform, string parentPath)
-        {
-            var path = $"{parentPath}{transform.name}";
-            var components = transform.GetComponents(typeof(Component));
-            // for (var i = 0; i < components.Length; i++)
-            // {
-            //     var item = components[i];
-            //     var itemPath = $"{path}{item.GetType().Name}";
-            // }
-            yield return path;
-            for (var i = 0; i < transform.childCount; i++)
-            {
-                var childTransform = transform.GetChild(i);
-                foreach (var item in this.CollectPath(childTransform, $"{path}/"))
-                {
-                    yield return item;
+                    ShowRecursive(sb, item, $"{parentPath}/{item.name}", isRecursive);
                 }
             }
         }
