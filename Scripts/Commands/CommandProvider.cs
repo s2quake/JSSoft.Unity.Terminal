@@ -39,6 +39,8 @@ namespace JSSoft.Unity.Terminal.Commands
             yield return new InternetProtocolCommand(terminal);
             yield return new SceneCommand(terminal);
             yield return new DateCommand(terminal);
+            yield return new GameObjectCommand(terminal);
+            yield return new ComponentCommand(terminal);
 
             yield return new ConfigCommand(terminal, configurationProvider);
         }

@@ -28,13 +28,24 @@ namespace JSSoft.Unity.Terminal.Commands
     public abstract class TerminalCommandBase : CommandBase
     {
         protected TerminalCommandBase(ITerminal terminal)
+            : this(terminal, new string[] { })
+        {
+        }
+
+        protected TerminalCommandBase(ITerminal terminal, string[] aliases)
+            : base(aliases)
         {
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
         }
 
         protected TerminalCommandBase(ITerminal terminal, string name)
-            : base(name)
+            : this(terminal, name, new string[] { })
+        {
+        }
+
+        protected TerminalCommandBase(ITerminal terminal, string name, string[] aliases)
+            : base(name, aliases)
         {
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();

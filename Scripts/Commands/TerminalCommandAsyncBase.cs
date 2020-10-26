@@ -30,6 +30,24 @@ namespace JSSoft.Unity.Terminal.Commands
     public abstract class TerminalCommandAsyncBase : CommandAsyncBase
     {
         protected TerminalCommandAsyncBase(ITerminal terminal)
+            : this(terminal, new string[] { })
+        {
+        }
+
+        protected TerminalCommandAsyncBase(ITerminal terminal, string[] aliases)
+            : base(aliases)
+        {
+            this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
+        }
+
+        protected TerminalCommandAsyncBase(ITerminal terminal, string name)
+            : this(terminal, name, new string[] { })
+        {
+        }
+
+        protected TerminalCommandAsyncBase(ITerminal terminal, string name, string[] aliases)
+            : base(name, aliases)
         {
             this.Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             this.Grid = terminal.GameObject.GetComponent<ITerminalGrid>();
