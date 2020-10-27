@@ -47,29 +47,7 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (memberDescriptor.DescriptorName == "path")
             {
-                var ss = find.Split('/');
-                if (ss.Length == 0)
-                {
-                    var query = from item in SceneManager.GetActiveScene().GetRootGameObjects()
-                                where item.name.StartsWith(find)
-                                select item.name;
-                    return query.ToArray();
-                }
-                else
-                {
-                    var s = string.Join("/", ss.Take(ss.Length - 1));
-                    if (s == string.Empty)
-                        s = "/";
-                    var gameObject = GameObjectUtility.Find(s);
-                    if (gameObject != null)
-                    {
-                        var query = from item in GameObjectUtility.GetChilds(gameObject)
-                                    let path = s + "/" + item.name
-                                    where path.StartsWith(find)
-                                    select path;
-                        return query.ToArray();
-                    }
-                }
+                return GameObjectUtility.GetCompletions(find);
             }
             return base.GetCompletions(methodDescriptor, memberDescriptor, find);
         }
@@ -77,58 +55,50 @@ namespace JSSoft.Unity.Terminal.Commands
         [CommandMethod(Aliases = new string[] { "new" })]
         public void Create(string path, string name)
         {
-
+            var parentObject = GameObjectUtility.Get(path);
+            var gameObject = new GameObject(name);
+            GameObjectUtility.SetParent(gameObject, parentObject);
         }
 
         [CommandMethod(Aliases = new string[] { "ren" })]
-        public void Rename()
+        public void Rename(string path, string newName)
         {
-
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            gameObject.name = newName;
         }
 
         [CommandMethod(Aliases = new string[] { "mv" })]
-        public void Move()
+        public void Move(string path, string parentPath)
         {
-
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            var parentObject = GameObjectUtility.Get(parentPath);
+            GameObjectUtility.SetParent(gameObject, parentObject);
         }
 
         [CommandMethod(Aliases = new string[] { "rm" })]
-        public void Delete()
+        public void Delete(string path)
         {
-
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            GameObject.DestroyImmediate(gameObject);
         }
 
         [CommandMethod(Aliases = new string[] { "on" })]
         public void Activate(string path)
         {
-            var gameObject = GameObject.Find(path);
-            if (gameObject != null)
-            {
-                gameObject.SetActive(true);
-            }
-            else
-            {
-                throw new ArgumentException($"invalid path: '{path}'");
-            }
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            gameObject.SetActive(true);
         }
 
         [CommandMethod(Aliases = new string[] { "off" })]
         public void Deactivate(string path)
         {
-            var gameObject = GameObject.Find(path);
-            if (gameObject != null)
-            {
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                throw new ArgumentException($"invalid path: '{path}'");
-            }
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            gameObject.SetActive(false);
         }
 
         [CommandMethod("list", Aliases = new string[] { "ls" })]
         [CommandMethodProperty(nameof(IsRecursive))]
-        public void ShowList(string path)
+        public void ShowList(string path = "")
         {
             var sb = new StringBuilder();
             var obj = GameObjectUtility.Find(path);

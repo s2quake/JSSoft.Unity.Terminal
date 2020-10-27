@@ -43,46 +43,78 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
+        public override string[] GetCompletions(CommandMethodDescriptor methodDescriptor, CommandMemberDescriptor memberDescriptor, string find)
+        {
+            if (memberDescriptor.DescriptorName == "path")
+            {
+                return GameObjectUtility.GetCompletions(find);
+            }
+            return base.GetCompletions(methodDescriptor, memberDescriptor, find);
+        }
+
         [CommandMethod(Aliases = new string[] { "new" })]
-        public void Create()
+        public void Create(string path, string className)
         {
-
-        }
-
-        [CommandMethod(Aliases = new string[] { "ren" })]
-        public void Rename()
-        {
-
-        }
-
-        [CommandMethod(Aliases = new string[] { "mv" })]
-        public void Move()
-        {
-
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            var type = Type.GetType(className);
+            if (type == null)
+                throw new InvalidOperationException($"cannot found type: '{className}'");
+            gameObject.AddComponent(type);
         }
 
         [CommandMethod(Aliases = new string[] { "rm" })]
-        public void Delete()
+        public void Delete(string path, int index)
         {
-
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            var components = gameObject.GetComponents(typeof(Component));
+            var component = components[index];
+            Component.DestroyImmediate(component);
         }
 
         [CommandMethod(Aliases = new string[] { "on" })]
-        public void Activate()
+        public void Activate(string path, int index)
         {
-
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            var components = gameObject.GetComponents(typeof(Component));
+            var component = components[index];
+            if (component is Behaviour behaviour)
+            {
+                behaviour.enabled = true;
+            }
+            else
+            {
+                throw new InvalidOperationException("component cannot be enabled.");
+            }
         }
 
         [CommandMethod(Aliases = new string[] { "off" })]
-        public void Deactivate(string path = "/")
+        public void Deactivate(string path, int index)
         {
-           
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            var components = gameObject.GetComponents(typeof(Component));
+            var component = components[index];
+            if (component is Behaviour behaviour)
+            {
+                behaviour.enabled = false;
+            }
+            else
+            {
+                throw new InvalidOperationException("component cannot be enabled.");
+            }
         }
 
         [CommandMethod("list", Aliases = new string[] { "ls" })]
-        public void ShowList(string path = "/")
+        public void ShowList(string path = "")
         {
-            
+            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
+            var sb = new StringBuilder();
+            var components = gameObject.GetComponents(typeof(Component));
+            for (var i = 0; i < components.Length; i++)
+            {
+                var item = components[i];
+                sb.AppendLine($"{i,2}: {item.GetType()}");
+            }
+            this.WriteLine(sb.ToString());
         }
     }
 }

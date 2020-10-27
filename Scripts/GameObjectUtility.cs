@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,15 +30,99 @@ namespace JSSoft.Unity.Terminal
 {
     public static class GameObjectUtility
     {
+        public static string[] GetCompletions(string find)
+        {
+            var parentPath = string.Empty;
+            var index = find.LastIndexOf('/');
+            if (index >= 0)
+                parentPath = find.Remove(index);
+            var parent = GameObjectUtility.Find(parentPath);
+            if (parent != null)
+            {
+                if (index >= 0)
+                    parentPath += "/";
+                var query = from item in GetChilds(parent)
+                            let path = parentPath + item.name
+                            where path.StartsWith(find)
+                            select path;
+                return query.ToArray();
+            }
+            return null;
+        }
+
         public static object Find(string path)
         {
-            if (path == "/")
+            if (path == "/" || path == string.Empty)
             {
                 return SceneManager.GetActiveScene();
             }
             else
             {
                 return GameObject.Find(path);
+            }
+        }
+
+        public static object Get(string path)
+        {
+            return Get(path, typeof(object));
+        }
+
+        public static object Get(string path, Type type)
+        {
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+            if (Find(path) is object obj && type.IsAssignableFrom(obj.GetType()))
+                return obj;
+            throw new ArgumentException($"invalid path: '{path}'");
+        }
+
+        public static void SetParent(object obj, object parent)
+        {
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+            if (obj is Scene)
+                throw new ArgumentException("invalid obj", nameof(obj));
+            var transform = GetTransform(obj);
+            var parentTransform = GetTransform(parent);
+            transform.SetParent(parentTransform);
+        }
+
+        public static string GetPath(object obj)
+        {
+            if (obj == null)
+                throw new ArgumentNullException(nameof(obj));
+            if (obj is Scene)
+            {
+                return "/";
+            }
+            else if (obj is GameObject gameObject)
+            {
+                var transform = gameObject.transform;
+                var path = transform.name;
+                var parent = transform.parent;
+                while (parent != null)
+                {
+                    path += parent.name + "/" + path;
+                    parent = transform.parent;
+                }
+                return "/" + path;
+            }
+            else if (obj is Transform transform)
+            {
+                var path = transform.name;
+                var parent = transform.parent;
+                while (parent != null)
+                {
+                    path += parent.name + "/" + path;
+                    parent = transform.parent;
+                }
+                return "/" + path;
+            }
+            else
+            {
+                throw new ArgumentException("invalid obj", nameof(obj));
             }
         }
 
@@ -69,6 +154,17 @@ namespace JSSoft.Unity.Terminal
             {
                 throw new ArgumentException("invalid obj", nameof(obj));
             }
+        }
+
+        private static Transform GetTransform(object obj)
+        {
+            if (obj is GameObject gameObject)
+                return gameObject.transform;
+            else if (obj is Transform transform)
+                return transform;
+            else if (obj is Scene || obj == null)
+                return null;
+            throw new ArgumentException("invalid obj", nameof(obj));
         }
     }
 }
