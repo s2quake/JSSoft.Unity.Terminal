@@ -25,22 +25,39 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Text.RegularExpressions;
 
 namespace JSSoft.Unity.Terminal
 {
     public static class GameObjectUtility
     {
-        public static string[] GetCompletions(string find)
+        public static string[] SplitPath(string path)
         {
-            var parentPath = string.Empty;
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+            if (path.StartsWith("/") == false)
+                throw new ArgumentException($"invalid path: '{path}'", nameof(path));
+
+            var ss = Regex.Split(path, @"(?<!\\)/");
+            var items = new string[ss.Length - 1];
+            for (var i = 1; i < ss.Length; i++)
+            {
+                items[i - 1] = ss[i];
+            }
+            return items;
+        }
+
+        public static string[] GetPathCompletions(string find)
+        {
+            if (find == null)
+                throw new ArgumentNullException(nameof(find));
+            if (find.StartsWith("/") == false)
+                throw new ArgumentException($"invalid path: '{find}'", nameof(find));
             var index = find.LastIndexOf('/');
-            if (index >= 0)
-                parentPath = find.Remove(index);
+            var parentPath = find.Substring(0, index + 1);
             var parent = GameObjectUtility.Find(parentPath);
             if (parent != null)
             {
-                if (index >= 0)
-                    parentPath += "/";
                 var query = from item in GetChilds(parent)
                             let path = parentPath + item.name
                             where path.StartsWith(find)
@@ -52,14 +69,8 @@ namespace JSSoft.Unity.Terminal
 
         public static object Find(string path)
         {
-            if (path == "/" || path == string.Empty)
-            {
-                return SceneManager.GetActiveScene();
-            }
-            else
-            {
-                return GameObject.Find(path);
-            }
+            var items = SplitPath(path);
+            return Find(SceneManager.GetActiveScene(), items, 0);
         }
 
         public static object Get(string path)
@@ -182,6 +193,23 @@ namespace JSSoft.Unity.Terminal
             else if (obj is Scene || obj == null)
                 return null;
             throw new ArgumentException("invalid obj", nameof(obj));
+        }
+
+        private static object Find(object obj, string[] paths, int index)
+        {
+            var path = paths[index];
+            if (path == string.Empty)
+                return obj;
+            foreach (var item in GetChilds(obj))
+            {
+                if (item.name == path)
+                {
+                    if (paths.Length <= index + 1)
+                        return item;
+                    return Find(item, paths, index + 1);
+                }
+            }
+            return null;
         }
     }
 }

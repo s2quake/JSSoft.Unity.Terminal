@@ -277,8 +277,8 @@ resolution 1024x768@60hz";
 
             public static class Path
             {
-                public const string Summary = "Specifies the path of the object used for GameObject.Find().";
-                public const string Summary_ko_KR = "GameObject.Find() 에 사용되는 객체의 경로를 지정합니다.";
+                public const string Summary = "Specifies the absolute path of the GameObject, such as /Monster/Arm/Hand.";
+                public const string Summary_ko_KR = "/Monster/Arm/Hand 처럼 GameObject의 절대 경로를 지정합니다. ";
             }
 
             public static class Index
@@ -337,8 +337,8 @@ resolution 1024x768@60hz";
 
             public static class Path
             {
-                public const string Summary = "Specifies the path of the object used for GameObject.Find().";
-                public const string Summary_ko_KR = "GameObject.Find() 에 사용되는 객체의 경로를 지정합니다.";
+                public const string Summary = "Specifies the absolute path of the GameObject, such as /Monster/Arm/Hand.";
+                public const string Summary_ko_KR = "/Monster/Arm/Hand 처럼 GameObject의 절대 경로를 지정합니다. ";
             }
 
             public static class Name

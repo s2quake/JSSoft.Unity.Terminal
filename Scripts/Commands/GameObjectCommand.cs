@@ -47,7 +47,14 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (memberDescriptor.DescriptorName == "path")
             {
-                return GameObjectUtility.GetCompletions(find);
+                try
+                {
+                    return GameObjectUtility.GetPathCompletions(find);
+                }
+                catch
+                {
+                    return null;
+                }
             }
             return base.GetCompletions(methodDescriptor, memberDescriptor, find);
         }
@@ -74,7 +81,7 @@ namespace JSSoft.Unity.Terminal.Commands
         public void Rename(
             [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
             [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path, 
+            string path,
             [CommandSummary(CommandStrings.GameObjectCommand.NewName.Summary)]
             [CommandSummary(CommandStrings.GameObjectCommand.NewName.Summary_ko_KR, Locale = "ko-KR")]
             string newName)
@@ -89,7 +96,7 @@ namespace JSSoft.Unity.Terminal.Commands
         public void Move(
             [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
             [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path, 
+            string path,
             [CommandSummary(CommandStrings.GameObjectCommand.ParentPath.Summary)]
             [CommandSummary(CommandStrings.GameObjectCommand.ParentPath.Summary_ko_KR, Locale = "ko-KR")]
             string parentPath)
@@ -142,7 +149,7 @@ namespace JSSoft.Unity.Terminal.Commands
         public void ShowList(
             [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
             [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path = "")
+            string path = "/")
         {
             var sb = new StringBuilder();
             var obj = GameObjectUtility.Find(path);

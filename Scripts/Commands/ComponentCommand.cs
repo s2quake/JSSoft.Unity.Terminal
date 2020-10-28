@@ -40,7 +40,14 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             if (memberDescriptor.DescriptorName == "path")
             {
-                return GameObjectUtility.GetCompletions(find);
+                try
+                {
+                    return GameObjectUtility.GetPathCompletions(find);
+                }
+                catch
+                {
+                    return null;
+                }
             }
             return base.GetCompletions(methodDescriptor, memberDescriptor, find);
         }
