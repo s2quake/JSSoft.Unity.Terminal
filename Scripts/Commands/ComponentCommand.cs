@@ -21,21 +21,14 @@
 // SOFTWARE.
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
-using JSSoft.Library;
 using JSSoft.Library.Commands;
-using JSSoft.Library.ObjectModel;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    // [CommandSummary(CommandStrings.DateCommand.Summary)]
-    // [CommandSummary(CommandStrings.DateCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [CommandSummary(CommandStrings.ComponentCommand.Summary)]
+    [CommandSummary(CommandStrings.ComponentCommand.Summary_ko_KR, Locale = "ko-KR")]
     public class ComponentCommand : TerminalCommandMethodBase
     {
         public ComponentCommand(ITerminal terminal)
@@ -52,31 +45,49 @@ namespace JSSoft.Unity.Terminal.Commands
             return base.GetCompletions(methodDescriptor, memberDescriptor, find);
         }
 
-        [CommandMethod(Aliases = new string[] { "new" })]
-        public void Create(string path, string className)
+        [CommandMethod]
+        [CommandSummary(CommandStrings.ComponentCommand.Add.Summary)]
+        [CommandSummary(CommandStrings.ComponentCommand.Add.Summary_ko_KR, Locale = "ko-KR")]
+        public void Add(
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
+            string path,
+            string componentType)
         {
-            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
-            var type = Type.GetType(className);
+            var gameObject = GameObjectUtility.GetGameObject(path);
+            var type = Type.GetType(componentType);
             if (type == null)
-                throw new InvalidOperationException($"cannot found type: '{className}'");
+                throw new InvalidOperationException($"cannot found type: '{componentType}'");
             gameObject.AddComponent(type);
         }
 
         [CommandMethod(Aliases = new string[] { "rm" })]
-        public void Delete(string path, int index)
+        [CommandSummary(CommandStrings.ComponentCommand.Remove.Summary)]
+        [CommandSummary(CommandStrings.ComponentCommand.Remove.Summary_ko_KR, Locale = "ko-KR")]
+        public void Remove(
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
+            string path,
+            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary_ko_KR, Locale = "ko-KR")]
+            int index)
         {
-            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
-            var components = gameObject.GetComponents(typeof(Component));
-            var component = components[index];
+            var component = GameObjectUtility.GetComponent(path, index);
             Component.DestroyImmediate(component);
         }
 
         [CommandMethod(Aliases = new string[] { "on" })]
-        public void Activate(string path, int index)
+        [CommandSummary(CommandStrings.ComponentCommand.Activate.Summary)]
+        [CommandSummary(CommandStrings.ComponentCommand.Activate.Summary_ko_KR, Locale = "ko-KR")]
+        public void Activate(
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
+            string path,
+            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary_ko_KR, Locale = "ko-KR")]
+            int index)
         {
-            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
-            var components = gameObject.GetComponents(typeof(Component));
-            var component = components[index];
+            var component = GameObjectUtility.GetComponent(path, index);
             if (component is Behaviour behaviour)
             {
                 behaviour.enabled = true;
@@ -88,11 +99,17 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "off" })]
-        public void Deactivate(string path, int index)
+        [CommandSummary(CommandStrings.ComponentCommand.Deactivate.Summary)]
+        [CommandSummary(CommandStrings.ComponentCommand.Deactivate.Summary_ko_KR, Locale = "ko-KR")]
+        public void Deactivate(
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
+            string path,
+            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary_ko_KR, Locale = "ko-KR")]
+            int index)
         {
-            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
-            var components = gameObject.GetComponents(typeof(Component));
-            var component = components[index];
+            var component = GameObjectUtility.GetComponent(path, index);
             if (component is Behaviour behaviour)
             {
                 behaviour.enabled = false;
@@ -104,11 +121,15 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod("list", Aliases = new string[] { "ls" })]
-        public void ShowList(string path = "")
+        [CommandSummary(CommandStrings.ComponentCommand.ShowList.Summary)]
+        [CommandSummary(CommandStrings.ComponentCommand.ShowList.Summary_ko_KR, Locale = "ko-KR")]
+        public void ShowList(
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
+            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
+            string path = "")
         {
-            var gameObject = GameObjectUtility.Get(path, typeof(GameObject)) as GameObject;
             var sb = new StringBuilder();
-            var components = gameObject.GetComponents(typeof(Component));
+            var components = GameObjectUtility.GetComponents(path);
             for (var i = 0; i < components.Length; i++)
             {
                 var item = components[i];

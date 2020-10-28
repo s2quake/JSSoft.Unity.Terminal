@@ -67,15 +67,21 @@ namespace JSSoft.Unity.Terminal
             return Get(path, typeof(object));
         }
 
-        public static object Get(string path, Type type)
+        public static GameObject GetGameObject(string path)
         {
-            if (path == null)
-                throw new ArgumentNullException(nameof(path));
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (Find(path) is object obj && type.IsAssignableFrom(obj.GetType()))
-                return obj;
-            throw new ArgumentException($"invalid path: '{path}'");
+            return Get(path, typeof(GameObject)) as GameObject;
+        }
+
+        public static Component[] GetComponents(string path)
+        {
+            var gameObject = GetGameObject(path);
+            return gameObject.GetComponents(typeof(Component));
+        }
+
+        public static Component GetComponent(string path, int index)
+        {
+            var components = GetComponents(path);
+            return components[index];
         }
 
         public static void SetParent(object obj, object parent)
@@ -154,6 +160,17 @@ namespace JSSoft.Unity.Terminal
             {
                 throw new ArgumentException("invalid obj", nameof(obj));
             }
+        }
+
+        private static object Get(string path, Type type)
+        {
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+            if (Find(path) is object obj && type.IsAssignableFrom(obj.GetType()))
+                return obj;
+            throw new ArgumentException($"invalid path: '{path}'");
         }
 
         private static Transform GetTransform(object obj)

@@ -239,5 +239,131 @@ resolution 1024x768@60hz";
                 public const string Summary_ko_KR = "날짜와 시간을 UTC로 표시합니다.";
             }
         }
+
+        public static class ComponentCommand
+        {
+            public const string Summary = "Provides commands for Component.";
+            public const string Summary_ko_KR = "Component 관련 명령어를 제공합니다.";
+
+            public static class Add
+            {
+                public const string Summary = "Add components to GameObject.";
+                public const string Summary_ko_KR = "GameObject 에 컴포넌트를 추가합니다.";
+            }
+
+            public static class Remove
+            {
+                public const string Summary = "Remove the component from the GameObject.";
+                public const string Summary_ko_KR = "GameObject 에서 컴포넌트를 제거합니다.";
+            }
+
+            public static class Activate
+            {
+                public const string Summary = "Activates the component.";
+                public const string Summary_ko_KR = "컴포넌트를 활성화합니다.";
+            }
+
+            public static class Deactivate
+            {
+                public const string Summary = "Deactivates the component.";
+                public const string Summary_ko_KR = "컴포넌트를 비활성화합니다.";
+            }
+
+            public static class ShowList
+            {
+                public const string Summary = "Displays a list of components.";
+                public const string Summary_ko_KR = "컴포넌트 목록을 표시합니다.";
+            }
+
+            public static class Path
+            {
+                public const string Summary = "Specifies the path of the object used for GameObject.Find().";
+                public const string Summary_ko_KR = "GameObject.Find() 에 사용되는 객체의 경로를 지정합니다.";
+            }
+
+            public static class Index
+            {
+                public const string Summary = "Specifies the index of the component.";
+                public const string Summary_ko_KR = "컴포넌트의 색인을 지정합니다.";
+            }
+        }
+
+        public static class GameObjectCommand
+        {
+            public const string Summary = "Provides commands for GameObject.";
+            public const string Summary_ko_KR = "GameObject 관련 명령어를 제공합니다.";
+
+            public static class Create
+            {
+                public const string Summary = "Create GameObject.";
+                public const string Summary_ko_KR = "GameObject를 생성합니다.";
+            }
+
+            public static class Rename
+            {
+                public const string Summary = "Rename GameObject.";
+                public const string Summary_ko_KR = "GameObject의 이름을 변경합니다.";
+            }
+
+            public static class Move
+            {
+                public const string Summary = "Move the GameObject to the target object.";
+                public const string Summary_ko_KR = "GameObject를 대상 객체로 이동합니다.";
+            }
+
+            public static class Delete
+            {
+                public const string Summary = "Delete GameObject.";
+                public const string Summary_ko_KR = "GameObject를 삭제합니다.";
+            }
+
+            public static class Activate
+            {
+                public const string Summary = "Activates GameObject.";
+                public const string Summary_ko_KR = "GameObject를 활성화합니다.";
+            }
+
+            public static class Deactivate
+            {
+                public const string Summary = "Deactivates GameObject.";
+                public const string Summary_ko_KR = "GameObject를 비활성화 합니다.";
+            }
+
+            public static class ShowList
+            {
+                public const string Summary = "Add components to GameObject.";
+                public const string Summary_ko_KR = "GameObject의 목록을 표시합니다.";
+            }
+
+            public static class Path
+            {
+                public const string Summary = "Specifies the path of the object used for GameObject.Find().";
+                public const string Summary_ko_KR = "GameObject.Find() 에 사용되는 객체의 경로를 지정합니다.";
+            }
+
+            public static class Name
+            {
+                public const string Summary = "Specifies the name of the GameObject to create.";
+                public const string Summary_ko_KR = "생성할 GameObject 이름을 지정합니다.";
+            }
+
+            public static class NewName
+            {
+                public const string Summary = "Specifies the new name of the GameObject to change.";
+                public const string Summary_ko_KR = "변경할 GameObject 새로운 이름을 지정합니다.";
+            }
+
+            public static class ParentPath
+            {
+                public const string Summary = "Specifies the path of the GameObject to be moved.";
+                public const string Summary_ko_KR = "이동할 대상이 되는 GameObject 의 경로를 지정합니다.";
+            }
+
+            public static class IsRecursive
+            {
+                public const string Summary = "Recursively displays a list of child objects.";
+                public const string Summary_ko_KR = "자식 객체의 목록까지 재귀적으로 표시합니다.";
+            }
+        }
     }
 }
