@@ -81,7 +81,7 @@ namespace JSSoft.Unity.Terminal.Commands
         public string ListPattern { get; set; }
 
         [CommandPropertySwitch("reset")]
-        [CommandPropertyTrigger(nameof(ListPattern), false)]
+        [CommandPropertyTrigger(nameof(ListPattern), "")]
         [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary)]
         [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public bool ResetSwitch { get; set; }
@@ -157,7 +157,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         private void ShowUsage()
         {
-            this.WriteLine("type 'help config'");
+            this.WriteLine($"type 'help {this.Name}'");
         }
 
         private ICommandConfiguration GetConfiguration(string configName)
