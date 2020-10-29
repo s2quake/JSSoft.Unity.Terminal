@@ -37,30 +37,70 @@ namespace JSSoft.Unity.Terminal.Editor
 {
     public static class TerminalMenuItems
     {
-        private static Func<Type, Type> typeResolver;
-
-        public static Func<Type, Type> TypeResolver
+        [MenuItem("GameObject/UI/Terminals/Terminal")]
+        public static void CreateTerminalUI()
         {
-            get => typeResolver ?? defaultTypeResolver;
-            set => typeResolver = value;
+            var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalGridObj = CreateTerminal(canvas);
+            InvokeTerminalCreated(terminalGridObj, TerminalCreation.Terminal);
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal");
         }
 
-        public static T FindAsset<T>(string path) where T : class
+        [MenuItem("GameObject/UI/Terminals/Terminal - Commands")]
+        public static void CreateTerminalUICommands()
         {
-            var name = Path.GetFileNameWithoutExtension(path);
-            var items = AssetDatabase.FindAssets($"{name} t:{typeof(T).Name}");
-            foreach (var item in items)
-            {
-                var assetPath = AssetDatabase.GUIDToAssetPath(item);
-                if (assetPath.EndsWith(path) == true)
-                {
-                    return AssetDatabase.LoadAssetAtPath(assetPath, typeof(T)) as T;
-                }
-            }
-            throw new ArgumentException($"cannot found asset: '{path}'", nameof(path));
+            var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalGridObj = CreateTerminal(canvas);
+            terminalGridObj.AddComponent<CommandContextHost>();
+            PrepareStyles(canvas);
+            InvokeTerminalCreated(terminalGridObj, TerminalCreation.Terminal | TerminalCreation.Commands);
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal - Commands");
         }
 
-        private static readonly Func<Type, Type> defaultTypeResolver = new Func<Type, Type>((type) => type);
+        [MenuItem("GameObject/UI/Terminals/Terminal Layout")]
+        public static void CreateTerminalUILayout()
+        {
+            var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalGridObj = CreateTerminalLayout(canvas);
+            InvokeTerminalCreated(terminalGridObj, TerminalCreation.Layout);
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Layout");
+        }
+
+        [MenuItem("GameObject/UI/Terminals/Terminal Full")]
+        public static void CreateTerminalUIFull()
+        {
+            var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalLayoutObj = CreateTerminalLayout(canvas);
+            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
+            var terminalGridObj = CreateTerminal(canvas);
+            rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
+            InvokeTerminalCreated(terminalGridObj, TerminalCreation.Terminal | TerminalCreation.Layout);
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Full");
+        }
+
+        [MenuItem("GameObject/UI/Terminals/Terminal Full - Commands")]
+        public static void CreateTerminalUIFullCommands()
+        {
+            var canvas = PrepareCanvas();
+            if (canvas == null)
+                throw new InvalidOperationException("cannot found Canvas.");
+            var terminalLayoutObj = CreateTerminalLayout(canvas);
+            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
+            var terminalGridObj = CreateTerminal(canvas);
+            rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
+            terminalGridObj.AddComponent<CommandContextHost>();
+            PrepareStyles(canvas);
+            InvokeTerminalCreated(terminalGridObj, TerminalCreation.Terminal | TerminalCreation.Layout | TerminalCreation.Terminal);
+            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Full - Commands");
+        }
 
         [MenuItem("Assets/Create/Terminal/Create Font Descriptor")]
         private static void CreateFontDescriptor()
@@ -133,63 +173,26 @@ namespace JSSoft.Unity.Terminal.Editor
             }
         }
 
-        [MenuItem("GameObject/UI/Terminals/Terminal")]
-        private static void CreateTerminalUI()
+        public static EventHandler<TerminalCreatedEventArgs> TerminalCreated;
+
+        internal static T FindAsset<T>(string path) where T : class
         {
-            var canvas = PrepareCanvas();
-            if (canvas == null)
-                throw new InvalidOperationException("cannot found Canvas.");
-            var terminalGridObj = CreateTerminal(canvas);
-            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal");
+            var name = Path.GetFileNameWithoutExtension(path);
+            var items = AssetDatabase.FindAssets($"{name} t:{typeof(T).Name}");
+            foreach (var item in items)
+            {
+                var assetPath = AssetDatabase.GUIDToAssetPath(item);
+                if (assetPath.EndsWith(path) == true)
+                {
+                    return AssetDatabase.LoadAssetAtPath(assetPath, typeof(T)) as T;
+                }
+            }
+            throw new ArgumentException($"cannot found asset: '{path}'", nameof(path));
         }
 
-        [MenuItem("GameObject/UI/Terminals/Terminal - Commands")]
-        private static void CreateTerminalUICommands()
+        private static void InvokeTerminalCreated(GameObject gameObject, TerminalCreation creation)
         {
-            var canvas = PrepareCanvas();
-            if (canvas == null)
-                throw new InvalidOperationException("cannot found Canvas.");
-            var terminalGridObj = CreateTerminal(canvas);
-            terminalGridObj.AddComponent<CommandContextHost>();
-            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal - Commands");
-        }
-
-        [MenuItem("GameObject/UI/Terminals/Terminal Layout")]
-        private static void CreateTerminalUILayout()
-        {
-            var canvas = PrepareCanvas();
-            if (canvas == null)
-                throw new InvalidOperationException("cannot found Canvas.");
-            var terminalLayoutObj = CreateTerminalLayout(canvas);
-            Undo.RegisterCreatedObjectUndo(terminalLayoutObj, "Create Terminal Layout");
-        }
-
-        [MenuItem("GameObject/UI/Terminals/Terminal Full")]
-        private static void CreateTerminalUIFull()
-        {
-            var canvas = PrepareCanvas();
-            if (canvas == null)
-                throw new InvalidOperationException("cannot found Canvas.");
-            var terminalLayoutObj = CreateTerminalLayout(canvas);
-            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
-            var terminalGridObj = CreateTerminal(canvas);
-            rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
-            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Full");
-        }
-
-        [MenuItem("GameObject/UI/Terminals/Terminal Full - Commands")]
-        private static void CreateTerminalUIFullCommands()
-        {
-            var canvas = PrepareCanvas();
-            if (canvas == null)
-                throw new InvalidOperationException("cannot found Canvas.");
-            var terminalLayoutObj = CreateTerminalLayout(canvas);
-            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
-            var terminalGridObj = CreateTerminal(canvas);
-            rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
-            terminalGridObj.AddComponent<CommandContextHost>();
-            PrepareStyles(canvas);
-            Undo.RegisterCreatedObjectUndo(terminalGridObj, "Create Terminal Full - Commands");
+            TerminalCreated?.Invoke(null, new TerminalCreatedEventArgs(gameObject, creation));
         }
 
         private static GameObject CreateTerminal(Canvas canvas)
@@ -203,23 +206,9 @@ namespace JSSoft.Unity.Terminal.Editor
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
             var font = FindAsset<TerminalFont>("Fonts/NanumGothicCoding.asset");
             var controller = FindAsset<RuntimeAnimatorController>("Animations/TerminalScrollbar/TerminalScrollbar.controller");
-            var types = new List<Type>()
-            {
-                { typeof(Terminal) },
-                { typeof(TerminalGrid) },
-                { typeof(TerminalBackground) },
-                { typeof(TerminalForeground) },
-                { typeof(TerminalForegroundItem) },
-                { typeof(TerminalComposition) },
-                { typeof(TerminalCompositionBackground) },
-                { typeof(TerminalCompositionForeground) },
-                { typeof(TerminalCursor) },
-                { typeof(TerminalScrollbar) },
-            };
-            var typeByType = CollectTypes(types);
 
-            var terminalGridObj = new GameObject(nameof(Terminal), typeByType[typeof(Terminal)]) { layer = canvas.gameObject.layer };
-            var terminalGrid = terminalGridObj.AddComponent(typeByType[typeof(TerminalGrid)]) as TerminalGrid;
+            var terminalGridObj = new GameObject(nameof(Terminal), typeof(Terminal)) { layer = canvas.gameObject.layer };
+            var terminalGrid = terminalGridObj.AddComponent(typeof(TerminalGrid)) as TerminalGrid;
             var terminal = terminalGrid.GetComponent<Terminal>();
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
@@ -234,7 +223,7 @@ namespace JSSoft.Unity.Terminal.Editor
             terminalGridRect.offsetMax = Vector2.zero;
 
             var backgroundObj = new GameObject(nameof(TerminalBackground)) { layer = canvas.gameObject.layer };
-            var background = backgroundObj.AddComponent(typeByType[typeof(TerminalBackground)]) as TerminalBackground;
+            var background = backgroundObj.AddComponent(typeof(TerminalBackground)) as TerminalBackground;
             var backgroundRect = background.rectTransform;
             background.material = new Material(Graphic.defaultGraphicMaterial);
             background.Grid = terminalGrid;
@@ -246,7 +235,7 @@ namespace JSSoft.Unity.Terminal.Editor
             backgroundRect.offsetMax = Vector2.zero;
 
             var cursorObj = new GameObject(nameof(TerminalCursor)) { layer = canvas.gameObject.layer };
-            var cursor = cursorObj.AddComponent(typeByType[typeof(TerminalCursor)]) as TerminalCursor;
+            var cursor = cursorObj.AddComponent(typeof(TerminalCursor)) as TerminalCursor;
             var cursorRect = cursor.rectTransform;
             cursor.material = new Material(Graphic.defaultGraphicMaterial);
             cursor.Grid = terminalGrid;
@@ -258,10 +247,10 @@ namespace JSSoft.Unity.Terminal.Editor
             cursorRect.offsetMax = Vector2.zero;
 
             var foregroundObj = new GameObject(nameof(TerminalForeground)) { layer = canvas.gameObject.layer };
-            var foreground = foregroundObj.AddComponent(typeByType[typeof(TerminalForeground)]) as TerminalForeground;
+            var foreground = foregroundObj.AddComponent(typeof(TerminalForeground)) as TerminalForeground;
             var foregroundRect = foregroundObj.GetComponent<RectTransform>();
             foreground.Grid = terminalGrid;
-            foreground.ItemType = typeByType[typeof(TerminalForegroundItem)].AssemblyQualifiedName;
+            foreground.ItemType = typeof(TerminalForegroundItem).AssemblyQualifiedName;
             foregroundRect.SetParent(terminalGridRect);
             foregroundRect.anchorMin = Vector3.zero;
             foregroundRect.anchorMax = Vector3.one;
@@ -270,7 +259,7 @@ namespace JSSoft.Unity.Terminal.Editor
             foregroundRect.offsetMax = Vector2.zero;
 
             var compositionObj = new GameObject(nameof(TerminalComposition)) { layer = canvas.gameObject.layer };
-            var composition = compositionObj.AddComponent(typeByType[typeof(TerminalComposition)]) as TerminalComposition;
+            var composition = compositionObj.AddComponent(typeof(TerminalComposition)) as TerminalComposition;
             var compositionRect = composition.GetComponent<RectTransform>();
             composition.Grid = terminalGrid;
             composition.ForegroundColor = terminalGrid.ForegroundColor;
@@ -283,7 +272,7 @@ namespace JSSoft.Unity.Terminal.Editor
             compositionRect.offsetMax = Vector2.zero;
 
             var compositionBackgroundObj = new GameObject("Background") { layer = canvas.gameObject.layer };
-            var compositionBackground = compositionBackgroundObj.AddComponent(typeByType[typeof(TerminalCompositionBackground)]) as TerminalCompositionBackground;
+            var compositionBackground = compositionBackgroundObj.AddComponent(typeof(TerminalCompositionBackground)) as TerminalCompositionBackground;
             var compositionBackgroundRect = compositionBackground.rectTransform;
             compositionBackground.Composition = composition;
             compositionBackgroundRect.SetParent(compositionRect);
@@ -294,7 +283,7 @@ namespace JSSoft.Unity.Terminal.Editor
             compositionBackgroundRect.offsetMax = Vector2.zero;
 
             var compositionForegroundObj = new GameObject("Foreground") { layer = canvas.gameObject.layer };
-            var compositionForeground = compositionForegroundObj.AddComponent(typeByType[typeof(TerminalCompositionForeground)]) as TerminalCompositionForeground;
+            var compositionForeground = compositionForegroundObj.AddComponent(typeof(TerminalCompositionForeground)) as TerminalCompositionForeground;
             var compositionForegroundRect = compositionForeground.rectTransform;
             compositionForeground.Composition = composition;
             compositionForegroundRect.SetParent(compositionRect);
@@ -304,7 +293,7 @@ namespace JSSoft.Unity.Terminal.Editor
             compositionForegroundRect.offsetMin = Vector2.zero;
             compositionForegroundRect.offsetMax = Vector2.zero;
 
-            var scrollbarObj = new GameObject(nameof(TerminalScrollbar), typeof(Image), typeByType[typeof(TerminalScrollbar)]) { layer = canvas.gameObject.layer };
+            var scrollbarObj = new GameObject(nameof(TerminalScrollbar), typeof(Image), typeof(TerminalScrollbar)) { layer = canvas.gameObject.layer };
             var scrollbar = scrollbarObj.GetComponent<TerminalScrollbar>();
             var animator = scrollbarObj.GetComponent<Animator>();
             var scrollbarImage = scrollbarObj.GetComponent<Image>();
@@ -502,19 +491,6 @@ namespace JSSoft.Unity.Terminal.Editor
                 stylesRect.SetParent(canvasRect);
             }
             return styles;
-        }
-
-        private static IDictionary<Type, Type> CollectTypes(IEnumerable<Type> types)
-        {
-            var typeByType = new Dictionary<Type, Type>(types.Count());
-            foreach (var item in types)
-            {
-                var type = TypeResolver(item);
-                if (type != item && type.IsSubclassOf(item) == false)
-                    throw new InvalidOperationException($"'{type}' is not subclass of '{item}'");
-                typeByType.Add(item, type);
-            }
-            return typeByType;
         }
 
         public static TerminalFontDescriptor CreateFontDescriptor(TextAsset fntAsset)
