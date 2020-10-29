@@ -29,6 +29,7 @@ namespace JSSoft.Unity.Terminal.Commands
     {
         public virtual IEnumerable<ICommand> Provide(ITerminal terminal, ICommandConfigurationProvider configurationProvider)
         {
+            yield return new VersionCommand();
             yield return new ResetCommand(terminal);
             yield return new InfoCommand(terminal);
             yield return new ExitCommand(terminal);

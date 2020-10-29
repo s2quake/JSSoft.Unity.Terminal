@@ -41,7 +41,5 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             return base.GetCompletion(items, find);
         }
-
-        protected override ICommand CreateVersionCommand() => this.versionCommand;
     }
 }
