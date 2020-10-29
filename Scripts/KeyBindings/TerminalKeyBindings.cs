@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -114,7 +115,7 @@ namespace JSSoft.Unity.Terminal.KeyBindings
                 var pattern = @"\w(?<=\b)|$";
                 var matches = Regex.Matches(command, pattern).Cast<Match>();
                 var match = matches.Where(item => item.Index > index).First();
-                terminal.CursorPosition = match.Index + 1;
+                terminal.CursorPosition = Math.Min(command.Length, match.Index + 1);
             }
             return terminal.CursorPosition;
         }
