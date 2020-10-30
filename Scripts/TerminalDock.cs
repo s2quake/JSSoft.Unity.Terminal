@@ -20,31 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using JSSoft.Library.Commands;
-using System.Collections.Generic;
+using System;
+using System.ComponentModel;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
-namespace JSSoft.Unity.Terminal.Commands
+namespace JSSoft.Unity.Terminal
 {
-    public class CommandProvider : ICommandProvider
+    public enum TerminalDock
     {
-        public virtual IEnumerable<ICommand> Provide(ITerminal terminal, ICommandConfigurationProvider configurationProvider)
-        {
-            yield return new VersionCommand();
-            yield return new ResetCommand(terminal);
-            yield return new InfoCommand(terminal);
-            yield return new ExitCommand(terminal);
-            yield return new VerboseCommand(terminal);
-            yield return new ResolutionCommand(terminal);
-            yield return new PingCommand(terminal);
-            yield return new StyleCommand(terminal);
-            yield return new InternetProtocolCommand(terminal);
-            yield return new SceneCommand(terminal);
-            yield return new DateCommand(terminal);
-            yield return new GameObjectCommand(terminal);
-            yield return new ComponentCommand(terminal);
-            yield return new TerminalCommand(terminal);
+        None,
 
-            yield return new ConfigCommand(terminal, configurationProvider);
-        }
+        Left,
+
+        Top,
+
+        Right,
+
+        Bottom
     }
 }
