@@ -53,16 +53,42 @@ namespace JSSoft.Unity.Terminal.Commands
         // }
 
         [CommandMethod]
-        public void Dock(TerminalDock dock)
+        [CommandMethodProperty(nameof(Length), nameof(Ratio))]
+        public void Dock(TerminalDock? dock = null)
         {
             if (this.DockController is TerminalDockController controller && controller.enabled == true)
             {
-                controller.Dock = dock;
+                if (dock != null)
+                    controller.Dock = dock.Value;
+                if (this.Length != null)
+                {
+                    controller.IsRatio = false;
+                    controller.Length = this.Length.Value;
+                }
+                else if (this.Ratio != null)
+                {
+                    controller.IsRatio = true;
+                    controller.Ratio = this.Ratio.Value;
+                }
             }
             else
             {
                 throw new NotImplementedException();
             }
+        }
+
+        [CommandProperty]
+        [CommandPropertyTrigger(nameof(Ratio), null)]
+        public int? Length
+        {
+            get; set;
+        }
+
+        [CommandProperty]
+        [CommandPropertyTrigger(nameof(Length), null)]
+        public float? Ratio
+        {
+            get; set;
         }
 
         public string[] CompleteDock(CommandMemberDescriptor descriptor, string find)

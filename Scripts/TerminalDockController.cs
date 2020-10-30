@@ -103,7 +103,6 @@ namespace JSSoft.Unity.Terminal
         protected override void OnValidate()
         {
             base.OnValidate();
-            // this.SetDirty();
             this.UpdateLayout();
         }
 
@@ -111,7 +110,9 @@ namespace JSSoft.Unity.Terminal
         {
             var layout = this.GetComponent<HorizontalOrVerticalLayoutGroup>();
             var rect = this.GetComponent<RectTransform>();
-            var size = rect.sizeDelta;
+            var size = rect.rect.size;
+            if (size == Vector2.zero)
+                return;
             if (this.isRatio == true)
                 size *= (1.0f - this.ratio);
             else
