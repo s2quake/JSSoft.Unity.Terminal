@@ -52,14 +52,14 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandPropertySwitch("list")]
         [CommandPropertyTrigger(nameof(SceneName), "")]
-        public bool ListSwitch { get; set; }
+        public bool IsList { get; set; }
 
         [CommandPropertyRequired(DefaultValue = "")]
         public string SceneName { get; set; }
 
         protected override void OnExecute()
         {
-            if (this.ListSwitch == true)
+            if (this.IsList == true)
             {
                 this.ShowSceneList();
             }
