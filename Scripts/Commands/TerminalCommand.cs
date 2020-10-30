@@ -36,22 +36,6 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        // public override string[] GetCompletions(CommandMethodDescriptor methodDescriptor, CommandMemberDescriptor memberDescriptor, string find)
-        // {
-        //     if (memberDescriptor.DescriptorName == "path")
-        //     {
-        //         try
-        //         {
-        //             return GameObjectUtility.GetPathCompletions(find);
-        //         }
-        //         catch
-        //         {
-        //             return null;
-        //         }
-        //     }
-        //     return base.GetCompletions(methodDescriptor, memberDescriptor, find);
-        // }
-
         [CommandMethod]
         [CommandMethodProperty(nameof(Length), nameof(Ratio))]
         public void Dock(TerminalDock? dock = null)
@@ -69,6 +53,14 @@ namespace JSSoft.Unity.Terminal.Commands
                 {
                     controller.IsRatio = true;
                     controller.Ratio = this.Ratio.Value;
+                }
+                else if (dock == null && this.Length == null && this.Ratio == null)
+                {
+                    this.WriteLine($"dock: {controller.Dock.ToString().ToLower()}");
+                    if (controller.IsRatio == true)
+                        this.WriteLine($"ratio: {controller.Ratio}");
+                    else
+                        this.WriteLine($"length: {controller.Length}");
                 }
             }
             else

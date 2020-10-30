@@ -388,6 +388,7 @@ namespace JSSoft.Unity.Terminal.Editor
             var terminalHostVertLayout = terminalHostObj.GetComponent<VerticalLayoutGroup>();
             var terminalHostRect = terminalHostObj.GetComponent<RectTransform>();
             var terminalHostLayoutElement = terminalHostObj.GetComponent<LayoutElement>();
+            var terminalDockController = terminalHostObj.AddComponent<TerminalDockController>();
             terminalHostVertLayout.spacing = 2;
             terminalHostVertLayout.childControlWidth = true;
             terminalHostVertLayout.childControlHeight = true;

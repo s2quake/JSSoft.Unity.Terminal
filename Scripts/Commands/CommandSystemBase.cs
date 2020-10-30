@@ -92,12 +92,17 @@ namespace JSSoft.Unity.Terminal.Commands
             var commandContext = GetComponent<CommandContextHost>();
             var terminalGrid = commandContext.Grid;
             terminalGrid.LayoutChanged -= TerminalGrid_LayoutChanged;
+            this.OnStateSave();
+        }
+
+        protected virtual void OnStateSave()
+        {
+            var commandContext = GetComponent<CommandContextHost>();
+            var terminalGrid = commandContext.Grid;
             dataByName[this.name] = terminalGrid.Save();
         }
 
-        protected abstract IEnumerable<ICommand> OnCommandProvide(ITerminal terminal);
-
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        protected virtual void OnStateLoad()
         {
             var commandContext = GetComponent<CommandContextHost>();
             var terminalGrid = commandContext.Grid;
@@ -105,6 +110,13 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 terminalGrid.Load(dataByName[this.name]);
             }
+        }
+
+        protected abstract IEnumerable<ICommand> OnCommandProvide(ITerminal terminal);
+
+        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
+        {
+            this.OnStateLoad();
         }
 
         #region ICommandProvider

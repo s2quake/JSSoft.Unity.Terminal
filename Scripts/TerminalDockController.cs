@@ -44,6 +44,26 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private bool isRatio = true;
 
+        public DockData Save()
+        {
+            return new DockData()
+            {
+                Dock = this.dock,
+                Ratio = this.ratio,
+                Length = this.length,
+                IsRatio = this.isRatio,
+            };
+        }
+
+        public void Load(DockData data)
+        {
+            this.dock = data.Dock;
+            this.ratio = data.Ratio;
+            this.length = data.Length;
+            this.isRatio = data.IsRatio;
+            this.UpdateLayout();
+        }
+
         [FieldName(nameof(dock))]
         public TerminalDock Dock
         {
@@ -100,6 +120,12 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        protected override void OnRectTransformDimensionsChange()
+        {
+            base.OnRectTransformDimensionsChange();
+            this.UpdateLayout();
+        }
+
         internal void UpdateLayout()
         {
             var layout = this.GetComponent<HorizontalOrVerticalLayoutGroup>();
@@ -140,5 +166,20 @@ namespace JSSoft.Unity.Terminal
                     break;
             }
         }
+
+        #region DockData
+
+        public struct DockData
+        {
+            public TerminalDock Dock { get; set; }
+
+            public float Ratio { get; set; }
+
+            public int Length { get; set; }
+
+            public bool IsRatio { get; set; }
+        }
+
+        #endregion
     }
 }
