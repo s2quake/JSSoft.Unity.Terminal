@@ -26,9 +26,8 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.VersionCommand.Summary)]
-    [CommandSummary(CommandStrings.VersionCommand.Summary_ko_KR, Locale = "ko-KR")]
     [VersionCommand]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class VersionCommand : CommandBase
     {
         protected override void OnExecute()

@@ -24,8 +24,7 @@ using JSSoft.Library.Commands;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ExitCommand.Summary)]
-    [CommandSummary(CommandStrings.ExitCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class ExitCommand : TerminalCommandBase
     {
         public ExitCommand(ITerminal terminal)
@@ -33,8 +32,6 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        [CommandSummary(CommandStrings.ExitCommand.ExitCode.Summary)]
-        [CommandSummary(CommandStrings.ExitCommand.ExitCode.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = 0)]
         public int ExitCode { get; set; }
 

@@ -24,8 +24,7 @@ using JSSoft.Library.Commands;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.VerboseCommand.Summary)]
-    [CommandSummary(CommandStrings.VerboseCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class VerboseCommand : TerminalCommandBase
     {
         public VerboseCommand(ITerminal terminal)
@@ -33,8 +32,6 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        [CommandSummary(CommandStrings.VerboseCommand.Value.Summary)]
-        [CommandSummary(CommandStrings.VerboseCommand.Value.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = null)]
         public bool? Value { get; set; }
 

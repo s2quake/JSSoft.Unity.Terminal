@@ -30,8 +30,7 @@ using UnityEngine.SceneManagement;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.SceneCommand.Summary)]
-    [CommandSummary(CommandStrings.SceneCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class SceneCommand : TerminalCommandBase
     {
         public SceneCommand(ITerminal terminal)
@@ -51,14 +50,10 @@ namespace JSSoft.Unity.Terminal.Commands
             return null;
         }
 
-        [CommandSummary(CommandStrings.SceneCommand.IsList.Summary)]
-        [CommandSummary(CommandStrings.SceneCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertySwitch("list")]
         [CommandPropertyTrigger(nameof(SceneName), "")]
         public bool ListSwitch { get; set; }
 
-        [CommandSummary(CommandStrings.SceneCommand.SceneName.Summary)]
-        [CommandSummary(CommandStrings.SceneCommand.SceneName.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = "")]
         public string SceneName { get; set; }
 

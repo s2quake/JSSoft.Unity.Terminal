@@ -30,9 +30,7 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ResolutionCommand.Summary)]
-    [CommandSummary(CommandStrings.ResolutionCommand.Summary_ko_KR, Locale = "ko-KR")]
-    [CommandExample(CommandStrings.ResolutionCommand.Example)]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class ResolutionCommand : TerminalCommandBase
     {
         private const string fullPattern = @"(\d+)\s*x\s*(\d+)\s*@\s*(\d+)\s*(?:hz)?";
@@ -43,28 +41,20 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        [CommandSummary(CommandStrings.ResolutionCommand.Resolution.Summary)]
-        [CommandSummary(CommandStrings.ResolutionCommand.Resolution.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = "")]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public string Resolution { get; set; }
 
-        [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary)]
-        [CommandSummary(CommandStrings.ResolutionCommand.IsWindowMode.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertySwitch("window")]
         [CommandPropertyTrigger(nameof(IsFullScreen), false)]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public bool IsWindowMode { get; set; }
 
-        [CommandSummary(CommandStrings.ResolutionCommand.IsFullScreen.Summary)]
-        [CommandSummary(CommandStrings.ResolutionCommand.IsFullScreen.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertySwitch("full")]
         [CommandPropertyTrigger(nameof(IsWindowMode), false)]
         [CommandPropertyTrigger(nameof(IsList), false)]
         public bool IsFullScreen { get; set; }
 
-        [CommandSummary(CommandStrings.ResolutionCommand.IsList.Summary)]
-        [CommandSummary(CommandStrings.ResolutionCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertySwitch("list")]
         public bool IsList { get; set; }
 

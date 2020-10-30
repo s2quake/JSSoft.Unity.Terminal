@@ -30,8 +30,7 @@ using System.Text;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ConfigCommand.Summary)]
-    [CommandSummary(CommandStrings.ConfigCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class ConfigCommand : TerminalCommandBase
     {
         private readonly ICommandConfigurationProvider provider;
@@ -65,25 +64,17 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandPropertyRequired(DefaultValue = "")]
-        [CommandSummary(CommandStrings.ConfigCommand.ConfigName.Summary)]
-        [CommandSummary(CommandStrings.ConfigCommand.ConfigName.Summary_ko_KR, Locale = "ko-KR")]
         public string ConfigName { get; set; }
 
         [CommandPropertyRequired(DefaultValue = "")]
-        [CommandSummary(CommandStrings.ConfigCommand.Value.Summary)]
-        [CommandSummary(CommandStrings.ConfigCommand.Value.Summary_ko_KR, Locale = "ko-KR")]
         public string Value { get; set; }
 
         [CommandProperty("list", DefaultValue = "")]
         [CommandPropertyTrigger(nameof(ConfigName), "")]
-        [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary)]
-        [CommandSummary(CommandStrings.ConfigCommand.ListSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public string ListPattern { get; set; }
 
         [CommandPropertySwitch("reset")]
         [CommandPropertyTrigger(nameof(ListPattern), null)]
-        [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary)]
-        [CommandSummary(CommandStrings.ConfigCommand.ResetSwitch.Summary_ko_KR, Locale = "ko-KR")]
         public bool ResetSwitch { get; set; }
 
         protected override void OnExecute()

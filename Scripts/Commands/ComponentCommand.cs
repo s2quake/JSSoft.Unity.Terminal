@@ -27,8 +27,7 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ComponentCommand.Summary)]
-    [CommandSummary(CommandStrings.ComponentCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class ComponentCommand : TerminalCommandMethodBase
     {
         public ComponentCommand(ITerminal terminal)
@@ -53,13 +52,7 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod]
-        [CommandSummary(CommandStrings.ComponentCommand.Add.Summary)]
-        [CommandSummary(CommandStrings.ComponentCommand.Add.Summary_ko_KR, Locale = "ko-KR")]
-        public void Add(
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            string componentType)
+        public void Add(string path, string componentType)
         {
             var gameObject = GameObjectUtility.GetGameObject(path);
             var type = Type.GetType(componentType);
@@ -69,30 +62,14 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "rm" })]
-        [CommandSummary(CommandStrings.ComponentCommand.Remove.Summary)]
-        [CommandSummary(CommandStrings.ComponentCommand.Remove.Summary_ko_KR, Locale = "ko-KR")]
-        public void Remove(
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary_ko_KR, Locale = "ko-KR")]
-            int index)
+        public void Remove(string path, int index)
         {
             var component = GameObjectUtility.GetComponent(path, index);
             Component.DestroyImmediate(component);
         }
 
         [CommandMethod(Aliases = new string[] { "on" })]
-        [CommandSummary(CommandStrings.ComponentCommand.Activate.Summary)]
-        [CommandSummary(CommandStrings.ComponentCommand.Activate.Summary_ko_KR, Locale = "ko-KR")]
-        public void Activate(
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary_ko_KR, Locale = "ko-KR")]
-            int index)
+        public void Activate(string path, int index)
         {
             var component = GameObjectUtility.GetComponent(path, index);
             if (component is Behaviour behaviour)
@@ -106,15 +83,7 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "off" })]
-        [CommandSummary(CommandStrings.ComponentCommand.Deactivate.Summary)]
-        [CommandSummary(CommandStrings.ComponentCommand.Deactivate.Summary_ko_KR, Locale = "ko-KR")]
-        public void Deactivate(
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Index.Summary_ko_KR, Locale = "ko-KR")]
-            int index)
+        public void Deactivate(string path, int index)
         {
             var component = GameObjectUtility.GetComponent(path, index);
             if (component is Behaviour behaviour)
@@ -128,12 +97,7 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod("list", Aliases = new string[] { "ls" })]
-        [CommandSummary(CommandStrings.ComponentCommand.ShowList.Summary)]
-        [CommandSummary(CommandStrings.ComponentCommand.ShowList.Summary_ko_KR, Locale = "ko-KR")]
-        public void ShowList(
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.ComponentCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path = "")
+        public void ShowList(string path = "")
         {
             var sb = new StringBuilder();
             var components = GameObjectUtility.GetComponents(path);

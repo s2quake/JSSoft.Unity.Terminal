@@ -29,8 +29,7 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.InfoCommand.Summary)]
-    [CommandSummary(CommandStrings.InfoCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class InfoCommand : TerminalCommandBase
     {
         private static readonly Dictionary<string, Func<string, string>> actions;
@@ -77,8 +76,6 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        [CommandSummary(CommandStrings.InfoCommand.PropertyName.Summary)]
-        [CommandSummary(CommandStrings.InfoCommand.PropertyName.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = "")]
         public string PropertyName
         {

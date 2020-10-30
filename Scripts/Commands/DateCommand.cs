@@ -26,8 +26,7 @@ using JSSoft.Library.Commands;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.DateCommand.Summary)]
-    [CommandSummary(CommandStrings.DateCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class DateCommand : TerminalCommandBase
     {
         public DateCommand(ITerminal terminal)
@@ -36,18 +35,12 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandProperty]
-        [CommandSummary(CommandStrings.DateCommand.Format.Summary)]
-        [CommandSummary(CommandStrings.DateCommand.Format.Summary_ko_KR, Locale = "ko-KR")]
         public string Format { get; set; }
 
         [CommandProperty]
-        [CommandSummary(CommandStrings.DateCommand.Locale.Summary)]
-        [CommandSummary(CommandStrings.DateCommand.Locale.Summary_ko_KR, Locale = "ko-KR")]
         public string Locale { get; set; }
 
         [CommandPropertySwitch]
-        [CommandSummary(CommandStrings.DateCommand.UTC.Summary)]
-        [CommandSummary(CommandStrings.DateCommand.UTC.Summary_ko_KR, Locale = "ko-KR")]
         public bool UTC { get; set; }
 
         protected override void OnExecute()

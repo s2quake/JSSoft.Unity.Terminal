@@ -31,8 +31,7 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.PingCommand.Summary)]
-    [CommandSummary(CommandStrings.PingCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class PingCommand : TerminalCommandAsyncBase
     {
         private const string ipPattern = @"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
@@ -43,24 +42,18 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        [CommandSummary(CommandStrings.PingCommand.Address.Summary)]
-        [CommandSummary(CommandStrings.PingCommand.Address.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired]
         public string Address
         {
             get; set;
         }
 
-        [CommandSummary(CommandStrings.PingCommand.Count.Summary)]
-        [CommandSummary(CommandStrings.PingCommand.Count.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty(InitValue = 3)]
         public int Count
         {
             get; set;
         }
 
-        [CommandSummary(CommandStrings.PingCommand.Timeout.Summary)]
-        [CommandSummary(CommandStrings.PingCommand.Timeout.Summary_ko_KR, Locale = "ko-KR")]
         [CommandProperty('w', InitValue = 4000)]
         public int Timeout
         {

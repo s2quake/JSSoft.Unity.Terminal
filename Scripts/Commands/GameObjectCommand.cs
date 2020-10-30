@@ -34,8 +34,7 @@ using UnityEngine.SceneManagement;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.GameObjectCommand.Summary)]
-    [CommandSummary(CommandStrings.GameObjectCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class GameObjectCommand : TerminalCommandMethodBase
     {
         public GameObjectCommand(ITerminal terminal)
@@ -60,15 +59,7 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "new" })]
-        [CommandSummary(CommandStrings.GameObjectCommand.Create.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.Create.Summary_ko_KR, Locale = "ko-KR")]
-        public void Create(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            [CommandSummary(CommandStrings.GameObjectCommand.Name.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Name.Summary_ko_KR, Locale = "ko-KR")]
-            string name)
+        public void Create(string path, string name)
         {
             var parentObject = GameObjectUtility.Get(path);
             var gameObject = new GameObject(name);
@@ -76,30 +67,14 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "ren" })]
-        [CommandSummary(CommandStrings.GameObjectCommand.Rename.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.Rename.Summary_ko_KR, Locale = "ko-KR")]
-        public void Rename(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            [CommandSummary(CommandStrings.GameObjectCommand.NewName.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.NewName.Summary_ko_KR, Locale = "ko-KR")]
-            string newName)
+        public void Rename(string path, string newName)
         {
             var gameObject = GameObjectUtility.GetGameObject(path);
             gameObject.name = newName;
         }
 
         [CommandMethod(Aliases = new string[] { "mv" })]
-        [CommandSummary(CommandStrings.GameObjectCommand.Move.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.Move.Summary_ko_KR, Locale = "ko-KR")]
-        public void Move(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path,
-            [CommandSummary(CommandStrings.GameObjectCommand.ParentPath.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.ParentPath.Summary_ko_KR, Locale = "ko-KR")]
-            string parentPath)
+        public void Move(string path, string parentPath)
         {
             var gameObject = GameObjectUtility.GetGameObject(path);
             var parentObject = GameObjectUtility.Get(parentPath);
@@ -107,36 +82,21 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod(Aliases = new string[] { "rm" })]
-        [CommandSummary(CommandStrings.GameObjectCommand.Delete.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.Delete.Summary_ko_KR, Locale = "ko-KR")]
-        public void Delete(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path)
+        public void Delete(string path)
         {
             var gameObject = GameObjectUtility.GetGameObject(path);
             GameObject.DestroyImmediate(gameObject);
         }
 
         [CommandMethod(Aliases = new string[] { "on" })]
-        [CommandSummary(CommandStrings.GameObjectCommand.Activate.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.Activate.Summary_ko_KR, Locale = "ko-KR")]
-        public void Activate(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path)
+        public void Activate(string path)
         {
             var gameObject = GameObjectUtility.GetGameObject(path);
             gameObject.SetActive(true);
         }
 
         [CommandMethod(Aliases = new string[] { "off" })]
-        [CommandSummary(CommandStrings.GameObjectCommand.Deactivate.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.Deactivate.Summary_ko_KR, Locale = "ko-KR")]
-        public void Deactivate(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path)
+        public void Deactivate(string path)
         {
             var gameObject = GameObjectUtility.GetGameObject(path);
             gameObject.SetActive(false);
@@ -144,12 +104,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [CommandMethod("list", Aliases = new string[] { "ls" })]
         [CommandMethodProperty(nameof(IsRecursive))]
-        [CommandSummary(CommandStrings.GameObjectCommand.ShowList.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.ShowList.Summary_ko_KR, Locale = "ko-KR")]
-        public void ShowList(
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary)]
-            [CommandSummary(CommandStrings.GameObjectCommand.Path.Summary_ko_KR, Locale = "ko-KR")]
-            string path = "/")
+        public void ShowList(string path = "/")
         {
             var sb = new StringBuilder();
             var obj = GameObjectUtility.Find(path);
@@ -159,8 +114,6 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandPropertySwitch("recursive", 'r')]
-        [CommandSummary(CommandStrings.GameObjectCommand.IsRecursive.Summary)]
-        [CommandSummary(CommandStrings.GameObjectCommand.IsRecursive.Summary_ko_KR, Locale = "ko-KR")]
         public bool IsRecursive
         {
             get; set;

@@ -24,8 +24,7 @@ using JSSoft.Library.Commands;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.InternetProtocolCommand.Summary)]
-    [CommandSummary(CommandStrings.InternetProtocolCommand.Summary_ko_KR)]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class InternetProtocolCommand : TerminalCommandBase
     {
         public InternetProtocolCommand(ITerminal terminal)

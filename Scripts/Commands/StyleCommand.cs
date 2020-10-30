@@ -27,8 +27,7 @@ using System.Linq;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.StyleCommand.Summary)]
-    [CommandSummary(CommandStrings.StyleCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class StyleCommand : TerminalCommandBase
     {
         public StyleCommand(ITerminal terminal)
@@ -48,22 +47,16 @@ namespace JSSoft.Unity.Terminal.Commands
             return null;
         }
 
-        [CommandSummary(CommandStrings.StyleCommand.IsList.Summary)]
-        [CommandSummary(CommandStrings.StyleCommand.IsList.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertySwitch("list")]
         [CommandPropertyTrigger(nameof(IsRemove), false)]
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsList { get; set; }
 
-        [CommandSummary(CommandStrings.StyleCommand.IsRemove.Summary)]
-        [CommandSummary(CommandStrings.StyleCommand.IsRemove.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertySwitch("remove")]
         [CommandPropertyTrigger(nameof(IsList), false)]
         [CommandPropertyTrigger(nameof(StyleName), "")]
         public bool IsRemove { get; set; }
 
-        [CommandSummary(CommandStrings.StyleCommand.StyleName.Summary)]
-        [CommandSummary(CommandStrings.StyleCommand.StyleName.Summary_ko_KR, Locale = "ko-KR")]
         [CommandPropertyRequired(DefaultValue = "")]
         public string StyleName { get; set; }
 

@@ -24,8 +24,7 @@ using JSSoft.Library.Commands;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
-    [CommandSummary(CommandStrings.ResetCommand.Summary)]
-    [CommandSummary(CommandStrings.ResetCommand.Summary_ko_KR, Locale = "ko-KR")]
+    [UsageDescriptionProvider(typeof(CommandUsageDescriptionProvider))]
     public class ResetCommand : TerminalCommandBase
     {
         public ResetCommand(ITerminal terminal)
