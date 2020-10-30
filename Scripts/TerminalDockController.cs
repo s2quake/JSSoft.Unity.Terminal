@@ -100,13 +100,7 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        protected override void OnValidate()
-        {
-            base.OnValidate();
-            this.UpdateLayout();
-        }
-
-        private void UpdateLayout()
+        internal void UpdateLayout()
         {
             var layout = this.GetComponent<HorizontalOrVerticalLayoutGroup>();
             var rect = this.GetComponent<RectTransform>();

@@ -32,17 +32,21 @@ namespace JSSoft.Unity.Terminal.Editor
 
         public override void OnInspectorGUI()
         {
-            this.notifier.Begin();
-            this.notifier.PropertyField(nameof(TerminalDockController.Dock));
-            this.notifier.PropertyField(nameof(TerminalDockController.IsRatio));
             if (this.serializedObject.targetObject is TerminalDockController controller)
             {
+                this.notifier.Begin();
+                this.notifier.PropertyField(nameof(TerminalDockController.Dock));
+                this.notifier.PropertyField(nameof(TerminalDockController.IsRatio));
                 if (controller.IsRatio == true)
                     this.notifier.PropertyField(nameof(TerminalDockController.Ratio));
                 else
                     this.notifier.PropertyField(nameof(TerminalDockController.Length));
+                this.notifier.End();
+                if (this.notifier.IsModified == true)
+                {
+                    controller.UpdateLayout();
+                }
             }
-            this.notifier.End();
         }
 
         protected virtual void OnEnable()
