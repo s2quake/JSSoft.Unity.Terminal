@@ -89,7 +89,8 @@ namespace JSSoft.Unity.Terminal.Commands
 
         protected override void OnDisable()
         {
-            Console.SetOut(this.consoleWriter);
+            if (this.consoleWriter != null)
+                Console.SetOut(this.consoleWriter);
             base.OnDisable();
         }
 

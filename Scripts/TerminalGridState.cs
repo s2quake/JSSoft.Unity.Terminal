@@ -43,14 +43,12 @@ namespace JSSoft.Unity.Terminal
             base.Awake();
             var terminalGrid = GetComponent<TerminalGridBase>();
             terminalGrid.LayoutChanged += TerminalGrid_LayoutChanged;
-            terminalGrid.Disabled += TerminalGrid_Disabled;
         }
 
         protected override void OnDestroy()
         {
             var terminalGrid = GetComponent<TerminalGridBase>();
             terminalGrid.LayoutChanged -= TerminalGrid_LayoutChanged;
-            terminalGrid.Disabled -= TerminalGrid_Disabled;
             this.OnStateSave();
             base.OnDestroy();
         }
@@ -74,11 +72,6 @@ namespace JSSoft.Unity.Terminal
         private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
         {
             this.OnStateLoad();
-        }
-
-        private void TerminalGrid_Disabled(object sender, EventArgs e)
-        {
-            this.OnStateSave();
         }
     }
 }

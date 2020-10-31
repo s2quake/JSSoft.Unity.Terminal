@@ -22,12 +22,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace JSSoft.Unity.Terminal
 {
     [RequireComponent(typeof(TerminalDockController))]
+    [DefaultExecutionOrder(int.MaxValue)]
     public class TerminalDockControllerState : TerminalStateBase
     {
         public TerminalDockControllerState()

@@ -354,7 +354,10 @@ namespace JSSoft.Unity.Terminal
 
             if (this.bufferWidth != data.BufferWidth || this.bufferHeight != data.BufferHeight)
             {
-                Debug.LogWarning($"BufferWidth or BufferHeight mismatch. Some data loads are ignored.");
+                // var sb = new StringBuilder();
+                // sb.AppendLine($"BufferWidth or BufferHeight mismatch. Some data loads are ignored.");
+                // sb.AppendLine($"width : {this.bufferWidth} != {data.BufferWidth}, height: {this.bufferHeight} != {data.BufferHeight}");
+                // Debug.LogWarning(sb.ToString());
             }
             else
             {

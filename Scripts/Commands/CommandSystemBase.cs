@@ -63,12 +63,14 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public void RemoveConfigs(object instance)
         {
-            this.configs.RemoveInstance(instance);
+            if (instance != null)
+                this.configs.RemoveInstance(instance);
         }
 
         public void RemoveConfigs(object instance, string instanceName)
         {
-            this.configs.RemoveInstance(instance, instanceName);
+            if (instance != null)
+                this.configs.RemoveInstance(instance, instanceName);
         }
 
         protected virtual void Awake()
