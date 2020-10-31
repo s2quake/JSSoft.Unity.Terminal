@@ -67,6 +67,7 @@ namespace JSSoft.Unity.Terminal
             if (this.TryGetState<TerminalGridData>(out var state))
             {
                 terminalGrid.Load(state);
+                this.ResetState();
             }
         }
 

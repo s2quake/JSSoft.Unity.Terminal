@@ -42,6 +42,7 @@ namespace JSSoft.Unity.Terminal
             if (this.TryGetState<TerminalDockController.DockData>(out var state) == true)
             {
                 controller.Load(state);
+                this.ResetState();
             }
         }
 
