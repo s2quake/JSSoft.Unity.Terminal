@@ -29,10 +29,10 @@ using UnityEngine.SceneManagement;
 namespace JSSoft.Unity.Terminal.Commands
 {
     [RequireComponent(typeof(CommandContextHost))]
+    [RequireComponent(typeof(TerminalGridState))]
     [DefaultExecutionOrder(int.MaxValue)]
     public abstract class CommandSystemBase : MonoBehaviour, ICommandProvider, ICommandConfigurationProvider
     {
-        private readonly static Dictionary<string, TerminalGridData> dataByName = new Dictionary<string, TerminalGridData>();
         private readonly CommandConfigurationProvider configs = new CommandConfigurationProvider();
         private readonly CommandProvider commands = new CommandProvider();
 
@@ -77,7 +77,6 @@ namespace JSSoft.Unity.Terminal.Commands
             var terminalGrid = commandContext.Grid;
             commandContext.CommandProvider = this;
             commandContext.ConfigurationProvider = this;
-            terminalGrid.LayoutChanged += TerminalGrid_LayoutChanged;
         }
 
         protected virtual void OnEnable()
@@ -91,33 +90,9 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             var commandContext = GetComponent<CommandContextHost>();
             var terminalGrid = commandContext.Grid;
-            terminalGrid.LayoutChanged -= TerminalGrid_LayoutChanged;
-            this.OnStateSave();
-        }
-
-        protected virtual void OnStateSave()
-        {
-            var commandContext = GetComponent<CommandContextHost>();
-            var terminalGrid = commandContext.Grid;
-            dataByName[this.name] = terminalGrid.Save();
-        }
-
-        protected virtual void OnStateLoad()
-        {
-            var commandContext = GetComponent<CommandContextHost>();
-            var terminalGrid = commandContext.Grid;
-            if (dataByName.ContainsKey(this.name) == true)
-            {
-                terminalGrid.Load(dataByName[this.name]);
-            }
         }
 
         protected abstract IEnumerable<ICommand> OnCommandProvide(ITerminal terminal);
-
-        private void TerminalGrid_LayoutChanged(object sender, EventArgs e)
-        {
-            this.OnStateLoad();
-        }
 
         #region ICommandProvider
 
