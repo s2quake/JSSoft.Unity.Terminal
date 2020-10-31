@@ -243,7 +243,14 @@ namespace JSSoft.Unity.Terminal
             var value2 = (float)(this.grid.MaximumVisibleIndex - this.grid.MinimumVisibleIndex);
             var value = value1 * value2;
             this.isScrolling = true;
-            this.grid.VisibleIndex = (int)value + this.grid.MinimumVisibleIndex;
+            try
+            {
+                this.grid.VisibleIndex = (int)value + this.grid.MinimumVisibleIndex;
+            }
+            catch
+            {
+                
+            }
             this.isScrolling = false;
         }
 
