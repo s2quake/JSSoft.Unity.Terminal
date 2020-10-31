@@ -61,6 +61,8 @@ namespace JSSoft.Unity.Terminal.Commands
             var type = methodInfo.DeclaringType;
             var name = methodInfo.Name;
             var id = $"Example:{type.Name}.{name}";
+            if (type.DeclaringType != null)
+                id = $"{type.DeclaringType.Name}.{id}";
             return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
         }
 
@@ -75,6 +77,8 @@ namespace JSSoft.Unity.Terminal.Commands
             var type = propertyInfo.DeclaringType;
             var name = propertyInfo.Name;
             var id = $"{type.Name}.{name}";
+            if (type.DeclaringType != null)
+                id = $"{type.DeclaringType.Name}.{id}";
             return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
         }
 
@@ -92,6 +96,8 @@ namespace JSSoft.Unity.Terminal.Commands
             var type = methodInfo.DeclaringType;
             var name = methodInfo.Name;
             var id = $"{type.Name}.{name}";
+            if (type.DeclaringType != null)
+                id = $"{type.DeclaringType.Name}.{id}";
             return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
         }
     }

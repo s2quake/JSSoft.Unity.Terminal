@@ -111,6 +111,15 @@ resolution 1024x768@60hz" },
                 { "GameObjectCommand.NewName", "Specifies the new name of the GameObject to change." },
                 { "GameObjectCommand.ParentPath", "Specifies the path of the GameObject to be moved." },
                 { "GameObjectCommand.IsRecursive", "Recursively displays a list of child objects." },
+                { "TerminalCommand", "Provides commands for the terminal." },
+                { "TerminalCommand.Dock", "Specify the settings for where the terminal is docked." },
+                { "TerminalCommand.Dock.dock", "Specifies the type of terminal docking. [none, left, top, right, bottom]" },
+                { "DockProperties.Ratio", "Specifies the percentage(0 ~ 1) of terminals docked on the screen." },
+                { "DockProperties.Length", "Specifies the length of the docked terminal." },
+                { "TerminalCommand.Style", "Change terminal style." },
+                { "StyleProperties.IsList", "Displays a list of supported styles." },
+                { "StyleProperties.IsRemove", "Removes the currently applied style." },
+                { "StyleProperties.StyleName", "Specifies the name of the style to apply. If not specified, displays the name of the currently applied style." },
             });
 
             stringsByLocale.Add("ko-KR", new Dictionary<string, string>()
@@ -171,6 +180,15 @@ resolution 1024x768@60hz" },
                 { "GameObjectCommand.NewName", "변경할 GameObject 새로운 이름을 지정합니다." },
                 { "GameObjectCommand.ParentPath", "이동할 대상이 되는 GameObject 의 경로를 지정합니다." },
                 { "GameObjectCommand.IsRecursive", "자식 객체의 목록까지 재귀적으로 표시합니다." },
+                { "TerminalCommand", "터미널 관련 명령어를 제공합니다." },
+                { "TerminalCommand.Dock", "터미널이 어느 위치에 도킹되는지에 대한 설정을 지정합니다." },
+                { "TerminalCommand.Dock.dock", "터미널 도킹의 형태를 지정합니다. [none, left, top, right, bottom]" },
+                { "DockProperties.Ratio", "화면에서 도킹된 터미널이 차지하는 비율(0 ~ 1)을 지정합니다." },
+                { "DockProperties.Length", "도킹된 터미널의 길이를 지정합니다." },
+                { "TerminalCommand.Style", "터미널 스타일을 변경합니다." },
+                { "StyleProperties.IsList", "지원되는 스타일의 목록을 표시합니다." },
+                { "StyleProperties.IsRemove", "현재 적용된 스타일을 제거합니다." },
+                { "StyleProperties.StyleName", "적용할 스타일의 이름을 지정합니다. 지정되지 않으면 현재 적용된 스타일의 이름을 표시합니다." },
             });
         }
 

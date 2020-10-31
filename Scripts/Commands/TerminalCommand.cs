@@ -37,24 +37,36 @@ namespace JSSoft.Unity.Terminal.Commands
         }
 
         [CommandMethod]
-        [CommandMethodProperty(nameof(Length), nameof(Ratio))]
+        [CommandMethodStaticProperty(typeof(StyleProperties))]
+        public void Style()
+        {
+            StyleProperties.Execute(this.Out, this.Grid);
+        }
+
+        public string[] CompleteStyle(CommandMemberDescriptor descriptor, string find)
+        {
+            return StyleProperties.GetCompletions(descriptor, find);
+        }
+
+        [CommandMethod]
+        [CommandMethodStaticProperty(typeof(DockProperties))]
         public void Dock(TerminalDock? dock = null)
         {
             if (this.DockController is TerminalDockController controller && controller.enabled == true)
             {
                 if (dock != null)
                     controller.Dock = dock.Value;
-                if (this.Length != null)
+                if (DockProperties.Length != null)
                 {
                     controller.IsRatio = false;
-                    controller.Length = this.Length.Value;
+                    controller.Length = DockProperties.Length.Value;
                 }
-                else if (this.Ratio != null)
+                else if (DockProperties.Ratio != null)
                 {
                     controller.IsRatio = true;
-                    controller.Ratio = this.Ratio.Value;
+                    controller.Ratio = DockProperties.Ratio.Value;
                 }
-                else if (dock == null && this.Length == null && this.Ratio == null)
+                else if (dock == null)
                 {
                     this.WriteLine($"dock: {controller.Dock.ToString().ToLower()}");
                     if (controller.IsRatio == true)
@@ -67,20 +79,6 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 throw new NotImplementedException();
             }
-        }
-
-        [CommandProperty]
-        [CommandPropertyTrigger(nameof(Ratio), null)]
-        public int? Length
-        {
-            get; set;
-        }
-
-        [CommandProperty]
-        [CommandPropertyTrigger(nameof(Length), null)]
-        public float? Ratio
-        {
-            get; set;
         }
 
         public string[] CompleteDock(CommandMemberDescriptor descriptor, string find)
