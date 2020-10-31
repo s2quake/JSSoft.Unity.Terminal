@@ -210,6 +210,7 @@ namespace JSSoft.Unity.Terminal.Editor
             var terminalGridObj = new GameObject(nameof(Terminal), typeof(Terminal)) { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent(typeof(TerminalGrid)) as TerminalGrid;
             var terminal = terminalGrid.GetComponent<Terminal>();
+            var terminalGridState = terminalGridObj.AddComponent<TerminalGridState>();
             var terminalGridRect = terminalGrid.rectTransform;
             var terminalPadding = terminalGrid.Padding;
             terminal.SetDispatcher(dispatcher);
@@ -389,6 +390,7 @@ namespace JSSoft.Unity.Terminal.Editor
             var terminalHostRect = terminalHostObj.GetComponent<RectTransform>();
             var terminalHostLayoutElement = terminalHostObj.GetComponent<LayoutElement>();
             var terminalDockController = terminalHostObj.AddComponent<TerminalDockController>();
+            var terminalDockControllerState = terminalHostObj.AddComponent<TerminalDockControllerState>();
             terminalHostVertLayout.spacing = 2;
             terminalHostVertLayout.childControlWidth = true;
             terminalHostVertLayout.childControlHeight = true;
