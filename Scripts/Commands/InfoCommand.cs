@@ -38,36 +38,36 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             actions = new Dictionary<string, Func<string, string>>()
             {
-                { nameof(Application.absoluteURL), (item) => $"{item}: {Application.absoluteURL}" },
-                { nameof(Application.backgroundLoadingPriority), (item) => $"{item}: {Application.backgroundLoadingPriority}" },
-                { nameof(Application.buildGUID), (item) => $"{item}: {Application.buildGUID}" },
-                { nameof(Application.cloudProjectId), (item) => $"{item}: {Application.cloudProjectId}" },
-                { nameof(Application.companyName), (item) => $"{item}: {Application.companyName}" },
-                { nameof(Application.consoleLogPath), (item) => $"{item}: {Application.consoleLogPath}" },
-                { nameof(Application.dataPath), (item) => $"{item}: {Application.dataPath}" },
-                { nameof(Application.genuine), (item) => $"{item}: {Application.genuine}" },
-                { nameof(Application.genuineCheckAvailable), (item) => $"{item}: {Application.genuineCheckAvailable}" },
-                { nameof(Application.identifier), (item) => $"{item}: {Application.identifier}" },
-                { nameof(Application.installerName), (item) => $"{item}: {Application.installerName}" },
-                { nameof(Application.installMode), (item) => $"{item}: {Application.installMode}" },
-                { nameof(Application.internetReachability), (item) => $"{item}: {Application.internetReachability}" },
-                { nameof(Application.isBatchMode), (item) => $"{item}: {Application.isBatchMode}" },
-                { nameof(Application.isConsolePlatform), (item) => $"{item}: {Application.isConsolePlatform}" },
-                { nameof(Application.isEditor), (item) => $"{item}: {Application.isEditor}" },
-                { nameof(Application.isFocused), (item) => $"{item}: {Application.isFocused}" },
-                { nameof(Application.isMobilePlatform), (item) => $"{item}: {Application.isMobilePlatform}" },
-                { nameof(Application.isPlaying), (item) => $"{item}: {Application.isPlaying}" },
-                { nameof(Application.persistentDataPath), (item) => $"{item}: {Application.persistentDataPath}" },
-                { nameof(Application.platform), (item) => $"{item}: {Application.platform}" },
-                { nameof(Application.productName), (item) => $"{item}: {Application.productName}" },
-                { nameof(Application.runInBackground), (item) => $"{item}: {Application.runInBackground}" },
-                { nameof(Application.sandboxType), (item) => $"{item}: {Application.sandboxType}" },
-                { nameof(Application.streamingAssetsPath), (item) => $"{item}: {Application.streamingAssetsPath}" },
-                { nameof(Application.systemLanguage), (item) => $"{item}: {Application.systemLanguage}" },
-                { nameof(Application.targetFrameRate), (item) => $"{item}: {Application.targetFrameRate}" },
-                { nameof(Application.temporaryCachePath), (item) => $"{item}: {Application.temporaryCachePath}" },
-                { nameof(Application.unityVersion), (item) => $"{item}: {Application.unityVersion}" },
-                { nameof(Application.version), (item) => $"{item}: {Application.version}" },
+                { nameof(Application.absoluteURL), (item) => $"{Application.absoluteURL}" },
+                { nameof(Application.backgroundLoadingPriority), (item) => $"{Application.backgroundLoadingPriority}" },
+                { nameof(Application.buildGUID), (item) => $"{Application.buildGUID}" },
+                { nameof(Application.cloudProjectId), (item) => $"{Application.cloudProjectId}" },
+                { nameof(Application.companyName), (item) => $"{Application.companyName}" },
+                { nameof(Application.consoleLogPath), (item) => $"{Application.consoleLogPath}" },
+                { nameof(Application.dataPath), (item) => $"{Application.dataPath}" },
+                { nameof(Application.genuine), (item) => $"{Application.genuine}" },
+                { nameof(Application.genuineCheckAvailable), (item) => $"{Application.genuineCheckAvailable}" },
+                { nameof(Application.identifier), (item) => $"{Application.identifier}" },
+                { nameof(Application.installerName), (item) => $"{Application.installerName}" },
+                { nameof(Application.installMode), (item) => $"{Application.installMode}" },
+                { nameof(Application.internetReachability), (item) => $"{Application.internetReachability}" },
+                { nameof(Application.isBatchMode), (item) => $"{Application.isBatchMode}" },
+                { nameof(Application.isConsolePlatform), (item) => $"{Application.isConsolePlatform}" },
+                { nameof(Application.isEditor), (item) => $"{Application.isEditor}" },
+                { nameof(Application.isFocused), (item) => $"{Application.isFocused}" },
+                { nameof(Application.isMobilePlatform), (item) => $"{Application.isMobilePlatform}" },
+                { nameof(Application.isPlaying), (item) => $"{Application.isPlaying}" },
+                { nameof(Application.persistentDataPath), (item) => $"{Application.persistentDataPath}" },
+                { nameof(Application.platform), (item) => $"{Application.platform}" },
+                { nameof(Application.productName), (item) => $"{Application.productName}" },
+                { nameof(Application.runInBackground), (item) => $"{Application.runInBackground}" },
+                { nameof(Application.sandboxType), (item) => $"{Application.sandboxType}" },
+                { nameof(Application.streamingAssetsPath), (item) => $"{Application.streamingAssetsPath}" },
+                { nameof(Application.systemLanguage), (item) => $"{Application.systemLanguage}" },
+                { nameof(Application.targetFrameRate), (item) => $"{Application.targetFrameRate}" },
+                { nameof(Application.temporaryCachePath), (item) => $"{Application.temporaryCachePath}" },
+                { nameof(Application.unityVersion), (item) => $"{Application.unityVersion}" },
+                { nameof(Application.version), (item) => $"{Application.version}" },
             };
         }
 
@@ -76,37 +76,61 @@ namespace JSSoft.Unity.Terminal.Commands
         {
         }
 
-        [CommandPropertyRequired(DefaultValue = "")]
-        public string PropertyName
+        [CommandPropertyArray]
+        public string[] PropertyNames
+        {
+            get; set;
+        }
+
+        [CommandPropertySwitch("quiet")]
+        public bool IsQuiet
         {
             get; set;
         }
 
         public override string[] GetCompletions(CommandCompletionContext completionContext)
         {
+            if (completionContext.MemberDescriptor.DescriptorName == nameof(PropertyNames))
+            {
+                var query = from item in actions
+                            where item.Key.StartsWith(completionContext.Find)
+                            select item.Key;
+                return query.ToArray();
+            }
             return actions.Keys.ToArray();
         }
 
         protected override void OnExecute()
         {
             var sb = new StringBuilder();
-            var propertyName = this.PropertyName;
-            if (propertyName == string.Empty)
+            var propertyNames = this.PropertyNames;
+            var isQuiet = this.IsQuiet;
+            if (propertyNames.Any() == true)
             {
-                foreach (var item in actions)
+                foreach (var item in propertyNames)
                 {
-                    sb.AppendLine(item.Value(item.Key));
+                    if (actions.ContainsKey(item) == false)
+                        throw new InvalidOperationException($"property '{item}' does not exists.");
+                    var action = actions[item];
+                    WriteInfo(sb, item, action(item), isQuiet);
                 }
-            }
-            else if (actions.ContainsKey(propertyName) == true)
-            {
-                sb.AppendLine(actions[propertyName](propertyName));
             }
             else
             {
-                sb.AppendLine($"property '{propertyName}' does not exists.");
+                foreach (var item in actions)
+                {
+                    WriteInfo(sb, item.Key, item.Value(item.Key), isQuiet);
+                }
             }
             this.WriteLine(sb.ToString());
+        }
+
+        private static void WriteInfo(StringBuilder sb, string key, string value, bool isQuiet)
+        {
+            if (isQuiet == true)
+                sb.AppendLine(value);
+            else
+                sb.AppendLine($"{key}: {value}");
         }
     }
 }
