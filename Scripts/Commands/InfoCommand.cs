@@ -95,7 +95,7 @@ namespace JSSoft.Unity.Terminal.Commands
                 var query = from item in actions
                             where item.Key.StartsWith(completionContext.Find)
                             select item.Key;
-                return query.ToArray();
+                return query.Except(completionContext.Arguments).ToArray();
             }
             return actions.Keys.ToArray();
         }
