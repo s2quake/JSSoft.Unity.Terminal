@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {
-    public class TerminalRectVisibleController : RectVisibleController
+    public class TerminalSlidingController : SlidingController
     {
         private readonly List<TerminalGridBase> gridList = new List<TerminalGridBase>();
 

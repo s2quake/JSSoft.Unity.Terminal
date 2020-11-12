@@ -79,7 +79,7 @@ namespace JSSoft.Unity.Terminal.Editor
             if (canvas == null)
                 throw new InvalidOperationException("cannot found Canvas.");
             var terminalLayoutObj = CreateTerminalLayout(canvas);
-            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
+            var rectVisibleController = terminalLayoutObj.GetComponentInParent<SlidingController>();
             var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
             InvokeTerminalCreated(terminalGridObj, TerminalCreation.Terminal | TerminalCreation.Layout);
@@ -93,7 +93,7 @@ namespace JSSoft.Unity.Terminal.Editor
             if (canvas == null)
                 throw new InvalidOperationException("cannot found Canvas.");
             var terminalLayoutObj = CreateTerminalLayout(canvas);
-            var rectVisibleController = terminalLayoutObj.GetComponentInParent<RectVisibleController>();
+            var rectVisibleController = terminalLayoutObj.GetComponentInParent<SlidingController>();
             var terminalGridObj = CreateTerminal(canvas);
             rectVisibleController.Grid = terminalGridObj.GetComponent<TerminalGridBase>();
             terminalGridObj.AddComponent<CommandContextHost>();
@@ -361,10 +361,10 @@ namespace JSSoft.Unity.Terminal.Editor
             {
                 { typeof(VerticalLayoutGroup) },
                 { typeof(TerminalKeyboardLayoutGroup) },
-                { typeof(TerminalRectVisibleController) },
+                { typeof(TerminalSlidingController) },
             };
 
-            var controllerAsset = FindAsset<RuntimeAnimatorController>("Animations/RectVisibleController/RectVisibleController.controller");
+            var controllerAsset = FindAsset<RuntimeAnimatorController>("Animations/SlidingController/SlidingController.controller");
 
             var terminalRootObj = new GameObject("TerminalRoot", types.ToArray()) { layer = canvas.gameObject.layer };
             var terminalRootRect = terminalRootObj.GetComponent<RectTransform>();

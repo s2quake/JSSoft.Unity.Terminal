@@ -25,8 +25,8 @@ using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Editor
 {
-    [CustomEditor(typeof(RectVisibleController))]
-    public class RectVisibleControllerEditor : UnityEditor.Editor
+    [CustomEditor(typeof(TerminalSlidingController))]
+    public class TerminalSlidingControllerEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
 
@@ -34,14 +34,16 @@ namespace JSSoft.Unity.Terminal.Editor
         {
             this.notifier.Begin();
             this.notifier.PropertyScript();
-            this.notifier.PropertyField(nameof(RectVisibleController.Grid));
-            this.notifier.PropertyField(nameof(TerminalRectVisibleController.Direction));
+            this.notifier.PropertyField(nameof(TerminalSlidingController.Grid));
+            this.notifier.PropertyField(nameof(TerminalSlidingController.Direction));
+            this.notifier.PropertyField(nameof(TerminalSlidingController.KeyCode));
+            this.notifier.PropertyField(nameof(TerminalSlidingController.Modifiers));
             this.notifier.End();
-
+            
             GUI.enabled = Application.isPlaying == false;
             if (GUILayout.Button("Show") == true)
             {
-                if (this.target is RectVisibleController controller)
+                if (this.target is TerminalSlidingController controller)
                 {
                     controller.Show();
                     EditorUtility.SetDirty(controller);
@@ -49,7 +51,7 @@ namespace JSSoft.Unity.Terminal.Editor
             }
             if (GUILayout.Button("Hide") == true)
             {
-                if (this.target is RectVisibleController controller)
+                if (this.target is TerminalSlidingController controller)
                 {
                     controller.Hide();
                     EditorUtility.SetDirty(controller);
@@ -57,7 +59,7 @@ namespace JSSoft.Unity.Terminal.Editor
             }
             if (GUILayout.Button("Reset") == true)
             {
-                if (this.target is RectVisibleController controller)
+                if (this.target is SlidingController controller)
                 {
                     controller.ResetPosition();
                     EditorUtility.SetDirty(controller);
@@ -69,8 +71,10 @@ namespace JSSoft.Unity.Terminal.Editor
         protected virtual void OnEnable()
         {
             this.notifier = new EditorPropertyNotifier(this);
-            this.notifier.Add(nameof(RectVisibleController.Grid));
-            this.notifier.Add(nameof(RectVisibleController.Direction));
+            this.notifier.Add(nameof(TerminalSlidingController.Grid));
+            this.notifier.Add(nameof(TerminalSlidingController.Direction));
+            this.notifier.Add(nameof(TerminalSlidingController.KeyCode));
+            this.notifier.Add(nameof(TerminalSlidingController.Modifiers));
         }
 
         protected virtual void OnDisable()

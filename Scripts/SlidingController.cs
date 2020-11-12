@@ -5,7 +5,7 @@ namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(Animator))]
-    public class RectVisibleController : UIBehaviour, IValidatable
+    public class SlidingController : UIBehaviour, IValidatable
     {
         public const string StateNone = "None";
         public const string StateHide = "Hide";
@@ -17,7 +17,7 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Vector2 position;
         [SerializeField]
-        private RectVisibleDirection direction = RectVisibleDirection.Top;
+        private SlidingDirection direction = SlidingDirection.Top;
         [SerializeField]
         private TerminalGridBase grid = null;
 
@@ -67,7 +67,7 @@ namespace JSSoft.Unity.Terminal
         }
 
         [FieldName(nameof(direction))]
-        public RectVisibleDirection Direction
+        public SlidingDirection Direction
         {
             get => this.direction;
             set
@@ -144,22 +144,22 @@ namespace JSSoft.Unity.Terminal
                     var value = this.value;
                     switch (direction)
                     {
-                        case RectVisibleDirection.Left:
+                        case SlidingDirection.Left:
                             {
                                 pos = new Vector2(-rect.rect.width * value, pos.y);
                             }
                             break;
-                        case RectVisibleDirection.Top:
+                        case SlidingDirection.Top:
                             {
                                 pos = new Vector2(pos.x, rect.rect.height * value);
                             }
                             break;
-                        case RectVisibleDirection.Right:
+                        case SlidingDirection.Right:
                             {
                                 pos = new Vector2(rect.rect.width * value, pos.y);
                             }
                             break;
-                        case RectVisibleDirection.Bottom:
+                        case SlidingDirection.Bottom:
                             {
                                 pos = new Vector2(pos.x, -rect.rect.height * value);
                             }

@@ -54,7 +54,7 @@
 
 # 터미널 보이기 / 감추기
 
-![RectVisibleController](./Documents/RectVisibleController.gif)
+![SlidingController](./Documents/SlidingController.gif)
 
     GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
 

@@ -1,6 +1,6 @@
 ﻿namespace JSSoft.Unity.Terminal
 {
-    public enum RectVisibleDirection
+    public enum SlidingDirection
     {
         Left,
 
