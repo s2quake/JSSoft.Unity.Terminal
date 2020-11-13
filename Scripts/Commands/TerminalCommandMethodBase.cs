@@ -176,5 +176,7 @@ namespace JSSoft.Unity.Terminal.Commands
         protected ITerminal Terminal { get; }
 
         protected ITerminalGrid Grid { get; }
+
+        protected TerminalDispatcher Dispatcher => this.Terminal.Dispatcher;
     }
 }
