@@ -52,67 +52,60 @@ namespace JSSoft.Unity.Terminal.InputHandlers
             }
         }
 
-#if UNITY_IOS
-        public override Rect Area => TouchScreenKeyboard.area;
-#elif UNITY_ANDROID
         public override Rect Area
         {
             get
             {
-                // using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-                // {
-                //     var view = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
-                //                          .Get<AndroidJavaObject>("mUnityPlayer")
-                //                          .Call<AndroidJavaObject>("getView");
-                //     using (var rect = new AndroidJavaObject("android.graphics.Rect"))
-                //     {
-                //         view.Call("getWindowVisibleDisplayFrame", rect);
-                //         var height = Screen.height - rect.Call<int>("height");
-                //         return new Rect(0, Screen.height - height, Screen.width, height);
-                //     }
-                // }
-
-                using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
+                if (TerminalEnvironment.IsIPhone == true)
                 {
-                    var view = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
-                        .Get<AndroidJavaObject>("mUnityPlayer")
-                        .Call<AndroidJavaObject>("getView");
-
-                    var height = 0;
-                    try
+                    return TouchScreenKeyboard.area;
+                }
+                else if (TerminalEnvironment.IsAndroid == true)
+                {
+                    using (var unityClass = new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
                     {
-                        var dialog = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
+                        var view = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
                             .Get<AndroidJavaObject>("mUnityPlayer")
-                            .Get<AndroidJavaObject>("b");
+                            .Call<AndroidJavaObject>("getView");
 
-                        var decorView = dialog.Call<AndroidJavaObject>("getWindow")
-                            .Call<AndroidJavaObject>("getDecorView");
+                        var height = 0;
+                        try
+                        {
+                            var dialog = unityClass.GetStatic<AndroidJavaObject>("currentActivity")
+                                .Get<AndroidJavaObject>("mUnityPlayer")
+                                .Get<AndroidJavaObject>("b");
 
-                        height = decorView.Call<int>("getHeight");
+                            var decorView = dialog.Call<AndroidJavaObject>("getWindow")
+                                .Call<AndroidJavaObject>("getDecorView");
+
+                            height = decorView.Call<int>("getHeight");
+                        }
+                        catch
+                        {
+                        }
+                        using (var rect = new AndroidJavaObject("android.graphics.Rect"))
+                        {
+                            view.Call("getWindowVisibleDisplayFrame", rect);
+                            var h = (float)(Screen.height - rect.Call<int>("height") + height);
+                            return new Rect(0, Screen.height - h, Screen.width, h);
+                        }
                     }
-                    catch
-                    {
-                    }
-                    using (var rect = new AndroidJavaObject("android.graphics.Rect"))
-                    {
-                        view.Call("getWindowVisibleDisplayFrame", rect);
-                        var h = (float)(Screen.height - rect.Call<int>("height") + height);
-                        return new Rect(0, Screen.height - h, Screen.width, h);
-                    }
+                }
+                else
+                {
+                    return default(Rect);
                 }
             }
         }
-#else
-        public override Rect Area => default(Rect);
-#endif
 
         protected override void OnOpen(string text)
         {
             this.keyboard = TouchScreenKeyboard.Open(text, TouchScreenKeyboardType.Default, false, false, false, false, "type command");
-#if UNITY_IOS
-            this.keyboard.active = true;
-            this.keyboard.text = text;
-#endif
+            if (TerminalEnvironment.IsIPhone)
+            {
+                this.keyboard.active = true;
+                this.keyboard.text = text;
+            }
         }
 
         protected override void OnClose()
