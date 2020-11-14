@@ -34,7 +34,7 @@ namespace JSSoft.Unity.Terminal.InputHandlers
         private const float scrollStopSpeed = 100.0f;
         private readonly float clickThreshold = 0.5f;
         private readonly Swiper swiper = new Swiper();
-        private readonly TerminalKeyboardBase keyboard = KeyboardCreator();
+        private readonly TerminalKeyboardBase keyboard;
         private InputSelections selections;
         private Vector2 downPosition;
         private TerminalPoint downPoint;
@@ -52,6 +52,7 @@ namespace JSSoft.Unity.Terminal.InputHandlers
 
         public MobileInputHandlerContext()
         {
+            this.keyboard = KeyboardCreator != null ? KeyboardCreator() : new MobileKeyboard();
         }
 
         public override void BeginDrag(PointerEventData eventData)
@@ -419,6 +420,6 @@ namespace JSSoft.Unity.Terminal.InputHandlers
             return (count % 3) + 1;
         }
 
-        internal static Func<TerminalKeyboardBase> KeyboardCreator { get; set; } = new Func<TerminalKeyboardBase>(() => new MobileKeyboard());
+        internal static Func<TerminalKeyboardBase> KeyboardCreator { get; set; }
     }
 }
