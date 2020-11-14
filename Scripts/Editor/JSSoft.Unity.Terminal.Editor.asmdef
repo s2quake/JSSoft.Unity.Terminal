@@ -9,8 +9,11 @@
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "JSSoft.Library.dll",
+        "JSSoft.Library.Commands.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": []
 }
