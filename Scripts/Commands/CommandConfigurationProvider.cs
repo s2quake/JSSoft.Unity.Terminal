@@ -22,22 +22,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
     public class CommandConfigurationProvider : ICommandConfigurationProvider
     {
-        private readonly List<ICommandConfiguration> configList = new List<ICommandConfiguration>();
+        private readonly Dictionary<string, ICommandConfiguration> configByName = new Dictionary<string, ICommandConfiguration>();
 
         public void Add(ICommandConfiguration config)
         {
-            foreach (var item in this.configList)
-            {
-                if (item.Name == config.Name)
-                    throw new ArgumentException();
-            }
-            this.configList.Add(config);
+            this.configByName.Add(config.Name, config);
         }
 
         public void AddInstance(object instance)
@@ -88,22 +84,15 @@ namespace JSSoft.Unity.Terminal.Commands
 
         public void Remove(ICommandConfiguration config)
         {
-            this.configList.Remove(config);
+            this.configByName.Remove(config.Name);
         }
 
-        public void Remove(string propertyName)
+        public void Remove(string configName)
         {
-            foreach (var item in this.configList)
-            {
-                if (item.Name == propertyName)
-                {
-                    this.configList.Remove(item);
-                    break;
-                }
-            }
+            this.configByName.Remove(configName);
         }
 
-        public IEnumerable<ICommandConfiguration> Configs => this.configList;
+        public IEnumerable<ICommandConfiguration> Configs => this.configByName.OrderBy(item => item.Key).Select(item => item.Value);
 
         private void AddProperties(object instance, string rootName)
         {

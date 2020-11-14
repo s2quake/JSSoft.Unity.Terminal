@@ -46,9 +46,13 @@ namespace JSSoft.Unity.Terminal.Commands
                 throw new ArgumentNullException(nameof(propertyName));
             this.Name = name ?? throw new ArgumentNullException(nameof(name));
             this.instance = instance ?? throw new ArgumentNullException(nameof(instance));
-            this.propertyInfo = instance.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            this.propertyInfo = instance.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (this.propertyInfo == null)
-                throw new InvalidOperationException($"property cannot found: '{propertyName}'");
+                throw new InvalidOperationException($"Property not found or not public.: '{propertyName}'");
+            if (this.propertyInfo.CanRead == false)
+                throw new InvalidOperationException($"Property cannot read.: '{propertyName}'");
+            if (this.propertyInfo.CanWrite == false)
+                throw new InvalidOperationException($"Property cannot write.: '{propertyName}'");
             this.Initialize();
         }
 
