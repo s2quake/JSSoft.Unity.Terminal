@@ -1,165 +1,101 @@
-# 소개
+# Table of contents
 
-일반적인 유닉스 환경에서 사용하는 터미널 프로그램이 아니며
+[1.Summary](#summary)<br>
+[2.Unity Version](#unity-version)<br>
+[3.Features](#features)<br>
+[4.Example of use](#example-of-use)<br>
+[5.Example of Command Definition](#example-of-command-definition)<br>
+[6.Configuration](#configuration)<br>
+[7.Sliding controller](#sliding-controller)<br>
+[8.javascript](#javascript)<br>
 
-런타임 상에서 사용자의 입력을 받고 처리를 할 수 있는 REPL 환경을 제공하는 라이브러리 입니다.
+***
 
-사용자는 런타임 상에서 특정 필드 및 속성의 값을 변경할 수 있으며
+## Summary
 
-기본적으로 제공되는 명령어를 실행하거나 직접 명령어를 정의하여 사용할 수 있습니다.
+u-Terminal is like a terminal in Unix, a console in Windows, and a console window in FPS games.
 
-# 개발 환경
+Provides a REPL environment for receiving user input and outputting results.
 
-    Unity 2018.4.27f1
+https://s2quake.github.io/u-terminal/
 
-# 만들기
+***
 
-## 터미널
+## Unity Version
 
-    단순 터미널만 생성합니다. 
-    
-    이렇게 생성된 터미널은 사용자의 입력을 받을 수는 있지만 아무런 처리를 하지 않습니다.
+2018.4.27f1 and later
+2019.4.10f1 and later
+2020.1.6f1 and later
 
-    GameObject -> UI -> Terminals -> Terminal
+***
 
-## 터미널 + 명령어
+## Features
 
-    기본적으로 제공되는 명령어를 실행할 수 있으며 사용자가 직접 작성한 명령어를 실행할 수 있습니다.
+* Asynchronous command support
+* Subcommand support
+* Autocomplete command
+* Automatically generate help
+* Text color support
+* Mobile support(ios, android)
+* Various styles and palettes
 
-    명령어의 정의는 https://github.com/s2quake/JSSoft.Library.Commands 에서 확인할 수 있습니다.
+***
 
-    GameObject -> UI -> Terminals -> Terminal - Commands
+## Example of use
 
-## 터미널 레이아웃
+```
+comp ls /GameObject
+config audio.pause true
+date --locale ko-KR --utc
+obj ls / --recursive
+exit
+info productName
+resolution --full
+scene --list
+version
+```
 
-    터미널을 제외한 터미널이 잘 동작할 수 있는 외형만 생성합니다.
+***
 
-    터미널을 보여지고 사라지게 할 수 있으며 모바일 환경에서는 키보드 보여짐에 따라
+## Example of Command Definition
 
-    터미널의 크기가 자동으로 조정되는 기능이 포함되어 있습니다.
-    
-    GameObject -> UI -> Terminals -> TerminalLayout
+Base command definition
 
-## 터미널 레이아웃 + 터미널
-
-    터미널의 레이아웃과 단순 터미널을 생성합니다.
-
-    GameObject -> UI -> Terminals -> Terminal Full
-
-### 터미널 레이아웃 + 터미널 + 명령어
-
-    터미널이 잘 동작할 수 있도록 필요한 모든 구성 요소가 함께 생성됩니다.
-    
-    GameObject -> UI -> Terminals -> Terminal Full - Commands
-
-# 터미널 보이기 / 감추기
-
-![SlidingController](./Documents/SlidingController.gif)
-
-    GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
-
-    Hierarchy 창에서 Canvas/TerminalRoot 객체 선택
-
-    Inspector 창에서 Terminal Rect Visible Controller 컴포넌트에서 키 값과 방향 값을 설정
-
-    기본 키값은 Control + ` 이며 숨겨지는 방향은 위쪽
-
-    Play 이후 Control + ` 키로 터미널 보이기 또는 감추기
-
-# 터미널에 로그 표시하기
-
-    GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
-
-    Hierarchy 창에서 Canvas/TerminalRoot/TerminalLayout/Terminal 객체 선택
-
-    Inspector 창에서 Add Component 클릭후 Terminal Log Receiver 추가
-
-# 명령어 추가하기
-
-![RestartCommand](./Documents/RestartCommand.gif)
-
-## 명령어 만들기
-
-```csharp
-using JSSoft.Unity.Terminal;
-using JSSoft.Unity.Terminal.Commands;
-using UnityEngine.SceneManagement;
-
-public class RestartCommand : TerminalCommandBase
+```cs
+[CommandSummary("Exit the application.")]
+public class ExitCommand : TerminalCommandBase
 {
-    public RestartCommand(ITerminal terminal)
+    public ExitCommand(ITerminal terminal)
         : base(terminal)
     {
     }
 
+    [CommandPropertyRequired(DefaultValue = 0)]
+    [CommandSummary("Specifies the exit code. The default is 0.")]
+    public int ExitCode { get; set; }
+
     protected override void OnExecute()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        this.WriteLine("Scene restarted.");
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        UnityEngine.Application.Quit();
+#endif
     }
 }
 ```
 
-    TerminalCommandAsyncBase 을(를) 사용하여 비동기로 명령을 실행할 수 있으며
+Base usage
 
-    TerminalCommandMethodBase 을(를) 사용하여 하위 명령을 정의할 수 있습니다.
+<img id="body-img" src="./Documentation/restart-command.gif" alt="restart-command" />
 
-## 명령어 제공자 만들기
+***
 
-```csharp
-using System.Collections.Generic;
-using JSSoft.Library.Commands;
-using JSSoft.Unity.Terminal;
-using JSSoft.Unity.Terminal.Commands;
-using UnityEngine;
+## Configuration
 
-[RequireComponent(typeof(CommandContextHost))]
-public class CommandSystem : MonoBehaviour, ICommandProvider
-{
-    private readonly CommandProvider commands = new CommandProvider();
+Register field information to be used as configuration
 
-    private void Awake()
-    {
-        GetComponent<CommandContextHost>().CommandProvider = this;
-    }
-
-    #region ICommandProvider
-
-    IEnumerable<ICommand> ICommandProvider.Provide(ITerminal terminal)
-    {
-        foreach (var item in commands.Provide(terminal))
-        {
-            yield return item;
-        }
-        yield return new RestartCommand(terminal);
-    }
-
-    #endregion
-}
-```
-
-### 컴포넌트 추가하기
-
-    GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
-
-    Hierarchy 창에서 Canvas/TerminalRoot/TerminalLayout/Terminal 객체 선택
-
-    Inspector 창에서 Add Component 클릭후 Command System 추가
-
-    Play 후 프롬프트창에서 restart 명령어 실행
-
-# 터미널 속성 만들기
-
-![ConfigCommand](./Documents/ConfigCommand.gif)
-
-## 속성 만들기
-
-```csharp
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using JSSoft.Unity.Terminal.Commands;
-
+```cs
 public class TestConfiguration : MonoBehaviour
 {
     [SerializeField]
@@ -169,69 +105,32 @@ public class TestConfiguration : MonoBehaviour
 
     private void Awake()
     {
-        var config = new FieldConfiguration("test.value", this, nameof(value));
         if (this.configSystem != null)
         {
-            this.configSystem.AddConfig(config);
+            this.configSystem.AddConfig(new FieldConfiguration("test.value", this, nameof(value)) { DefaultValue = this.value });
         }
     }
 }
 ```
 
-## 속성 제공자 만들기
+How to use configurations in a terminal
 
-```csharp
-using System.Collections.Generic;
-using JSSoft.Library.Commands;
-using JSSoft.Unity.Terminal;
-using JSSoft.Unity.Terminal.Commands;
-using UnityEngine;
+<img id="body-img" src="./Documentation/config-command.gif" alt="config-command" />
 
-[RequireComponent(typeof(CommandContextHost))]
-public class ConfigurationSystem : MonoBehaviour, ICommandConfigurationProvider
-{
-    private readonly CommandConfigurationProvider configs = new CommandConfigurationProvider();
+***
 
-    private void Awake()
-    {
-        GetComponent<CommandContextHost>().ConfigurationProvider = this;
-    }
+## Sliding controller
 
-    public void AddConfig(ICommandConfiguration provider)
-    {
-        this.configs.Add(provider);
-    }
+default key : ctrl + `
 
-    #region ICommandConfigurationProvider
+<img id="body-img" src="./Documentation/sliding-controller.gif" alt="sliding-controller" />
 
-    IEnumerable<ICommandConfiguration> ICommandConfigurationProvider.Configs => configs.Configs;
+***
 
-    #endregion
-}
-```
+## javascript
 
-## 속성 제공자 컴포넌트 추가하기
+*javascript content is not included in the asset.*
 
-    GameObject -> UI -> Terminals -> Terminal Full - Commands 메뉴에서 터미널 생성
+The figure below is implemented using the [jint](https://github.com/sebastienros/jint) library.
 
-    Hierarchy 창에서 Canvas/TerminalRoot/TerminalLayout/Terminal 객체 선택
-
-    Inspector 창에서 Add Component 클릭후 Configuration System 추가
-
-## 속성 객체 만들기
-
-    GameObject -> Create Empty로 객체 생성
-
-    Hierarchy 창에서 새로 생성된 GameObject 객체 선택
-
-    Inspector 창에서 Add Component 클릭후 Test Configuration 추가
-
-    Test Configuration 컴포넌트의 Config System 의 값을 Terminal로 선택
-
-## 런타임상에서 속성 사용하기
-
-    Play후 프롬프트에서 config --list 실행하여 config의 값을 확인
-
-    프롬프트에서 config test.value 1 실행하여 값을 1로 변경
-
-    프롬프트에서 config test.value --reset 실행하여 기본값으로 설정
+<img id="body-img" src="./Documentation/javascript.gif" alt="javascript" />
