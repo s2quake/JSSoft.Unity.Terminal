@@ -1,6 +1,8 @@
 {
     "name": "JSSoft.Unity.Terminal",
-    "references": [],
+    "references": [
+        "UnityEngine.UI"
+    ],
     "optionalUnityReferences": [],
     "includePlatforms": [],
     "excludePlatforms": [],
