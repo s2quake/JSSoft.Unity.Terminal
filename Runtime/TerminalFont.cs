@@ -53,6 +53,15 @@ namespace JSSoft.Unity.Terminal
             return false;
         }
 
+        public void UpdateSize()
+        {
+            var mainFont = this.DescriptorList.FirstOrDefault();
+            this.width = mainFont != null ? mainFont.Width : FontUtility.DefaultItemWidth;
+            this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
+            this.InvokePropertyChangedEvent(nameof(this.Width));
+            this.InvokePropertyChangedEvent(nameof(this.Height));
+        }
+
         public CharInfo this[char character]
         {
             get
@@ -176,13 +185,6 @@ namespace JSSoft.Unity.Terminal
         private void InvokePropertyChangedEvent(string propertyName)
         {
             this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void UpdateSize()
-        {
-            var mainFont = this.DescriptorList.FirstOrDefault();
-            this.width = mainFont != null ? mainFont.Width : FontUtility.DefaultItemWidth;
-            this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
         }
 
         private void Object_Validated(object sender, EventArgs e)

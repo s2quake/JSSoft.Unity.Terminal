@@ -430,6 +430,7 @@ namespace JSSoft.Unity.Terminal
                 if (this.font != value)
                 {
                     this.font = value;
+                    this.UpdateLayout();
                     this.UpdateVisibleIndex();
                     this.UpdateCursorPoint();
                     this.InvokePropertyChangedEvent(nameof(Font));

@@ -365,6 +365,7 @@ namespace JSSoft.Unity.Terminal
                             this.SetVerticesDirty();
                         }
                         break;
+                    case nameof(ITerminalGrid.Font):
                     case nameof(ITerminalGrid.CursorPoint):
                     case nameof(ITerminalGrid.VisibleIndex):
                         {

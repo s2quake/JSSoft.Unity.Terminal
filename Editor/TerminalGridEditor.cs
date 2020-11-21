@@ -101,15 +101,20 @@ namespace JSSoft.Unity.Terminal.Editor
 
         private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(TerminalGrid.Padding))
+            switch (e.PropertyName)
             {
-                foreach (var item in this.targets)
-                {
-                    if (item is TerminalGrid grid)
+                case nameof(TerminalGrid.Padding):
+                case nameof(TerminalGrid.Font):
                     {
-                        grid.UpdateLayout();
+                        foreach (var item in this.targets)
+                        {
+                            if (item is TerminalGrid grid)
+                            {
+                                grid.UpdateLayout();
+                            }
+                        }
                     }
-                }
+                    break;
             }
         }
     }

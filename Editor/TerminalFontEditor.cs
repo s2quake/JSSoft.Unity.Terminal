@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using UnityEditor;
+using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Editor
 {
@@ -48,6 +49,16 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Begin();
             this.notifier.PropertyFieldAll();
             this.notifier.End();
+            if (GUILayout.Button("Apply desired size") == true)
+            {
+                foreach (var item in this.targets)
+                {
+                    if (item is TerminalFont font)
+                    {
+                        font.UpdateSize();
+                    }
+                }
+            }
         }
     }
 }
