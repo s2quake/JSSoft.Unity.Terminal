@@ -395,7 +395,8 @@ namespace JSSoft.Unity.Terminal
                     }
                 }
             }
-            this.terminal.InsertCharacter(itemList.ToArray());
+            if (itemList.Count > 0)
+                this.terminal.InsertCharacter(itemList.ToArray());
         }
 
         public override IKeyBindingCollection KeyBindings
