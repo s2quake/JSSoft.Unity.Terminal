@@ -212,7 +212,6 @@ namespace JSSoft.Unity.Terminal
                 }
             }
             var items = itemByTexture.Values.ToArray();
-            this.itemsToDelete.Clear();
             foreach (var item in items)
             {
                 var rect = item.GetComponent<RectTransform>();
