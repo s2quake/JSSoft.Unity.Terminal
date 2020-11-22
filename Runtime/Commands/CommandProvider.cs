@@ -43,6 +43,7 @@ namespace JSSoft.Unity.Terminal.Commands
             yield return new GameObjectCommand(terminal);
             yield return new ComponentCommand(terminal);
             yield return new TerminalCommand(terminal);
+            yield return new CultureCommand(terminal);
 
             yield return new ConfigCommand(terminal, configurationProvider);
         }

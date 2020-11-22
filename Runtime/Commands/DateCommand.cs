@@ -46,7 +46,7 @@ namespace JSSoft.Unity.Terminal.Commands
         protected override void OnExecute()
         {
             var dateTime = this.UTC == true ? DateTime.UtcNow : DateTime.Now;
-            var cultureInfo = this.Locale != null ? new CultureInfo(this.Locale) : CultureInfo.CurrentCulture;
+            var cultureInfo = this.Locale != null ? CultureInfo.CreateSpecificCulture(this.Locale) : CultureInfo.CurrentCulture;
             var format = this.Format ?? "G";
             this.WriteLine(dateTime.ToString(format, cultureInfo));
         }
