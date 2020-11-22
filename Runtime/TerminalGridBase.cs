@@ -166,6 +166,8 @@ namespace JSSoft.Unity.Terminal
 
         public abstract Vector2 WorldToGrid(Vector2 position, Camera camera);
 
+        public static TerminalGridBase Current { get; protected set; }
+
         #region ITerminalGrid
 
         ITerminal ITerminalGrid.Terminal => this.Terminal;

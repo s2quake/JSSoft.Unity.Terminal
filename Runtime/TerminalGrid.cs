@@ -1266,6 +1266,7 @@ namespace JSSoft.Unity.Terminal
 
         void ISelectHandler.OnSelect(BaseEventData eventData)
         {
+            Current = this;
             this.InputSystem.imeCompositionMode = IMECompositionMode.On;
             this.SetFocused(true);
             this.InputHandler?.Select(this, eventData);
@@ -1273,6 +1274,7 @@ namespace JSSoft.Unity.Terminal
 
         void IDeselectHandler.OnDeselect(BaseEventData eventData)
         {
+            Current = null;
             this.SetFocused(false);
             this.InputHandler?.Deselect(this, eventData);
         }
