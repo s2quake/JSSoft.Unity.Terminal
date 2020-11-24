@@ -50,6 +50,9 @@ namespace JSSoft.Unity.Terminal.Fonts.Serializations
         [XmlAttribute("xadvance")]
         public int XAdvance { get; set; }
 
+        [XmlAttribute("yadvance")]
+        public int YAdvance { get; set; }
+
         [XmlAttribute("page")]
         public int Page { get; set; }
 
@@ -68,6 +71,7 @@ namespace JSSoft.Unity.Terminal.Fonts.Serializations
                 XOffset = info.XOffset,
                 YOffset = info.YOffset,
                 XAdvance = info.XAdvance,
+                YAdvance = info.YAdvance,
                 Channel = info.Chnl,
             };
         }

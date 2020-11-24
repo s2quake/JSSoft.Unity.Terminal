@@ -45,6 +45,8 @@ namespace JSSoft.Unity.Terminal.Fonts
         [SerializeField]
         private int xAdvance;
         [SerializeField]
+        private int yAdvance;
+        [SerializeField]
         private int channel;
         [SerializeField]
         private Texture2D texture;
@@ -64,6 +66,8 @@ namespace JSSoft.Unity.Terminal.Fonts
         public int YOffset { get => this.yOffset; set => this.yOffset = value; }
 
         public int XAdvance { get => this.xAdvance; set => this.xAdvance = value; }
+
+        public int YAdvance { get => this.yAdvance; set => this.yAdvance = value; }
 
         public int Channel { get => this.channel; set => this.channel = value; }
 

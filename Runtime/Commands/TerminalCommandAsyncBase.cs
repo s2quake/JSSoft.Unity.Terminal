@@ -101,7 +101,7 @@ namespace JSSoft.Unity.Terminal.Commands
                 if (foregroundColor != null)
                     this.Terminal.ForegroundColor = foregroundColor;
                 if (backgroundColor != null)
-                    this.Terminal.ForegroundColor = backgroundColor;
+                    this.Terminal.BackgroundColor = backgroundColor;
                 this.Out.WriteLine(text);
                 if (foregroundColor != null || backgroundColor != null)
                     this.Terminal.ResetColor();

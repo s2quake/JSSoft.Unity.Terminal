@@ -85,7 +85,9 @@ namespace JSSoft.Unity.Terminal
                 throw new ArgumentException($"'{character}' does not exits.", nameof(character));
             var charInfo = font[character];
             var fx = x + charInfo.XOffset;
-            var fy = y + charInfo.YOffset;
+            // var fy = y + charInfo.YOffset;
+            var fy = y + (font.Height - charInfo.YAdvance) + charInfo.YOffset;
+            // var fy = y + (font.Line - charInfo.YOffset) - (charInfo.YAdvance) + font.Height - (font.Height - font.Line);
             return new Rect(fx, fy, charInfo.Width, charInfo.Height);
         }
     }

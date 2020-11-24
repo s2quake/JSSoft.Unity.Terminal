@@ -38,6 +38,8 @@ namespace JSSoft.Unity.Terminal
         private int width = FontUtility.DefaultItemWidth;
         [SerializeField]
         private int height = FontUtility.DefaultItemHeight;
+        [SerializeField]
+        private int line = FontUtility.DefaultItemHeight;
 
         public TerminalFont()
         {
@@ -53,13 +55,25 @@ namespace JSSoft.Unity.Terminal
             return false;
         }
 
+        public TerminalFontDescriptor GetDescriptor(char character)
+        {
+            foreach (var item in this.DescriptorList)
+            {
+                if (item is TerminalFontDescriptor descriptor && descriptor.Contains(character) == true)
+                    return descriptor;
+            }
+            return null;
+        }
+
         public void UpdateSize()
         {
             var mainFont = this.DescriptorList.FirstOrDefault();
             this.width = mainFont != null ? mainFont.Width : FontUtility.DefaultItemWidth;
             this.height = mainFont != null ? mainFont.Height : FontUtility.DefaultItemHeight;
+            this.line = mainFont != null ? mainFont.CommonInfo.BaseLine : FontUtility.DefaultItemHeight;
             this.InvokePropertyChangedEvent(nameof(this.Width));
             this.InvokePropertyChangedEvent(nameof(this.Height));
+            this.InvokePropertyChangedEvent(nameof(this.Line));
         }
 
         public CharInfo this[char character]
@@ -123,6 +137,20 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.width = value;
                     this.InvokePropertyChangedEvent(nameof(Width));
+                }
+            }
+        }
+        
+        [FieldName(nameof(line))]
+        public int Line
+        {
+            get => this.line;
+            set
+            {
+                if (this.line != value)
+                {
+                    this.line = value;
+                    this.InvokePropertyChangedEvent(nameof(Line));
                 }
             }
         }

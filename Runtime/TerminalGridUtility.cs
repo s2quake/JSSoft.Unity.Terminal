@@ -139,6 +139,15 @@ namespace JSSoft.Unity.Terminal
             return FontUtility.DefaultItemHeight;
         }
 
+        public static int GetItemLine(ITerminalGrid grid)
+        {
+            if (grid != null && grid.Font is TerminalFont font)
+            {
+                return font.Line;
+            }
+            return FontUtility.DefaultItemHeight;
+        }
+
         public static TerminalThickness GetPadding(ITerminalGrid grid)
         {
             if (grid != null)

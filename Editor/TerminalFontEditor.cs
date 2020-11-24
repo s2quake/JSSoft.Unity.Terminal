@@ -36,6 +36,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalFont.DescriptorList), EditorPropertyUsage.IncludeChildren);
             this.notifier.Add(nameof(TerminalFont.Width));
             this.notifier.Add(nameof(TerminalFont.Height));
+            this.notifier.Add(nameof(TerminalFont.Line));
         }
 
         protected virtual void OnDisable()

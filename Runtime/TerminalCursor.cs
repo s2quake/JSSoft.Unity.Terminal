@@ -444,6 +444,7 @@ namespace JSSoft.Unity.Terminal
         {
             var itemWidth = TerminalGridUtility.GetItemWidth(this.grid);
             var itemHeight = TerminalGridUtility.GetItemHeight(this.grid);
+            var itemLine = TerminalGridUtility.GetItemLine(this.grid);
             var padding = TerminalGridUtility.GetPadding(this.grid);
             var x = this.cursorLeft * itemWidth + padding.Left;
             var y = this.cursorTop * itemHeight + padding.Top;
