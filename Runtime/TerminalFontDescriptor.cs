@@ -23,7 +23,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
+using System.Xml;
+using System.Xml.Serialization;
 using JSSoft.Unity.Terminal.Fonts;
 using UnityEngine;
 
@@ -47,6 +50,48 @@ namespace JSSoft.Unity.Terminal
         public bool Contains(char character)
         {
             return this.Characters.ContainsKey(character);
+        }
+
+        public static TerminalFontDescriptor Create(TextAsset textAsset, TerminalFontResolver resolver)
+        {
+            var descriptor = new TerminalFontDescriptor();
+            descriptor.Update(textAsset, resolver);
+            return descriptor;
+        }
+
+        public void Update(TextAsset textAsset, TerminalFontResolver resolver)
+        {
+            if (textAsset == null)
+                throw new ArgumentException(nameof(textAsset));
+            if (resolver == null)
+                throw new ArgumentNullException(nameof(resolver));
+
+            using (var sb = new StringReader(textAsset.text))
+            using (var reader = XmlReader.Create(sb))
+            {
+                var serializer = new XmlSerializer(typeof(Fonts.Serializations.FontSerializationInfo));
+                var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
+                var charInfos = obj.CharInfo.Items;
+                var pages = obj.Pages;
+                this.baseInfo = (BaseInfo)obj.Info;
+                this.commonInfo = (CommonInfo)obj.Common;
+                this.textures = new Texture2D[pages.Length];
+                for (var i = 0; i < pages.Length; i++)
+                {
+                    var item = pages[i];
+                    this.textures[i] = resolver.GetTexture(textAsset, item.File);
+                }
+                this.charInfos = new CharInfo[charInfos.Length];
+                for (var i = 0; i < charInfos.Length; i++)
+                {
+                    var item = charInfos[i];
+                    var charInfo = (CharInfo)item;
+                    charInfo.Texture = this.textures[item.Page];
+                    this.charInfos[i] = charInfo;
+                }
+                this.UpdateWidth();
+                this.UpdateProperty();
+            }
         }
 
         public CharInfo this[char character] => this.Characters[character];

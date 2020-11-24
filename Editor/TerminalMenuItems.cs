@@ -106,21 +106,22 @@ namespace JSSoft.Unity.Terminal.Editor
         private static void CreateFontDescriptor()
         {
             var obj = Selection.activeObject;
-            if (obj is TextAsset fntAsset)
+            if (obj is TextAsset textAsset)
             {
-                var assetPath = AssetDatabase.GetAssetPath(fntAsset);
+                var assetPath = AssetDatabase.GetAssetPath(textAsset);
                 var assetName = Path.GetFileNameWithoutExtension(assetPath);
                 var assetDirectory = Path.GetDirectoryName(assetPath);
                 var fontPath = Path.Combine(assetDirectory, $"{assetName}.asset");
                 var fontDescriptor = AssetDatabase.LoadAssetAtPath(fontPath, typeof(TerminalFontDescriptor)) as TerminalFontDescriptor;
+                var resolver = new DescriptorResolver();
                 if (fontDescriptor == null)
                 {
-                    fontDescriptor = CreateFontDescriptor(fntAsset);
+                    fontDescriptor = TerminalFontDescriptor.Create(textAsset, resolver);
                     AssetDatabase.CreateAsset(fontDescriptor, fontPath);
                 }
                 else
                 {
-                    UpdateFontDescriptor(fontDescriptor, fntAsset);
+                    fontDescriptor.Update(textAsset, resolver);
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }
@@ -496,44 +497,19 @@ namespace JSSoft.Unity.Terminal.Editor
             return styles;
         }
 
-        public static TerminalFontDescriptor CreateFontDescriptor(TextAsset fntAsset)
-        {
-            var font = new TerminalFontDescriptor();
-            UpdateFontDescriptor(font, fntAsset);
-            return font;
-        }
+        #region DescriptorResolver
 
-        private static void UpdateFontDescriptor(TerminalFontDescriptor font, TextAsset fntAsset)
+        class DescriptorResolver : TerminalFontResolver
         {
-            using (var sb = new StringReader(fntAsset.text))
-            using (var reader = XmlReader.Create(sb))
+            public override Texture2D GetTexture(TextAsset textAsset, string path)
             {
-                var assetPath = AssetDatabase.GetAssetPath(fntAsset);
+                var assetPath = AssetDatabase.GetAssetPath(textAsset);
                 var assetDirectory = Path.GetDirectoryName(assetPath);
-                var serializer = new XmlSerializer(typeof(Fonts.Serializations.FontSerializationInfo));
-                var obj = (Fonts.Serializations.FontSerializationInfo)serializer.Deserialize(reader);
-                var charInfos = obj.CharInfo.Items;
-                var pages = obj.Pages;
-                font.baseInfo = (BaseInfo)obj.Info;
-                font.commonInfo = (CommonInfo)obj.Common;
-                font.textures = new Texture2D[pages.Length];
-                for (var i = 0; i < pages.Length; i++)
-                {
-                    var item = pages[i];
-                    var texturePath = Path.Combine(assetDirectory, item.File);
-                    font.textures[i] = AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
-                }
-                font.charInfos = new CharInfo[charInfos.Length];
-                for (var i = 0; i < charInfos.Length; i++)
-                {
-                    var item = charInfos[i];
-                    var charInfo = (CharInfo)item;
-                    charInfo.Texture = font.textures[item.Page];
-                    font.charInfos[i] = charInfo;
-                }
-                font.UpdateWidth();
-                font.UpdateProperty();
+                var texturePath = Path.Combine(assetDirectory, path);
+                return AssetDatabase.LoadAssetAtPath(texturePath, typeof(Texture2D)) as Texture2D;
             }
         }
+
+        #endregion
     }
 }
