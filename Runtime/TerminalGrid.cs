@@ -176,7 +176,6 @@ namespace JSSoft.Unity.Terminal
 
         public Color32? IndexToBackgroundColor(int index)
         {
-            return Color.red;
             var pallete = this.ColorPalette;
             var color = this.terminal.GetBackgroundColor(index);
             if (color == null)
