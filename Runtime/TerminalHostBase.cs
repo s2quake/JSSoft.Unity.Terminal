@@ -39,7 +39,7 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private bool useExceptionBackgroundColor = false;
         [SerializeField]
-        private TerminalColor exceptionForegroundColor = TerminalColor.Red;
+        private TerminalColor exceptionForegroundColor = TerminalColor.BrightRed;
         [SerializeField]
         private TerminalColor exceptionBackgroundColor = TerminalColor.Black;
 

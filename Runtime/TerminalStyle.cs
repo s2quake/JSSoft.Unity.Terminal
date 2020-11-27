@@ -41,7 +41,11 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color selectionColor = TerminalGrid.DefaultSelectionColor;
         [SerializeField]
+        private Color selectionTextColor = TerminalGrid.DefaultSelectionTextColor;
+        [SerializeField]
         private Color cursorColor = TerminalGrid.DefaultCursorColor;
+        [SerializeField]
+        private Color cursorTextColor = TerminalGrid.DefaultCursorTextColor;
         [SerializeField]
         private TerminalColorPalette colorPallete;
         [SerializeField]

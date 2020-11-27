@@ -13,18 +13,18 @@ MonoBehaviour:
   m_Name: PowerShell
   m_EditorClassIdentifier: 
   black: {r: 0, g: 0, b: 0, a: 1}
-  darkBlue: {r: 0, g: 0, b: 0.5019608, a: 1}
-  darkGreen: {r: 0, g: 0.5019608, b: 0, a: 1}
-  darkCyan: {r: 0, g: 0.5019608, b: 0.5019608, a: 1}
-  darkRed: {r: 0.5019608, g: 0, b: 0, a: 1}
-  darkMagenta: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
-  darkYellow: {r: 0.5019608, g: 0.5019608, b: 0, a: 1}
-  gray: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
-  darkGray: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
-  blue: {r: 0, g: 0, b: 1, a: 1}
-  green: {r: 0, g: 1, b: 0, a: 1}
-  cyan: {r: 0, g: 1, b: 1, a: 1}
-  red: {r: 1, g: 0, b: 0, a: 1}
-  magenta: {r: 1, g: 0, b: 1, a: 1}
-  yellow: {r: 1, g: 1, b: 0, a: 1}
-  white: {r: 1, g: 1, b: 1, a: 1}
+  blue: {r: 0, g: 0, b: 0.5019608, a: 1}
+  green: {r: 0, g: 0.5019608, b: 0, a: 1}
+  cyan: {r: 0, g: 0.5019608, b: 0.5019608, a: 1}
+  red: {r: 0.5019608, g: 0, b: 0, a: 1}
+  magenta: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
+  yellow: {r: 0.5019608, g: 0.5019608, b: 0, a: 1}
+  brightBlack: {r: 0.4627451, g: 0.4627451, b: 0.4627451, a: 1}
+  white: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  brightBlue: {r: 0, g: 0, b: 1, a: 1}
+  brightGreen: {r: 0, g: 1, b: 0, a: 1}
+  brightCyan: {r: 0, g: 1, b: 1, a: 1}
+  brightRed: {r: 1, g: 0, b: 0, a: 1}
+  brightMagenta: {r: 1, g: 0, b: 1, a: 1}
+  brightYellow: {r: 1, g: 1, b: 0, a: 1}
+  brightWhite: {r: 1, g: 1, b: 1, a: 1}

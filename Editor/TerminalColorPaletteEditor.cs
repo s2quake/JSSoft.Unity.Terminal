@@ -40,21 +40,21 @@ namespace JSSoft.Unity.Terminal.Editor
         {
             this.notifier = new EditorPropertyNotifier(this);
             this.notifier.Add(nameof(TerminalColorPalette.Black));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkBlue));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkGreen));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkCyan));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkRed));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkMagenta));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkYellow));
-            this.notifier.Add(nameof(TerminalColorPalette.Gray));
-            this.notifier.Add(nameof(TerminalColorPalette.DarkGray));
-            this.notifier.Add(nameof(TerminalColorPalette.Blue));
-            this.notifier.Add(nameof(TerminalColorPalette.Green));
-            this.notifier.Add(nameof(TerminalColorPalette.Cyan));
             this.notifier.Add(nameof(TerminalColorPalette.Red));
-            this.notifier.Add(nameof(TerminalColorPalette.Magenta));
+            this.notifier.Add(nameof(TerminalColorPalette.Green));
             this.notifier.Add(nameof(TerminalColorPalette.Yellow));
+            this.notifier.Add(nameof(TerminalColorPalette.Blue));
+            this.notifier.Add(nameof(TerminalColorPalette.Magenta));
+            this.notifier.Add(nameof(TerminalColorPalette.Cyan));
             this.notifier.Add(nameof(TerminalColorPalette.White));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightBlack));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightRed));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightGreen));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightYellow));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightBlue));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightMagenta));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightCyan));
+            this.notifier.Add(nameof(TerminalColorPalette.BrightWhite));
         }
 
         protected virtual void OnDisable()

@@ -32,22 +32,6 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color black = TerminalColors.Black;
         [SerializeField]
-        private Color darkBlue = TerminalColors.DarkBlue;
-        [SerializeField]
-        private Color darkGreen = TerminalColors.DarkGreen;
-        [SerializeField]
-        private Color darkCyan = TerminalColors.DarkCyan;
-        [SerializeField]
-        private Color darkRed = TerminalColors.DarkRed;
-        [SerializeField]
-        private Color darkMagenta = TerminalColors.DarkMagenta;
-        [SerializeField]
-        private Color darkYellow = TerminalColors.DarkYellow;
-        [SerializeField]
-        private Color gray = TerminalColors.Gray;
-        [SerializeField]
-        private Color darkGray = TerminalColors.DarkGray;
-        [SerializeField]
         private Color blue = TerminalColors.Blue;
         [SerializeField]
         private Color green = TerminalColors.Green;
@@ -60,7 +44,23 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color yellow = TerminalColors.Yellow;
         [SerializeField]
+        private Color brightBlack = TerminalColors.BrightBlack;
+        [SerializeField]
         private Color white = TerminalColors.White;
+        [SerializeField]
+        private Color brightBlue = TerminalColors.BrightBlue;
+        [SerializeField]
+        private Color brightGreen = TerminalColors.BrightGreen;
+        [SerializeField]
+        private Color brightCyan = TerminalColors.BrightCyan;
+        [SerializeField]
+        private Color brightRed = TerminalColors.BrightRed;
+        [SerializeField]
+        private Color brightMagenta = TerminalColors.BrightMagenta;
+        [SerializeField]
+        private Color brightYellow = TerminalColors.BrightYellow;
+        [SerializeField]
+        private Color brightWhite = TerminalColors.BrightWhite;
 
         public Color GetColor(TerminalColor color)
         {
@@ -68,22 +68,6 @@ namespace JSSoft.Unity.Terminal
             {
                 case TerminalColor.Black:
                     return this.Black;
-                case TerminalColor.DarkBlue:
-                    return this.DarkBlue;
-                case TerminalColor.DarkGreen:
-                    return this.DarkGreen;
-                case TerminalColor.DarkCyan:
-                    return this.DarkCyan;
-                case TerminalColor.DarkRed:
-                    return this.DarkRed;
-                case TerminalColor.DarkMagenta:
-                    return this.DarkMagenta;
-                case TerminalColor.DarkYellow:
-                    return this.DarkYellow;
-                case TerminalColor.Gray:
-                    return this.Gray;
-                case TerminalColor.DarkGray:
-                    return this.DarkGray;
                 case TerminalColor.Blue:
                     return this.Blue;
                 case TerminalColor.Green:
@@ -96,8 +80,24 @@ namespace JSSoft.Unity.Terminal
                     return this.Magenta;
                 case TerminalColor.Yellow:
                     return this.Yellow;
+                case TerminalColor.BrightBlack:
+                    return this.BrightBlack;
                 case TerminalColor.White:
                     return this.White;
+                case TerminalColor.BrightBlue:
+                    return this.BrightBlue;
+                case TerminalColor.BrightGreen:
+                    return this.BrightGreen;
+                case TerminalColor.BrightCyan:
+                    return this.BrightCyan;
+                case TerminalColor.BrightRed:
+                    return this.BrightRed;
+                case TerminalColor.BrightMagenta:
+                    return this.BrightMagenta;
+                case TerminalColor.BrightYellow:
+                    return this.BrightYellow;
+                case TerminalColor.BrightWhite:
+                    return this.BrightWhite;
             }
             throw new NotImplementedException();
         }
@@ -116,128 +116,16 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        [FieldName(nameof(darkBlue))]
-        public Color DarkBlue
+        [FieldName(nameof(red))]
+        public Color Red
         {
-            get => this.darkBlue;
+            get => this.red;
             set
             {
-                if (this.darkBlue != value)
+                if (this.red != value)
                 {
-                    this.darkBlue = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkBlue));
-                }
-            }
-        }
-
-        [FieldName(nameof(darkGreen))]
-        public Color DarkGreen
-        {
-            get => this.darkGreen;
-            set
-            {
-                if (this.darkGreen != value)
-                {
-                    this.darkGreen = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkGreen));
-                }
-            }
-        }
-
-        [FieldName(nameof(darkCyan))]
-        public Color DarkCyan
-        {
-            get => this.darkCyan;
-            set
-            {
-                if (this.darkCyan != value)
-                {
-                    this.darkCyan = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkCyan));
-                }
-            }
-        }
-
-        [FieldName(nameof(darkRed))]
-        public Color DarkRed
-        {
-            get => this.darkRed;
-            set
-            {
-                if (this.darkRed != value)
-                {
-                    this.darkRed = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkRed));
-                }
-            }
-        }
-
-        [FieldName(nameof(darkMagenta))]
-        public Color DarkMagenta
-        {
-            get => this.darkMagenta;
-            set
-            {
-                if (this.darkMagenta != value)
-                {
-                    this.darkMagenta = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkMagenta));
-                }
-            }
-        }
-
-        [FieldName(nameof(darkYellow))]
-        public Color DarkYellow
-        {
-            get => this.darkYellow;
-            set
-            {
-                if (this.darkYellow != value)
-                {
-                    this.darkYellow = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkYellow));
-                }
-            }
-        }
-
-        [FieldName(nameof(gray))]
-        public Color Gray
-        {
-            get => this.gray;
-            set
-            {
-                if (this.gray != value)
-                {
-                    this.gray = value;
-                    this.InvokePropertyChangedEvent(nameof(Gray));
-                }
-            }
-        }
-
-        [FieldName(nameof(darkGray))]
-        public Color DarkGray
-        {
-            get => this.darkGray;
-            set
-            {
-                if (this.darkGray != value)
-                {
-                    this.darkGray = value;
-                    this.InvokePropertyChangedEvent(nameof(DarkGray));
-                }
-            }
-        }
-
-        [FieldName(nameof(blue))]
-        public Color Blue
-        {
-            get => this.blue;
-            set
-            {
-                if (this.blue != value)
-                {
-                    this.blue = value;
-                    this.InvokePropertyChangedEvent(nameof(Blue));
+                    this.red = value;
+                    this.InvokePropertyChangedEvent(nameof(Red));
                 }
             }
         }
@@ -256,30 +144,30 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        [FieldName(nameof(cyan))]
-        public Color Cyan
+        [FieldName(nameof(yellow))]
+        public Color Yellow
         {
-            get => this.cyan;
+            get => this.yellow;
             set
             {
-                if (this.cyan != value)
+                if (this.yellow != value)
                 {
-                    this.cyan = value;
-                    this.InvokePropertyChangedEvent(nameof(Cyan));
+                    this.yellow = value;
+                    this.InvokePropertyChangedEvent(nameof(Yellow));
                 }
             }
         }
 
-        [FieldName(nameof(red))]
-        public Color Red
+        [FieldName(nameof(blue))]
+        public Color Blue
         {
-            get => this.red;
+            get => this.blue;
             set
             {
-                if (this.red != value)
+                if (this.blue != value)
                 {
-                    this.red = value;
-                    this.InvokePropertyChangedEvent(nameof(Red));
+                    this.blue = value;
+                    this.InvokePropertyChangedEvent(nameof(Blue));
                 }
             }
         }
@@ -298,16 +186,16 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        [FieldName(nameof(yellow))]
-        public Color Yellow
+        [FieldName(nameof(cyan))]
+        public Color Cyan
         {
-            get => this.yellow;
+            get => this.cyan;
             set
             {
-                if (this.yellow != value)
+                if (this.cyan != value)
                 {
-                    this.yellow = value;
-                    this.InvokePropertyChangedEvent(nameof(Yellow));
+                    this.cyan = value;
+                    this.InvokePropertyChangedEvent(nameof(Cyan));
                 }
             }
         }
@@ -322,6 +210,118 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.white = value;
                     this.InvokePropertyChangedEvent(nameof(White));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightBlack))]
+        public Color BrightBlack
+        {
+            get => this.brightBlack;
+            set
+            {
+                if (this.brightBlack != value)
+                {
+                    this.brightBlack = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightBlack));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightRed))]
+        public Color BrightRed
+        {
+            get => this.brightRed;
+            set
+            {
+                if (this.brightRed != value)
+                {
+                    this.brightRed = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightRed));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightGreen))]
+        public Color BrightGreen
+        {
+            get => this.brightGreen;
+            set
+            {
+                if (this.brightGreen != value)
+                {
+                    this.brightGreen = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightGreen));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightYellow))]
+        public Color BrightYellow
+        {
+            get => this.brightYellow;
+            set
+            {
+                if (this.brightYellow != value)
+                {
+                    this.brightYellow = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightYellow));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightBlue))]
+        public Color BrightBlue
+        {
+            get => this.brightBlue;
+            set
+            {
+                if (this.brightBlue != value)
+                {
+                    this.brightBlue = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightBlue));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightMagenta))]
+        public Color BrightMagenta
+        {
+            get => this.brightMagenta;
+            set
+            {
+                if (this.brightMagenta != value)
+                {
+                    this.brightMagenta = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightMagenta));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightCyan))]
+        public Color BrightCyan
+        {
+            get => this.brightCyan;
+            set
+            {
+                if (this.brightCyan != value)
+                {
+                    this.brightCyan = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightCyan));
+                }
+            }
+        }
+
+        [FieldName(nameof(brightWhite))]
+        public Color BrightWhite
+        {
+            get => this.brightWhite;
+            set
+            {
+                if (this.brightWhite != value)
+                {
+                    this.brightWhite = value;
+                    this.InvokePropertyChangedEvent(nameof(BrightWhite));
                 }
             }
         }

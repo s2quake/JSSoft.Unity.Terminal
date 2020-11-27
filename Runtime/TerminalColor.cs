@@ -25,20 +25,21 @@ namespace JSSoft.Unity.Terminal
     public enum TerminalColor
     {
         Black,
-        DarkBlue,
-        DarkGreen,
-        DarkCyan,
-        DarkRed,
-        DarkMagenta,
-        DarkYellow,
-        Gray,
-        DarkGray,
-        Blue,
-        Green,
-        Cyan,
         Red,
-        Magenta,
+        Green,
         Yellow,
+        Blue,
+        Magenta,
+        Cyan,
         White,
+        
+        BrightBlack,
+        BrightRed,
+        BrightGreen,
+        BrightYellow,
+        BrightBlue,
+        BrightMagenta,
+        BrightCyan,
+        BrightWhite,
     }
 }
