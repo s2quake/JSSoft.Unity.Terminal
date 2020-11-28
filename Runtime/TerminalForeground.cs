@@ -144,16 +144,8 @@ namespace JSSoft.Unity.Terminal
                 switch (e.PropertyName)
                 {
                     case nameof(ITerminalGrid.Font):
-                        {
-                            this.RefreshChilds();
-                        }
-                        break;
                     case nameof(ITerminalGrid.Style):
                     case nameof(ITerminalGrid.ForegroundColor):
-                        {
-                            this.SetDirty(false);
-                        }
-                        break;
                     case nameof(ITerminalGrid.VisibleIndex):
                     case nameof(ITerminalGrid.Text):
                     case nameof(ITerminalGrid.SelectingRange):
