@@ -105,8 +105,7 @@ namespace JSSoft.Unity.Terminal.Commands
             for (var i = 0; i < Screen.resolutions.Length; i++)
             {
                 var item = Screen.resolutions[i];
-                var isCurrent = $"{Screen.currentResolution}" == $"{item}" ? "*" : " ";
-                sb.AppendLine($"{isCurrent}{i,2}: {item}");
+                sb.AppendLine($"{i,2}: {item}");
             }
             this.WriteLine(sb.ToString());
         }
