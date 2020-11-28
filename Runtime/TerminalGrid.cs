@@ -62,7 +62,11 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color selectionColor = DefaultSelectionColor;
         [SerializeField]
+        private Color selectionTextColor = DefaultSelectionTextColor;
+        [SerializeField]
         private Color cursorColor = DefaultCursorColor;
+        [SerializeField]
+        private Color cursorTextColor = DefaultCursorTextColor;
         [SerializeField]
         private TerminalColorPalette colorPalette;
         [SerializeField]
@@ -305,7 +309,9 @@ namespace JSSoft.Unity.Terminal
                 BackgroundColor = this.backgroundColor,
                 ForegroundColor = this.foregroundColor,
                 SelectionColor = this.selectionColor,
+                SelectionTextColor = this.selectionTextColor,
                 CursorColor = this.cursorColor,
+                CursorTextColor = this.cursorTextColor,
                 ColorPalette = this.colorPalette,
                 VisibleIndex = this.visibleIndex,
                 MaxBufferHeight = this.maxBufferHeight,
@@ -333,7 +339,9 @@ namespace JSSoft.Unity.Terminal
             this.notifier.SetField(ref this.backgroundColor, data.BackgroundColor, nameof(BackgroundColor));
             this.notifier.SetField(ref this.foregroundColor, data.ForegroundColor, nameof(ForegroundColor));
             this.notifier.SetField(ref this.selectionColor, data.SelectionColor, nameof(SelectionColor));
+            this.notifier.SetField(ref this.selectionTextColor, data.SelectionTextColor, nameof(SelectionTextColor));
             this.notifier.SetField(ref this.cursorColor, data.CursorColor, nameof(CursorColor));
+            this.notifier.SetField(ref this.cursorTextColor, data.CursorTextColor, nameof(CursorTextColor));
             this.notifier.SetField(ref this.colorPalette, data.ColorPalette, nameof(ColorPalette));
             this.notifier.SetField(ref this.visibleIndex, data.VisibleIndex, nameof(VisibleIndex));
             this.notifier.SetField(ref this.maxBufferHeight, data.MaxBufferHeight, nameof(MaxBufferHeight));
@@ -425,7 +433,12 @@ namespace JSSoft.Unity.Terminal
         [FieldName(nameof(font))]
         public override TerminalFont Font
         {
-            get => this.style != null ? this.style.Font : this.font;
+            get
+            {
+                if (this.style != null && this.style.Font != null)
+                    return this.style.Font;
+                return this.font;
+            }
             set
             {
                 if (this.font != value)
@@ -537,6 +550,20 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        [FieldName(nameof(selectionTextColor))]
+        public override Color SelectionTextColor
+        {
+            get => this.style != null ? this.style.SelectionTextColor : this.selectionTextColor;
+            set
+            {
+                if (this.selectionTextColor != value)
+                {
+                    this.selectionTextColor = value;
+                    this.InvokePropertyChangedEvent(nameof(SelectionTextColor));
+                }
+            }
+        }
+
         [FieldName(nameof(cursorColor))]
         public override Color CursorColor
         {
@@ -551,10 +578,29 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        [FieldName(nameof(cursorTextColor))]
+        public override Color CursorTextColor
+        {
+            get => this.style != null ? this.style.CursorTextColor : this.cursorTextColor;
+            set
+            {
+                if (this.cursorTextColor != value)
+                {
+                    this.cursorTextColor = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorTextColor));
+                }
+            }
+        }
+
         [FieldName(nameof(colorPalette))]
         public TerminalColorPalette ColorPalette
         {
-            get => this.style != null ? this.style.ColorPalette : this.colorPalette;
+            get
+            {
+                if (this.style != null && this.style.ColorPalette != null)
+                    return this.style.ColorPalette;
+                return this.colorPalette;
+            }
             set
             {
                 if (this.colorPalette != value)
@@ -1225,6 +1271,7 @@ namespace JSSoft.Unity.Terminal
                 this.OnGotFocus(EventArgs.Empty);
             else
                 this.OnLostFocus(EventArgs.Empty);
+            this.InvokePropertyChangedEvent(nameof(IsFocused));
         }
 
         private IList<Event> PopEvents()

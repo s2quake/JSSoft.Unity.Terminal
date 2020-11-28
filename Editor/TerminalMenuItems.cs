@@ -121,7 +121,7 @@ namespace JSSoft.Unity.Terminal.Editor
                 }
                 else
                 {
-                    fontDescriptor.Update(textAsset, resolver);
+                    fontDescriptor.Refresh(textAsset, resolver);
                     EditorUtility.SetDirty(fontDescriptor);
                     AssetDatabase.SaveAssets();
                 }

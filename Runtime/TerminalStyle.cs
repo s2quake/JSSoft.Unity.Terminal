@@ -133,6 +133,20 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        [FieldName(nameof(selectionTextColor))]
+        public Color SelectionTextColor
+        {
+            get => this.selectionTextColor;
+            set
+            {
+                if (this.selectionTextColor != value)
+                {
+                    this.selectionTextColor = value;
+                    this.InvokePropertyChangedEvent(nameof(SelectionTextColor));
+                }
+            }
+        }
+
         [FieldName(nameof(cursorColor))]
         public Color CursorColor
         {
@@ -143,6 +157,20 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.cursorColor = value;
                     this.InvokePropertyChangedEvent(nameof(CursorColor));
+                }
+            }
+        }
+
+        [FieldName(nameof(cursorTextColor))]
+        public Color CursorTextColor
+        {
+            get => this.cursorTextColor;
+            set
+            {
+                if (this.cursorTextColor != value)
+                {
+                    this.cursorTextColor = value;
+                    this.InvokePropertyChangedEvent(nameof(CursorTextColor));
                 }
             }
         }

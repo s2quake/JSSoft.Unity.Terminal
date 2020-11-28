@@ -138,7 +138,7 @@ namespace JSSoft.Unity.Terminal
             }
             return FontUtility.DefaultItemHeight;
         }
-
+        
         public static int GetItemLine(ITerminalGrid grid)
         {
             if (grid != null && grid.Font is TerminalFont font)
@@ -188,9 +188,19 @@ namespace JSSoft.Unity.Terminal
             return grid != null ? grid.SelectionColor : TerminalGrid.DefaultSelectionColor;
         }
 
+        public static Color GetSelectionTextColor(ITerminalGrid grid)
+        {
+            return grid != null ? grid.SelectionTextColor : TerminalGrid.DefaultSelectionTextColor;
+        }
+
         public static Color GetCursorColor(ITerminalGrid grid)
         {
             return grid != null ? grid.CursorColor : TerminalGrid.DefaultCursorColor;
+        }
+
+        public static Color GetCursorTextColor(ITerminalGrid grid)
+        {
+            return grid != null ? grid.CursorTextColor : TerminalGrid.DefaultCursorTextColor;
         }
 
         public static Color32 GetBackgroundColor(ITerminalGrid grid)

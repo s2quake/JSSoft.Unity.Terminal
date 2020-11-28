@@ -55,11 +55,11 @@ namespace JSSoft.Unity.Terminal
         public static TerminalFontDescriptor Create(TextAsset textAsset, TerminalFontResolver resolver)
         {
             var descriptor = new TerminalFontDescriptor();
-            descriptor.Update(textAsset, resolver);
+            descriptor.Refresh(textAsset, resolver);
             return descriptor;
         }
 
-        public void Update(TextAsset textAsset, TerminalFontResolver resolver)
+        public void Refresh(TextAsset textAsset, TerminalFontResolver resolver)
         {
             if (textAsset == null)
                 throw new ArgumentException(nameof(textAsset));

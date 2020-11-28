@@ -22,6 +22,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
@@ -77,6 +78,7 @@ namespace JSSoft.Unity.Terminal
             TerminalGridEvents.Enabled += Grid_Enabled;
             TerminalGridEvents.PropertyChanged += Grid_PropertyChanged;
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
+            TerminalGridEvents.SelectionChanged += Grid_SelectionChanged;
             TerminalValidationEvents.Validated += Object_Validated;
             this.CollectChilds();
             this.Invoke(nameof(SetDirty), float.Epsilon);
@@ -85,8 +87,9 @@ namespace JSSoft.Unity.Terminal
         protected override void OnDisable()
         {
             TerminalGridEvents.Enabled -= Grid_Enabled;
-            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
             TerminalGridEvents.PropertyChanged -= Grid_PropertyChanged;
+            TerminalGridEvents.LayoutChanged -= Grid_LayoutChanged;
+            TerminalGridEvents.SelectionChanged -= Grid_SelectionChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
             this.text = string.Empty;
             base.OnDisable();
@@ -150,8 +153,10 @@ namespace JSSoft.Unity.Terminal
                     case nameof(ITerminalGrid.VisibleIndex):
                     case nameof(ITerminalGrid.Text):
                     case nameof(ITerminalGrid.SelectingRange):
+                    case nameof(ITerminalGrid.IsFocused):
+                    case nameof(ITerminalGrid.CursorPoint):
                         {
-                            this.SetDirty(false);
+                            this.SetDirty(true);
                         }
                         break;
                 }
@@ -159,6 +164,14 @@ namespace JSSoft.Unity.Terminal
         }
 
         private void Grid_LayoutChanged(object sender, EventArgs e)
+        {
+            if (sender is TerminalGrid grid && grid == this.grid)
+            {
+                this.SetDirty(true);
+            }
+        }
+
+        private void Grid_SelectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {

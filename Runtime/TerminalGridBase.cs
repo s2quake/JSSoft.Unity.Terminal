@@ -70,7 +70,11 @@ namespace JSSoft.Unity.Terminal
 
         public abstract Color SelectionColor { get; set; }
 
+        public abstract Color SelectionTextColor { get; set; }
+
         public abstract Color CursorColor { get; set; }
+
+        public abstract Color CursorTextColor { get; set; }
 
         public abstract TerminalThickness Padding { get; set; }
 

@@ -20,27 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal
 {
-    public static class TerminalMeshExtensions
+    [Flags]
+    public enum TerminalCellFlags
     {
-        public static void SetVertices(this TerminalMesh terminalMesh, IEnumerable<ITerminalCell> cells, Rect rect)
-        {
-            var index = 0;
-            terminalMesh.Count = cells.Count();
-            foreach (var item in cells)
-            {
-                var flags = item.Flags;
-                var grid = item.Row.Grid;
-                terminalMesh.SetVertex(index, item.ForegroundRect, rect);
-                terminalMesh.SetUV(index, item.ForegroundUV);
-                terminalMesh.SetColor(index, TerminalCell.GetForegroundColor(item));
-                index++;
-            }
-        }
+        None,
+
+        IsSelecting = 1,
+
+        IsSelected = 2,
+
+        IsCursor = 4,
     }
 }

@@ -54,6 +54,13 @@ namespace JSSoft.Unity.Terminal
         {
             if (cell == null)
                 throw new ArgumentNullException(nameof(cell));
+            var flags = cell.Flags;
+            var grid = cell.Row.Grid;
+            var isCursor = grid.IsFocused == true && grid.CursorStyle == TerminalCursorStyle.Block && grid.CursorPoint == cell.Point;
+            if (isCursor == true)
+                return TerminalGridUtility.GetCursorTextColor(grid);
+            if (flags.HasFlag(TerminalCellFlags.IsSelected) == true || flags.HasFlag(TerminalCellFlags.IsSelecting) == true)
+                return TerminalGridUtility.GetSelectionTextColor(grid);
             return cell.ForegroundColor ?? TerminalRow.GetForegroundColor(cell.Row);
         }
 
@@ -133,7 +140,20 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        public bool IsSelected => TerminalGridUtility.IsSelected(this.Grid, this.Point);
+        public TerminalCellFlags Flags
+        {
+            get
+            {
+                var flags = TerminalCellFlags.None;
+                if (TerminalGridUtility.IsSelected(this.Grid, this.Point) == true)
+                    flags |= TerminalCellFlags.IsSelected;
+                if (TerminalGridUtility.IsSelecting(this.Grid, this.Point) == true)
+                    flags |= TerminalCellFlags.IsSelecting;
+                if (this.Grid.CursorPoint == this.Point)
+                    flags |= TerminalCellFlags.IsCursor;
+                return flags;
+            }
+        }
 
         public Rect BackgroundRect { get; private set; }
 
@@ -163,6 +183,8 @@ namespace JSSoft.Unity.Terminal
         #region ITerminalCell
 
         ITerminalRow ITerminalCell.Row => this.Row;
+
+        ITerminalGrid ITerminalCell.Grid => this.Grid;
 
         #endregion
     }

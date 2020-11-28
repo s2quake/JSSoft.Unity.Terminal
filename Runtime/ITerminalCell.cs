@@ -36,11 +36,15 @@ namespace JSSoft.Unity.Terminal
 
         ITerminalRow Row { get; }
 
+        ITerminalGrid Grid { get; }
+
+        TerminalPoint Point { get; }
+
         char Character { get; }
 
         int Volume { get; }
 
-        bool IsSelected { get; }
+        TerminalCellFlags Flags { get; }
 
         Rect BackgroundRect { get; }
 

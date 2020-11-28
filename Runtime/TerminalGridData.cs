@@ -44,7 +44,11 @@ namespace JSSoft.Unity.Terminal
 
         public Color SelectionColor { get; set; }
 
+        public Color SelectionTextColor { get; set; }
+
         public Color CursorColor { get; set; }
+
+        public Color CursorTextColor { get; set; }
 
         public TerminalColorPalette ColorPalette { get; set; }
 
