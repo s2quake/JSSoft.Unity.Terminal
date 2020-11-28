@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+using System;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.InputHandlers
@@ -58,7 +59,11 @@ namespace JSSoft.Unity.Terminal.InputHandlers
             {
                 if (TerminalEnvironment.IsIPhone == true)
                 {
+#if !UNITY_EDITOR
+                    throw new NotImplementedException();
+#else
                     return TouchScreenKeyboard.area;
+#endif
                 }
                 else if (TerminalEnvironment.IsAndroid == true)
                 {

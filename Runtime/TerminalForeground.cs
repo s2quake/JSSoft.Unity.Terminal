@@ -46,9 +46,7 @@ namespace JSSoft.Unity.Terminal
 
         private int visibleIndex;
         private string text = string.Empty;
-        private bool isFocused;
-        private TerminalRange selectingRange;
-        private TerminalPoint cursorPoint;
+        private TerminalFont font;
 
         public TerminalForeground()
         {
@@ -95,6 +93,7 @@ namespace JSSoft.Unity.Terminal
             TerminalGridEvents.SelectionChanged -= Grid_SelectionChanged;
             TerminalValidationEvents.Validated -= Object_Validated;
             this.text = string.Empty;
+            this.font = null;
             base.OnDisable();
         }
 
@@ -105,36 +104,29 @@ namespace JSSoft.Unity.Terminal
 
         private void SetDirty(bool force)
         {
-            if (this.text != this.grid.Text || 
-                this.visibleIndex != this.grid.VisibleIndex ||
-                this.isFocused != this.grid.IsFocused ||
-                this.selectingRange != this.grid.SelectingRange ||
-                this.cursorPoint != this.grid.CursorPoint ||
-                force == true)
+            if (this.font != this.grid.Font)
+            {
+                this.font = this.grid.Font;
+                this.RefreshChilds();
+            }
+            if (this.text != this.grid.Text ||
+                this.visibleIndex != this.grid.VisibleIndex || force == true)
             {
                 this.UpdateCellList();
                 this.text = this.grid.Text;
                 this.visibleIndex = this.grid.VisibleIndex;
-                this.isFocused = this.grid.IsFocused;
-                this.selectingRange = this.grid.SelectingRange;
-                this.cursorPoint = this.grid.CursorPoint;
-                // Debug.Log("SetDirty");
-            }
-        }
-
-        private void UpdateCellList()
-        {
-            var itemByTexture = this.Items.ToDictionary(item => item.Texture);
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
-            this.cellList.Clear();
-            foreach (var item in visibleCells)
-            {
-                this.cellList.Add(item);
             }
             foreach (var item in this.Items)
             {
                 item.SetVerticesDirty();
             }
+        }
+
+        private void UpdateCellList()
+        {
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
+            this.cellList.Clear();
+            this.cellList.AddRange(visibleCells);
         }
 
         private void Grid_Enabled(object sender, EventArgs e)
@@ -152,14 +144,14 @@ namespace JSSoft.Unity.Terminal
                 switch (e.PropertyName)
                 {
                     case nameof(ITerminalGrid.Font):
-                    case nameof(ITerminalGrid.Style):
                         {
                             this.RefreshChilds();
                         }
                         break;
+                    case nameof(ITerminalGrid.Style):
                     case nameof(ITerminalGrid.ForegroundColor):
                         {
-                            this.SetDirty(true);
+                            this.SetDirty(false);
                         }
                         break;
                     case nameof(ITerminalGrid.VisibleIndex):
@@ -187,7 +179,7 @@ namespace JSSoft.Unity.Terminal
         {
             if (sender is TerminalGrid grid && grid == this.grid)
             {
-                this.SetDirty(true);
+                this.SetDirty(false);
             }
         }
 

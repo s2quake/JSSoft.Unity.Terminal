@@ -1357,11 +1357,14 @@ namespace JSSoft.Unity.Terminal
                 this.scrollPos -= eventData.scrollDelta.y;
                 this.scrollPos = Math.Max(this.scrollPos, this.MinimumVisibleIndex);
                 this.scrollPos = Math.Min(this.scrollPos, this.MaximumVisibleIndex);
-                this.visibleIndex = (int)this.scrollPos;
-                this.IsScrolling = true;
-                this.UpdateVisibleIndex();
-                this.InvokePropertyChangedEvent(nameof(VisibleIndex));
-                this.IsScrolling = false;
+                if (this.visibleIndex != (int)this.scrollPos)
+                {
+                    this.visibleIndex = (int)this.scrollPos;
+                    this.IsScrolling = true;
+                    this.UpdateVisibleIndex();
+                    this.InvokePropertyChangedEvent(nameof(VisibleIndex));
+                    this.IsScrolling = false;
+                }
             }
         }
 
