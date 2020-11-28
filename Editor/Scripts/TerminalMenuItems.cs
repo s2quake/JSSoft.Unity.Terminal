@@ -251,7 +251,6 @@ namespace JSSoft.Unity.Terminal.Editor
             var foreground = foregroundObj.AddComponent(typeof(TerminalForeground)) as TerminalForeground;
             var foregroundRect = foregroundObj.GetComponent<RectTransform>();
             foreground.Grid = terminalGrid;
-            foreground.ItemType = typeof(TerminalForegroundItem).AssemblyQualifiedName;
             foregroundRect.SetParent(terminalGridRect);
             foregroundRect.anchorMin = Vector3.zero;
             foregroundRect.anchorMax = Vector3.one;

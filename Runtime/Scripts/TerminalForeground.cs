@@ -36,12 +36,8 @@ namespace JSSoft.Unity.Terminal
     {
         [SerializeField]
         private TerminalGrid grid = null;
-        [SerializeField]
-        [HideInInspector]
-        private string itemType;
 
         private readonly List<ITerminalCell> cellList = new List<ITerminalCell>();
-        private readonly Dictionary<Texture2D, TerminalForegroundItem> itemByTexture = new Dictionary<Texture2D, TerminalForegroundItem>();
         private readonly List<TerminalForegroundItem> itemsToDelete = new List<TerminalForegroundItem>();
 
         private int visibleIndex;
@@ -67,12 +63,6 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        internal string ItemType
-        {
-            get => this.itemType;
-            set => this.itemType = value;
-        }
-
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -81,7 +71,8 @@ namespace JSSoft.Unity.Terminal
             TerminalGridEvents.LayoutChanged += Grid_LayoutChanged;
             TerminalGridEvents.SelectionChanged += Grid_SelectionChanged;
             TerminalValidationEvents.Validated += Object_Validated;
-            this.CollectChilds();
+            this.font = this.grid != null ? this.grid.Font : null;
+            this.text = this.grid != null ? this.grid.Text : string.Empty;
             this.Invoke(nameof(SetDirty), float.Epsilon);
         }
 
@@ -194,41 +185,30 @@ namespace JSSoft.Unity.Terminal
 
         private void RefreshChilds()
         {
-            var font = this.grid.Font;
-            var itemByTexture = this.Items.ToDictionary(item => item.Texture);
-            var textures = font != null ? font.Textures.ToArray() : new Texture2D[] { };
+            var textures = this.font != null ? this.font.Textures.ToArray() : new Texture2D[] { };
+            var items = this.Items.ToArray();
             for (var i = 0; i < textures.Length; i++)
             {
                 var texture = textures[i];
-                if (itemByTexture.ContainsKey(texture) == true)
-                {
-                    itemByTexture.Remove(texture);
-                }
-                else
-                {
-                    var gameObject = new GameObject($"Item{i}", this.ForegroungItemType);
-                    var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
-                    var transform = foregroundItem.rectTransform;
-                    foregroundItem.material = new Material(Shader.Find("UI/Default"));
-                    foregroundItem.Texture = texture;
-                    foregroundItem.Grid = this.grid;
-                    foregroundItem.Foreground = this;
-                    transform.SetParent(this.transform);
-                    transform.anchorMin = Vector3.zero;
-                    transform.anchorMax = Vector3.one;
-                    transform.offsetMin = Vector3.zero;
-                    transform.offsetMax = Vector3.zero;
-                }
+                var gameObject = new GameObject($"Item{i}", typeof(TerminalForegroundItem));
+                var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
+                var transform = foregroundItem.rectTransform;
+                foregroundItem.material = new Material(Shader.Find("UI/Default"));
+                foregroundItem.Texture = texture;
+                foregroundItem.Grid = this.grid;
+                foregroundItem.Foreground = this;
+                transform.SetParent(this.transform);
+                transform.anchorMin = Vector3.zero;
+                transform.anchorMax = Vector3.one;
+                transform.offsetMin = Vector3.zero;
+                transform.offsetMax = Vector3.zero;
             }
-            var items = itemByTexture.Values.ToArray();
             foreach (var item in items)
             {
                 var rect = item.GetComponent<RectTransform>();
                 rect.SetParent(null);
                 this.itemsToDelete.Add(item);
             }
-            this.CollectChilds();
-            this.SetDirty(true);
             this.Invoke(nameof(DeleteItems), float.Epsilon);
         }
 
@@ -239,15 +219,6 @@ namespace JSSoft.Unity.Terminal
                 GameObject.DestroyImmediate(item.gameObject);
             }
             this.itemsToDelete.Clear();
-        }
-
-        private void CollectChilds()
-        {
-            this.itemByTexture.Clear();
-            foreach (var item in this.Items)
-            {
-                this.itemByTexture.Add(item.Texture, item);
-            }
         }
 
         private IEnumerable<TerminalForegroundItem> Items
@@ -262,18 +233,6 @@ namespace JSSoft.Unity.Terminal
                         yield return component;
                     }
                 }
-            }
-        }
-
-        private Type ForegroungItemType
-        {
-            get
-            {
-                if (this.itemType == null)
-                {
-                    return Type.GetType(this.itemType);
-                }
-                return typeof(TerminalForegroundItem);
             }
         }
     }

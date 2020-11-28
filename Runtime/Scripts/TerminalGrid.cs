@@ -436,7 +436,7 @@ namespace JSSoft.Unity.Terminal
 
         public override bool IsFocused => this.isFocused;
 
-        public override string Text => this.terminal.Text;
+        public override string Text => this.terminal != null ? this.terminal.Text : string.Empty;
 
         [FieldName(nameof(font))]
         public override TerminalFont Font
