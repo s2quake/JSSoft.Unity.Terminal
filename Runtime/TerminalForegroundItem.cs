@@ -71,7 +71,7 @@ namespace JSSoft.Unity.Terminal
             {
                 var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
                 var visibleCells = this.foreground.GetCells(this.texture);
-                this.terminalMesh.SetVertices(visibleCells, rect);
+                this.terminalMesh.SetForegroundVertices(visibleCells, rect);
                 this.terminalMesh.Fill(vh);
             }
         }

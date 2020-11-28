@@ -47,6 +47,12 @@ namespace JSSoft.Unity.Terminal
         {
             if (cell == null)
                 throw new ArgumentNullException(nameof(cell));
+            var grid = cell.Grid;
+            var isCursor = grid.CursorPoint == cell.Point;
+            if (cell.IsCursor == true)
+                return TerminalGridUtility.GetCursorColor(grid);
+            if (cell.IsSelecting == true || cell.IsSelected == true)
+                return TerminalGridUtility.GetSelectionColor(grid);
             return cell.BackgroundColor ?? TerminalRow.GetBackgroundColor(cell.Row);
         }
 
@@ -54,12 +60,11 @@ namespace JSSoft.Unity.Terminal
         {
             if (cell == null)
                 throw new ArgumentNullException(nameof(cell));
-            var flags = cell.Flags;
-            var grid = cell.Row.Grid;
-            var isCursor = grid.IsFocused == true && grid.CursorStyle == TerminalCursorStyle.Block && grid.CursorPoint == cell.Point;
+            var grid = cell.Grid;
+            var isCursor = grid.IsFocused == true && grid.CursorStyle == TerminalCursorStyle.Block && cell.IsCursor == true;
             if (isCursor == true)
                 return TerminalGridUtility.GetCursorTextColor(grid);
-            if (flags.HasFlag(TerminalCellFlags.IsSelected) == true || flags.HasFlag(TerminalCellFlags.IsSelecting) == true)
+            if (cell.IsSelecting == true || cell.IsSelected == true)
                 return TerminalGridUtility.GetSelectionTextColor(grid);
             return cell.ForegroundColor ?? TerminalRow.GetForegroundColor(cell.Row);
         }
@@ -90,10 +95,6 @@ namespace JSSoft.Unity.Terminal
                 this.ForegroundColor = foregroundColor;
                 this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
                 this.ForegroundUV = FontUtility.GetUV(this.Font, character);
-            }
-            for (var i = 1; i < this.Volume; i++)
-            {
-                this.Row.Cells[this.Index + i].Reset();
             }
         }
 
@@ -131,29 +132,22 @@ namespace JSSoft.Unity.Terminal
             {
                 var row = this.Row;
                 var cells = row.Cells;
-                for (var i = 1; i < this.volume; i++)
+                var index = this.Index;
+                for (var i = 1; i < value; i++)
                 {
-                    var cell = cells[i];
+                    var cell = cells[index + i];
+                    cell.Reset();
                     cell.volume = -i;
                 }
                 this.volume = value;
             }
         }
 
-        public TerminalCellFlags Flags
-        {
-            get
-            {
-                var flags = TerminalCellFlags.None;
-                if (TerminalGridUtility.IsSelected(this.Grid, this.Point) == true)
-                    flags |= TerminalCellFlags.IsSelected;
-                if (TerminalGridUtility.IsSelecting(this.Grid, this.Point) == true)
-                    flags |= TerminalCellFlags.IsSelecting;
-                if (this.Grid.CursorPoint == this.Point)
-                    flags |= TerminalCellFlags.IsCursor;
-                return flags;
-            }
-        }
+        public bool IsSelected => TerminalGridUtility.IsSelected(this.Grid, this.Point);
+
+        public bool IsCursor => this.Grid.CursorPoint == this.Point;
+
+        public bool IsSelecting => TerminalGridUtility.IsSelecting(this.Grid, this.Point);
 
         public Rect BackgroundRect { get; private set; }
 

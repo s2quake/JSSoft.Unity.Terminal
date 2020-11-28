@@ -52,19 +52,7 @@ namespace JSSoft.Unity.Terminal
             base.OnPopulateMesh(vh);
             var rect = TerminalGridUtility.TransformRect(this.grid, this.rectTransform.rect, true);
             var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
-            var index = 0;
-            var selectionColor = TerminalGridUtility.GetSelectionColor(this.grid);
-            this.terminalMesh.Count = visibleCells.Count();
-            foreach (var item in visibleCells)
-            {
-                this.terminalMesh.SetVertex(index, item.BackgroundRect, rect);
-                this.terminalMesh.SetUV(index, item.BackgroundUV);
-                if (item.BackgroundColor is Color32 color)
-                    this.terminalMesh.SetColor(index, color);
-                else
-                    this.terminalMesh.SetColor(index, selectionColor);
-                index++;
-            }
+            this.terminalMesh.SetBackgroundVertices(visibleCells, rect);
             this.terminalMesh.Fill(vh);
         }
 

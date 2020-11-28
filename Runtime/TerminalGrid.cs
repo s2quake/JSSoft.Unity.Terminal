@@ -152,6 +152,9 @@ namespace JSSoft.Unity.Terminal
             var y = (int)(position.y / itemHeight);
             if (x >= this.BufferWidth || y >= this.rows.Count)
                 return TerminalPoint.Invalid;
+            var cell = this.rows[y].Cells[x];
+            if (cell.Volume < 0)
+                x += cell.Volume;
             return new TerminalPoint(x, y);
         }
 
@@ -385,6 +388,11 @@ namespace JSSoft.Unity.Terminal
             while (this.eventQueue.Any() == true)
             {
                 var item = this.eventQueue.Dequeue();
+                if (item.Character == 0 && itemList.Count > 0)
+                {
+                    this.terminal.InsertCharacter(itemList.ToArray());
+                    itemList.Clear();
+                }
                 if (this.OnKeyDown(item.Modifiers, item.KeyCode) == true)
                     continue;
                 if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnKeyPress(item.Character) == false)

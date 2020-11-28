@@ -46,6 +46,9 @@ namespace JSSoft.Unity.Terminal
 
         private int visibleIndex;
         private string text = string.Empty;
+        private bool isFocused;
+        private TerminalRange selectingRange;
+        private TerminalPoint cursorPoint;
 
         public TerminalForeground()
         {
@@ -102,11 +105,20 @@ namespace JSSoft.Unity.Terminal
 
         private void SetDirty(bool force)
         {
-            if (this.text != this.grid.Text || this.visibleIndex != this.grid.VisibleIndex || force == true)
+            if (this.text != this.grid.Text || 
+                this.visibleIndex != this.grid.VisibleIndex ||
+                this.isFocused != this.grid.IsFocused ||
+                this.selectingRange != this.grid.SelectingRange ||
+                this.cursorPoint != this.grid.CursorPoint ||
+                force == true)
             {
                 this.UpdateCellList();
                 this.text = this.grid.Text;
                 this.visibleIndex = this.grid.VisibleIndex;
+                this.isFocused = this.grid.IsFocused;
+                this.selectingRange = this.grid.SelectingRange;
+                this.cursorPoint = this.grid.CursorPoint;
+                // Debug.Log("SetDirty");
             }
         }
 
@@ -156,7 +168,7 @@ namespace JSSoft.Unity.Terminal
                     case nameof(ITerminalGrid.IsFocused):
                     case nameof(ITerminalGrid.CursorPoint):
                         {
-                            this.SetDirty(true);
+                            this.SetDirty(false);
                         }
                         break;
                 }

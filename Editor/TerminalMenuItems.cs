@@ -216,7 +216,6 @@ namespace JSSoft.Unity.Terminal.Editor
             var terminalPadding = terminalGrid.Padding;
             terminal.SetDispatcher(dispatcher);
             terminalGrid.material = new Material(Graphic.defaultGraphicMaterial);
-            terminalGrid.BackgroundColor = TerminalGrid.DefaultBackgroundColor;
             terminalGridRect.SetParent(parentRect);
             terminalGridRect.anchorMin = Vector3.zero;
             terminalGridRect.anchorMax = Vector3.one;

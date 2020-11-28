@@ -32,33 +32,33 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color black = TerminalColors.Black;
         [SerializeField]
-        private Color blue = TerminalColors.Blue;
+        private Color red = TerminalColors.Red;
         [SerializeField]
         private Color green = TerminalColors.Green;
         [SerializeField]
-        private Color cyan = TerminalColors.Cyan;
+        private Color yellow = TerminalColors.Yellow;
         [SerializeField]
-        private Color red = TerminalColors.Red;
+        private Color blue = TerminalColors.Blue;
         [SerializeField]
         private Color magenta = TerminalColors.Magenta;
         [SerializeField]
-        private Color yellow = TerminalColors.Yellow;
+        private Color cyan = TerminalColors.Cyan;
+        [SerializeField]
+        private Color white = TerminalColors.White;
         [SerializeField]
         private Color brightBlack = TerminalColors.BrightBlack;
         [SerializeField]
-        private Color white = TerminalColors.White;
+        private Color brightRed = TerminalColors.BrightRed;
         [SerializeField]
         private Color brightBlue = TerminalColors.BrightBlue;
         [SerializeField]
         private Color brightGreen = TerminalColors.BrightGreen;
         [SerializeField]
-        private Color brightCyan = TerminalColors.BrightCyan;
-        [SerializeField]
-        private Color brightRed = TerminalColors.BrightRed;
+        private Color brightYellow = TerminalColors.BrightYellow;
         [SerializeField]
         private Color brightMagenta = TerminalColors.BrightMagenta;
         [SerializeField]
-        private Color brightYellow = TerminalColors.BrightYellow;
+        private Color brightCyan = TerminalColors.BrightCyan;
         [SerializeField]
         private Color brightWhite = TerminalColors.BrightWhite;
 

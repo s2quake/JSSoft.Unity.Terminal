@@ -57,19 +57,21 @@ namespace JSSoft.Unity.Terminal
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
-            if (font.Contains(character) == false)
-                throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-            var charInfo = font[character];
-            var texture = charInfo.Texture;
-            var w = (float)texture.width;
-            var h = (float)texture.height;
-            var l = (float)charInfo.X;
-            var t = (float)charInfo.Y;
-            var r = (float)charInfo.X + charInfo.Width;
-            var b = (float)charInfo.Y + charInfo.Height;
-            var uv0 = new Vector2(l / w, 1.0f - b / h);
-            var uv1 = new Vector2(r / w, 1.0f - t / h);
-            return (uv0, uv1);
+            if (font.Contains(character) == true)
+            {
+                var charInfo = font[character];
+                var texture = charInfo.Texture;
+                var w = (float)texture.width;
+                var h = (float)texture.height;
+                var l = (float)charInfo.X;
+                var t = (float)charInfo.Y;
+                var r = (float)charInfo.X + charInfo.Width;
+                var b = (float)charInfo.Y + charInfo.Height;
+                var uv0 = new Vector2(l / w, 1.0f - b / h);
+                var uv1 = new Vector2(r / w, 1.0f - t / h);
+                return (uv0, uv1);
+            }
+            return (Vector2.zero, Vector2.zero);
         }
 
         public static Rect GetForegroundRect(TerminalFont font, char character)
@@ -81,12 +83,14 @@ namespace JSSoft.Unity.Terminal
         {
             if (font == null)
                 throw new ArgumentNullException(nameof(font));
-            if (font.Contains(character) == false)
-                throw new ArgumentException($"'{character}' does not exits.", nameof(character));
-            var charInfo = font[character];
-            var fx = x + charInfo.XOffset;
-            var fy = y + charInfo.YOffset;
-            return new Rect(fx, fy, charInfo.Width, charInfo.Height);
+            if (font.Contains(character) == true)
+            {
+                var charInfo = font[character];
+                var fx = x + charInfo.XOffset;
+                var fy = y + charInfo.YOffset;
+                return new Rect(fx, fy, charInfo.Width, charInfo.Height);
+            }
+            return new Rect(x, y, font.Width, font.Height);
         }
     }
 }

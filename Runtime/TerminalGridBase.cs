@@ -34,9 +34,9 @@ namespace JSSoft.Unity.Terminal
         public static readonly Color DefaultBackgroundColor = new Color32(23, 23, 23, 240);
         public static readonly Color DefaultForegroundColor = new Color32(255, 255, 255, 255);
         public static readonly Color DefaultSelectionColor = new Color32(49, 79, 129, 255);
-        public static readonly Color DefaultSelectionTextColor = new Color32(49, 79, 129, 255);
+        public static readonly Color DefaultSelectionTextColor = new Color32(255, 255, 255, 255);
         public static readonly Color DefaultCursorColor = new Color32(139, 139, 139, 255);
-        public static readonly Color DefaultCursorTextColor = new Color32(139, 139, 139, 255);
+        public static readonly Color DefaultCursorTextColor = new Color32(255, 255, 255, 255);
         public static readonly Color DefaultCompositionColor = new Color32(255, 255, 255, 255);
         public static readonly Color DefaultScrollbarColor = new Color32(139, 139, 139, 0);
 

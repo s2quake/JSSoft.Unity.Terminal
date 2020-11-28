@@ -44,7 +44,11 @@ namespace JSSoft.Unity.Terminal
 
         int Volume { get; }
 
-        TerminalCellFlags Flags { get; }
+        bool IsSelected { get; }
+
+        bool IsCursor { get; }
+
+        bool IsSelecting { get; }
 
         Rect BackgroundRect { get; }
 
