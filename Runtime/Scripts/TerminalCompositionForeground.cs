@@ -54,7 +54,7 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        public override Texture mainTexture => this.texture;
+        public override Texture mainTexture => this.texture ?? Texture2D.whiteTexture;
 
         protected override void OnEnable()
         {
@@ -91,8 +91,6 @@ namespace JSSoft.Unity.Terminal
             {
                 var rect = TerminalGridUtility.TransformRect(grid, this.rectTransform.rect, false);
                 var character = text.First();
-                var characterInfo = font[character];
-                var texture = characterInfo.Texture;
                 var itemWidth = TerminalGridUtility.GetItemWidth(grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(grid);
                 var volume = FontUtility.GetCharacterVolume(font, character);
@@ -101,7 +99,7 @@ namespace JSSoft.Unity.Terminal
                 var by = rowIndex * itemHeight + padding.Top + (int)offset.y;
                 var foregroundRect = FontUtility.GetForegroundRect(font, character, bx, by) + foregroundMargin;
                 var uv = FontUtility.GetUV(font, character);
-                this.texture = texture;
+                this.texture = FontUtility.GetCharacter(font, character).Texture;
                 this.terminalMesh.Count = 1;
                 this.terminalMesh.SetVertex(0, foregroundRect, rect);
                 this.terminalMesh.SetUV(0, uv);

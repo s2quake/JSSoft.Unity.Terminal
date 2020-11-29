@@ -88,8 +88,6 @@ namespace JSSoft.Unity.Terminal
             {
                 var rect = TerminalGridUtility.TransformRect(grid, this.rectTransform.rect, false);
                 var character = text.First();
-                var characterInfo = font[character];
-                var texture = characterInfo.Texture;
                 var itemWidth = TerminalGridUtility.GetItemWidth(grid);
                 var itemHeight = TerminalGridUtility.GetItemHeight(grid);
                 var volume = FontUtility.GetCharacterVolume(font, character);

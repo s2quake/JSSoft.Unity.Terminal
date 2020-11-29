@@ -90,12 +90,9 @@ namespace JSSoft.Unity.Terminal
             this.BackgroundColor = backgroundColor;
             this.BackgroundRect = new Rect(rect.x, rect.y, rect.width * volume, rect.height);
             this.BackgroundUV = (Vector2.zero, Vector2.zero);
-            if (characterInfo.Texture != null)
-            {
-                this.ForegroundColor = foregroundColor;
-                this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
-                this.ForegroundUV = FontUtility.GetUV(this.Font, character);
-            }
+            this.ForegroundColor = foregroundColor;
+            this.ForegroundRect = FontUtility.GetForegroundRect(this.Font, character, (int)rect.x, (int)rect.y);
+            this.ForegroundUV = FontUtility.GetUV(this.Font, character);
         }
 
         public void Reset()

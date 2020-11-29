@@ -86,6 +86,10 @@ namespace JSSoft.Unity.Terminal
                 var fy = y + charInfo.YOffset;
                 return new Rect(fx, fy, charInfo.Width, charInfo.Height);
             }
+            else if (font != null)
+            {
+                return new Rect(x + 1, y + 1, font.Width - 2, font.Height - 2);
+            }
             return new Rect(x + 1, y + 1, defaultItemWidth - 2, defaultItemHeight - 2);
         }
     }
