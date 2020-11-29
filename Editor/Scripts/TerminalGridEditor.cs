@@ -59,6 +59,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.PropertyField(nameof(TerminalGrid.SelectionTextColor));
             this.notifier.PropertyField(nameof(TerminalGrid.CursorColor));
             this.notifier.PropertyField(nameof(TerminalGrid.CursorTextColor));
+            this.notifier.PropertyField(nameof(TerminalGrid.FallbackTexture));
             this.notifier.PropertyField(nameof(TerminalGrid.ColorPalette));
             this.notifier.PropertyField(nameof(TerminalGrid.CursorStyle));
             this.notifier.PropertyField(nameof(TerminalGrid.CursorThickness));
@@ -85,6 +86,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalGrid.SelectionTextColor));
             this.notifier.Add(nameof(TerminalGrid.CursorColor));
             this.notifier.Add(nameof(TerminalGrid.CursorTextColor));
+            this.notifier.Add(nameof(TerminalGrid.FallbackTexture));
             this.notifier.Add(nameof(TerminalGrid.ColorPalette));
             this.notifier.Add(nameof(TerminalGrid.CursorStyle));
             this.notifier.Add(nameof(TerminalGrid.CursorThickness));

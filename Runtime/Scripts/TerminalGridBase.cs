@@ -76,6 +76,8 @@ namespace JSSoft.Unity.Terminal
 
         public abstract Color CursorTextColor { get; set; }
 
+        public abstract Texture2D FallbackTexture { get; set; }
+
         public abstract TerminalThickness Padding { get; set; }
 
         public abstract TerminalPoint CursorPoint { get; set; }

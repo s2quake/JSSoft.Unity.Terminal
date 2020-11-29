@@ -207,6 +207,7 @@ namespace JSSoft.Unity.Terminal.Editor
             var uiSprite = AssetDatabase.GetBuiltinExtraResource<Sprite>("UI/Skin/UISprite.psd");
             var font = FindAsset<TerminalFont>("Fonts/NanumGothicCoding.asset");
             var controller = FindAsset<RuntimeAnimatorController>("Animations/TerminalScrollbar/TerminalScrollbar.controller");
+            var noneTexture = FindAsset<Texture2D>("Fonts/white.png");
 
             var terminalGridObj = new GameObject(nameof(Terminal), typeof(Terminal)) { layer = canvas.gameObject.layer };
             var terminalGrid = terminalGridObj.AddComponent(typeof(TerminalGrid)) as TerminalGrid;

@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +44,12 @@ namespace JSSoft.Unity.Terminal
         {
         }
 
-        public override Texture mainTexture => this.texture;
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+        }
+
+        public override Texture mainTexture => this.texture ?? Texture2D.whiteTexture;
 
         public TerminalFont Font => this.grid?.Font;
 

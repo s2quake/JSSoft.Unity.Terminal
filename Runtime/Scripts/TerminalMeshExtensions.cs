@@ -45,6 +45,7 @@ namespace JSSoft.Unity.Terminal
         {
             var index = 0;
             terminalMesh.Count = cells.Count();
+            Debug.Log(terminalMesh.Count);
             foreach (var item in cells)
             {
                 terminalMesh.SetVertex(index, item.ForegroundRect, rect);

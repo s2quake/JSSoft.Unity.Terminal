@@ -47,6 +47,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalStyle.SelectionTextColor));
             this.notifier.Add(nameof(TerminalStyle.CursorColor));
             this.notifier.Add(nameof(TerminalStyle.CursorTextColor));
+            this.notifier.Add(nameof(TerminalStyle.FallbackTexture));
             this.notifier.Add(nameof(TerminalStyle.ColorPalette));
             this.notifier.Add(nameof(TerminalStyle.CursorStyle));
             this.notifier.Add(nameof(TerminalStyle.CursorThickness));

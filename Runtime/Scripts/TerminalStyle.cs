@@ -47,6 +47,8 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color cursorTextColor = TerminalGrid.DefaultCursorTextColor;
         [SerializeField]
+        private Texture2D fallbackTexture;
+        [SerializeField]
         private TerminalColorPalette colorPallete;
         [SerializeField]
         private TerminalCursorStyle cursorStyle;
@@ -171,6 +173,20 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.cursorTextColor = value;
                     this.InvokePropertyChangedEvent(nameof(CursorTextColor));
+                }
+            }
+        }
+
+        [FieldName(nameof(fallbackTexture))]
+        public Texture2D FallbackTexture
+        {
+            get => this.fallbackTexture;
+            set
+            {
+                if (this.fallbackTexture != value)
+                {
+                    this.fallbackTexture = value;
+                    this.InvokePropertyChangedEvent(nameof(FallbackTexture));
                 }
             }
         }

@@ -69,6 +69,8 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private Color cursorTextColor = DefaultCursorTextColor;
         [SerializeField]
+        private Texture2D fallbackTexture;
+        [SerializeField]
         private TerminalColorPalette colorPalette;
         [SerializeField]
         private int visibleIndex;
@@ -143,8 +145,8 @@ namespace JSSoft.Unity.Terminal
         public override TerminalPoint Intersect(Vector2 position)
         {
             var padding = this.Padding;
-            var itemWidth = this.Font.Width;
-            var itemHeight = this.Font.Height;
+            var itemWidth = TerminalGridUtility.GetItemWidth(this);
+            var itemHeight = TerminalGridUtility.GetItemHeight(this);
             if (position.x < 0 || position.y < 0)
                 return TerminalPoint.Invalid;
             position.x -= padding.Left;
@@ -316,6 +318,7 @@ namespace JSSoft.Unity.Terminal
                 SelectionTextColor = this.selectionTextColor,
                 CursorColor = this.cursorColor,
                 CursorTextColor = this.cursorTextColor,
+                FallbackTexture = this.fallbackTexture,
                 ColorPalette = this.colorPalette,
                 VisibleIndex = this.visibleIndex,
                 MaxBufferHeight = this.maxBufferHeight,
@@ -346,6 +349,7 @@ namespace JSSoft.Unity.Terminal
             this.notifier.SetField(ref this.selectionTextColor, data.SelectionTextColor, nameof(SelectionTextColor));
             this.notifier.SetField(ref this.cursorColor, data.CursorColor, nameof(CursorColor));
             this.notifier.SetField(ref this.cursorTextColor, data.CursorTextColor, nameof(CursorTextColor));
+            this.notifier.SetField(ref this.fallbackTexture, data.FallbackTexture, nameof(FallbackTexture));
             this.notifier.SetField(ref this.colorPalette, data.ColorPalette, nameof(ColorPalette));
             this.notifier.SetField(ref this.visibleIndex, data.VisibleIndex, nameof(VisibleIndex));
             this.notifier.SetField(ref this.maxBufferHeight, data.MaxBufferHeight, nameof(MaxBufferHeight));
@@ -597,6 +601,20 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.cursorTextColor = value;
                     this.InvokePropertyChangedEvent(nameof(CursorTextColor));
+                }
+            }
+        }
+
+        [FieldName(nameof(fallbackTexture))]
+        public override Texture2D FallbackTexture
+        {
+            get => this.style != null ? this.style.FallbackTexture : this.fallbackTexture;
+            set
+            {
+                if (this.fallbackTexture != value)
+                {
+                    this.fallbackTexture = value;
+                    this.InvokePropertyChangedEvent(nameof(FallbackTexture));
                 }
             }
         }

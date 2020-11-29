@@ -55,9 +55,7 @@ namespace JSSoft.Unity.Terminal
 
         public static (Vector2, Vector2) GetUV(TerminalFont font, char character)
         {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            if (font.Contains(character) == true)
+            if (font?.Contains(character) == true)
             {
                 var charInfo = font[character];
                 var texture = charInfo.Texture;
@@ -81,16 +79,14 @@ namespace JSSoft.Unity.Terminal
 
         public static Rect GetForegroundRect(TerminalFont font, char character, int x, int y)
         {
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-            if (font.Contains(character) == true)
+            if (font?.Contains(character) == true)
             {
                 var charInfo = font[character];
                 var fx = x + charInfo.XOffset;
                 var fy = y + charInfo.YOffset;
                 return new Rect(fx, fy, charInfo.Width, charInfo.Height);
             }
-            return new Rect(x, y, font.Width, font.Height);
+            return new Rect(x + 1, y + 1, defaultItemWidth - 2, defaultItemHeight - 2);
         }
     }
 }

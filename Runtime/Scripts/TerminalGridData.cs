@@ -50,6 +50,8 @@ namespace JSSoft.Unity.Terminal
 
         public Color CursorTextColor { get; set; }
 
+        public Texture2D FallbackTexture { get; set; }
+
         public TerminalColorPalette ColorPalette { get; set; }
 
         public int VisibleIndex { get; set; }

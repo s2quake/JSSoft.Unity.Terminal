@@ -60,7 +60,9 @@ namespace JSSoft.Unity.Terminal
             foreach (var item in this.cellList)
             {
                 if (item.Texture == texture)
+                {
                     yield return item;
+                }
             }
         }
 
@@ -116,7 +118,7 @@ namespace JSSoft.Unity.Terminal
 
         private void UpdateCellList()
         {
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Texture != null);
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0);
             this.cellList.Clear();
             this.cellList.AddRange(visibleCells);
         }
@@ -191,19 +193,9 @@ namespace JSSoft.Unity.Terminal
             for (var i = 0; i < textures.Length; i++)
             {
                 var texture = textures[i];
-                var gameObject = new GameObject($"Item{i}", typeof(TerminalForegroundItem));
-                var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
-                var transform = foregroundItem.rectTransform;
-                foregroundItem.material = new Material(Shader.Find("UI/Default"));
-                foregroundItem.Texture = texture;
-                foregroundItem.Grid = this.grid;
-                foregroundItem.Foreground = this;
-                transform.SetParent(this.transform);
-                transform.anchorMin = Vector3.zero;
-                transform.anchorMax = Vector3.one;
-                transform.offsetMin = Vector3.zero;
-                transform.offsetMax = Vector3.zero;
+                this.CreateForegroundItem($"Item{i}", texture);
             }
+            this.CreateForegroundItem("Fallback", this.grid.FallbackTexture);
             foreach (var item in items)
             {
                 var rect = item.GetComponent<RectTransform>();
@@ -211,6 +203,22 @@ namespace JSSoft.Unity.Terminal
                 this.itemsToDelete.Add(item);
             }
             this.Invoke(nameof(DeleteItems), float.Epsilon);
+        }
+
+        private void CreateForegroundItem(string name, Texture2D texture)
+        {
+            var gameObject = new GameObject(name, typeof(TerminalForegroundItem));
+            var foregroundItem = gameObject.GetComponent<TerminalForegroundItem>();
+            var transform = foregroundItem.rectTransform;
+            foregroundItem.material = new Material(Shader.Find("UI/Default"));
+            foregroundItem.Texture = texture;
+            foregroundItem.Grid = this.grid;
+            foregroundItem.Foreground = this;
+            transform.SetParent(this.transform);
+            transform.anchorMin = Vector3.zero;
+            transform.anchorMax = Vector3.one;
+            transform.offsetMin = Vector3.zero;
+            transform.offsetMax = Vector3.zero;
         }
 
         private void DeleteItems()
