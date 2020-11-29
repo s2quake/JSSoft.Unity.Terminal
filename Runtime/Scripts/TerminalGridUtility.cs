@@ -66,6 +66,8 @@ namespace JSSoft.Unity.Terminal
                     var row = grid.Rows[i];
                     foreach (var item in row.Cells)
                     {
+                        if (item.Character == 0 && item.Volume == 0)
+                            break;
                         if (predicate(item) == true)
                             yield return item;
                     }

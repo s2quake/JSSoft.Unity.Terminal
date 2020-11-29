@@ -62,7 +62,7 @@ namespace JSSoft.Unity.Terminal
         public Texture2D Texture
         {
             get => this.texture;
-            internal set => this.texture = value ?? throw new ArgumentNullException(nameof(value));
+            internal set => this.texture = value;
         }
 
         public TerminalForeground Foreground
