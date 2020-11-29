@@ -39,10 +39,14 @@ namespace JSSoft.Unity.Terminal
 
         public static Rect TransformRect(ITerminalGrid grid, Rect rect, bool scroll)
         {
-            if (grid != null && grid.Font != null && grid.Rows.Count > 0)
+            var itemHeight = FontUtility.DefaultItemHeight;
+            if (grid != null && grid.Font != null)
             {
                 var font = grid.Font;
-                var itemHeight = font.Height;
+                itemHeight = font.Height;
+            }
+            if (grid.Rows.Count > 0)
+            {
                 if (scroll == true)
                     rect.y += itemHeight * grid.VisibleIndex;
                 rect.x += grid.Rectangle.x;
@@ -138,7 +142,7 @@ namespace JSSoft.Unity.Terminal
             }
             return FontUtility.DefaultItemHeight;
         }
-        
+
         public static int GetItemLine(ITerminalGrid grid)
         {
             if (grid != null && grid.Font is TerminalFont font)
