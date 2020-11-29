@@ -38,7 +38,6 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private TerminalGrid grid = null;
 
-        // private readonly List<ITerminalCell> cellList = new List<ITerminalCell>();
         private readonly List<TerminalForegroundItem> itemsToDelete = new List<TerminalForegroundItem>();
 
         private int visibleIndex;
@@ -57,7 +56,7 @@ namespace JSSoft.Unity.Terminal
 
         internal IEnumerable<ITerminalCell> GetCells(Texture2D texture)
         {
-            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0 && item.Character != ' ' && item.Character != '\n');
+            var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, this.Predicate);
             foreach (var item in visibleCells)
             {
                 if (item.Texture == texture)
@@ -107,7 +106,6 @@ namespace JSSoft.Unity.Terminal
             if (this.text != this.grid.Text ||
                 this.visibleIndex != this.grid.VisibleIndex || force == true)
             {
-                this.UpdateCellList();
                 this.text = this.grid.Text;
                 this.visibleIndex = this.grid.VisibleIndex;
             }
@@ -117,11 +115,17 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
-        private void UpdateCellList()
+        private bool Predicate(ITerminalCell cell)
         {
-            // var visibleCells = TerminalGridUtility.GetVisibleCells(this.grid, item => item.Character != 0);
-            // this.cellList.Clear();
-            // this.cellList.AddRange(visibleCells);
+            if (cell.Character == 0)
+                return false;
+            if (cell.Character == ' ')
+                return false;
+            if (cell.Character == '\n')
+                return false;
+            if (cell.Character == '\r')
+                return false;
+            return true;
         }
 
         private void Grid_Enabled(object sender, EventArgs e)
