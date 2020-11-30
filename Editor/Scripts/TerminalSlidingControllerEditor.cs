@@ -29,6 +29,9 @@ namespace JSSoft.Unity.Terminal.Editor
     public class TerminalSlidingControllerEditor : UnityEditor.Editor
     {
         private EditorPropertyNotifier notifier;
+        private GUIContent showContent;
+        private GUIContent hideContent;
+        private GUIContent resetContent;
 
         public override void OnInspectorGUI()
         {
@@ -39,9 +42,9 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.PropertyField(nameof(TerminalSlidingController.KeyCode));
             this.notifier.PropertyField(nameof(TerminalSlidingController.Modifiers));
             this.notifier.End();
-            
+
             GUI.enabled = Application.isPlaying == false;
-            if (GUILayout.Button("Show") == true)
+            if (GUILayout.Button(this.showContent) == true)
             {
                 if (this.target is TerminalSlidingController controller)
                 {
@@ -49,7 +52,7 @@ namespace JSSoft.Unity.Terminal.Editor
                     EditorUtility.SetDirty(controller);
                 }
             }
-            if (GUILayout.Button("Hide") == true)
+            if (GUILayout.Button(this.hideContent) == true)
             {
                 if (this.target is TerminalSlidingController controller)
                 {
@@ -57,7 +60,7 @@ namespace JSSoft.Unity.Terminal.Editor
                     EditorUtility.SetDirty(controller);
                 }
             }
-            if (GUILayout.Button("Reset") == true)
+            if (GUILayout.Button(this.resetContent) == true)
             {
                 if (this.target is SlidingController controller)
                 {
@@ -75,6 +78,9 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalSlidingController.Direction));
             this.notifier.Add(nameof(TerminalSlidingController.KeyCode));
             this.notifier.Add(nameof(TerminalSlidingController.Modifiers));
+            this.showContent = new GUIContent("Show", TerminalStrings.GetString("SlidingController.Show"));
+            this.hideContent = new GUIContent("Hide", TerminalStrings.GetString("SlidingController.Hide"));
+            this.resetContent = new GUIContent("Reset", TerminalStrings.GetString("SlidingController.Reset"));
         }
 
         protected virtual void OnDisable()

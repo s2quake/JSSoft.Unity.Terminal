@@ -228,10 +228,25 @@ namespace JSSoft.Unity.Terminal.Editor
 
         private string GetTooltip(SerializedProperty property)
         {
-            var targetType = this.editor.target.GetType();
+            var targetType = GetTargetType(this.editor, property);
+            if (targetType == null)
+                return string.Empty;
             var name = $"{targetType.Name}.{property.name}";
-            var cultureInfo = CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture;
-            return TerminalStrings.GetString(name, cultureInfo);
+            return TerminalStrings.GetString(name);
+        }
+
+        private static Type GetTargetType(UnityEditor.Editor editor, SerializedProperty property)
+        {
+            var type = editor.target.GetType();
+            var field = type.GetField(property.name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+            while (type != null && field == null)
+            {
+                field = type.GetField(property.name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+                type = type.BaseType;
+            }
+            if (field != null)
+                return field.DeclaringType;
+            return null;
         }
     }
 }

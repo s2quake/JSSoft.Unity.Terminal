@@ -58,6 +58,19 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalGrid.behaviourList", "Indicates a list of terminal behavior. Users can apply different interactions across terminals by adding new behaviours." },
                 { "TerminalGrid.maxBufferHeight", "Indicates the height of the maximum buffer that the terminal can display." },
                 { "TerminalGrid.padding", "Indicates the inner margin of the terminal." },
+
+                { "SlidingController.grid", "Indicates the grid that will be focused when the target layout is displayed." },
+                { "SlidingController.direction", "Indicates the direction in which the target layout is displayed or disappeared." },
+                { "SlidingController.Show", "Set the target layout to Displayed." },
+                { "SlidingController.Hide", "Set the target layout to Invisible." },
+                { "SlidingController.Reset", "Initializes the layout status." },
+                { "TerminalSlidingController.keyCode", "Indicates the key to which the action is to be performed." },
+                { "TerminalSlidingController.modifiers", "Indicates the 'Modifiers' key to which the action is to be performed." },
+
+                { "TerminalDockController.dock", "Indicates where the terminal will be docked." },
+                { "TerminalDockController.isRatio", "Indicates whether the unit value that the terminal occupies in the layout is in ratio or length." },
+                { "TerminalDockController.length", "Indicates the length that the terminal occupies in the layout." },
+                { "TerminalDockController.ratio", "Indicates the percentage of the terminal in the layout." },
             });
 
             stringsByLocale.Add("ko-KR", new Dictionary<string, string>()
@@ -86,7 +99,26 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalGrid.behaviourList", "터미널의 동작의 목록을 나타냅니다. 사용자는 새로운 동작을 추가함으로써 터미널마다 다양한 상호작용을 적용할 수 있습니다." },
                 { "TerminalGrid.maxBufferHeight", "터미널이 표시할 수 있는 최대 버퍼의 높이를 나타냅니다." },
                 { "TerminalGrid.padding", "터미널의 안쪽 여백을 나타냅니다." },
+
+                { "SlidingController.grid", "대상 레이아웃이 표시될때 포커스될 그리드를 나타냅니다." },
+                { "SlidingController.direction", "대상 레이아웃이 표시되거나 사라질때의 방향을 나타냅니다." },
+                { "SlidingController.Show", "대상 레이아웃을 표시됨으로 설정합니다." },
+                { "SlidingController.Hide", "대상 레이아웃을 안보임으로 설정합니다." },
+                { "SlidingController.Reset", "레이아웃 상태를 초기화합니다." },
+                { "TerminalSlidingController.keyCode", "해당 동작이 수행될 키를 나타냅니다." },
+                { "TerminalSlidingController.modifiers", "해당 동작이 수행될 'Modifiers' 키를 나타냅니다." },
+
+                { "TerminalDockController.dock", "터미널이 도킹될 위치를 나타냅니다." },
+                { "TerminalDockController.isRatio", "터미널이 레이아웃에서 차지하는 단위값을 비율로 할지 길이로 할지에 대한 여부를 나타냅니다." },
+                { "TerminalDockController.length", "터미널이 레이아웃에서 차지하는 길이를 나타냅니다." },
+                { "TerminalDockController.ratio", "터미널이 레이아웃에서 차지하는 비율을 나타냅니다." },
             });
+        }
+
+        public static string GetString(string id)
+        {
+            var cultureInfo = CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture;
+            return GetString(id, cultureInfo);
         }
 
         public static string GetString(string id, CultureInfo cultureInfo)

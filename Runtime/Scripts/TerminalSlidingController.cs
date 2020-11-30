@@ -11,6 +11,7 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private KeyCode keyCode = KeyCode.BackQuote;
         [SerializeField]
+        [TerminalFlags(typeof(EventModifiers))]
         private EventModifiers modifiers = EventModifiers.Control;
 
         [FieldName(nameof(keyCode))]
