@@ -34,7 +34,7 @@ namespace JSSoft.Unity.Terminal
         {
             stringsByLocale.Add("common", new Dictionary<string, string>()
             {
-                { $"Terminal.outputText", "" },
+                { $"Terminal.outputText", "Indicates the output string of the terminal." },
                 { $"Terminal.prompt", "" },
                 { $"Terminal.command", "" },
                 { $"Terminal.isReadOnly", "" },
@@ -44,6 +44,12 @@ namespace JSSoft.Unity.Terminal
 
             stringsByLocale.Add("ko-KR", new Dictionary<string, string>()
             {
+                { $"Terminal.outputText", "터미널의 출력된 문자열을 나타냅니다." },
+                { $"Terminal.prompt", "" },
+                { $"Terminal.command", "" },
+                { $"Terminal.isReadOnly", "" },
+                { $"Terminal.isVerbose", "" },
+                { $"Terminal.dispatcher", "" },
             });
         }
 
