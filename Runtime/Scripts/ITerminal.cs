@@ -80,8 +80,6 @@ namespace JSSoft.Unity.Terminal
 
         bool IsReadOnly { get; set; }
 
-        bool IsVerbose { get; set; }
-
         bool IsExecuting { get; }
 
         TerminalColor? ForegroundColor { get; set; }

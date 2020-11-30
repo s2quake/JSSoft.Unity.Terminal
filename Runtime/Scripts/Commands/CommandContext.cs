@@ -30,16 +30,20 @@ namespace JSSoft.Unity.Terminal.Commands
     {
         private readonly ITerminal terminal;
         private readonly VersionCommand versionCommand = new VersionCommand();
+        private readonly CommandContextHost host;
 
-        public CommandContext(ITerminal terminal, IEnumerable<ICommand> commands)
+        public CommandContext(ITerminal terminal, IEnumerable<ICommand> commands, CommandContextHost host)
             : base("UnityCommand", commands)
         {
             this.terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            this.Host = host ?? throw new ArgumentNullException(nameof(host));
         }
 
         public new string[] GetCompletion(string[] items, string find)
         {
             return base.GetCompletion(items, find);
         }
+
+        public CommandContextHost Host { get; }
     }
 }

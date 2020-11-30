@@ -44,7 +44,6 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(Terminal.Prompt));
             this.notifier.Add(nameof(Terminal.Command));
             this.notifier.Add(nameof(Terminal.IsReadOnly));
-            this.notifier.Add(nameof(Terminal.IsVerbose));
             this.notifier.Add(nameof(Terminal.Dispatcher));
         }
 

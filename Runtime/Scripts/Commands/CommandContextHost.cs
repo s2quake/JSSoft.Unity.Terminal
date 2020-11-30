@@ -73,7 +73,7 @@ namespace JSSoft.Unity.Terminal.Commands
                         where Application.isEditor == true ||
                               Attribute.GetCustomAttribute(item.GetType(), typeof(DebugCommandAttribute)) is null
                         select item;
-            this.commandContext = new CommandContext(this.Terminal, query.ToArray());
+            this.commandContext = new CommandContext(this.Terminal, query.ToArray(), this);
             this.commandContext.Out = new CommandWriter(this.Terminal);
         }
 

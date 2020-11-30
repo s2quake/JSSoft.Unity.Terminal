@@ -53,7 +53,7 @@ namespace JSSoft.Unity.Terminal.Commands
         public string GetExample(object instance)
         {
             var id = $"Example:{instance.GetType().Name}";
-            return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
+            return CommandStrings.GetString(id, CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture);
         }
 
         public string GetExample(MethodInfo methodInfo)
@@ -63,13 +63,13 @@ namespace JSSoft.Unity.Terminal.Commands
             var id = $"Example:{type.Name}.{name}";
             if (type.DeclaringType != null)
                 id = $"{type.DeclaringType.Name}.{id}";
-            return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
+            return CommandStrings.GetString(id, CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture);
         }
 
         public string GetSummary(object instance)
         {
             var id = instance.GetType().Name;
-            return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
+            return CommandStrings.GetString(id, CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture);
         }
 
         public string GetSummary(PropertyInfo propertyInfo)
@@ -79,7 +79,7 @@ namespace JSSoft.Unity.Terminal.Commands
             var id = $"{type.Name}.{name}";
             if (type.DeclaringType != null)
                 id = $"{type.DeclaringType.Name}.{id}";
-            return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
+            return CommandStrings.GetString(id, CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture);
         }
 
         public string GetSummary(ParameterInfo parameterInfo)
@@ -88,7 +88,7 @@ namespace JSSoft.Unity.Terminal.Commands
             var type = method.DeclaringType;
             var name = parameterInfo.Name;
             var id = $"{type.Name}.{method.Name}.{name}";
-            return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
+            return CommandStrings.GetString(id, CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture);
         }
 
         public string GetSummary(MethodInfo methodInfo)
@@ -98,7 +98,7 @@ namespace JSSoft.Unity.Terminal.Commands
             var id = $"{type.Name}.{name}";
             if (type.DeclaringType != null)
                 id = $"{type.DeclaringType.Name}.{id}";
-            return CommandStrings.GetString(id, CultureInfo.CurrentUICulture);
+            return CommandStrings.GetString(id, CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture);
         }
     }
 }

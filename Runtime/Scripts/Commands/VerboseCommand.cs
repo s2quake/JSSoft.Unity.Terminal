@@ -39,9 +39,9 @@ namespace JSSoft.Unity.Terminal.Commands
         {
             var value = this.Value;
             if (value == null)
-                this.WriteLine($"Verbose: {$"{this.Terminal.IsVerbose}".ToLower()}");
+                this.WriteLine($"Verbose: {$"{this.CommandContextHost.IsVerbose}".ToLower()}");
             else
-                this.Terminal.IsVerbose = (bool)value;
+                this.CommandContextHost.IsVerbose = (bool)value;
         }
     }
 }

@@ -23,7 +23,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
@@ -175,8 +177,12 @@ namespace JSSoft.Unity.Terminal.Editor
         {
             var property = propertyInfo.Property;
             var includeChildren = propertyInfo.IncludeChildren;
+            var tooltip = GetTooltip(property);
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.PropertyField(property, includeChildren);
+            if (tooltip != string.Empty)
+                EditorGUILayout.PropertyField(property, new GUIContent(property.displayName, tooltip), includeChildren);
+            else
+                EditorGUILayout.PropertyField(property, includeChildren);
             this.serializedObject.ApplyModifiedProperties();
             if (EditorGUI.EndChangeCheck())
             {
@@ -218,6 +224,14 @@ namespace JSSoft.Unity.Terminal.Editor
                 InvokeEvent(this.editor, this.lastPropertyNames);
                 this.lastPropertyNames = new string[] { };
             }
+        }
+
+        private string GetTooltip(SerializedProperty property)
+        {
+            var targetType = this.editor.target.GetType();
+            var name = $"{targetType.Name}.{property.name}";
+            var cultureInfo = CultureInfo.DefaultThreadCurrentUICulture ?? CultureInfo.CurrentUICulture;
+            return TerminalStrings.GetString(name, cultureInfo);
         }
     }
 }

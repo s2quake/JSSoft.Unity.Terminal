@@ -58,8 +58,6 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private bool isReadOnly;
         private bool isChanged;
-        [SerializeField]
-        private bool isVerbose;
         private int cursorPosition;
         private int outputIndex = 0;
         private int progressIndex;
@@ -516,20 +514,6 @@ namespace JSSoft.Unity.Terminal
                 {
                     this.isReadOnly = value;
                     this.InvokePropertyChangedEvent(nameof(IsReadOnly));
-                }
-            }
-        }
-
-        [FieldName(nameof(isVerbose))]
-        public override bool IsVerbose
-        {
-            get => this.isVerbose;
-            set
-            {
-                if (this.isVerbose != value)
-                {
-                    this.isVerbose = value;
-                    this.InvokePropertyChangedEvent(nameof(IsVerbose));
                 }
             }
         }

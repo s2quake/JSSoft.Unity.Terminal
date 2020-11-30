@@ -33,6 +33,8 @@ namespace JSSoft.Unity.Terminal
         [SerializeField]
         private bool isAsync = false;
         [SerializeField]
+        private bool isVerbose = false;
+        [SerializeField]
         private bool logException = true;
         [SerializeField]
         private bool useExceptionForegroundColor = true;
@@ -54,6 +56,12 @@ namespace JSSoft.Unity.Terminal
         {
             get => this.isAsync;
             set => this.isAsync = value;
+        }
+
+        public bool IsVerbose
+        {
+            get => this.isVerbose;
+            set => this.isVerbose = value;
         }
 
         public bool ExceptionRedirection
@@ -144,7 +152,7 @@ namespace JSSoft.Unity.Terminal
 
         protected virtual string GetExceptionMessage(Exception e)
         {
-            if (this.terminal.IsVerbose == true)
+            if (this.isVerbose == true)
             {
                 return $"{e}";
             }
