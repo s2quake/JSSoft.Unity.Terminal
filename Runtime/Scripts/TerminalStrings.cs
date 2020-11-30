@@ -71,6 +71,16 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalDockController.isRatio", "Indicates whether the unit value that the terminal occupies in the layout is in ratio or length." },
                 { "TerminalDockController.length", "Indicates the length that the terminal occupies in the layout." },
                 { "TerminalDockController.ratio", "Indicates the percentage of the terminal in the layout." },
+
+                { "TerminalHostBase.isAsync", "Indicates whether to run the command asynchronously. If the value is 'false', the asynchronous command cannot be executed." },
+                { "TerminalHostBase.isVerbose", "Indicates whether more detailed information is printed when an exception or error message is printed." },
+                { "TerminalHostBase.exceptionRedirection", "Indicates whether the message is redirected using Debug.LogException when an exception occurs." },
+                { "TerminalHostBase.useExceptionForegroundColor", "Indicates whether text colors are used for displayed error messages in the terminal." },
+                { "TerminalHostBase.useExceptionBackgroundColor", "Indicates whether background color is used for displayed error messages in the terminal." },
+                { "TerminalHostBase.exceptionForegroundColor", "Indicates the text color in the error message displayed in the terminal." },
+                { "TerminalHostBase.exceptionBackgroundColor", "Indicates background color for error messages displayed in the terminal." },
+
+                { "CommandContextHost.text", "Indicates the message to be displayed when the terminal starts." },
             });
 
             stringsByLocale.Add("ko-KR", new Dictionary<string, string>()
@@ -112,6 +122,16 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalDockController.isRatio", "터미널이 레이아웃에서 차지하는 단위값을 비율로 할지 길이로 할지에 대한 여부를 나타냅니다." },
                 { "TerminalDockController.length", "터미널이 레이아웃에서 차지하는 길이를 나타냅니다." },
                 { "TerminalDockController.ratio", "터미널이 레이아웃에서 차지하는 비율을 나타냅니다." },
+
+                { "TerminalHostBase.isAsync", "명령의 실행을 비동기로 실행할지에 대한 여부를 나타냅니다. 값이 'false' 일 경우 비동기 명령어는 실행할 수 없습니다." },
+                { "TerminalHostBase.isVerbose", "예외나 에러 메세지가 출력될때 더 자세한 정보까지 출력되는지에 대한 여부를 나타냅니다." },
+                { "TerminalHostBase.exceptionRedirection", "예외가 발생할때 메세지가 Debug.LogException 를 사용하여 리디렉션이 될지에 대한 여부를 나타냅니다." },
+                { "TerminalHostBase.useExceptionForegroundColor", "터미널의 표시되는 에러 메세지에 문자 색상을 사용할지에 대한 여부를 나타냅니다." },
+                { "TerminalHostBase.useExceptionBackgroundColor", "터미널의 표시되는 에러 메세지에 배경색을 사용할지에 대한 여부를 나타냅니다." },
+                { "TerminalHostBase.exceptionForegroundColor", "터미널의 표시되는 에러 메세지에 문자 색상을 나타냅니다." },
+                { "TerminalHostBase.exceptionBackgroundColor", "터미널의 표시되는 에러 메세지에 배경색을 나타냅니다." },
+
+                { "CommandContextHost.text", "터미널이 시작될때 표시될 메세지를 나타냅니다." },
             });
         }
 

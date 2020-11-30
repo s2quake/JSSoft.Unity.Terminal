@@ -42,10 +42,20 @@ namespace JSSoft.Unity.Terminal.Commands
         private ICommandProvider commandProvider;
         private ICommandConfigurationProvider configurationProvider;
 
+        [FieldName(nameof(text))]
         public string Text
         {
             get => this.text;
-            set => this.text = value ?? throw new ArgumentNullException(nameof(value));
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+                if (this.text != value)
+                {
+                    this.text = value;
+                    this.InvokePropertyChangedEvent(nameof(Text));
+                }
+            }
         }
 
         public ICommandProvider CommandProvider

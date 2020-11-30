@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -28,14 +29,14 @@ namespace JSSoft.Unity.Terminal
 {
     [RequireComponent(typeof(TerminalBase))]
     [DisallowMultipleComponent]
-    public class TerminalHostBase : MonoBehaviour, IServiceProvider
+    public class TerminalHostBase : MonoBehaviour, IServiceProvider, INotifyPropertyChanged, IPropertyChangedNotifyable
     {
         [SerializeField]
         private bool isAsync = false;
         [SerializeField]
         private bool isVerbose = false;
         [SerializeField]
-        private bool logException = true;
+        private bool exceptionRedirection = true;
         [SerializeField]
         private bool useExceptionForegroundColor = true;
         [SerializeField]
@@ -52,47 +53,105 @@ namespace JSSoft.Unity.Terminal
 
         public TerminalGridBase Grid => this.grid;
 
+        [FieldName(nameof(isAsync))]
         public bool IsAsync
         {
             get => this.isAsync;
-            set => this.isAsync = value;
+            set
+            {
+                if (this.isAsync != value)
+                {
+                    this.isAsync = value;
+                    this.InvokePropertyChangedEvent(nameof(IsAsync));
+                }
+            }
         }
 
+        [FieldName(nameof(isVerbose))]
         public bool IsVerbose
         {
             get => this.isVerbose;
-            set => this.isVerbose = value;
+            set
+            {
+                if (this.isVerbose != value)
+                {
+                    this.isVerbose = value;
+                    this.InvokePropertyChangedEvent(nameof(IsVerbose));
+                }
+            }
         }
 
+        [FieldName(nameof(exceptionRedirection))]
         public bool ExceptionRedirection
         {
-            get => this.logException;
-            set => this.logException = value;
+            get => this.exceptionRedirection;
+            set
+            {
+                if (this.exceptionRedirection != value)
+                {
+                    this.exceptionRedirection = value;
+                    this.InvokePropertyChangedEvent(nameof(ExceptionRedirection));
+                }
+            }
         }
 
+        [FieldName(nameof(useExceptionForegroundColor))]
         public bool UseExceptionForegroundColor
         {
             get => this.useExceptionForegroundColor;
-            set => this.useExceptionForegroundColor = value;
+            set
+            {
+                if (this.useExceptionForegroundColor != value)
+                {
+                    this.useExceptionForegroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(UseExceptionForegroundColor));
+                }
+            }
         }
 
+        [FieldName(nameof(useExceptionBackgroundColor))]
         public bool UseExceptionBackgroundColor
         {
             get => this.useExceptionBackgroundColor;
-            set => this.useExceptionBackgroundColor = value;
+            set
+            {
+                if (this.useExceptionBackgroundColor != value)
+                {
+                    this.useExceptionBackgroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(UseExceptionBackgroundColor));
+                }
+            }
         }
 
+        [FieldName(nameof(exceptionForegroundColor))]
         public TerminalColor ExceptionForegroundColor
         {
             get => this.exceptionForegroundColor;
-            set => this.exceptionForegroundColor = value;
+            set
+            {
+                if (this.exceptionForegroundColor != value)
+                {
+                    this.exceptionForegroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(ExceptionForegroundColor));
+                }
+            }
         }
 
+        [FieldName(nameof(exceptionBackgroundColor))]
         public TerminalColor ExceptionBackgroundColor
         {
             get => this.exceptionBackgroundColor;
-            set => this.exceptionBackgroundColor = value;
+            set
+            {
+                if (this.exceptionBackgroundColor != value)
+                {
+                    this.exceptionBackgroundColor = value;
+                    this.InvokePropertyChangedEvent(nameof(ExceptionBackgroundColor));
+                }
+            }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void Awake()
         {
@@ -146,7 +205,7 @@ namespace JSSoft.Unity.Terminal
                 this.terminal.BackgroundColor = this.exceptionBackgroundColor;
             this.terminal.AppendLine(message);
             this.terminal.ResetColor();
-            if (this.logException == true)
+            if (this.exceptionRedirection == true)
                 Debug.LogException(e);
         }
 
@@ -163,6 +222,16 @@ namespace JSSoft.Unity.Terminal
                 else
                     return e.Message;
             }
+        }
+
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            this.PropertyChanged?.Invoke(this, e);
+        }
+
+        protected void InvokePropertyChangedEvent(string propertyName)
+        {
+            this.OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
         }
 
         private void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
@@ -200,6 +269,15 @@ namespace JSSoft.Unity.Terminal
         object IServiceProvider.GetService(Type serviceType)
         {
             return this.GetService(serviceType);
+        }
+
+        #endregion
+
+        #region IPropertyChangedNotifyable
+
+        void IPropertyChangedNotifyable.InvokePropertyChangedEvent(string propertyName)
+        {
+            this.InvokePropertyChangedEvent(propertyName);
         }
 
         #endregion
