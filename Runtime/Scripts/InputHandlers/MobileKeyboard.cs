@@ -59,7 +59,7 @@ namespace JSSoft.Unity.Terminal.InputHandlers
             {
                 if (TerminalEnvironment.IsIPhone == true)
                 {
-#if !UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE
                     throw new NotImplementedException();
 #else
                     return TouchScreenKeyboard.area;
