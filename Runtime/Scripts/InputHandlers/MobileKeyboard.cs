@@ -137,8 +137,6 @@ namespace JSSoft.Unity.Terminal.InputHandlers
                 }
                 else if (this.keyboard.status == TouchScreenKeyboard.Status.Visible)
                 {
-                    this.Text = this.keyboard.text;
-                    this.Selection = this.keyboard.selection;
                 }
                 else if (this.keyboard.status == TouchScreenKeyboard.Status.LostFocus)
                 {
