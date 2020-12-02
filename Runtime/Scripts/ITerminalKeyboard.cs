@@ -37,6 +37,8 @@ namespace JSSoft.Unity.Terminal
 
         ITerminalGrid Grid { get; }
 
+        ITerminal Terminal { get; }
+
         event EventHandler<TerminalKeyboardEventArgs> Opened;
 
         event EventHandler<TerminalKeyboardEventArgs> Done;

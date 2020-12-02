@@ -31,6 +31,7 @@ namespace JSSoft.Unity.Terminal
 {
     [ExecuteAlways]
     [RequireComponent(typeof(HorizontalOrVerticalLayoutGroup))]
+    [DefaultExecutionOrder(-194)]
     public class TerminalDockController : UIBehaviour
     {
         [SerializeField]
@@ -43,6 +44,8 @@ namespace JSSoft.Unity.Terminal
         private int length = 100;
         [SerializeField]
         private bool isRatio = true;
+        private ITerminal terminal;
+        private DockData? data;
 
         public DockData Save()
         {
@@ -120,10 +123,66 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            TerminalKeyboardEvents.Opened += Keyboard_Opened;
+            TerminalKeyboardEvents.Canceled += Keyboard_Canceled;
+            TerminalEvents.Executing += Terminal_Executing;
+        }
+
+        protected override void OnDisable()
+        {
+            TerminalKeyboardEvents.Opened -= Keyboard_Opened;
+            TerminalEvents.Executing += Terminal_Executing;
+            base.OnDisable();
+        }
+
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
             this.UpdateLayout();
+        }
+
+        private void Keyboard_Opened(object sender, TerminalKeyboardEventArgs e)
+        {
+            if (sender is ITerminalKeyboard keyboard)
+            {
+                if (this.dock == TerminalDock.Top || this.dock == TerminalDock.Bottom)
+                {
+                    var grid = keyboard.Grid;
+                    var gameObject = grid.GameObject;
+                    var rect = gameObject.GetComponent<RectTransform>();
+                    var height = (int)rect.rect.height;
+                    this.terminal = keyboard.Terminal;
+                    this.data = this.Save();
+                    this.IsRatio = false;
+                    this.Length = height;
+                }
+            }
+        }
+
+        private void Keyboard_Canceled(object sender, EventArgs e)
+        {
+            this.Restore();
+        }
+
+        private void Terminal_Executing(object sender, EventArgs e)
+        {
+            if (sender is ITerminal terminal && terminal == this.terminal)
+            {
+                this.Restore();
+            }
+        }
+
+        private void Restore()
+        {
+            if (this.data != null)
+            {
+                this.Load(this.data.Value);
+                this.data = null;
+                this.terminal = null;
+            }
         }
 
         internal void UpdateLayout()
@@ -131,13 +190,16 @@ namespace JSSoft.Unity.Terminal
             var layout = this.GetComponent<HorizontalOrVerticalLayoutGroup>();
             var rect = this.GetComponent<RectTransform>();
             var size = rect.rect.size;
+            var isRatio = this.isRatio;
+            var length = this.length;
+            var dock = this.dock;
             if (size == Vector2.zero)
                 return;
-            if (this.isRatio == true)
-                size *= (1.0f - this.ratio);
+            if (isRatio == true)
+                size *= (1.0f - ratio);
             else
-                size = new Vector2(size.x - this.length, size.y - this.length);
-            switch (this.dock)
+                size = new Vector2(size.x - length, size.y - length);
+            switch (dock)
             {
                 case TerminalDock.None:
                     {
@@ -165,6 +227,7 @@ namespace JSSoft.Unity.Terminal
                     }
                     break;
             }
+            layout.CalculateLayoutInputVertical();
         }
 
         #region DockData

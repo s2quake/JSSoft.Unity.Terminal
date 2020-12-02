@@ -188,7 +188,6 @@ namespace JSSoft.Unity.Terminal.InputHandlers
                     this.DoScroll();
                 }
             }
-
             this.swiper.Update();
             this.keyboard.Update();
         }
@@ -396,8 +395,9 @@ namespace JSSoft.Unity.Terminal.InputHandlers
         {
             this.isExecuting = true;
             this.Terminal.Command = e.Text;
-            this.Terminal.Execute();
             this.scrollPos = (int)this.Grid.VisibleIndex;
+            Debug.Log("!Execute23");
+            this.Terminal.Execute();
         }
 
         private void Keyboard_Canceled(object sender, EventArgs e)

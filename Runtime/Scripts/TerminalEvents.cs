@@ -43,6 +43,7 @@ namespace JSSoft.Unity.Terminal
             terminal.CancellationRequested += Terminal_CancellationRequested;
             terminal.PropertyChanged += Terminal_PropertyChanged;
             terminal.TextChanged += Terminal_TextChanged;
+            terminal.Executing += Terminal_Executing;
             terminal.Executed += Terminal_Executed;
         }
 
@@ -58,6 +59,7 @@ namespace JSSoft.Unity.Terminal
             terminal.CancellationRequested -= Terminal_CancellationRequested;
             terminal.PropertyChanged -= Terminal_PropertyChanged;
             terminal.TextChanged -= Terminal_TextChanged;
+            terminal.Executing -= Terminal_Executing;
             terminal.Executed -= Terminal_Executed;
             terminals.Remove(terminal);
         }
@@ -73,6 +75,8 @@ namespace JSSoft.Unity.Terminal
         public static event PropertyChangedEventHandler PropertyChanged;
 
         public static event EventHandler<TextChangedEventArgs> TextChanged;
+
+        public static event EventHandler Executing;
 
         public static event EventHandler<TerminalExecutedEventArgs> Executed;
 
@@ -104,6 +108,11 @@ namespace JSSoft.Unity.Terminal
         private static void Terminal_TextChanged(object sender, TextChangedEventArgs e)
         {
             TextChanged?.Invoke(sender, e);
+        }
+
+        private static void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
+        {
+            Executing?.Invoke(sender, e);
         }
 
         private static void Terminal_Executed(object sender, TerminalExecutedEventArgs e)
