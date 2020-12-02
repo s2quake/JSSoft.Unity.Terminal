@@ -141,6 +141,14 @@ namespace JSSoft.Unity.Terminal
         protected override void OnRectTransformDimensionsChange()
         {
             base.OnRectTransformDimensionsChange();
+            if (this.data != null)
+            {
+                var gameObject = this.terminal.GameObject;
+                var terminalRect = gameObject.GetComponent<RectTransform>();
+                var rect = this.GetComponent<RectTransform>();
+                var height = Math.Min((int)rect.rect.height, (int)terminalRect.rect.height);
+                this.length = height;
+            }
             this.UpdateLayout();
         }
 
@@ -152,8 +160,9 @@ namespace JSSoft.Unity.Terminal
                 {
                     var grid = keyboard.Grid;
                     var gameObject = grid.GameObject;
-                    var rect = gameObject.GetComponent<RectTransform>();
-                    var height = (int)rect.rect.height;
+                    var terminalRect = gameObject.GetComponent<RectTransform>();
+                    var rect = this.GetComponent<RectTransform>();
+                    var height = Math.Min((int)rect.rect.height, (int)terminalRect.rect.height);
                     this.terminal = keyboard.Terminal;
                     this.data = this.Save();
                     this.IsRatio = false;
