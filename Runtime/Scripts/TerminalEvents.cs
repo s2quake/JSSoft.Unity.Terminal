@@ -112,7 +112,7 @@ namespace JSSoft.Unity.Terminal
 
         private static void Terminal_Executing(object sender, TerminalExecuteEventArgs e)
         {
-            Executing?.Invoke(sender, e);
+            Executing?.Invoke(sender, EventArgs.Empty);
         }
 
         private static void Terminal_Executed(object sender, TerminalExecutedEventArgs e)
