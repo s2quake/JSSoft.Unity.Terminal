@@ -29,6 +29,8 @@ namespace JSSoft.Unity.Terminal.KeyBindings
                 return TerminalKeyBindings.TerminalOnMacOS;
             else if (TerminalEnvironment.IsWindows == true)
                 return TerminalKeyBindings.TerminalOnWindows;
+            else if (TerminalEnvironment.IsLinux == true)
+                return TerminalKeyBindings.TerminalOnLinux;
             return TerminalKeyBindings.Common;
         }
 
@@ -83,6 +85,19 @@ namespace JSSoft.Unity.Terminal.KeyBindings
             new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
             new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t))
+        };
+
+        public static readonly IKeyBindingCollection TerminalOnLinux = new KeyBindingCollection("Terminal(Linux) Key Bindings", Common)
+        {
+            new KeyBinding(EventModifiers.Control, KeyCode.U, (t) => DeleteToFirst(t)),
+            new KeyBinding(EventModifiers.Control, KeyCode.K, (t) => DeleteToLast(t)),
+            new KeyBinding(EventModifiers.Control, KeyCode.E, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.Control, KeyCode.A, (t) => t.MoveToFirst()),
+            new KeyBinding(EventModifiers.Control, KeyCode.W, (t) => DeletePrevWord(t)),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.Home, (t) => t.MoveToFirst()),
+            new KeyBinding(EventModifiers.FunctionKey, KeyCode.End, (t) => t.MoveToLast()),
+            new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.LeftArrow, (t) => PrevWord(t)),
+            new KeyBinding(EventModifiers.Control | EventModifiers.FunctionKey, KeyCode.RightArrow, (t) => NextWord(t)),
         };
 
         private static int PrevWord(ITerminal terminal)
