@@ -391,7 +391,6 @@ namespace JSSoft.Unity.Terminal
                     this.terminal.InsertCharacter(itemList.ToArray());
                     itemList.Clear();
                 }
-                Debug.Log($"{item.Modifiers}, {item.KeyCode}");
                 if (this.OnKeyDown(item.Modifiers, item.KeyCode) == true)
                     continue;
                 if (this.terminal.IsReadOnly == false && item.Character != 0 && this.OnKeyPress(item.Character) == false)
