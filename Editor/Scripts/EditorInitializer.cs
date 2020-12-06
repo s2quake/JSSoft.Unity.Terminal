@@ -29,7 +29,9 @@ namespace JSSoft.Unity.Terminal.Editor
         {
             TerminalEnvironment.IsStandalone = EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneOSX ||
                                                EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows ||
-                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64;
+                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64 || 
+                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux || 
+                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux64;
 
             TerminalEnvironment.IsMobile = EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ||
                                            EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS;

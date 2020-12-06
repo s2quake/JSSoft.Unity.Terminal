@@ -23,15 +23,18 @@ namespace JSSoft.Unity.Terminal
         {
             IsMac = (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.OSXPlayer);
             IsWindows = (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer);
+            IsLinux = (Application.platform == RuntimePlatform.LinuxEditor || Application.platform == RuntimePlatform.LinuxPlayer);
             IsIPhone = (Application.platform == RuntimePlatform.IPhonePlayer);
             IsAndroid = (Application.platform == RuntimePlatform.Android);
-            IsStandalone = IsMac == true || IsWindows == true;
+            IsStandalone = IsMac == true || IsWindows == true || IsLinux == true;
             IsMobile = IsIPhone == true || IsAndroid == true;
         }
 
         public static bool IsMac { get; }
 
         public static bool IsWindows { get; }
+
+        public static bool IsLinux { get; }
 
         public static bool IsIPhone { get; }
 
