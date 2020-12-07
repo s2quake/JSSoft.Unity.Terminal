@@ -51,6 +51,7 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalGrid.behaviourList", "Indicates a list of terminal behavior. Users can apply different interactions across terminals by adding new behaviours." },
                 { "TerminalGrid.maxBufferHeight", "Indicates the height of the maximum buffer that the terminal can display." },
                 { "TerminalGrid.padding", "Indicates the inner margin of the terminal." },
+                { "TerminalGrid.RefreshForeground", "The font has been changed and you need to update the object for character rendering. You can fix the problem by selecting a terminal object and clicking the Refresh Foreground button in the Inspector." },
 
                 { "SlidingController.grid", "Indicates the grid that will be focused when the target layout is displayed." },
                 { "SlidingController.direction", "Indicates the direction in which the target layout is displayed or disappeared." },
@@ -102,6 +103,7 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalGrid.behaviourList", "터미널의 동작의 목록을 나타냅니다. 사용자는 새로운 동작을 추가함으로써 터미널마다 다양한 상호작용을 적용할 수 있습니다." },
                 { "TerminalGrid.maxBufferHeight", "터미널이 표시할 수 있는 최대 버퍼의 높이를 나타냅니다." },
                 { "TerminalGrid.padding", "터미널의 안쪽 여백을 나타냅니다." },
+                { "TerminalGrid.RefreshForeground", "폰트가 변경되어 글자 렌더링을 위한 객체를 갱신해주어야 합니다. 터미널 객체를 선택한후 Inspector 에서 Refresh Foreground 버튼을 클릭하여 문제를 해결 할 수 있습니다." },
 
                 { "SlidingController.grid", "대상 레이아웃이 표시될때 포커스될 그리드를 나타냅니다." },
                 { "SlidingController.direction", "대상 레이아웃이 표시되거나 사라질때의 방향을 나타냅니다." },

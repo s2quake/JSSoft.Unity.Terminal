@@ -114,8 +114,8 @@ namespace JSSoft.Unity.Terminal
                 var parent = transform.parent;
                 while (parent != null)
                 {
-                    path += parent.name + "/" + path;
-                    parent = transform.parent;
+                    path = parent.name + "/" + path;
+                    parent = parent.parent;
                 }
                 return "/" + path;
             }
@@ -125,8 +125,8 @@ namespace JSSoft.Unity.Terminal
                 var parent = transform.parent;
                 while (parent != null)
                 {
-                    path += parent.name + "/" + path;
-                    parent = transform.parent;
+                    path = parent.name + "/" + path;
+                    parent = parent.parent;
                 }
                 return "/" + path;
             }

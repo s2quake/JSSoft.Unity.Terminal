@@ -59,6 +59,44 @@ namespace JSSoft.Unity.Terminal
             }
         }
 
+        internal void RefreshChilds()
+        {
+            var textures = this.font != null ? this.font.Textures.ToArray() : new Texture2D[] { };
+            var items = this.Items.ToArray();
+            for (var i = 0; i < textures.Length; i++)
+            {
+                var texture = textures[i];
+                this.CreateForegroundItem($"Item{i}", texture);
+            }
+            this.CreateForegroundItem("Fallback", this.grid.FallbackTexture);
+            foreach (var item in items)
+            {
+                var rect = item.GetComponent<RectTransform>();
+                rect.SetParent(null);
+                this.itemsToDelete.Add(item);
+            }
+            this.Invoke(nameof(DeleteItems), float.Epsilon);
+        }
+
+        internal bool VerifyRefreshChilds()
+        {
+            var textures = this.font != null ? this.font.Textures.ToArray() : new Texture2D[] { };
+            var itemByName = this.Items.ToDictionary(item => item.name);
+            if (itemByName.ContainsKey("Fallback") == false)
+                return true;
+            for (var i = 0; i < textures.Length; i++)
+            {
+                var texture = textures[i];
+                var name = $"Item{i}";
+                if (itemByName.ContainsKey(name) == false)
+                    return true;
+                var item = itemByName[name];
+                if (item.Texture != texture)
+                    return true;
+            }
+            return false;
+        }
+
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -182,25 +220,6 @@ namespace JSSoft.Unity.Terminal
                     }
                     break;
             }
-        }
-
-        private void RefreshChilds()
-        {
-            var textures = this.font != null ? this.font.Textures.ToArray() : new Texture2D[] { };
-            var items = this.Items.ToArray();
-            for (var i = 0; i < textures.Length; i++)
-            {
-                var texture = textures[i];
-                this.CreateForegroundItem($"Item{i}", texture);
-            }
-            this.CreateForegroundItem("Fallback", this.grid.FallbackTexture);
-            foreach (var item in items)
-            {
-                var rect = item.GetComponent<RectTransform>();
-                rect.SetParent(null);
-                this.itemsToDelete.Add(item);
-            }
-            this.Invoke(nameof(DeleteItems), float.Epsilon);
         }
 
         private void CreateForegroundItem(string name, Texture2D texture)

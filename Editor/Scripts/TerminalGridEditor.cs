@@ -13,8 +13,11 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace JSSoft.Unity.Terminal.Editor
@@ -23,6 +26,7 @@ namespace JSSoft.Unity.Terminal.Editor
     [CanEditMultipleObjects]
     public class TerminalGridEditor : UnityEditor.Editor
     {
+        private readonly List<TerminalForeground> foregroundList = new List<TerminalForeground>();
         private EditorPropertyNotifier notifier;
         private bool isDebug = false;
 
@@ -34,6 +38,21 @@ namespace JSSoft.Unity.Terminal.Editor
             {
                 base.OnInspectorGUI();
                 return;
+            }
+
+            if (this.foregroundList.Any() == true)
+            {
+                var message = TerminalStrings.GetString("TerminalGrid.RefreshForeground");
+                EditorGUILayout.HelpBox(message, MessageType.Warning);
+                if (GUILayout.Button("Refresh Foreground") == true)
+                {
+                    foreach (var item in this.foregroundList)
+                    {
+                        item.RefreshChilds();
+                    }
+                    this.foregroundList.Clear();
+                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                }
             }
 
             this.notifier.Begin();
@@ -90,12 +109,25 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalGrid.MaxBufferHeight));
             this.notifier.Add(nameof(TerminalGrid.Padding), EditorPropertyUsage.IncludeChildren);
             this.notifier.PropertyChanged += Notifier_PropertyChanged;
+
+            foreach (var item in this.targets)
+            {
+                if (item is TerminalGrid grid)
+                {
+                    var foreground = grid.GetComponentInChildren<TerminalForeground>();
+                    if (foreground.VerifyRefreshChilds() == true)
+                    {
+                        this.foregroundList.Add(foreground);
+                    }
+                }
+            }
         }
 
         protected virtual void OnDisable()
         {
             this.notifier.Dispose();
             this.notifier = null;
+            this.foregroundList.Clear();
         }
 
         private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
