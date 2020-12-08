@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Experimental.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ namespace JSSoft.Unity.Terminal.Editor
                         item.RefreshChilds();
                     }
                     this.foregroundList.Clear();
-                    EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                    this.MarkSceneDirty();
                 }
             }
 
@@ -110,6 +111,31 @@ namespace JSSoft.Unity.Terminal.Editor
             this.notifier.Add(nameof(TerminalGrid.Padding), EditorPropertyUsage.IncludeChildren);
             this.notifier.PropertyChanged += Notifier_PropertyChanged;
 
+            this.CollectInvalidForegrounds();
+        }
+
+        protected virtual void OnDisable()
+        {
+            this.notifier.Dispose();
+            this.notifier = null;
+            this.foregroundList.Clear();
+        }
+
+        private void MarkSceneDirty()
+        {
+            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (prefabStage != null)
+            {
+                EditorSceneManager.MarkSceneDirty(prefabStage.scene);
+            }
+            else
+            {
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            }
+        }
+
+        private void CollectInvalidForegrounds()
+        {
             foreach (var item in this.targets)
             {
                 if (item is TerminalGrid grid)
@@ -121,13 +147,6 @@ namespace JSSoft.Unity.Terminal.Editor
                     }
                 }
             }
-        }
-
-        protected virtual void OnDisable()
-        {
-            this.notifier.Dispose();
-            this.notifier = null;
-            this.foregroundList.Clear();
         }
 
         private void Notifier_PropertyChanged(object sender, PropertyChangedEventArgs e)
