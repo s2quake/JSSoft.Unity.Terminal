@@ -71,14 +71,6 @@ namespace JSSoft.Unity.Terminal
 
         static Terminal()
         {
-            // var cultureInfo = CultureInfo.CreateSpecificCulture("ko-KR");
-            // CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-            // CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
-            // CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("ko-KR");
-            // CultureInfo.CurrentUICulture = CultureInfo.CurrentCulture;
-            // CultureInfo.DefaultThreadCurrentCulture = CultureInfo.CurrentCulture;
-            // CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.CurrentCulture;
-            // Debug.Log(CultureInfo.CurrentCulture);
         }
 
         public Terminal()
