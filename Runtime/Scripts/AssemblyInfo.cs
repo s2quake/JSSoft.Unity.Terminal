@@ -25,8 +25,8 @@ using System.Reflection;
 #endif
 [assembly: AssemblyCopyright("Copyright (c) 2020 Jeesu Choi")]
 [assembly: AssemblyDescription("Terminal for Unity")]
-[assembly: AssemblyFileVersion("1.0.1")]
-[assembly: AssemblyInformationalVersion("1.0.1")]
+[assembly: AssemblyFileVersion("1.1.0")]
+[assembly: AssemblyInformationalVersion("1.1.0")]
 [assembly: AssemblyProduct("JSSoft.Unity.Terminal")]
 [assembly: AssemblyTitle("JSSoft.Unity.Terminal")]
 [assembly: AssemblyVersion("1.0.0.0")]

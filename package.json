@@ -1,6 +1,6 @@
 {
     "name": "com.jssoft.u-terminal",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "displayName": "u-terminal",
     "unity": "2018.4",
     "description": "u-Terminal is like a terminal in Unix, a console in Windows, and a console window in FPS games. Provides a REPL environment for receiving user input and outputting results.",
