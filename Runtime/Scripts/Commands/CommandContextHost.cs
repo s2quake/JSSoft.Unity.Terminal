@@ -21,6 +21,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace JSSoft.Unity.Terminal.Commands
 {
@@ -28,7 +29,7 @@ namespace JSSoft.Unity.Terminal.Commands
     {
         [TextArea(5, 10)]
         [SerializeField]
-        private string text = "type 'help' to help.";
+        private string text = "Type 'help' for usage.\nType 'version' for version.";
 
         private CommandContext commandContext;
         private TextWriter consoleWriter;
@@ -78,6 +79,7 @@ namespace JSSoft.Unity.Terminal.Commands
                         select item;
             this.commandContext = new CommandContext(this.Terminal, query.ToArray(), this);
             this.commandContext.Out = new CommandWriter(this.Terminal);
+            this.commandContext.DefaultUsage = null;
         }
 
         protected override void OnEnable()
