@@ -34,6 +34,7 @@ namespace JSSoft.Unity.Terminal.Editor
         private readonly List<string> propertyNameList = new List<string>();
         private readonly SerializedProperty scriptProperty;
         private string[] lastPropertyNames = new string[] { };
+        private EditorProperty[] orderedProperties;
         private bool isModified;
 
         public EditorPropertyNotifier(UnityEditor.Editor editor)
@@ -65,7 +66,8 @@ namespace JSSoft.Unity.Terminal.Editor
                 throw new ArgumentException($"{targetType} does not have {propertyName} property.", nameof(propertyName));
             if (Attribute.GetCustomAttribute(property, typeof(FieldNameAttribute)) is FieldNameAttribute attribute)
             {
-                this.Add(attribute.FieldName, propertyName, usage);
+                this.AddProperty(propertyName, attribute.FieldName, usage);
+                this.SetProperty(propertyName, attribute);
             }
             else
             {
@@ -73,30 +75,16 @@ namespace JSSoft.Unity.Terminal.Editor
             }
         }
 
+        [Obsolete]
         public void Add(string fieldName, string propertyName)
         {
             this.Add(fieldName, propertyName, EditorPropertyUsage.None);
         }
 
+        [Obsolete]
         public void Add(string fieldName, string propertyName, EditorPropertyUsage usage)
         {
-            if (fieldName is null)
-                throw new ArgumentNullException(nameof(fieldName));
-            if (fieldName == string.Empty)
-                throw new ArgumentException("empty strings are not allowed.", nameof(fieldName));
-            if (propertyName is null)
-                throw new ArgumentNullException(nameof(propertyName));
-            if (propertyName == string.Empty)
-                throw new ArgumentException("empty strings are not allowed.", nameof(propertyName));
-            var property = this.serializedObject.FindProperty(fieldName);
-            var propertyInfo = new EditorProperty()
-            {
-                Property = property,
-                Name = propertyName,
-                Usage = usage,
-            };
-            this.propertyByName.Add(propertyName, propertyInfo);
-            this.propertyList.Add(propertyInfo);
+            this.AddProperty(propertyName, fieldName, usage);
         }
 
         public void Begin()
@@ -133,7 +121,11 @@ namespace JSSoft.Unity.Terminal.Editor
         public void PropertyFieldAll()
         {
             this.PropertyScript();
-            foreach (var item in this.propertyList)
+            if (this.orderedProperties == null)
+            {
+                this.orderedProperties = this.propertyList.OrderBy(item => item.Order).ToArray();
+            }
+            foreach (var item in this.orderedProperties)
             {
                 this.PropertyField(item);
             }
@@ -146,7 +138,7 @@ namespace JSSoft.Unity.Terminal.Editor
             this.PropertyField(this.propertyByName[propertyName]);
         }
 
-        public SerializedProperty GetProperty(string propertyName)
+        public SerializedProperty SerializedProperty(string propertyName)
         {
             var propertyInfo = this.propertyByName[propertyName];
             return propertyInfo.Property;
@@ -166,16 +158,48 @@ namespace JSSoft.Unity.Terminal.Editor
             this.PropertyChanged?.Invoke(this, e);
         }
 
+        public void AddProperty(string propertyName, string fieldName, EditorPropertyUsage usage)
+        {
+            if (fieldName is null)
+                throw new ArgumentNullException(nameof(fieldName));
+            if (fieldName == string.Empty)
+                throw new ArgumentException("empty strings are not allowed.", nameof(fieldName));
+            if (propertyName is null)
+                throw new ArgumentNullException(nameof(propertyName));
+            if (propertyName == string.Empty)
+                throw new ArgumentException("empty strings are not allowed.", nameof(propertyName));
+            var property = this.serializedObject.FindProperty(fieldName);
+            var propertyInfo = new EditorProperty()
+            {
+                Property = property,
+                Name = propertyName,
+                Usage = usage,
+            };
+            this.propertyByName.Add(propertyName, propertyInfo);
+            this.propertyList.Add(propertyInfo);
+            this.orderedProperties = null;
+        }
+
+        private void SetProperty(string propertyName, FieldNameAttribute attribute)
+        {
+            if (propertyName is null)
+                throw new ArgumentNullException(nameof(propertyName));
+            if (attribute is null)
+                throw new ArgumentNullException(nameof(attribute));
+            var propertyInfo = this.propertyByName[propertyName];
+            propertyInfo.DisplayName = attribute.DisplayName;
+            propertyInfo.Order = attribute.Order;
+            this.orderedProperties = null;
+        }
+
         private void PropertyField(EditorProperty propertyInfo)
         {
             var property = propertyInfo.Property;
             var includeChildren = propertyInfo.IncludeChildren;
+            var displayName = propertyInfo.DisplayName != string.Empty ? propertyInfo.DisplayName : property.displayName;
             var tooltip = GetTooltip(property);
             EditorGUI.BeginChangeCheck();
-            if (tooltip != string.Empty)
-                EditorGUILayout.PropertyField(property, new GUIContent(property.displayName, tooltip), includeChildren);
-            else
-                EditorGUILayout.PropertyField(property, includeChildren);
+            EditorGUILayout.PropertyField(property, new GUIContent(displayName, tooltip), includeChildren);
             this.serializedObject.ApplyModifiedProperties();
             if (EditorGUI.EndChangeCheck())
             {

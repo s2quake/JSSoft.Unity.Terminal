@@ -29,25 +29,45 @@ namespace JSSoft.Unity.Terminal.Commands
     {
         [TextArea(5, 10)]
         [SerializeField]
-        private string text = "Type 'help' for usage.\nType 'version' for version.";
+        private string startupText = "Type 'help' for usage.\nType 'version' for version.";
+
+        [TextArea(5, 10)]
+        [SerializeField]
+        private string baseUsage = "";
 
         private CommandContext commandContext;
         private TextWriter consoleWriter;
         private ICommandProvider commandProvider;
         private ICommandConfigurationProvider configurationProvider;
 
-        [FieldName(nameof(text))]
-        public string Text
+        [FieldName(nameof(startupText), Order = int.MinValue)]
+        public string StartupText
         {
-            get => this.text;
+            get => this.startupText;
             set
             {
                 if (value == null)
                     throw new ArgumentNullException(nameof(value));
-                if (this.text != value)
+                if (this.startupText != value)
                 {
-                    this.text = value;
-                    this.InvokePropertyChangedEvent(nameof(Text));
+                    this.startupText = value;
+                    this.InvokePropertyChangedEvent(nameof(StartupText));
+                }
+            }
+        }
+
+        [FieldName(nameof(baseUsage))]
+        public string BaseUsage
+        {
+            get => this.baseUsage;
+            set
+            {
+                if (baseUsage == null)
+                    throw new ArgumentNullException(nameof(baseUsage));
+                if (this.baseUsage != value)
+                {
+                    this.baseUsage = value;
+                    this.InvokePropertyChangedEvent(nameof(BaseUsage));
                 }
             }
         }
@@ -79,7 +99,7 @@ namespace JSSoft.Unity.Terminal.Commands
                         select item;
             this.commandContext = new CommandContext(this.Terminal, query.ToArray(), this);
             this.commandContext.Out = new CommandWriter(this.Terminal);
-            this.commandContext.DefaultUsage = null;
+            this.commandContext.BaseUsage = PrintBaseUsage;
         }
 
         protected override void OnEnable()
@@ -87,8 +107,8 @@ namespace JSSoft.Unity.Terminal.Commands
             base.OnEnable();
             this.Terminal.CommandCompletor = this;
             this.Terminal.ResetOutput();
-            if (this.text != string.Empty)
-                this.Terminal.AppendLine(this.text);
+            if (this.startupText != string.Empty)
+                this.Terminal.AppendLine(this.startupText);
             Console.SetOut(new TerminalTextWriter(this.Terminal));
         }
 
@@ -152,6 +172,14 @@ namespace JSSoft.Unity.Terminal.Commands
             {
                 if (cancellation.IsCancellationRequested == false)
                     cancellation.Cancel();
+            }
+        }
+
+        private void PrintBaseUsage(CommandContextBase commandContext)
+        {
+            if (this.baseUsage != string.Empty)
+            {
+                commandContext.Out.WriteLine(this.baseUsage);
             }
         }
 

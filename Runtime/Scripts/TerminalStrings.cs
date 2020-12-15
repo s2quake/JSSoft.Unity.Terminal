@@ -75,6 +75,7 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalHostBase.exceptionBackgroundColor", "Indicates background color for error messages displayed in the terminal." },
 
                 { "CommandContextHost.text", "Indicates the message to be displayed when the terminal starts." },
+                { "CommandContextHost.baseUsage", "Indicates the default usage that appears when an empty string is entered." },
             });
 
             stringsByLocale.Add("ko-KR", new Dictionary<string, string>()
@@ -127,6 +128,7 @@ namespace JSSoft.Unity.Terminal
                 { "TerminalHostBase.exceptionBackgroundColor", "터미널의 표시되는 에러 메세지에 배경색을 나타냅니다." },
 
                 { "CommandContextHost.text", "터미널이 시작될때 표시될 메세지를 나타냅니다." },
+                { "CommandContextHost.baseUsage", "빈 문자열이 입력 되었을때 표시되는 기본 사용법을 나타냅니다." },
             });
         }
 

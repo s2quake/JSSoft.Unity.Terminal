@@ -41,8 +41,8 @@ namespace JSSoft.Unity.Terminal.Editor
 
         public override void OnInspectorGUI()
         {
-            var useForegroundColorProperty = this.notifier.GetProperty(nameof(TerminalLogReceiver.UseForegroundColor));
-            var useBackgroundColorProperty = this.notifier.GetProperty(nameof(TerminalLogReceiver.UseBackgroundColor));
+            var useForegroundColorProperty = this.notifier.SerializedProperty(nameof(TerminalLogReceiver.UseForegroundColor));
+            var useBackgroundColorProperty = this.notifier.SerializedProperty(nameof(TerminalLogReceiver.UseBackgroundColor));
             this.notifier.Begin();
             this.notifier.PropertyScript();
             this.notifier.PropertyField(nameof(TerminalLogReceiver.LogType));

@@ -26,5 +26,9 @@ namespace JSSoft.Unity.Terminal
         }
 
         public string FieldName { get; } = string.Empty;
+
+        public string DisplayName { get; set; } = string.Empty;
+
+        public int Order { get; set; }
     }
 }

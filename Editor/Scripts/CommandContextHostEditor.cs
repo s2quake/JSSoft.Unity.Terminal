@@ -24,7 +24,8 @@ namespace JSSoft.Unity.Terminal.Editor
         protected override void OnEnable()
         {
             base.OnEnable();
-            this.notifier.Add(nameof(CommandContextHost.Text));
+            this.notifier.Add(nameof(CommandContextHost.StartupText));
+            this.notifier.Add(nameof(CommandContextHost.BaseUsage));
         }
 
         protected override void OnDisable()

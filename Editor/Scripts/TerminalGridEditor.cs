@@ -33,7 +33,7 @@ namespace JSSoft.Unity.Terminal.Editor
 
         public override void OnInspectorGUI()
         {
-            var styleProperty = this.notifier.GetProperty(nameof(TerminalGrid.Style));
+            var styleProperty = this.notifier.SerializedProperty(nameof(TerminalGrid.Style));
             this.isDebug = GUILayout.Toggle(this.isDebug, "Debug Mode");
             if (isDebug == true)
             {
