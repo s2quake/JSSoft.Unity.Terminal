@@ -33,7 +33,7 @@ namespace JSSoft.Unity.Terminal.Commands
 
         [TextArea(5, 10)]
         [SerializeField]
-        private string baseUsage = "";
+        private string baseUsage = "Type 'help' for usage.\nType 'version' for version.";
 
         private CommandContext commandContext;
         private TextWriter consoleWriter;

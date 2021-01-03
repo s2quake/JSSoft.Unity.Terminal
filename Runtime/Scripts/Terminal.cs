@@ -917,9 +917,8 @@ namespace JSSoft.Unity.Terminal
             var eventArgs = new TerminalExecuteEventArgs(commandText, action);
             this.InvokePropertyChangedEvent(nameof(IsExecuting));
             this.isExecuting = true;
-            if (eventArgs.Token != Guid.Empty)
-                this.executing.Invoke(this, eventArgs);
-            else
+            this.executing.Invoke(this, eventArgs);
+            if (eventArgs.Token == Guid.Empty)
                 action(null);
         }
 
