@@ -241,18 +241,19 @@ namespace JSSoft.Unity.Terminal
 
         private async void Run(TerminalExecuteEventArgs e)
         {
+            var token = e.GetToken();
             try
             {
                 if (this.isAsync == true)
                     await this.OnRunAsync(e.Command);
                 else
                     this.OnRun(e.Command);
-                e.Success();
+                e.Success(token);
             }
             catch (Exception ex)
             {
                 var message = this.GetExceptionMessage(ex);
-                e.Fail(ex);
+                e.Fail(token, ex);
                 this.OnException(ex, message);
             }
         }

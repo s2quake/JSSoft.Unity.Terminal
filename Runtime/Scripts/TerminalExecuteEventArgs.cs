@@ -21,6 +21,7 @@ namespace JSSoft.Unity.Terminal
     {
         private readonly Action<Exception> action;
         private bool isHandled;
+        private Guid token;
 
         public TerminalExecuteEventArgs(string command, Action<Exception> action)
         {
@@ -32,16 +33,28 @@ namespace JSSoft.Unity.Terminal
 
         public bool IsHandled => this.isHandled;
 
-        public void Success()
+        public Guid GetToken()
         {
+            if (this.token != Guid.Empty)
+                throw new InvalidOperationException("Token has already been created.");
+            this.token = Guid.NewGuid();
+            return this.token;
+        }
+
+        public void Success(Guid token)
+        {
+            if (token == Guid.Empty || token != this.token)
+                throw new InvalidOperationException("Invalid token.");
             if (this.isHandled == true)
                 throw new InvalidOperationException("command expired.");
             this.isHandled = true;
             this.action(null);
         }
 
-        public void Fail(Exception exception)
+        public void Fail(Guid token, Exception exception)
         {
+            if (token == Guid.Empty || token != this.token)
+                throw new InvalidOperationException("Invalid token.");
             if (this.isHandled == true)
                 throw new InvalidOperationException("command expired.");
             if (exception == null)
@@ -49,5 +62,7 @@ namespace JSSoft.Unity.Terminal
             this.isHandled = true;
             this.action(exception);
         }
+
+        internal Guid Token => this.token;
     }
 }
