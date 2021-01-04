@@ -338,7 +338,7 @@ namespace JSSoft.Unity.Terminal.Editor
             scrollbar.handleRect = handleRect;
 
             terminalGrid.Font = font;
-            terminal.Append("hello world!");
+            terminal.AppendLine("hello world!");
             terminal.Prompt = "Prompt>";
 
             Selection.activeGameObject = terminalGridObj;
