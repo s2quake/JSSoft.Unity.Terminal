@@ -30,19 +30,27 @@ namespace JSSoft.Unity.Terminal.Editor
     {
         static EditorInitializer()
         {
-            TerminalEnvironment.IsStandalone = EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneOSX ||
-                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows ||
-                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64 ||
-                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux ||
-                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux64;
+            try
+            {
+                TerminalEnvironment.IsStandalone = EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneOSX ||
+                                                   EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows ||
+                                                   EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64 ||
+                                                   EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux ||
+                                                   EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneLinux64;
 
-            TerminalEnvironment.IsMobile = EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ||
-                                           EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS;
+                TerminalEnvironment.IsMobile = EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android ||
+                                               EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS;
 
-            ExitCommand.ExitAction = new Action(() => UnityEditor.EditorApplication.isPlaying = false);
-            TerminalFont.SetDirtyCallback = new Action<TerminalFont>((font) => EditorUtility.SetDirty(font));
-            MobileInputHandlerContext.KeyboardCreator = new Func<TerminalKeyboardBase>(() => new EditorKeyboard());
-            EditorSceneManager.sceneOpened += EditorSceneManager_SceneOpened;
+                ExitCommand.ExitAction = new Action(() => UnityEditor.EditorApplication.isPlaying = false);
+                TerminalFont.SetDirtyCallback = new Action<TerminalFont>((font) => EditorUtility.SetDirty(font));
+                MobileInputHandlerContext.KeyboardCreator = new Func<TerminalKeyboardBase>(() => new EditorKeyboard());
+                EditorSceneManager.sceneOpened += EditorSceneManager_SceneOpened;
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Please select 'Assets/u-terminal/Runtime/Plugins/JSSoft.Unity.Terminal.dll' in the Project window and click /Reimport' in the Context Menu to resolve the issue.");
+                throw e;
+            }
         }
 
         private static void EditorSceneManager_SceneOpened(Scene scene, OpenSceneMode mode)
