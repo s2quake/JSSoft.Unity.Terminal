@@ -48,7 +48,9 @@ namespace JSSoft.Unity.Terminal.Editor
             }
             catch (Exception e)
             {
-                var obj = AssetDatabase.LoadAssetAtPath("Assets/u-terminal/Runtime/Plugins/JSSoft.Unity.Terminal.dll", typeof(UnityEditor.DefaultAsset));
+                var obj = AssetDatabase.LoadAssetAtPath("Assets/u-terminal/Runtime/Plugins/JSSoft.Unity.Terminal.dll", typeof(UnityEngine.Object));
+                if (obj == null)
+                    Debug.Log("null");
                 Debug.LogWarning("Please select 'Assets/u-terminal/Runtime/Plugins/JSSoft.Unity.Terminal.dll' in the Project window and click /Reimport' in the Context Menu to resolve the issue.", obj);
                 throw e;
             }
